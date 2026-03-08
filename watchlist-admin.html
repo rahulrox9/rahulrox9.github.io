@@ -170,7 +170,35 @@ hr { border:none; border-top:1px solid var(--border); margin:1.5rem 0; }
 <div class="entry-list" id="entry-list"><div class="empty">No entries yet</div></div>
 
 <script>
-const DB_URL   = 'https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+
+const GH = {
+  token: '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',
+  owner: 'rahulrox9',
+  repo:  'rahulrox9.github.io',
+  branch: 'main'
+};
+async function ghRead(file) {
+  const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${file}?ref=${GH.branch}&t=${Date.now()}`, {
+    headers: { Authorization: `token ${GH.token}` }
+  });
+  const d = await r.json();
+  return { data: JSON.parse(atob(d.content.replace(/\n/g,''))), sha: d.sha };
+}
+async function ghWrite(file, data, sha) {
+  const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${file}`, {
+    method: 'PUT',
+    headers: { Authorization: `token ${GH.token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message: `Update ${file}`,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
+      sha, branch: GH.branch
+    })
+  });
+  if (!r.ok) { const e = await r.json(); throw new Error(e.message); }
+  const j = await r.json();
+  return j.content.sha;
+}
+let watchlistSha = null;
 const LANG_NAMES = {
   'af':'Afrikaans','ar':'Arabic','bg':'Bulgarian','bn':'Bengali','cs':'Czech',
   'da':'Danish','de':'German','el':'Greek','en':'English','es':'Spanish',
@@ -690,14 +718,14 @@ function markSeasonAll(entryId, seasonNum, watched) {
 
 // ── Storage ──────────────────────────────────────────────
 async function save() {
-  localStorage.setItem('wl3', JSON.stringify(entries));
   try {
-    console.log('Saving', entries.length, 'entries to Drive…');
-    const r = await fetch(DB_URL, { method:'POST', body:JSON.stringify({file:'watchlist.json', data:entries}) });
-    const text = await r.text();
-    console.log('Drive response:', text);
-    const ind = document.getElementById('save-indicator');
-    if (ind) { ind.textContent = '✓ Saved'; ind.style.color='var(--green)'; setTimeout(()=>ind.textContent='',2000); }
+    watchlistSha = await ghWrite('watchlist.json', entries, watchlistSha);
+    return true;
+  } catch(e) {
+    console.error('Save failed:', e);
+    return false;
+  }
+}
   } catch(e) {
     console.error('Save to Drive failed:', e);
     const ind = document.getElementById('save-indicator');
@@ -705,20 +733,9 @@ async function save() {
   }
 }
 
-function jsonp(url) {
-  return new Promise((res,rej) => {
-    const cb = 'cb_'+Date.now();
-    const s  = document.createElement('script');
-    window[cb] = d => { delete window[cb]; s.remove(); res(d); };
-    s.onerror  = () => { delete window[cb]; s.remove(); rej(new Error('JSONP failed')); };
-    s.src      = url+'?file=watchlist.json&callback='+cb;
-    document.head.appendChild(s);
-  });
-}
-
 async function load() {
   try {
-    entries = await jsonp(DB_URL);
+    const r = await ghRead('watchlist.json'); entries = r.data; watchlistSha = r.sha;
   } catch(e) {
     try { entries = JSON.parse(localStorage.getItem('wl3')||'[]'); } catch(e2) { entries=[]; }
   }

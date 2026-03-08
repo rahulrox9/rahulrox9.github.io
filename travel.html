@@ -103,7 +103,34 @@ header{padding:1rem 1.5rem 0.8rem;border-bottom:1px solid var(--border);display:
 </div>
 
 <script>
-const DB_URL = 'https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+
+const GH = {
+  token: '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',
+  owner: 'rahulrox9',
+  repo:  'rahulrox9.github.io',
+  branch: 'main'
+};
+async function ghRead(file) {
+  const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${file}?ref=${GH.branch}&t=${Date.now()}`, {
+    headers: { Authorization: `token ${GH.token}` }
+  });
+  const d = await r.json();
+  return { data: JSON.parse(atob(d.content.replace(/\n/g,''))), sha: d.sha };
+}
+async function ghWrite(file, data, sha) {
+  const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${file}`, {
+    method: 'PUT',
+    headers: { Authorization: `token ${GH.token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message: `Update ${file}`,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
+      sha, branch: GH.branch
+    })
+  });
+  if (!r.ok) { const e = await r.json(); throw new Error(e.message); }
+  const j = await r.json();
+  return j.content.sha;
+}
 
 const map = L.map('map',{center:[20,10],zoom:3,zoomControl:false});
 L.control.zoom({position:'bottomright'}).addTo(map);
@@ -147,17 +174,6 @@ function makePopup(p) {
     ${p.category?`<span class="popup-cat ${p.category}">${p.category}</span>`:''}
     ${p.notes?`<div class="popup-notes">${p.notes}</div>`:''}
   </div>`;
-}
-
-function jsonp(url) {
-  return new Promise((res,rej)=>{
-    const cb='cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
-    const s=document.createElement('script');
-    window[cb]=d=>{delete window[cb];s.remove();res(d);};
-    s.onerror=()=>{delete window[cb];s.remove();rej(new Error('failed'));};
-    s.src=url+(url.includes('?')?'&':'?')+'file=travel_pins.json&callback='+cb;
-    document.head.appendChild(s);
-  });
 }
 
 // State
@@ -236,7 +252,7 @@ function expandPanel() {
 
 async function load() {
   try {
-    const pins  = await jsonp(DB_URL);
+    const { data: pins } = await ghRead('travel_pins.json');
     allPins     = Array.isArray(pins) ? pins : [];
     const countries = new Set(allPins.map(p=>p.country).filter(Boolean));
     document.getElementById('place-count').textContent   = allPins.length;
