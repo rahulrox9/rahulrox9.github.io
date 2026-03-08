@@ -742,12 +742,17 @@ async function save() {
 }
 
 async function load() {
+  const msg = document.getElementById('form-msg');
   try {
-    const r = await ghRead('watchlist.json'); entries = r.data; watchlistSha = r.sha;
+    const r = await ghRead('watchlist.json');
+    entries = r.data;
+    watchlistSha = r.sha;
+    if (!Array.isArray(entries)) throw new Error('Data is not an array');
   } catch(e) {
-    try { entries = JSON.parse(localStorage.getItem('wl3')||'[]'); } catch(e2) { entries=[]; }
+    entries = [];
+    if (msg) { msg.className='msg err'; msg.textContent='⚠ Could not load watchlist.json from GitHub: ' + e.message; }
+    console.error('Load error:', e);
   }
-  // Migrate old entries without id
   entries.forEach(e=>{ if(!e.id) e.id=Date.now().toString()+Math.random(); });
   renderList();
 }
