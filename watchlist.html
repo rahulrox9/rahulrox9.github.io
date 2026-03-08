@@ -431,7 +431,7 @@ function switchSeason(num, btn) {
 
 // ── Load ─────────────────────────────────────────────────
 async function load() {
-  try { allEntries = await jsonp(DB_URL); }
+  try { const r = await ghRead('watchlist.json'); allEntries = r.data; }
   catch(e) { console.error('Load failed',e); }
   document.getElementById('loading').style.display='none';
   buildLangFilters();
