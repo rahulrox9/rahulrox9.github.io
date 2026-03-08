@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magnet Collection — Rahul Subbaraman</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 4rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;text-decoration:none;color:var(--ink)}
+.nav-logo span{color:var(--warm);font-style:italic}
+.nav-links{display:flex;gap:1.8rem}
+.nav-links a{font-size:0.78rem;color:var(--muted);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
+.nav-links a:hover{color:var(--warm)}
+.nav-links a.active{color:var(--ink);font-weight:500}
+
+.page-header{max-width:1100px;margin:0 auto;padding:4rem 4rem 1.5rem;display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+.header-text{}
+.eyebrow{font-size:0.68rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.6rem}
+.eyebrow::before{content:'';display:inline-block;width:24px;height:1px;background:var(--warm)}
+.page-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4vw,3.5rem);font-weight:700;line-height:1.05;letter-spacing:-0.02em;margin-bottom:0.8rem}
+.page-title em{font-style:italic;color:var(--warm)}
+.page-desc{font-size:0.87rem;color:var(--muted);line-height:1.8;max-width:480px;font-weight:300}
+.count-chip{background:var(--ink);color:var(--parchment);font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;padding:1rem 1.5rem;border-radius:2px;text-align:center;flex-shrink:0}
+.count-chip span{display:block;font-family:'DM Sans',sans-serif;font-size:0.65rem;font-weight:400;color:rgba(250,246,239,0.5);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.2rem}
+
+/* Filter bar */
+.filter-bar{max-width:1100px;margin:0 auto;padding:0 4rem 2rem;display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center}
+.filter-label{font-size:0.7rem;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-right:0.3rem}
+.filter-btn{padding:0.22rem 0.75rem;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;white-space:nowrap}
+.filter-btn.on{background:var(--warm);color:#fff;border-color:var(--warm)}
+.filter-btn:hover:not(.on){border-color:var(--warm);color:var(--warm)}
+
+/* Gallery grid */
+.gallery{max-width:1100px;margin:0 auto;padding:0 4rem 6rem}
+.masonry{columns:4;column-gap:1rem}
+@media(max-width:1000px){.masonry{columns:3}}
+@media(max-width:700px){.masonry{columns:2}}
+@media(max-width:420px){.masonry{columns:1}}
+
+.magnet-card{break-inside:avoid;margin-bottom:1rem;background:var(--card);border:1px solid var(--border);border-radius:2px;overflow:hidden;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s}
+.magnet-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(26,18,8,0.1)}
+.magnet-img{width:100%;display:block;aspect-ratio:1;object-fit:cover;background:var(--border)}
+.magnet-img-placeholder{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:2.5rem;background:linear-gradient(135deg,var(--border),#d4c9b8)}
+.magnet-info{padding:0.7rem 0.8rem}
+.magnet-place{font-family:'Playfair Display',serif;font-size:0.88rem;font-weight:600;line-height:1.2;margin-bottom:0.15rem}
+.magnet-country{font-size:0.7rem;color:var(--muted);display:flex;align-items:center;gap:0.3rem}
+.magnet-year{font-size:0.65rem;color:var(--muted);margin-top:0.2rem}
+
+/* Empty state */
+.empty{text-align:center;padding:5rem 2rem;color:var(--muted);font-style:italic}
+.empty strong{display:block;font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:0.5rem;color:var(--ink)}
+
+/* Lightbox */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(26,18,8,0.85);z-index:300;align-items:center;justify-content:center;padding:2rem}
+.lightbox.on{display:flex}
+.lb-inner{background:var(--card);max-width:600px;width:100%;border-radius:2px;overflow:hidden;position:relative;animation:pop 0.2s ease}
+@keyframes pop{from{transform:scale(0.95);opacity:0}to{transform:scale(1);opacity:1}}
+.lb-img{width:100%;display:block;max-height:65vh;object-fit:contain;background:var(--ink)}
+.lb-img-placeholder{width:100%;height:320px;display:flex;align-items:center;justify-content:center;font-size:4rem;background:var(--ink)}
+.lb-info{padding:1.2rem 1.5rem}
+.lb-place{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:0.3rem}
+.lb-meta{font-size:0.78rem;color:var(--muted);margin-bottom:0.5rem}
+.lb-notes{font-size:0.82rem;color:var(--muted);font-style:italic;line-height:1.6;font-weight:300}
+.lb-close{position:absolute;top:0.8rem;right:1rem;background:none;border:none;font-size:1.4rem;cursor:pointer;color:rgba(255,255,255,0.6);z-index:1}
+.lb-close:hover{color:#fff}
+.lb-nav{display:flex;gap:0.5rem;margin-top:0.8rem}
+.lb-nav button{background:none;border:1px solid var(--border);padding:0.3rem 0.8rem;font-size:0.75rem;cursor:pointer;border-radius:2px;color:var(--muted);font-family:'DM Sans',sans-serif}
+.lb-nav button:hover{border-color:var(--warm);color:var(--warm)}
+
+footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.footer-left{font-family:'Playfair Display',serif;font-size:0.9rem;font-style:italic;color:var(--muted)}
+.footer-right{display:flex;gap:1.8rem}
+.footer-right a{font-size:0.75rem;color:var(--muted);text-decoration:none;transition:color 0.15s}
+.footer-right a:hover{color:var(--warm)}
+
+@media(max-width:900px){
+  nav{padding:0 1.5rem}
+  .page-header,.filter-bar,.gallery{padding-left:1.5rem;padding-right:1.5rem}
+  footer{padding:1.5rem;flex-direction:column;gap:1rem;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">Rahul <span>Subbaraman</span></a>
+  <div class="nav-links">
+    <a href="watchlist.html">Watchlist</a>
+    <a href="travel.html">Travels</a>
+    <a href="books.html">Bookshelf</a>
+    <a href="magnets.html" class="active">Magnets</a>
+    <a href="blog.html">Writing</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="header-text">
+    <div class="eyebrow">Collection</div>
+    <h1 class="page-title">The Magnet<br><em>Collection</em></h1>
+    <p class="page-desc">One magnet from every trip. A small, growing archive — more honest than a highlight reel, more tactile than a photo album. Each one lives on my fridge and carries a story.</p>
+  </div>
+  <div class="count-chip">
+    <div id="total-count">—</div>
+    <span>magnets &amp; counting</span>
+  </div>
+</div>
+
+<div class="filter-bar" id="filter-bar">
+  <span class="filter-label">Region:</span>
+  <button class="filter-btn on" onclick="setFilter('all',this)">All</button>
+</div>
+
+<div class="gallery">
+  <div class="masonry" id="masonry"></div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLb(event)">
+  <div class="lb-inner">
+    <button class="lb-close" onclick="closeLb()">✕</button>
+    <div id="lb-img-wrap"></div>
+    <div class="lb-info">
+      <div class="lb-place" id="lb-place"></div>
+      <div class="lb-meta" id="lb-meta"></div>
+      <div class="lb-notes" id="lb-notes"></div>
+      <div class="lb-nav">
+        <button onclick="lbNav(-1)">← Prev</button>
+        <button onclick="lbNav(1)">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-left">Rahul Subbaraman</div>
+  <div class="footer-right">
+    <a href="watchlist.html">Watchlist</a>
+    <a href="travel.html">Travels</a>
+    <a href="books.html">Bookshelf</a>
+    <a href="blog.html">Writing</a>
+    <a href="mailto:rahulsubbarox@gmail.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+// ── MAGNETS DATA ─────────────────────────────────────────
+// To add a magnet:
+// {
+//   id: 1,
+//   place: 'Santorini',
+//   country: 'Greece',
+//   region: 'Europe',
+//   year: 2023,
+//   img: 'magnets/santorini.jpg',  // put photos in a magnets/ folder
+//   notes: 'Got this at the caldera rim — felt appropriate for a volcanologist.'
+// }
+const MAGNETS = [
+  // Add your magnets here!
+];
+
+let activeFilter = 'all';
+let lbIndex = 0;
+let filteredMagnets = [];
+
+function getEmoji(country) {
+  const codes = {'india':'🇮🇳','france':'🇫🇷','germany':'🇩🇪','italy':'🇮🇹','japan':'🇯🇵','greece':'🇬🇷','spain':'🇪🇸','portugal':'🇵🇹','uk':'🇬🇧','united kingdom':'🇬🇧','usa':'🇺🇸','united states':'🇺🇸','netherlands':'🇳🇱','iceland':'🇮🇸','norway':'🇳🇴','switzerland':'🇨🇭','austria':'🇦🇹','czechia':'🇨🇿','hungary':'🇭🇺','croatia':'🇭🇷','turkey':'🇹🇷','thailand':'🇹🇭','indonesia':'🇮🇩','singapore':'🇸🇬','malaysia':'🇲🇾','nepal':'🇳🇵'};
+  return codes[country?.toLowerCase()] || '🌍';
+}
+
+function render() {
+  filteredMagnets = activeFilter === 'all' ? MAGNETS : MAGNETS.filter(m => m.region === activeFilter);
+  const grid = document.getElementById('masonry');
+  document.getElementById('total-count').textContent = MAGNETS.length || '—';
+
+  if (!filteredMagnets.length) {
+    grid.innerHTML = '<div class="empty"><strong>No magnets yet</strong>Add your first magnet to the MAGNETS array in the code.</div>';
+    return;
+  }
+
+  grid.innerHTML = filteredMagnets.map((m, i) => `
+    <div class="magnet-card" onclick="openLb(${i})">
+      ${m.img
+        ? `<img class="magnet-img" src="${m.img}" alt="${m.place}" loading="lazy">`
+        : `<div class="magnet-img-placeholder">🧲</div>`}
+      <div class="magnet-info">
+        <div class="magnet-place">${m.place}</div>
+        <div class="magnet-country">${getEmoji(m.country)} ${m.country}</div>
+        ${m.year ? `<div class="magnet-year">${m.year}</div>` : ''}
+      </div>
+    </div>`).join('');
+
+  // Build region filters
+  const regions = ['all', ...new Set(MAGNETS.map(m => m.region).filter(Boolean))].sort();
+  const bar = document.getElementById('filter-bar');
+  bar.innerHTML = '<span class="filter-label">Region:</span>' + regions.map(r =>
+    `<button class="filter-btn${r===activeFilter?' on':''}" onclick="setFilter('${r}',this)">${r==='all'?'All':r}</button>`
+  ).join('');
+}
+
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  render();
+}
+
+function openLb(i) {
+  lbIndex = i;
+  showLb();
+}
+
+function showLb() {
+  const m = filteredMagnets[lbIndex];
+  if (!m) return;
+  document.getElementById('lb-img-wrap').innerHTML = m.img
+    ? `<img class="lb-img" src="${m.img}" alt="${m.place}">`
+    : `<div class="lb-img-placeholder">🧲</div>`;
+  document.getElementById('lb-place').textContent = m.place;
+  document.getElementById('lb-meta').textContent  = [getEmoji(m.country) + ' ' + m.country, m.year].filter(Boolean).join(' · ');
+  document.getElementById('lb-notes').textContent = m.notes || '';
+  document.getElementById('lb-notes').style.display = m.notes ? 'block' : 'none';
+  document.getElementById('lightbox').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function lbNav(dir) {
+  lbIndex = (lbIndex + dir + filteredMagnets.length) % filteredMagnets.length;
+  showLb();
+}
+
+function closeLb(e) {
+  if (e && e.target !== document.getElementById('lightbox')) return;
+  document.getElementById('lightbox').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('on')) return;
+  if (e.key === 'Escape') closeLb();
+  if (e.key === 'ArrowLeft') lbNav(-1);
+  if (e.key === 'ArrowRight') lbNav(1);
+});
+
+render();
+</script>
+</body>
+</html>
