@@ -175,7 +175,7 @@ const GH = {
 };
 async function ghRead(file) {
   const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${file}?ref=${GH.branch}&t=${Date.now()}`, {
-    headers: { Authorization: `token ${GH.token}` }
+    headers: { Authorization: `Bearer ${GH.token}` }
   });
   const d = await r.json();
   return { data: JSON.parse(atob(d.content.replace(/\n/g,''))), sha: d.sha };
@@ -183,7 +183,7 @@ async function ghRead(file) {
 async function ghWrite(file, data, sha) {
   const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${file}`, {
     method: 'PUT',
-    headers: { Authorization: `token ${GH.token}`, 'Content-Type': 'application/json' },
+    headers: { Authorization: `Bearer ${GH.token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       message: `Update ${file}`,
       content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
