@@ -138,9 +138,30 @@ hr { border:none; border-top:1px solid var(--border); margin:1.5rem 0; }
 .modal { background:var(--card); border-radius:6px; max-width:480px; width:100%; padding:1.6rem; animation:pop 0.2s ease; }
 @keyframes pop { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
 .modal h3 { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:1rem; }
+nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid rgba(255,255,255,0.08);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:48px}
+.nav-logo{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;text-decoration:none;color:#faf6ef}
+.nav-logo span{color:var(--warm,#c8873a);font-style:italic}
+.nav-links{display:flex;gap:1rem;align-items:center}
+.nav-links a{font-size:0.74rem;color:rgba(250,246,239,0.5);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s;white-space:nowrap}
+.nav-links a:hover{color:#faf6ef}
+.nav-links a.active{color:#faf6ef;font-weight:500}
+.nav-back{font-size:0.72rem;color:rgba(250,246,239,0.5);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;padding:0.22rem 0.6rem;border:1px solid rgba(255,255,255,0.15);border-radius:3px;transition:all 0.15s;white-space:nowrap}
+.nav-back:hover{color:#faf6ef;border-color:rgba(255,255,255,0.4)}
 </style>
 </head>
 <body>
+<nav>
+  <a class="nav-logo" href="admin.html">Admin <span>Panel</span></a>
+  <div class="nav-links">
+    <a href="watchlist-admin.html" class="active">Watchlist</a>
+    <a href="travel-admin.html">Travels</a>
+    <a href="tmdb-backfill.html">TMDB Backfill</a>
+    <a href="watchlist-importer.html">Importer</a>
+    <a href="language-backfill.html">Languages</a>
+    <a href="country-backfill.html">Countries</a>
+  </div>
+  <a class="nav-back" href="index.html">← Site</a>
+</nav>
 
 <h1>What I've <span>Watched</span></h1>
 <p class="subtitle">Admin · Manage your watchlist <span id="save-indicator" style="margin-left:1rem;font-size:0.75rem;font-weight:500"></span></p>

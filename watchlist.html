@@ -100,9 +100,31 @@ header p{margin-top:0.4rem;font-size:0.82rem;color:var(--muted);font-weight:300;
 footer{text-align:center;margin-top:3rem;padding-top:1.4rem;border-top:1px solid var(--border);font-size:0.78rem;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:52px}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;text-decoration:none;color:var(--ink)}
+.nav-logo span{color:var(--warm);font-style:italic}
+.nav-links{display:flex;gap:1.4rem;align-items:center}
+.nav-links a{font-size:0.76rem;color:var(--muted);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s;white-space:nowrap}
+.nav-links a:hover{color:var(--warm)}
+.nav-links a.active{color:var(--ink);font-weight:500}
+.nav-admin{font-size:0.72rem;color:var(--muted);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;padding:0.25rem 0.65rem;border:1px solid var(--border);border-radius:3px;transition:all 0.15s;white-space:nowrap}
+.nav-admin:hover{color:var(--warm);border-color:var(--warm)}
+@media(max-width:680px){nav{padding:0 1.2rem}.nav-links{gap:0.9rem}.nav-links a:not(.active){display:none}}
 </style>
 </head>
 <body>
+<nav>
+  <a class="nav-logo" href="index.html">Rahul <span>Subbaraman</span></a>
+  <div class="nav-links">
+    <a href="watchlist.html" class="active">Watchlist</a>
+    <a href="travel.html">Travels</a>
+    <a href="books.html">Bookshelf</a>
+    <a href="magnets.html">Magnets</a>
+    <a href="postcards.html">Postcards</a>
+    <a href="blog.html">Writing</a>
+    <a class="nav-admin" href="admin.html">Admin</a>
+  </div>
+</nav>
 
 <header>
   <h1>Rahul's <span>Watchlist</span></h1>

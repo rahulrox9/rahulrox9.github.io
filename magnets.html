@@ -96,7 +96,9 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
     <a href="travel.html">Travels</a>
     <a href="books.html">Bookshelf</a>
     <a href="magnets.html" class="active">Magnets</a>
+    <a href="postcards.html">Postcards</a>
     <a href="blog.html">Writing</a>
+    <a class="nav-admin" href="admin.html">Admin</a>
   </div>
 </nav>
 
@@ -145,11 +147,11 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
     <a href="travel.html">Travels</a>
     <a href="books.html">Bookshelf</a>
     <a href="blog.html">Writing</a>
-    <a href="mailto:rahulsubbarox@gmail.com">Contact</a>
+    <a href="/cdn-cgi/l/email-protection#7200131a071e0107101013001d0a32151f131b1e5c111d1f">Contact</a>
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── MAGNETS DATA ─────────────────────────────────────────
 // To add a magnet:
 // {
@@ -243,12 +245,4 @@ function closeLb(e) {
 
 document.addEventListener('keydown', e => {
   if (!document.getElementById('lightbox').classList.contains('on')) return;
-  if (e.key === 'Escape') closeLb();
-  if (e.key === 'ArrowLeft') lbNav(-1);
-  if (e.key === 'ArrowRight') lbNav(1);
-});
-
-render();
-</script>
-</body>
-</html>
+  if

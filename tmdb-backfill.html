@@ -45,9 +45,30 @@ h1 span { color:var(--warm); font-style:italic; }
 .stat { font-size:0.8rem; color:var(--muted); }
 .stat strong { color:var(--ink); }
 #log { font-size:0.72rem; color:var(--muted); max-height:120px; overflow-y:auto; background:var(--card); border:1px solid var(--border); border-radius:4px; padding:0.6rem 0.8rem; margin-top:0.6rem; display:none; }
+nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid rgba(255,255,255,0.08);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:48px}
+.nav-logo{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;text-decoration:none;color:#faf6ef}
+.nav-logo span{color:var(--warm,#c8873a);font-style:italic}
+.nav-links{display:flex;gap:1rem;align-items:center}
+.nav-links a{font-size:0.74rem;color:rgba(250,246,239,0.5);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s;white-space:nowrap}
+.nav-links a:hover{color:#faf6ef}
+.nav-links a.active{color:#faf6ef;font-weight:500}
+.nav-back{font-size:0.72rem;color:rgba(250,246,239,0.5);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;padding:0.22rem 0.6rem;border:1px solid rgba(255,255,255,0.15);border-radius:3px;transition:all 0.15s;white-space:nowrap}
+.nav-back:hover{color:#faf6ef;border-color:rgba(255,255,255,0.4)}
 </style>
 </head>
 <body>
+<nav>
+  <a class="nav-logo" href="admin.html">Admin <span>Panel</span></a>
+  <div class="nav-links">
+    <a href="watchlist-admin.html">Watchlist</a>
+    <a href="travel-admin.html">Travels</a>
+    <a href="tmdb-backfill.html" class="active">TMDB Backfill</a>
+    <a href="watchlist-importer.html">Importer</a>
+    <a href="language-backfill.html">Languages</a>
+    <a href="country-backfill.html">Countries</a>
+  </div>
+  <a class="nav-back" href="index.html">← Site</a>
+</nav>
 
 <h1>TMDB <span>Backfill</span></h1>
 <p class="subtitle">Fill in IMDb links · language · cast · director for existing entries</p>
