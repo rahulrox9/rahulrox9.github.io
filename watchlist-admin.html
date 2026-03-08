@@ -649,7 +649,7 @@ function renderList() {
     return `<div class="entry">
       ${e.poster?`<img src="${e.poster}" alt="${e.title}">`:''}
       <div class="entry-info">
-        <div class="entry-title">${e.title} <span class="badge ${e.type}">${e.type==='show'?'Series':'Movie'}</span></div>
+        <div class="entry-title">${e.title} <span class="badge ${e.type}">${e.type==='show'?'Series':'Movie'}</span>${e.type==='show'&&['Ended','Canceled','Cancelled'].includes(e.status)?` <span class="badge" style="background:#f0e0e0;color:var(--red)">${e.status}</span>`:''}</div>
         <div class="entry-meta">${e.year}${e.language?' · '+e.language:''}${e.myRating?' · '+e.myRating+'/10':''}</div>
         ${e.review?`<div class="entry-meta" style="font-style:italic;margin-top:0.15rem">"${e.review.substring(0,70)}${e.review.length>70?'…':''}"</div>`:''}
         ${e.type==='show'?renderSeasonTracker(e):''}
