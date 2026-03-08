@@ -188,12 +188,13 @@ function fmtDate(str) {
 }
 
 // ── Genre cache (Google Drive) ───────────────────────────
-let driveGenreCache = {}; // loaded from Drive on init
+let driveGenreCache = {}; // loaded from GitHub on init
+let genreSha = null;
 let driveCacheDirty = false;
 
 async function loadDriveGenreCache() {
   try {
-    const gr = await ghRead('books_genres.json'); driveGenreCache = gr.data;
+    const gr = await ghRead('books_genres.json'); driveGenreCache = gr.data; genreSha = gr.sha;
   } catch(e) {
     driveGenreCache = {};
   }
@@ -201,10 +202,7 @@ async function loadDriveGenreCache() {
 
 async function saveDriveGenreCache() {
   try {
-    await fetch(DB_URL, {
-      method: 'POST',
-      body: JSON.stringify({ file: 'books_genres.json', data: driveGenreCache })
-    });
+    genreSha = await ghWrite('books_genres.json', driveGenreCache, genreSha);
     driveCacheDirty = false;
   } catch(e) { console.warn('Genre cache save failed', e); }
 }
