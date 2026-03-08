@@ -208,19 +208,18 @@ async function saveDriveGenreCache() {
 }
 
 async function fetchGenre(title, author) {
-  const key = `${title}|||${author}`;
-  // Check Drive cache first
+  const key = title+'|||'+author;
   if (driveGenreCache[key] !== undefined) return driveGenreCache[key];
-  // Not cached — fetch from Google Books
   try {
-    const q   = encodeURIComponent(`${title} ${author}`);
-    const r   = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=1&fields=items(volumeInfo(categories,publishedDate))`);
-    const d   = await r.json();
-    const vol = d.items?.[0]?.volumeInfo;
-    const cat = vol?.categories?.[0] || '';
-    const genre   = cat.split('/')[0].trim();
-    const pubYear = (vol?.publishedDate||'').substring(0,4);
-    const result  = { genre, pubYear };
+    const q = encodeURIComponent(title+' '+author);
+    const r = await fetch('https://openlibrary.org/search.json?q='+q+'&limit=1&fields=subject,first_publish_year');
+    const d = await r.json();
+    const doc = d.docs && d.docs[0];
+    const skip = /^(fiction|nonfiction|non-fiction|accessible book|protected daisy|in library|open library|large type|juvenile|children|internet archive)/i;
+    const subjects = doc && doc.subject ? doc.subject.filter(function(s){return !skip.test(s);}) : [];
+    const genre = subjects[0] || (doc && doc.subject && doc.subject[0]) || '';
+    const pubYear = doc && doc.first_publish_year ? String(doc.first_publish_year) : '';
+    const result = { genre: genre, pubYear: pubYear };
     driveGenreCache[key] = result;
     driveCacheDirty = true;
     return result;
@@ -228,6 +227,14 @@ async function fetchGenre(title, author) {
     driveGenreCache[key] = { genre:'', pubYear:'' };
     return driveGenreCache[key];
   }
+}
+
+function setGenreOverride(title, author, genre) {
+  const key = title+'|||'+author;
+  if (!driveGenreCache[key]) driveGenreCache[key] = { genre:'', pubYear:'' };
+  driveGenreCache[key].genre = genre;
+  driveCacheDirty = true;
+  saveDriveGenreCache();
 }
 
 // ── Filter & sort ────────────────────────────────────────
@@ -341,7 +348,10 @@ async function loadBooks() {
           <div class="book-title">${title}</div>
           <div class="book-author">${author}</div>
           ${starsHTML(rating)}
-          <div class="genre-tag loading" id="genre-${id}">fetching genre…</div>
+          <div style="display:flex;align-items:center;gap:0.4rem">
+            <div class="genre-tag loading" id="genre-${id}">fetching genre…</div>
+            <button class="genre-edit-btn" id="genre-edit-${id}" onclick="event.preventDefault();event.stopPropagation();promptGenreEdit('${id}','${title.replace(/'/g,"\\'").replace(/"/g,"&quot;")}','${author.replace(/'/g,"\\'").replace(/"/g,"&quot;")}')" title="Edit genre" style="display:none;background:none;border:none;cursor:pointer;font-size:0.7rem;color:var(--muted);padding:0;line-height:1">✏️</button>
+          </div>
           ${review?`<div class="review-snip">${review.substring(0,180)}…</div>`:''}
           <div class="book-date">${fmtDate(readAt)}</div>
         </div>`;
@@ -361,9 +371,11 @@ async function loadBooks() {
         b.pubYear = pubYear;
         // Update genre tag in card
         const tag = document.getElementById('genre-'+b.id);
+        const editBtn = document.getElementById('genre-edit-'+b.id);
         if (tag) {
           if (genre) { tag.textContent=genre; tag.className='genre-tag'; }
-          else { tag.remove(); }
+          else { tag.textContent='no genre'; tag.className='genre-tag'; tag.style.opacity='0.4'; }
+          if (editBtn) editBtn.style.display='inline';
         }
       }));
       // Rebuild pills as genres come in
@@ -382,6 +394,21 @@ async function loadBooks() {
     document.getElementById('error').style.display='block';
     console.error(err);
   }
+}
+
+function promptGenreEdit(id, title, author) {
+  const current = (driveGenreCache[title+'|||'+author] || {}).genre || '';
+  const newGenre = prompt('Edit genre for "' + title + '":', current);
+  if (newGenre === null) return; // cancelled
+  setGenreOverride(title, author, newGenre.trim());
+  const tag = document.getElementById('genre-'+id);
+  if (tag) {
+    if (newGenre.trim()) { tag.textContent=newGenre.trim(); tag.className='genre-tag'; tag.style.opacity='1'; }
+    else { tag.textContent='no genre'; tag.style.opacity='0.4'; }
+  }
+  // Update book object so filter pills update
+  const b = allBooks.find(b=>b.id===id);
+  if (b) { b.genre = newGenre.trim(); buildGenrePills(); applyFilters(); }
 }
 
 loadBooks();
