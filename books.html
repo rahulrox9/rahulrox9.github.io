@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rahul's Bookshelf</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;padding:2rem 1.5rem 3rem}
+
+header{text-align:center;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+header h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-0.02em}
+header h1 span{color:var(--warm);font-style:italic}
+header p{margin-top:0.5rem;font-size:0.85rem;color:var(--muted);font-weight:300;letter-spacing:0.08em;text-transform:uppercase}
+
+/* Controls */
+.controls{display:flex;flex-wrap:wrap;gap:0.6rem;align-items:center;margin-bottom:1.5rem;justify-content:center}
+.search-wrap{position:relative;flex:1;min-width:180px;max-width:320px}
+.search-wrap input{width:100%;padding:0.5rem 1rem 0.5rem 2.3rem;border:1px solid var(--border);border-radius:20px;background:var(--card);font-family:'DM Sans',sans-serif;font-size:0.84rem;color:var(--ink);outline:none;transition:border-color 0.2s}
+.search-wrap input:focus{border-color:var(--warm)}
+.search-icon{position:absolute;left:0.8rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.82rem;pointer-events:none}
+.ctrl-select{padding:0.48rem 0.85rem;border:1px solid var(--border);border-radius:20px;background:var(--card);font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--muted);outline:none;cursor:pointer;transition:border-color 0.2s}
+.ctrl-select:focus{border-color:var(--warm)}
+
+/* Genre pills */
+.genre-pills{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.2rem;justify-content:center;min-height:1.6rem}
+.pill{padding:0.25rem 0.75rem;border-radius:99px;font-size:0.73rem;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--muted);transition:all 0.15s;white-space:nowrap}
+.pill.on{background:var(--warm);border-color:var(--warm);color:#fff}
+
+/* Results count */
+.results-lbl{text-align:center;font-size:0.75rem;color:var(--muted);margin-bottom:1rem;letter-spacing:0.04em}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.4rem}
+.book-card{background:var(--card);border:1px solid var(--border);border-radius:4px;display:flex;gap:1rem;padding:1.2rem;transition:transform 0.2s,box-shadow 0.2s;animation:fadeUp 0.4s ease both;text-decoration:none;color:inherit;cursor:pointer}
+.book-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(26,18,8,0.1)}
+.book-card.hidden{display:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+.cover-wrap{flex-shrink:0;width:72px}
+.cover-wrap img{width:72px;height:108px;object-fit:cover;border-radius:2px;display:block;background:var(--border)}
+.cover-ph{width:72px;height:108px;background:linear-gradient(135deg,var(--border),#d4c9b8);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1.8rem}
+.book-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:0.28rem}
+.book-title{font-family:'Playfair Display',serif;font-size:0.95rem;line-height:1.3;font-weight:700;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.book-author{font-size:0.78rem;color:var(--muted)}
+.stars{display:flex;gap:2px;margin-top:0.1rem}
+.star{width:11px;height:11px;fill:var(--warm)}
+.star.empty{fill:var(--border)}
+.genre-tag{display:inline-block;font-size:0.62rem;padding:0.1rem 0.45rem;border-radius:8px;background:#fdecd8;color:var(--warm);font-weight:500;letter-spacing:0.04em;width:fit-content}
+.genre-tag.loading{background:var(--border);color:var(--muted)}
+.review-snip{font-size:0.76rem;color:#5a4e3f;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-style:italic}
+.book-date{font-size:0.71rem;color:var(--muted);margin-top:auto;padding-top:0.25rem;font-weight:300;letter-spacing:0.04em}
+.book-year{font-size:0.71rem;color:var(--muted)}
+
+#loading{text-align:center;padding:4rem 0;font-family:'Playfair Display',serif;font-style:italic;color:var(--muted);font-size:1.1rem}
+#error{display:none;text-align:center;padding:2rem;color:#c0392b;font-style:italic}
+.empty-state{text-align:center;padding:3rem;color:var(--muted);font-family:'Playfair Display',serif;font-style:italic}
+
+footer{text-align:center;margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+footer a{font-size:0.8rem;color:var(--muted);text-decoration:none;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.2s}
+footer a:hover{color:var(--warm)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Rahul's <span>Bookshelf</span></h1>
+  <p>Books read &amp; reviewed</p>
+</header>
+
+<div class="controls">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search" placeholder="Search title or author…" oninput="applyFilters()">
+  </div>
+  <select class="ctrl-select" id="sort" onchange="applyFilters()">
+    <option value="date-desc">Newest read</option>
+    <option value="date-asc">Oldest read</option>
+    <option value="rating-desc">Highest rated</option>
+    <option value="title-asc">Title A → Z</option>
+    <option value="title-desc">Title Z → A</option>
+    <option value="author-asc">Author A → Z</option>
+    <option value="pub-desc">Pub year newest</option>
+    <option value="pub-asc">Pub year oldest</option>
+  </select>
+</div>
+
+<div class="genre-pills" id="genre-pills"></div>
+<div class="results-lbl" id="results-lbl"></div>
+
+<div id="loading">Opening the shelves…</div>
+<div id="error">Could not load books. <a href="https://www.goodreads.com/user/show/104699560" target="_blank">Visit Goodreads</a></div>
+<div class="grid" id="grid"></div>
+
+<footer>
+  <a href="https://www.goodreads.com/user/show/104699560" target="_blank">View full shelf on Goodreads →</a>
+</footer>
+
+<script>
+const DB_URL = 'https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+const RSS_URL = 'https://www.goodreads.com/review/list_rss/104699560?shelf=read&sort=date_read&order=d';
+
+let allBooks = [];
+let activeGenre = 'All';
+// Genre cache persisted in sessionStorage so repeat views don't re-fetch
+// Genre cache loaded from Google Drive (see loadDriveGenreCache)
+
+// ── RSS fetch ────────────────────────────────────────────
+async function fetchRSS() {
+  const proxies = [
+    async () => {
+      const r = await fetch('https://api.allorigins.win/get?url='+encodeURIComponent(RSS_URL));
+      const d = await r.json();
+      if (!d.contents) throw new Error('empty');
+      return new DOMParser().parseFromString(d.contents,'text/xml');
+    },
+    async () => {
+      const r = await fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(RSS_URL));
+      const d = await r.json();
+      if (d.status!=='ok') throw new Error('failed');
+      const xml = '<rss>'+d.items.map(it=>`<item>
+        <title>${it.title}</title><link>${it.link}</link>
+        <pubDate>${it.pubDate}</pubDate>
+        <description><![CDATA[${it.description}]]></description>
+      </item>`).join('')+'</rss>';
+      return new DOMParser().parseFromString(xml,'text/xml');
+    }
+  ];
+  for (const p of proxies) { try { return await p(); } catch(e) { continue; } }
+  throw new Error('All proxies failed');
+}
+
+// ── Helpers ──────────────────────────────────────────────
+function upgradeImg(url) {
+  return url ? url.replace(/_SY75_|_SX50_|_SX98_|_SY160_/,'_SY475_') : '';
+}
+function extractImage(item) {
+  const n = item.querySelector('image_large,image_medium,image_small');
+  if (n) return n.textContent.trim();
+  const m = (item.querySelector('description')?.textContent||'').match(/src="([^"]+\.jpg[^"]*)"/);
+  return m ? m[1] : '';
+}
+function extractReview(item) {
+  const desc = item.querySelector('description')?.textContent||'';
+  const m = desc.match(/review: <br\/>([\s\S]*?)$/i);
+  if (m && m[1].trim().length>20) return m[1].replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  return '';
+}
+function starsHTML(r) {
+  if (!r) return '';
+  let h='<div class="stars">';
+  for (let i=1;i<=5;i++) h+=`<svg class="star${i>r?' empty':''}" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+  return h+'</div>';
+}
+function fmtDate(str) {
+  if (!str) return '';
+  const d = new Date(str);
+  return isNaN(d) ? '' : d.toLocaleDateString('en-GB',{month:'short',year:'numeric'});
+}
+
+// ── Genre cache (Google Drive) ───────────────────────────
+let driveGenreCache = {}; // loaded from Drive on init
+let driveCacheDirty = false;
+
+function jsonp(url) {
+  return new Promise((res,rej) => {
+    const cb = 'cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const s  = document.createElement('script');
+    window[cb] = d => { delete window[cb]; s.remove(); res(d); };
+    s.onerror  = () => { delete window[cb]; s.remove(); rej(new Error('JSONP failed')); };
+    s.src = url + (url.includes('?')?'&':'?') + 'callback=' + cb;
+    document.head.appendChild(s);
+  });
+}
+
+async function loadDriveGenreCache() {
+  try {
+    driveGenreCache = await jsonp(DB_URL + '?file=books_genres.json');
+  } catch(e) {
+    driveGenreCache = {};
+  }
+}
+
+async function saveDriveGenreCache() {
+  try {
+    await fetch(DB_URL, {
+      method: 'POST',
+      body: JSON.stringify({ file: 'books_genres.json', data: driveGenreCache })
+    });
+    driveCacheDirty = false;
+  } catch(e) { console.warn('Genre cache save failed', e); }
+}
+
+async function fetchGenre(title, author) {
+  const key = `${title}|||${author}`;
+  // Check Drive cache first
+  if (driveGenreCache[key] !== undefined) return driveGenreCache[key];
+  // Not cached — fetch from Google Books
+  try {
+    const q   = encodeURIComponent(`${title} ${author}`);
+    const r   = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=1&fields=items(volumeInfo(categories,publishedDate))`);
+    const d   = await r.json();
+    const vol = d.items?.[0]?.volumeInfo;
+    const cat = vol?.categories?.[0] || '';
+    const genre   = cat.split('/')[0].trim();
+    const pubYear = (vol?.publishedDate||'').substring(0,4);
+    const result  = { genre, pubYear };
+    driveGenreCache[key] = result;
+    driveCacheDirty = true;
+    return result;
+  } catch(e) {
+    driveGenreCache[key] = { genre:'', pubYear:'' };
+    return driveGenreCache[key];
+  }
+}
+
+// ── Filter & sort ────────────────────────────────────────
+function applyFilters() {
+  const q    = document.getElementById('search').value.toLowerCase().trim();
+  const sort = document.getElementById('sort').value;
+
+  let visible = allBooks.filter(b => {
+    const matchQ = !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q);
+    const matchG = activeGenre==='All' || b.genre===activeGenre;
+    return matchQ && matchG;
+  });
+
+  // Sort
+  visible.sort((a,b) => {
+    switch(sort) {
+      case 'date-desc':   return (b.readTs||0)-(a.readTs||0);
+      case 'date-asc':    return (a.readTs||0)-(b.readTs||0);
+      case 'rating-desc': return (b.rating||0)-(a.rating||0);
+      case 'title-asc':   return a.title.localeCompare(b.title);
+      case 'title-desc':  return b.title.localeCompare(a.title);
+      case 'author-asc':  return a.author.localeCompare(b.author);
+      case 'pub-desc':    return (parseInt(b.pubYear)||0)-(parseInt(a.pubYear)||0);
+      case 'pub-asc':     return (parseInt(a.pubYear)||0)-(parseInt(b.pubYear)||0);
+      default: return 0;
+    }
+  });
+
+  // Re-order DOM cards
+  const grid = document.getElementById('grid');
+  const cards = grid.querySelectorAll('.book-card');
+
+  // Hide all
+  cards.forEach(c => c.classList.add('hidden'));
+
+  // Show & reorder visible ones
+  const visibleIds = new Set(visible.map(b=>b.id));
+  visible.forEach(b => {
+    const card = document.getElementById('card-'+b.id);
+    if (card) { card.classList.remove('hidden'); grid.appendChild(card); }
+  });
+
+  // Results count
+  const lbl = document.getElementById('results-lbl');
+  lbl.textContent = visible.length === allBooks.length
+    ? `${allBooks.length} books`
+    : `${visible.length} of ${allBooks.length} books`;
+
+  // Empty state
+  let empty = grid.querySelector('.empty-state');
+  if (!visible.length) {
+    if (!empty) { empty=document.createElement('div'); empty.className='empty-state'; empty.textContent='No books match your filters'; grid.appendChild(empty); }
+  } else {
+    empty?.remove();
+  }
+}
+
+function buildGenrePills() {
+  const genres = ['All', ...new Set(allBooks.map(b=>b.genre).filter(Boolean).sort())];
+  const wrap   = document.getElementById('genre-pills');
+  wrap.innerHTML = genres.map(g =>
+    `<button class="pill ${g===activeGenre?'on':''}" onclick="setGenre('${g.replace(/'/g,"\\'")}')">${g}</button>`
+  ).join('');
+}
+
+function setGenre(g) {
+  activeGenre = g;
+  buildGenrePills();
+  applyFilters();
+}
+
+// ── Main load ────────────────────────────────────────────
+async function loadBooks() {
+  await loadDriveGenreCache();
+  try {
+    const xml   = await fetchRSS();
+    const items = Array.from(xml.querySelectorAll('item'));
+    if (!items.length) throw new Error('No items');
+
+    document.getElementById('loading').style.display = 'none';
+    const grid = document.getElementById('grid');
+
+    // Build book objects first, render cards immediately, fetch genres async
+    items.forEach((item, i) => {
+      const title  = item.querySelector('title')?.textContent?.trim()||'Unknown';
+      const link   = item.querySelector('link')?.textContent?.trim()||'#';
+      const author = item.querySelector('author_name')?.textContent?.trim()
+        || (()=>{ const m=(item.querySelector('description')?.textContent||'').match(/author: ([^\n<]+)/); return m?m[1].trim():''; })();
+      const rating = parseInt(item.querySelector('user_rating')?.textContent?.trim()||'0');
+      const readAt = item.querySelector('user_read_at')?.textContent?.trim()
+        || item.querySelector('pubDate')?.textContent?.trim()||'';
+      const imgSrc = upgradeImg(extractImage(item));
+      const review = extractReview(item);
+      const id     = 'b'+i;
+
+      const book = { id, title, link, author, rating, readAt, readTs: new Date(readAt).getTime()||0, imgSrc, review, genre:'', pubYear:'' };
+      allBooks.push(book);
+
+      const card = document.createElement('a');
+      card.className = 'book-card';
+      card.id = 'card-'+id;
+      card.href = link;
+      card.target = '_blank';
+      card.rel = 'noopener';
+      card.style.animationDelay = `${i*0.04}s`;
+      card.innerHTML = `
+        <div class="cover-wrap">${imgSrc
+          ? `<img src="${imgSrc}" alt="${title}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=cover-ph>📖</div>'">`
+          : '<div class="cover-ph">📖</div>'}</div>
+        <div class="book-info">
+          <div class="book-title">${title}</div>
+          <div class="book-author">${author}</div>
+          ${starsHTML(rating)}
+          <div class="genre-tag loading" id="genre-${id}">fetching genre…</div>
+          ${review?`<div class="review-snip">${review.substring(0,180)}…</div>`:''}
+          <div class="book-date">${fmtDate(readAt)}</div>
+        </div>`;
+      grid.appendChild(card);
+    });
+
+    document.getElementById('results-lbl').textContent = `${allBooks.length} books`;
+    buildGenrePills();
+
+    // Fetch genres async, staggered to avoid rate limiting
+    const BATCH = 5;
+    for (let i = 0; i < allBooks.length; i += BATCH) {
+      const batch = allBooks.slice(i, i+BATCH);
+      await Promise.all(batch.map(async b => {
+        const { genre, pubYear } = await fetchGenre(b.title, b.author);
+        b.genre   = genre;
+        b.pubYear = pubYear;
+        // Update genre tag in card
+        const tag = document.getElementById('genre-'+b.id);
+        if (tag) {
+          if (genre) { tag.textContent=genre; tag.className='genre-tag'; }
+          else { tag.remove(); }
+        }
+      }));
+      // Rebuild pills as genres come in
+      buildGenrePills();
+      await new Promise(r=>setTimeout(r,200));
+    }
+
+    // Save updated genres back to Drive if anything new was fetched
+    if (driveCacheDirty) await saveDriveGenreCache();
+    // Final pill + filter rebuild once all genres loaded
+    buildGenrePills();
+    applyFilters();
+
+  } catch(err) {
+    document.getElementById('loading').style.display='none';
+    document.getElementById('error').style.display='block';
+    console.error(err);
+  }
+}
+
+loadBooks();
+</script>
+</body>
+</html>

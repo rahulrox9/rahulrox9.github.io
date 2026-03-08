@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rahul's Travels</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink)}
+header{padding:1rem 1.5rem 0.8rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--card)}
+.site-title{font-family:'Playfair Display',serif;font-size:1.3rem}
+.site-title span{color:var(--warm);font-style:italic}
+.stats{font-size:0.75rem;color:var(--muted);letter-spacing:0.05em}
+#map{height:calc(100vh - 58px);width:100%}
+
+/* Pin */
+.flag-pin{display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 2px 5px rgba(0,0,0,0.35))}
+.flag-circle{width:30px;height:30px;border-radius:50%;border:3px solid #fff;background:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;overflow:hidden}
+.flag-stem{width:2.5px;height:14px;background:#555;margin-top:-1px}
+.flag-tip{width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid #555;margin-top:-1px}
+
+/* Popup */
+.leaflet-popup-content-wrapper{background:var(--card);border:1px solid var(--border);border-radius:4px;box-shadow:0 4px 16px rgba(26,18,8,0.15);padding:0}
+.leaflet-popup-content{margin:0;font-family:'DM Sans',sans-serif;min-width:140px}
+.leaflet-popup-tip{background:var(--card)}
+.popup-inner{padding:0.75rem 1rem}
+.popup-name{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;line-height:1.2}
+.popup-country{font-size:0.72rem;color:var(--muted);margin-top:0.1rem}
+.popup-cat{display:inline-block;font-size:0.6rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;padding:0.1rem 0.4rem;border-radius:8px;margin-top:0.3rem}
+.popup-cat.place{background:#fdecd8;color:var(--warm)}
+.popup-cat.temple{background:#f0e8f8;color:#7b4a9e}
+.popup-cat.airport{background:#e8f0f8;color:#2d6b8e}
+.popup-notes{font-size:0.74rem;color:#5a4e3f;font-style:italic;margin-top:0.3rem;line-height:1.4}
+
+/* Count badge */
+.count-badge{position:absolute;bottom:3.5rem;right:1rem;z-index:999;background:var(--card);border:1px solid var(--border);border-radius:4px;padding:0.5rem 0.9rem;font-size:0.74rem;color:var(--muted);text-align:center;pointer-events:none}
+.count-badge strong{display:block;font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--warm);line-height:1}
+
+/* Country panel */
+.country-panel{position:absolute;top:1rem;left:1rem;z-index:999;background:var(--card);border:1px solid var(--border);border-radius:4px;width:210px;box-shadow:0 4px 16px rgba(26,18,8,0.1);max-height:calc(100vh - 120px);display:flex;flex-direction:column}
+.cp-header{padding:0.55rem 0.8rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.cp-title{font-size:0.7rem;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted)}
+.cp-actions{display:flex;gap:0.6rem}
+.cp-btn{font-size:0.68rem;color:var(--warm);cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0}
+.cp-btn:hover{text-decoration:underline}
+.cp-list{overflow-y:auto;padding:0.3rem 0;flex:1}
+.cp-item{display:flex;align-items:center;gap:0.45rem;padding:0.28rem 0.75rem;cursor:pointer;transition:background 0.1s;font-size:0.79rem;user-select:none}
+.cp-item:hover{background:var(--parchment)}
+.cp-item input[type=checkbox]{accent-color:var(--warm);width:13px;height:13px;flex-shrink:0;cursor:pointer}
+.cp-emoji{font-size:13px;line-height:1;flex-shrink:0}
+.cp-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.cp-count{font-size:0.65rem;color:var(--muted);flex-shrink:0}
+.cp-cats{display:flex;gap:0.3rem;padding:0.45rem 0.75rem;border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap}
+.cat-pill{font-size:0.67rem;padding:0.18rem 0.5rem;border-radius:12px;border:1px solid var(--border);background:var(--parchment);color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.cat-pill.on{background:var(--warm);color:#fff;border-color:var(--warm)}
+.cp-cats{display:flex;gap:0.3rem;padding:0.45rem 0.75rem;border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap}
+.cat-pill{font-size:0.67rem;padding:0.18rem 0.5rem;border-radius:12px;border:1px solid var(--border);background:var(--parchment);color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.cat-pill.on{background:var(--warm);color:#fff;border-color:var(--warm)}
+.cp-footer{border-top:1px solid var(--border);padding:0.3rem 0.75rem;flex-shrink:0}
+.cp-collapse{background:none;border:none;font-size:0.68rem;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;width:100%;text-align:center;padding:0.1rem 0}
+.cp-collapse:hover{color:var(--warm)}
+.cp-show-btn{position:absolute;top:1rem;left:1rem;z-index:999;background:var(--card);border:1px solid var(--border);border-radius:4px;padding:0.38rem 0.75rem;font-size:0.75rem;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;display:none}
+.cp-show-btn:hover{color:var(--warm)}
+</style>
+</head>
+<body>
+<header>
+  <div class="site-title">Rahul's <span>Travels</span></div>
+  <div class="stats" id="header-stats">Loading…</div>
+</header>
+<div style="position:relative">
+  <div id="map"></div>
+
+  <div class="count-badge">
+    <strong id="place-count">—</strong>places
+    <div id="country-count" style="margin-top:0.1rem">— countries</div>
+  </div>
+
+  <div class="country-panel" id="country-panel">
+    <div class="cp-header">
+      <span class="cp-title">Countries</span>
+      <div class="cp-actions">
+        <button class="cp-btn" id="toggle-all-btn" onclick="toggleAll()">hide all</button>
+        <button class="cp-btn" onclick="collapsePanel()">✕</button>
+      </div>
+    </div>
+    <div class="cp-cats">
+      <button class="cat-pill on" id="cat-place" onclick="toggleCat('place',this)">📍 Places</button>
+      <button class="cat-pill on" id="cat-temple" onclick="toggleCat('temple',this)">🕉️ Temples</button>
+      <button class="cat-pill on" id="cat-airport" onclick="toggleCat('airport',this)">✈️ Airports</button>
+    </div>
+    <div class="cp-list" id="cp-list"></div>
+    <div class="cp-footer">
+      <button class="cp-collapse" onclick="collapsePanel()">▲ collapse</button>
+    </div>
+  </div>
+
+  <button class="cp-show-btn" id="panel-show-btn" onclick="expandPanel()">🌍 Countries</button>
+</div>
+
+<script>
+const DB_URL = 'https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+
+const map = L.map('map',{center:[20,10],zoom:3,zoomControl:false});
+L.control.zoom({position:'bottomright'}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+  attribution:'© OpenStreetMap © CartoDB',maxZoom:19
+}).addTo(map);
+
+function codeToEmoji(code) {
+  if (!code) return '';
+  return code.toUpperCase().split('').map(c=>String.fromCodePoint(0x1F1E6+c.charCodeAt(0)-65)).join('');
+}
+
+function countryToEmoji(name, explicitCode) {
+  if (explicitCode) return codeToEmoji(explicitCode);
+  const codes = {
+    'afghanistan':'af','albania':'al','algeria':'dz','andorra':'ad','angola':'ao','argentina':'ar','armenia':'am','australia':'au','austria':'at','azerbaijan':'az','bahrain':'bh','bangladesh':'bd','belarus':'by','belgium':'be','bhutan':'bt','bolivia':'bo','bosnia':'ba','botswana':'bw','brazil':'br','brunei':'bn','bulgaria':'bg','cambodia':'kh','cameroon':'cm','canada':'ca','chile':'cl','china':'cn','colombia':'co','croatia':'hr','cuba':'cu','cyprus':'cy','czech republic':'cz','czechia':'cz','denmark':'dk','ecuador':'ec','egypt':'eg','estonia':'ee','ethiopia':'et','finland':'fi','france':'fr','georgia':'ge','germany':'de','ghana':'gh','greece':'gr','hungary':'hu','iceland':'is','india':'in','indonesia':'id','iran':'ir','iraq':'iq','ireland':'ie','israel':'il','italy':'it','japan':'jp','jordan':'jo','kazakhstan':'kz','kenya':'ke','kuwait':'kw','kyrgyzstan':'kg','laos':'la','latvia':'lv','lebanon':'lb','libya':'ly','liechtenstein':'li','lithuania':'lt','luxembourg':'lu','malaysia':'my','maldives':'mv','malta':'mt','mexico':'mx','moldova':'md','monaco':'mc','mongolia':'mn','montenegro':'me','morocco':'ma','mozambique':'mz','myanmar':'mm','namibia':'na','nepal':'np','netherlands':'nl','new zealand':'nz','nicaragua':'ni','nigeria':'ng','north korea':'kp','north macedonia':'mk','norway':'no','oman':'om','pakistan':'pk','palestine':'ps','panama':'pa','paraguay':'py','peru':'pe','philippines':'ph','poland':'pl','portugal':'pt','qatar':'qa','romania':'ro','russia':'ru','rwanda':'rw','saudi arabia':'sa','senegal':'sn','serbia':'rs','singapore':'sg','slovakia':'sk','slovenia':'si','somalia':'so','south africa':'za','south korea':'kr','spain':'es','sri lanka':'lk','sudan':'sd','sweden':'se','switzerland':'ch','syria':'sy','taiwan':'tw','tajikistan':'tj','tanzania':'tz','thailand':'th','tunisia':'tn','turkey':'tr','turkmenistan':'tm','uganda':'ug','ukraine':'ua','united arab emirates':'ae','uae':'ae','united kingdom':'gb','uk':'gb','england':'gb','scotland':'gb','wales':'gb','united states':'us','usa':'us','america':'us','uruguay':'uy','uzbekistan':'uz','venezuela':'ve','vietnam':'vn','yemen':'ye','zambia':'zm','zimbabwe':'zw','hong kong':'hk','macau':'mo','kosovo':'xk','puerto rico':'pr'
+  };
+  const code = codes[(name||'').toLowerCase().trim()] || '';
+  return codeToEmoji(code);
+}
+
+function makePin(category, country, countryCode) {
+  let symbol;
+  if (category === 'temple')       symbol = '🕉️';
+  else if (category === 'airport') symbol = '✈️';
+  else symbol = countryToEmoji(country||'', countryCode||'') || '📍';
+  const html = `<div class="flag-pin">
+    <div class="flag-circle">${symbol}</div>
+    <div class="flag-stem"></div>
+    <div class="flag-tip"></div>
+  </div>`;
+  return L.divIcon({html, className:'', iconSize:[30,50], iconAnchor:[15,50], popupAnchor:[0,-50]});
+}
+
+function makePopup(p) {
+  const emoji = countryToEmoji(p.country||'', p.countryCode||'');
+  return `<div class="popup-inner">
+    ${emoji?`<div style="font-size:1.4rem;margin-bottom:0.3rem">${emoji}</div>`:''}
+    <div class="popup-name">${p.name}</div>
+    ${p.country?`<div class="popup-country">${p.country}</div>`:''}
+    ${p.category?`<span class="popup-cat ${p.category}">${p.category}</span>`:''}
+    ${p.notes?`<div class="popup-notes">${p.notes}</div>`:''}
+  </div>`;
+}
+
+function jsonp(url) {
+  return new Promise((res,rej)=>{
+    const cb='cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const s=document.createElement('script');
+    window[cb]=d=>{delete window[cb];s.remove();res(d);};
+    s.onerror=()=>{delete window[cb];s.remove();rej(new Error('failed'));};
+    s.src=url+(url.includes('?')?'&':'?')+'file=travel_pins.json&callback='+cb;
+    document.head.appendChild(s);
+  });
+}
+
+// State
+const countryMarkers = {}; // country → [Leaflet markers]
+const countryVisible = {}; // country → bool
+const catVisible = {place:true, temple:true, airport:true};
+let allPins = [];
+
+function markerShouldShow(p) {
+  const cat = p.category || 'place';
+  const country = p.country || 'Unknown';
+  return catVisible[cat] !== false && countryVisible[country] !== false;
+}
+
+function toggleCat(cat, btn) {
+  catVisible[cat] = !catVisible[cat];
+  btn.classList.toggle('on', catVisible[cat]);
+  // Show/hide all markers for this category
+  allPins.forEach((p, i) => {
+    const m = allPins[i]._marker;
+    if (!m) return;
+    const pCat = p.category || 'place';
+    if (pCat !== cat) return;
+    markerShouldShow(p) ? m.addTo(map) : map.removeLayer(m);
+  });
+}
+
+function buildCountryPanel() {
+  const countries = Object.keys(countryMarkers).sort();
+  const list = document.getElementById('cp-list');
+  list.innerHTML = countries.map(c => {
+    const pin    = allPins.find(p => p.country === c);
+    const emoji  = countryToEmoji(c, pin?.countryCode||'') || '🌍';
+    const count  = countryMarkers[c].length;
+    const safeC  = c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    return `<label class="cp-item">
+      <input type="checkbox" checked onchange="toggleCountry('${safeC}', this.checked)">
+      <span class="cp-emoji">${emoji}</span>
+      <span class="cp-name">${c}</span>
+      <span class="cp-count">${count}</span>
+    </label>`;
+  }).join('');
+}
+
+function toggleCountry(country, show) {
+  countryVisible[country] = show;
+  // Only show if category is also visible
+  allPins.forEach(p => {
+    if ((p.country||'Unknown') !== country || !p._marker) return;
+    markerShouldShow(p) ? p._marker.addTo(map) : map.removeLayer(p._marker);
+  });
+  const allOn = Object.values(countryVisible).every(v=>v);
+  document.getElementById('toggle-all-btn').textContent = allOn ? 'hide all' : 'show all';
+}
+
+function toggleAll() {
+  const allOn = Object.values(countryVisible).every(v=>v);
+  const show  = !allOn;
+  Object.keys(countryMarkers).forEach(c => { countryVisible[c] = show; });
+  allPins.forEach(p => {
+    if (!p._marker) return;
+    markerShouldShow(p) ? p._marker.addTo(map) : map.removeLayer(p._marker);
+  });
+  document.querySelectorAll('.cp-item input').forEach(cb => cb.checked = show);
+  document.getElementById('toggle-all-btn').textContent = show ? 'hide all' : 'show all';
+}
+
+function collapsePanel() {
+  document.getElementById('country-panel').style.display = 'none';
+  document.getElementById('panel-show-btn').style.display = 'block';
+}
+function expandPanel() {
+  document.getElementById('country-panel').style.display = 'flex';
+  document.getElementById('panel-show-btn').style.display = 'none';
+}
+
+async function load() {
+  try {
+    const pins  = await jsonp(DB_URL);
+    allPins     = Array.isArray(pins) ? pins : [];
+    const countries = new Set(allPins.map(p=>p.country).filter(Boolean));
+    document.getElementById('place-count').textContent   = allPins.length;
+    document.getElementById('country-count').textContent = countries.size + ' countries';
+    document.getElementById('header-stats').textContent  = `${allPins.length} places · ${countries.size} countries`;
+
+    allPins.forEach(p => {
+      if (!p.lat || !p.lng) return;
+      const m = L.marker([p.lat, p.lng], {icon: makePin(p.category||'place', p.country||'', p.countryCode||'')})
+        .bindPopup(makePopup(p), {maxWidth:220})
+        .addTo(map);
+      p._marker = m; // store reference for category toggling
+      const c = p.country || 'Unknown';
+      if (!countryMarkers[c]) { countryMarkers[c] = []; countryVisible[c] = true; }
+      countryMarkers[c].push(m);
+    });
+
+    buildCountryPanel();
+  } catch(e) {
+    document.getElementById('header-stats').textContent = 'Could not load pins';
+  }
+}
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rahul's Watchlist</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);padding:2rem 1.5rem 3rem}
+
+header{text-align:center;margin-bottom:1.8rem;padding-bottom:1.4rem;border-bottom:1px solid var(--border)}
+header h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-0.02em}
+header h1 span{color:var(--warm);font-style:italic}
+header p{margin-top:0.4rem;font-size:0.82rem;color:var(--muted);font-weight:300;letter-spacing:0.08em;text-transform:uppercase}
+
+/* Search */
+.search-wrap{max-width:400px;margin:0 auto 1.5rem;position:relative}
+.search-wrap input{width:100%;padding:0.55rem 1rem 0.55rem 2.4rem;border:1px solid var(--border);border-radius:20px;background:var(--card);font-family:'DM Sans',sans-serif;font-size:0.86rem;color:var(--ink);outline:none;transition:border-color 0.2s}
+.search-wrap input:focus{border-color:var(--warm)}
+.search-icon{position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.85rem;pointer-events:none}
+
+/* Tabs */
+.tabs{display:flex;justify-content:center;gap:0;margin-bottom:1.8rem;border-bottom:1px solid var(--border)}
+.tab{padding:0.5rem 1.4rem;font-size:0.82rem;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;letter-spacing:0.04em;background:none;border-top:none;border-left:none;border-right:none;font-family:'DM Sans',sans-serif;transition:color 0.15s}
+.tab.on{color:var(--warm);border-bottom-color:var(--warm);font-weight:500}
+
+#loading{text-align:center;padding:3rem 0;font-family:'Playfair Display',serif;font-style:italic;color:var(--muted);font-size:1.1rem}
+
+/* Movie grid */
+.movie-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.3rem}
+.movie-card{background:var(--card);border:1px solid var(--border);border-radius:4px;display:flex;gap:0.9rem;padding:1rem;transition:transform 0.2s,box-shadow 0.2s;animation:fadeUp 0.4s ease both;cursor:pointer}
+.movie-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(26,18,8,0.1)}
+
+/* Series grid — matches movie grid */
+.show-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.3rem}
+.show-card{background:var(--card);border:1px solid var(--border);border-radius:4px;animation:fadeUp 0.4s ease both;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s}
+.show-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(26,18,8,0.1)}
+.show-card-inner{display:flex;gap:0.9rem;padding:1rem}
+
+/* Shared */
+.poster-wrap{flex-shrink:0;width:62px}
+.poster-wrap img{width:62px;height:93px;object-fit:cover;border-radius:2px;display:block}
+.poster-ph{width:62px;height:93px;background:linear-gradient(135deg,var(--border),#d4c9b8);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+.info{flex:1;min-width:0;display:flex;flex-direction:column;gap:0.22rem}
+.badge{display:inline-block;font-size:0.6rem;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;padding:0.1rem 0.4rem;border-radius:8px}
+.badge.movie{background:#fdecd8;color:var(--warm)}
+.badge.show{background:#ddf0ec;color:var(--green)}
+.entry-title{font-family:'Playfair Display',serif;font-size:0.9rem;line-height:1.3;font-weight:700}
+.meta{font-size:0.74rem;color:var(--muted)}
+.my-rating{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--warm);line-height:1}
+.my-rating .oo{font-size:0.65rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:300}
+.review-snip{font-size:0.74rem;color:#5a4e3f;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-style:italic}
+
+/* Progress bar */
+.prog-bar{height:3px;background:var(--border);border-radius:99px;overflow:hidden;margin-top:0.3rem}
+.prog-fill{height:100%;background:var(--warm);border-radius:99px;transition:width 0.3s}
+.prog-lbl{font-size:0.68rem;color:var(--muted);margin-top:0.2rem}
+
+/* Modal */
+.overlay{display:none;position:fixed;inset:0;background:rgba(26,18,8,0.6);z-index:999;align-items:center;justify-content:center;padding:1rem}
+.overlay.on{display:flex}
+.modal{background:var(--card);border-radius:6px;max-width:580px;width:100%;max-height:90vh;overflow-y:auto;position:relative;animation:fadeUp 0.25s ease}
+.lang-pill{padding:0.2rem 0.7rem;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;white-space:nowrap}
+.lang-pill.on{background:var(--warm);color:#fff;border-color:var(--warm)}
+.lang-pill:hover:not(.on){border-color:var(--warm);color:var(--warm)}
+.modal-close{position:absolute;top:0.8rem;right:1rem;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--muted)}
+.modal-top{display:flex;gap:1.2rem;padding:1.4rem;border-bottom:1px solid var(--border)}
+.modal-poster img{width:95px;height:142px;object-fit:cover;border-radius:3px;display:block}
+.modal-poster-ph{width:95px;height:142px;background:linear-gradient(135deg,var(--border),#d4c9b8);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:2.2rem}
+.modal-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;line-height:1.3;margin-bottom:0.25rem}
+.modal-meta{font-size:0.78rem;color:var(--muted);margin-bottom:0.4rem}
+.modal-badges{display:flex;gap:0.4rem;flex-wrap:wrap;align-items:center;margin-bottom:0.5rem}
+.imdb-badge{display:flex;align-items:center;gap:0.2rem;font-size:0.68rem;font-weight:500;color:#5a4e3f}
+.imdb-logo{background:#f5c518;color:#000;font-size:0.57rem;font-weight:700;padding:0.08rem 0.26rem;border-radius:2px}
+.modal-body{padding:1.1rem 1.4rem}
+.modal-section{margin-bottom:0.9rem}
+.section-lbl{font-size:0.68rem;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.25rem}
+.section-val{font-size:0.84rem;color:var(--ink);line-height:1.5}
+.modal-review{font-style:italic;color:#5a4e3f;font-size:0.86rem;line-height:1.6}
+
+/* Season tabs in modal */
+.season-tabs-wrap{border-top:1px solid var(--border)}
+.season-tabs{display:flex;gap:0;padding:0 1.4rem;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.season-tab{padding:0.45rem 0.9rem;font-size:0.78rem;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.season-tab.on{color:var(--warm);border-bottom-color:var(--warm);font-weight:500}
+.season-panel{display:none;padding:1rem 1.4rem}
+.season-panel.on{display:block}
+
+/* Episode progress in modal */
+.ep-prog{margin-top:0.6rem}
+.ep-prog-bar{height:5px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:0.3rem}
+.ep-prog-fill{height:100%;background:var(--warm);border-radius:99px}
+.ep-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:0.3rem;margin-top:0.5rem}
+.ep-chip{font-size:0.72rem;padding:0.2rem 0.5rem;border-radius:3px;background:var(--border);color:var(--muted)}
+.ep-chip.done{background:#ddf0ec;color:var(--green)}
+
+.empty{text-align:center;padding:3rem;color:var(--muted);font-family:'Playfair Display',serif;font-style:italic}
+footer{text-align:center;margin-top:3rem;padding-top:1.4rem;border-top:1px solid var(--border);font-size:0.78rem;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Rahul's <span>Watchlist</span></h1>
+  <p>Movies &amp; series</p>
+</header>
+
+<div style="display:flex;gap:0.6rem;align-items:center;max-width:560px;margin:0 auto 1.5rem">
+  <div class="search-wrap" style="flex:1;margin:0">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search" placeholder="Search movies or series…" oninput="renderCurrent()">
+  </div>
+  <select id="sort-select" onchange="renderCurrent()" style="padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:20px;background:var(--card);font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--muted);outline:none;cursor:pointer;flex-shrink:0">
+    <option value="watched-desc">Newest watched</option>
+    <option value="watched-asc">Oldest watched</option>
+    <option value="rating-desc">Highest rated</option>
+    <option value="rating-asc">Lowest rated</option>
+    <option value="title-asc">A → Z</option>
+    <option value="title-desc">Z → A</option>
+    <option value="added-desc">Recently added</option>
+    <option value="lang-asc">Language A→Z</option>
+  </select>
+</div>
+
+<div id="lang-filters" style="display:flex;gap:0.4rem;flex-wrap:wrap;max-width:560px;margin:0 auto 1rem"></div>
+
+<div class="tabs">
+  <button class="tab on" onclick="switchTab('movie',this)">Movies</button>
+  <button class="tab" onclick="switchTab('show',this)">Series</button>
+</div>
+
+<div id="loading">Loading…</div>
+<div id="content"></div>
+
+<!-- Modal -->
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-top">
+      <div class="modal-poster" id="m-poster"></div>
+      <div style="flex:1;min-width:0">
+        <div class="modal-title" id="m-title"></div>
+        <div class="modal-meta" id="m-meta"></div>
+        <div class="modal-badges" id="m-badges"></div>
+        <div id="m-loading" style="font-size:0.82rem;color:var(--muted);font-style:italic">Loading details…</div>
+        <div id="m-director" class="modal-section" style="display:none"><div class="section-lbl">Director</div><div class="section-val" id="m-dir-val"></div></div>
+        <div id="m-cast" class="modal-section" style="display:none"><div class="section-lbl">Cast</div><div class="section-val" id="m-cast-val"></div></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div id="m-my-rating" class="modal-section" style="display:none"><div class="section-lbl">My Rating</div><div class="section-val" id="m-rating-val" style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--warm);font-weight:700"></div></div>
+      <div id="m-my-review" class="modal-section" style="display:none"><div class="section-lbl">My Review</div><div class="modal-review" id="m-review-val"></div></div>
+      <div id="m-watched" class="modal-section" style="display:none"><div class="section-lbl">Watched</div><div class="section-val" id="m-watched-val"></div></div>
+    </div>
+    <div class="season-tabs-wrap" id="m-seasons-wrap" style="display:none">
+      <div class="season-tabs" id="m-season-tabs"></div>
+      <div id="m-season-panels"></div>
+    </div>
+  </div>
+</div>
+
+<footer>My ratings &amp; reviews · Rahul</footer>
+
+<script>
+const DB_URL   = 'https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+const LANG_NAMES = {
+  'af':'Afrikaans','ar':'Arabic','bg':'Bulgarian','bn':'Bengali','cs':'Czech',
+  'da':'Danish','de':'German','el':'Greek','en':'English','es':'Spanish',
+  'et':'Estonian','fa':'Persian','fi':'Finnish','fr':'French','gu':'Gujarati',
+  'he':'Hebrew','hi':'Hindi','hr':'Croatian','hu':'Hungarian','id':'Indonesian',
+  'it':'Italian','ja':'Japanese','kn':'Kannada','ko':'Korean','lt':'Lithuanian',
+  'lv':'Latvian','ml':'Malayalam','mr':'Marathi','ms':'Malay','nl':'Dutch',
+  'no':'Norwegian','pa':'Punjabi','pl':'Polish','pt':'Portuguese','ro':'Romanian',
+  'ru':'Russian','sk':'Slovak','sl':'Slovenian','sq':'Albanian','sr':'Serbian',
+  'sv':'Swedish','sw':'Swahili','ta':'Tamil','te':'Telugu','th':'Thai',
+  'tr':'Turkish','uk':'Ukrainian','ur':'Urdu','vi':'Vietnamese','zh':'Chinese',
+  'cn':'Cantonese','zz':'Unknown'
+};
+function langName(code) { return LANG_NAMES[code] || code || ''; }
+
+const TMDB_KEY = '60a9d5e588c206cf1d895394aa72d581';
+
+let allEntries = [];
+let currentTab = 'movie';
+let activeLang = '';
+
+function buildLangFilters() {
+  const langs = [...new Set(allEntries.filter(e=>e.type===currentTab).map(e=>e.language).filter(Boolean))].sort();
+  const div = document.getElementById('lang-filters');
+  if (!div) return;
+  if (!langs.length) { div.innerHTML=''; return; }
+  div.innerHTML = ['<button class="lang-pill on" onclick="setLang(\'\',this)">All</button>',
+    ...langs.map(l=>`<button class="lang-pill" onclick="setLang('${l}',this)">${l}</button>`)
+  ].join('');
+}
+
+function setLang(lang, btn) {
+  activeLang = lang;
+  document.querySelectorAll('.lang-pill').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  renderCurrent();
+}
+
+function switchTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  buildLangFilters();
+  renderCurrent();
+}
+
+function sortEntries(arr) {
+  const s = document.getElementById('sort-select')?.value || 'watched-desc';
+  const parseDate = str => { if (!str) return 0; const d = new Date(str); return isNaN(d)?0:d.getTime(); };
+  // watched field is like "Mar 2026" — parse it
+  const parseWatched = str => {
+    if (!str) return 0;
+    const d = new Date(str);
+    return isNaN(d) ? 0 : d.getTime();
+  };
+  return [...arr].sort((a,b) => {
+    switch(s) {
+      case 'watched-desc': return parseWatched(b.watched) - parseWatched(a.watched);
+      case 'watched-asc':  return parseWatched(a.watched) - parseWatched(b.watched);
+      case 'rating-desc':  return (b.myRating||0) - (a.myRating||0);
+      case 'rating-asc':   return (a.myRating||0) - (b.myRating||0);
+      case 'title-asc':    return a.title.localeCompare(b.title);
+      case 'title-desc':   return b.title.localeCompare(a.title);
+      case 'added-desc':   return (b.addedAt||0) - (a.addedAt||0);
+      case 'lang-asc':     return (a.language||'').localeCompare(b.language||'');
+      default: return 0;
+    }
+  });
+}
+
+function renderCurrent() {
+  const q   = document.getElementById('search').value.toLowerCase().trim();
+  const vis = sortEntries(allEntries.filter(e=>e.type===currentTab && (!q || e.title.toLowerCase().includes(q)) && (!activeLang || e.language===activeLang)));
+  const el  = document.getElementById('content');
+
+  if (!vis.length) { el.innerHTML='<div class="empty">Nothing found</div>'; return; }
+
+  if (currentTab==='movie') {
+    el.innerHTML = `<div class="movie-grid">${vis.map((e,i)=>`
+      <div class="movie-card" style="animation-delay:${i*0.04}s" onclick="openModal('${e.id}')">
+        <div class="poster-wrap">${e.poster?`<img src="${e.poster}" alt="${e.title}">`:'<div class="poster-ph">🎬</div>'}</div>
+        <div class="info">
+          <span class="badge movie">Movie</span>
+          <div class="entry-title">${e.title}</div>
+          ${e.year?`<div class="meta">${e.year}</div>`:''}
+          ${e.myRating?`<div class="my-rating">${e.myRating}<span class="oo">/10</span></div>`:''}
+          ${e.review?`<div class="review-snip">${e.review}</div>`:''}
+          ${e.watched?`<div class="meta" style="margin-top:auto">${e.watched}</div>`:''}
+        </div>
+      </div>`).join('')}</div>`;
+  } else {
+    el.innerHTML = `<div class="show-list">${vis.map((e,i)=>{
+      const totalEps  = e.seasonsData?.reduce((a,s)=>a+(s.episodes?.length||0),0)||0;
+      const watchedEps= e.seasonsData?.reduce((a,s)=>a+(s.episodes?.filter(ep=>ep.watched).length||0),0)||0;
+      const pct       = totalEps ? Math.round(watchedEps/totalEps*100) : 0;
+      const completedSeasons = e.seasonsData?.filter(s=>s.reviewDone).length||0;
+      return `
+      <div class="show-card" style="animation-delay:${i*0.04}s" onclick="openModal('${e.id}')">
+        <div class="show-card-inner">
+          <div class="poster-wrap">${e.poster?`<img src="${e.poster}" alt="${e.title}">`:'<div class="poster-ph">📺</div>'}</div>
+          <div class="info">
+            <span class="badge show">Series</span>
+            <div class="entry-title">${e.title}</div>
+            ${e.year?`<div class="meta">${e.year}${e.seasonsData?' · '+e.seasonsData.length+' seasons':''}</div>`:''}
+            ${e.myRating?`<div class="my-rating">${e.myRating}<span class="oo">/10</span></div>`:''}
+            ${e.review?`<div class="review-snip">${e.review}</div>`:''}
+            ${totalEps?`
+              <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+              <div class="prog-lbl">${watchedEps}/${totalEps} episodes · ${completedSeasons} season${completedSeasons!==1?'s':''} reviewed</div>`:''}
+          </div>
+        </div>
+      </div>`}).join('')}</div>`;
+  }
+}
+
+// ── Modal ────────────────────────────────────────────────
+function closeModal(e) {
+  if (e && e.target!==document.getElementById('overlay')) return;
+  document.getElementById('overlay').classList.remove('on');
+}
+
+async function openModal(id) {
+  const entry = allEntries.find(e=>e.id===id);
+  if (!entry) return;
+
+  document.getElementById('overlay').classList.add('on');
+  document.getElementById('m-title').textContent  = entry.title;
+  document.getElementById('m-meta').textContent   = [entry.year, entry.language].filter(Boolean).join(' · ');
+  document.getElementById('m-loading').style.display = 'block';
+  document.getElementById('m-director').style.display = 'none';
+  document.getElementById('m-cast').style.display     = 'none';
+  document.getElementById('m-seasons-wrap').style.display = 'none';
+
+  document.getElementById('m-poster').innerHTML = entry.poster
+    ? `<img src="${entry.poster}" alt="${entry.title}">`
+    : `<div class="modal-poster-ph">🎬</div>`;
+
+  document.getElementById('m-badges').innerHTML = `<span class="badge ${entry.type}">${entry.type==='show'?'Series':'Movie'}</span>`;
+
+  // My info
+  const ratingEl  = document.getElementById('m-my-rating');
+  const reviewEl  = document.getElementById('m-my-review');
+  const watchedEl = document.getElementById('m-watched');
+  ratingEl.style.display  = entry.myRating ? 'block' : 'none';
+  if (entry.myRating) document.getElementById('m-rating-val').innerHTML = `${entry.myRating}<span style="font-size:0.7rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:300">/10</span>`;
+  reviewEl.style.display  = entry.review ? 'block' : 'none';
+  if (entry.review) document.getElementById('m-review-val').textContent = entry.review;
+  watchedEl.style.display = entry.watched ? 'block' : 'none';
+  if (entry.watched) document.getElementById('m-watched-val').textContent = entry.watched;
+
+  // Seasons
+  if (entry.type==='show' && entry.seasonsData?.length) {
+    document.getElementById('m-seasons-wrap').style.display = 'block';
+    const tabs   = document.getElementById('m-season-tabs');
+    const panels = document.getElementById('m-season-panels');
+    tabs.innerHTML = entry.seasonsData.map((s,i)=>
+      `<button class="season-tab ${i===0?'on':''}" onclick="switchSeason(${s.season},this)">${s.name||'S'+s.season}</button>`
+    ).join('');
+    panels.innerHTML = entry.seasonsData.map((s,i)=>{
+      const done  = s.episodes?.filter(ep=>ep.watched).length||0;
+      const total = s.episodes?.length||0;
+      const pct   = total ? Math.round(done/total*100) : 0;
+      return `
+      <div class="season-panel ${i===0?'on':''}" id="sp-${s.season}">
+        ${s.reviewDone&&s.rating?`<div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--warm);font-weight:700;margin-bottom:0.3rem">${s.rating}<span style="font-size:0.7rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:300">/10</span></div>`:''}
+        ${s.reviewDone&&s.review?`<div class="modal-review" style="margin-bottom:0.7rem">${s.review}</div>`:''}
+        ${!s.reviewDone?`<div style="font-size:0.78rem;color:var(--muted);font-style:italic;margin-bottom:0.6rem">Review pending — ${done}/${total} episodes watched</div>`:''}
+        <div class="ep-prog">
+          <div class="ep-prog-bar"><div class="ep-prog-fill" style="width:${pct}%"></div></div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-bottom:0.4rem">${done}/${total} episodes</div>
+          <div class="ep-list">
+            ${(s.episodes||[]).map(ep=>`<div class="ep-chip ${ep.watched?'done':''}">E${ep.ep}${ep.name?' · '+ep.name.substring(0,12):''}</div>`).join('')}
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Fetch TMDB details
+  try {
+    const ep = entry.type==='show' ? 'tv' : 'movie';
+    const idToUse = entry.tmdbId;
+    if (!idToUse && !entry.imdbId) throw new Error('No ID');
+
+    let tmdbId = idToUse;
+    if (!tmdbId && entry.imdbId) {
+      const f = await fetch(`https://api.themoviedb.org/3/find/${entry.imdbId}?api_key=${TMDB_KEY}&external_source=imdb_id`);
+      const fd = await f.json();
+      const res = fd.movie_results?.[0]||fd.tv_results?.[0];
+      if (res) tmdbId = String(res.id);
+    }
+    if (!tmdbId) throw new Error('No TMDB ID');
+
+    const [detRes, credRes] = await Promise.all([
+      fetch(`https://api.themoviedb.org/3/${ep}/${tmdbId}?api_key=${TMDB_KEY}`),
+      fetch(`https://api.themoviedb.org/3/${ep}/${tmdbId}/credits?api_key=${TMDB_KEY}`)
+    ]);
+    const det  = await detRes.json();
+    const cred = await credRes.json();
+
+    document.getElementById('m-loading').style.display = 'none';
+
+    const releaseDate = det.release_date||det.first_air_date||'';
+    const dateFmt = releaseDate ? new Date(releaseDate).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : '';
+    const runtime = det.runtime ? det.runtime+' min' : '';
+    const langCode = det.original_language || '';
+    const langFull = LANG_NAMES[langCode] || langCode || '';
+    document.getElementById('m-meta').textContent = [entry.year, dateFmt, runtime].filter(Boolean).join(' · ');
+
+    const badgesEl = document.getElementById('m-badges');
+    if (det.vote_average) {
+      badgesEl.innerHTML += ` <div class="imdb-badge"><span class="imdb-logo">IMDb</span>${det.vote_average.toFixed(1)}</div>`;
+    }
+    if (langFull) {
+      badgesEl.innerHTML += ` <span class="badge" style="background:#f0e8f8;color:#7b4a9e">${langFull}</span>`;
+    }
+
+    const directors = cred.crew?.filter(c=>c.job==='Director').map(c=>c.name).join(', ')||
+                      cred.crew?.filter(c=>c.job==='Executive Producer').slice(0,2).map(c=>c.name).join(', ')||'';
+    const cast = cred.cast?.slice(0,5).map(c=>c.name).join(', ')||'';
+
+    if (directors) { document.getElementById('m-director').style.display='block'; document.getElementById('m-dir-val').textContent=directors; }
+    if (cast)      { document.getElementById('m-cast').style.display='block';     document.getElementById('m-cast-val').textContent=cast; }
+  } catch(e) {
+    document.getElementById('m-loading').style.display = 'none';
+  }
+}
+
+function switchSeason(num, btn) {
+  document.querySelectorAll('.season-tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.season-panel').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById(`sp-${num}`)?.classList.add('on');
+}
+
+// ── Load ─────────────────────────────────────────────────
+function jsonp(url) {
+  return new Promise((res,rej)=>{
+    const cb='cb_'+Date.now();
+    const s=document.createElement('script');
+    window[cb]=d=>{delete window[cb];s.remove();res(d);};
+    s.onerror=()=>rej(new Error('JSONP failed'));
+    s.src=url+'?callback='+cb;
+    document.head.appendChild(s);
+  });
+}
+
+async function load() {
+  try { allEntries = await jsonp(DB_URL); }
+  catch(e) { console.error('Load failed',e); }
+  document.getElementById('loading').style.display='none';
+  buildLangFilters();
+  renderCurrent();
+}
+
+load();
+</script>
+</body>
+</html>
