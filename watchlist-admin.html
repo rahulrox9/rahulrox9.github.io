@@ -734,12 +734,6 @@ async function save() {
     return false;
   }
 }
-  } catch(e) {
-    console.error('Save to Drive failed:', e);
-    const ind = document.getElementById('save-indicator');
-    if (ind) { ind.textContent = '⚠ Save failed'; ind.style.color='var(--red)'; }
-  }
-}
 
 async function load() {
   const msg = document.getElementById('form-msg');
