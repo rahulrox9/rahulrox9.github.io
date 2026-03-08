@@ -656,6 +656,7 @@ function renderList() {
       </div>
       <div class="entry-actions">
         ${e.type==='show'?`<button class="track-btn ${e.tracking?'on':''}" onclick="toggleTracking('${e.id}')" title="${e.tracking?'Tracking':'Not tracking'}">${e.tracking?'● Tracking':'○ Track'}</button>`:''}
+        ${e.type==='show'?`<button class="icon-btn" onclick="markAllSeasons('${e.id}')" title="${(e.seasonsData||[]).every(s=>s.episodes?.every(ep=>ep.watched))?'Unmark all':'Mark all watched'}">✓✓</button>`:''}
         ${e.type==='show'?`<button class="icon-btn" onclick="refreshEpisodes('${e.id}')" title="Refresh episodes">↻</button>`:''}
         <button class="icon-btn" onclick="startEdit('${e.id}')" title="Edit">✏️</button>
         <button class="icon-btn del" onclick="removeEntry('${e.id}')" title="Remove">✕</button>
@@ -775,6 +776,15 @@ function markSeasonAll(entryId, seasonNum, watched) {
     document.getElementById('sm-review').value = '';
     document.getElementById('season-modal').classList.add('on');
   }
+  save().then(()=>renderList());
+}
+
+function markAllSeasons(entryId) {
+  const e = entries.find(x=>x.id===entryId);
+  if (!e?.seasonsData?.length) return;
+  const allWatched = e.seasonsData.every(s=>s.episodes?.every(ep=>ep.watched));
+  e.seasonsData.forEach(s => s.episodes?.forEach(ep => ep.watched = !allWatched));
+  if (!allWatched) e.lastActivity = Date.now();
   save().then(()=>renderList());
 }
 
