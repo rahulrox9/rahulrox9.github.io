@@ -129,11 +129,13 @@ hr { border:none; border-top:1px solid var(--border); margin:1.5rem 0; }
     </div>
     <div class="field"><label>My Review <span style="font-weight:300;text-transform:none">(optional)</span></label><textarea id="m-review" placeholder="What did you think?"></textarea></div>
     <div class="field"><label>Watched <span style="font-weight:300;text-transform:none">(optional)</span></label><input type="date" id="m-watched"></div>
+    <div class="field"><label>Language <span style="font-weight:300;text-transform:none">(auto-filled, editable)</span></label><input type="text" id="m-language" placeholder="e.g. Hindi, Tamil, English"></div>
   </div>
 
   <!-- SERIES FIELDS -->
   <div id="show-fields" style="display:none">
     <div class="field"><label>Overall Review <span style="font-weight:300;text-transform:none">(optional — add after finishing)</span></label><textarea id="s-review" placeholder="Overall thoughts on the series…"></textarea></div>
+    <div class="field"><label>Language <span style="font-weight:300;text-transform:none">(auto-filled, editable)</span></label><input type="text" id="s-language" placeholder="e.g. Hindi, Tamil, English"></div>
   </div>
 
   <div style="display:flex;gap:0.6rem;margin-top:0.5rem">
@@ -369,6 +371,7 @@ async function submitEntry() {
       e.language = document.getElementById('m-language').value.trim();
     } else {
       e.review   = document.getElementById('s-review').value.trim();
+      e.language = document.getElementById('s-language').value.trim();
       // Auto-compute overall rating as mean of reviewed seasons
       const ratedSeasons = (e.seasonsData||[]).filter(s=>s.reviewDone && s.rating);
       e.myRating = ratedSeasons.length ? Math.round(ratedSeasons.reduce((a,s)=>a+s.rating,0)/ratedSeasons.length*10)/10 : 0;
@@ -410,6 +413,7 @@ async function submitEntry() {
     entry.language = document.getElementById('m-language').value.trim();
   } else {
     entry.review   = document.getElementById('s-review').value.trim();
+    entry.language = document.getElementById('s-language').value.trim();
     entry.myRating = 0; // computed from season ratings as you watch
   }
 
@@ -449,10 +453,12 @@ function startEdit(id) {
 
   makeStar('m-stars','m-star-lbl','m'); setStar('m-stars','m-star-lbl','m', e.myRating||0);
   if (e.type==='movie') {
-    document.getElementById('m-review').value  = e.review||'';
-    document.getElementById('m-watched').value = '';
+    document.getElementById('m-review').value   = e.review||'';
+    document.getElementById('m-watched').value  = '';
+    document.getElementById('m-language').value = e.language||'';
   } else {
-    document.getElementById('s-review').value = e.review||'';
+    document.getElementById('s-review').value   = e.review||'';
+    document.getElementById('s-language').value = e.language||'';
   }
   document.getElementById('form-card').scrollIntoView({behavior:'smooth'});
 }
@@ -468,7 +474,9 @@ function resetForm() {
   document.getElementById('url-input').value = '';
   document.getElementById('m-review').value = '';
   document.getElementById('m-watched').value = '';
+  document.getElementById('m-language').value = '';
   document.getElementById('s-review').value = '';
+  document.getElementById('s-language').value = '';
   document.getElementById('preview').classList.remove('on');
   document.getElementById('movie-fields').style.display = 'none';
   document.getElementById('show-fields').style.display  = 'none';
