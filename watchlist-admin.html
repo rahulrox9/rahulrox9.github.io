@@ -173,34 +173,31 @@ hr { border:none; border-top:1px solid var(--border); margin:1.5rem 0; }
 
 <script>
 
-const GH = {
-  token: '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',
-  owner: 'rahulrox9',
-  repo:  'rahulrox9.github.io',
-  branch: 'main'
-};
-async function ghRead(file) {
-  const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${file}?ref=${GH.branch}&t=${Date.now()}`, {
-    headers: { Authorization: `Bearer ${GH.token}` }
+const DB_URL = 'https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+
+function jsonp(url, file) {
+  return new Promise((res, rej) => {
+    const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const s  = document.createElement('script');
+    window[cb] = d => { delete window[cb]; s.remove(); res(d); };
+    s.onerror  = () => { delete window[cb]; s.remove(); rej(); };
+    s.src = url + '?file=' + file + '&callback=' + cb;
+    document.head.appendChild(s);
   });
-  const d = await r.json();
-  return { data: JSON.parse(atob(d.content.replace(/\n/g,''))), sha: d.sha };
 }
-async function ghWrite(file, data, sha) {
-  const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${file}`, {
-    method: 'PUT',
-    headers: { Authorization: `Bearer ${GH.token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      message: `Update ${file}`,
-      content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
-      sha, branch: GH.branch
-    })
+
+async function driveRead(file) {
+  const data = await jsonp(DB_URL, file);
+  return { data: data };
+}
+
+async function driveWrite(file, data) {
+  await fetch(DB_URL, {
+    method: 'POST',
+    body: JSON.stringify({ file: file, data: data })
   });
-  if (!r.ok) { const e = await r.json(); throw new Error(e.message); }
-  const j = await r.json();
-  return j.content.sha;
 }
-let watchlistSha = null;
+
 const LANG_NAMES = {
   'af':'Afrikaans','ar':'Arabic','bg':'Bulgarian','bn':'Bengali','cs':'Czech',
   'da':'Danish','de':'German','el':'Greek','en':'English','es':'Spanish',
@@ -727,7 +724,7 @@ function markSeasonAll(entryId, seasonNum, watched) {
 // ── Storage ──────────────────────────────────────────────
 async function save() {
   try {
-    watchlistSha = await ghWrite('watchlist.json', entries, watchlistSha);
+    await driveWrite('watchlist.json', entries);
     return true;
   } catch(e) {
     console.error('Save failed:', e);
@@ -738,9 +735,8 @@ async function save() {
 async function load() {
   const msg = document.getElementById('form-msg');
   try {
-    const r = await ghRead('watchlist.json');
+    const r = await driveRead('watchlist.json');
     entries = r.data;
-    watchlistSha = r.sha;
     if (!Array.isArray(entries)) throw new Error('Data is not an array');
   } catch(e) {
     entries = [];

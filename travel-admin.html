@@ -196,34 +196,31 @@ textarea{resize:vertical;min-height:48px}
 
 <script>
 
-const GH = {
-  token: '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',
-  owner: 'rahulrox9',
-  repo:  'rahulrox9.github.io',
-  branch: 'main'
-};
-async function ghRead(file) {
-  const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${file}?ref=${GH.branch}&t=${Date.now()}`, {
-    headers: { Authorization: `Bearer ${GH.token}` }
+const DB_URL = 'https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+
+function jsonp(url, file) {
+  return new Promise((res, rej) => {
+    const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const s  = document.createElement('script');
+    window[cb] = d => { delete window[cb]; s.remove(); res(d); };
+    s.onerror  = () => { delete window[cb]; s.remove(); rej(); };
+    s.src = url + '?file=' + file + '&callback=' + cb;
+    document.head.appendChild(s);
   });
-  const d = await r.json();
-  return { data: JSON.parse(atob(d.content.replace(/\n/g,''))), sha: d.sha };
 }
-async function ghWrite(file, data, sha) {
-  const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${file}`, {
-    method: 'PUT',
-    headers: { Authorization: `Bearer ${GH.token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      message: `Update ${file}`,
-      content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
-      sha, branch: GH.branch
-    })
+
+async function driveRead(file) {
+  const data = await jsonp(DB_URL, file);
+  return { data: data };
+}
+
+async function driveWrite(file, data) {
+  await fetch(DB_URL, {
+    method: 'POST',
+    body: JSON.stringify({ file: file, data: data })
   });
-  if (!r.ok) { const e = await r.json(); throw new Error(e.message); }
-  const j = await r.json();
-  return j.content.sha;
 }
-let pinsSha = null;
+
 
 // ── Map setup ────────────────────────────────────────────
 const map = L.map('map', {center:[20,10], zoom:3, doubleClickZoom:false});
@@ -670,13 +667,13 @@ async function confirmImport() {
 // ── Storage ──────────────────────────────────────────────
 async function savePins() {
   try {
-    pinsSha = await ghWrite('travel_pins.json', pins, pinsSha);
+    await driveWrite('travel_pins.json', pins);
   } catch(e) { console.warn('Save failed', e); }
 }
 
 async function init() {
   try {
-    const r = await ghRead('travel_pins.json'); const data = r.data; pinsSha = r.sha;
+    const r = await driveRead('travel_pins.json'); const data = r.data;
     pins = Array.isArray(data) ? data : [];
   } catch(e) { pins = []; }
   renderMapPins();
