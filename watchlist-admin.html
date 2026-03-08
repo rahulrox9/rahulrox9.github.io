@@ -378,7 +378,16 @@ async function fetchTmdb(tmdbId, type, imdbIdHint) {
     }
 
     const language = d.original_language || '';
-    fetched = { imdbId, tmdbId: String(tmdbId), type, title, year, poster, seasonsData, language };
+
+    // Fetch cast + director
+    const credRes = await fetch(`https://api.themoviedb.org/3/${ep}/${tmdbId}/credits?api_key=${TMDB_KEY}`);
+    const credJson = await credRes.json();
+    const cast = (credJson.cast||[]).slice(0,10).map(p=>p.name);
+    const director = type==='movie'
+      ? (credJson.crew||[]).filter(p=>p.job==='Director').map(p=>p.name).join(', ')
+      : (d.created_by||[]).map(p=>p.name).join(', ');
+
+    fetched = { imdbId, tmdbId: String(tmdbId), type, title, year, poster, seasonsData, language, cast, director, status: d.status||'' };
 
     document.getElementById('preview-content').innerHTML = `
       ${poster ? `<img src="${poster}" alt="${title}">` : ''}
@@ -386,6 +395,8 @@ async function fetchTmdb(tmdbId, type, imdbIdHint) {
         <span class="badge ${type}">${type==='show'?'Series':'Movie'}</span>
         <div class="p-title" style="margin-top:0.2rem">${title}</div>
         <div class="p-meta">${year}${type==='show'?' · '+seasonsData.length+' seasons':''}${language?' · '+langName(language):''}</div>
+        ${director?`<div class="p-meta">Dir: ${director}</div>`:''}
+        ${cast.length?`<div class="p-meta" style="font-size:0.72rem">${cast.slice(0,5).join(', ')}</div>`:''}
       </div>`;
 
     document.getElementById('movie-fields').style.display = type==='movie' ? 'block' : 'none';
@@ -426,6 +437,7 @@ async function submitEntry() {
     if (fetched && fetched.imdbId !== e.imdbId) {
       e.imdbId = fetched.imdbId; e.tmdbId = fetched.tmdbId;
       e.title = fetched.title; e.year = fetched.year; e.poster = fetched.poster;
+      e.cast = fetched.cast; e.director = fetched.director; e.status = fetched.status;
       if (fetched.type==='show' && (!e.seasonsData||!e.seasonsData.length)) {
         e.seasonsData = fetched.seasonsData;
       }

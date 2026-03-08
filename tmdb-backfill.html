@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMDB Backfill</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --ink:#1a1208; --parchment:#faf6ef; --warm:#c8873a; --muted:#8a7560; --card:#fff9f2; --border:#e8dfd0; --green:#2d6b5e; --red:#c0392b; }
+body { font-family:'DM Sans',sans-serif; background:var(--parchment); color:var(--ink); padding:1.5rem; max-width:820px; margin:0 auto; }
+h1 { font-family:'Playfair Display',serif; font-size:1.6rem; margin-bottom:0.2rem; }
+h1 span { color:var(--warm); font-style:italic; }
+.subtitle { color:var(--muted); font-size:0.78rem; margin-bottom:1.5rem; letter-spacing:0.06em; text-transform:uppercase; }
+.btn { background:var(--warm); color:#fff; border:none; padding:0.55rem 1.4rem; border-radius:4px; font-family:'DM Sans',sans-serif; font-size:0.86rem; font-weight:500; cursor:pointer; transition:opacity 0.2s; }
+.btn:hover { opacity:0.85; }
+.btn:disabled { opacity:0.4; cursor:default; }
+.btn.green { background:var(--green); }
+.btn.ghost { background:transparent; color:var(--muted); border:1px solid var(--border); }
+.btn.sm { padding:0.3rem 0.75rem; font-size:0.76rem; }
+.btn.danger { background:var(--red); }
+.progress-bar { background:var(--border); border-radius:4px; height:6px; margin:1rem 0; overflow:hidden; }
+.progress-fill { background:var(--warm); height:100%; border-radius:4px; transition:width 0.3s; }
+.status-line { font-size:0.8rem; color:var(--muted); margin-bottom:1rem; min-height:1.2em; }
+.item { background:var(--card); border:1px solid var(--border); border-radius:6px; padding:0.9rem 1rem; margin-bottom:0.7rem; display:flex; gap:0.9rem; align-items:flex-start; }
+.item img { width:40px; height:60px; object-fit:cover; border-radius:2px; flex-shrink:0; }
+.item-ph { width:40px; height:60px; background:var(--border); border-radius:2px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+.item-body { flex:1; min-width:0; }
+.item-title { font-family:'Playfair Display',serif; font-size:0.9rem; font-weight:700; }
+.item-meta { font-size:0.72rem; color:var(--muted); margin-top:0.15rem; }
+.item-cast { font-size:0.7rem; color:var(--muted); margin-top:0.2rem; font-style:italic; }
+.item-actions { display:flex; gap:0.4rem; align-items:center; flex-shrink:0; flex-wrap:wrap; justify-content:flex-end; max-width:160px; }
+.badge { display:inline-block; font-size:0.6rem; font-weight:500; letter-spacing:0.07em; text-transform:uppercase; padding:0.1rem 0.4rem; border-radius:8px; }
+.badge.movie { background:#fdecd8; color:var(--warm); }
+.badge.show { background:#ddf0ec; color:var(--green); }
+.badge.ok { background:#ddf0ec; color:var(--green); }
+.badge.warn { background:#fff3cd; color:#856404; }
+.badge.err { background:#fde8e8; color:var(--red); }
+.section-head { font-size:0.7rem; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin:1.5rem 0 0.6rem; border-bottom:1px solid var(--border); padding-bottom:0.4rem; }
+.match-card { background:var(--parchment); border:1px solid var(--border); border-radius:4px; padding:0.5rem 0.7rem; font-size:0.78rem; cursor:pointer; transition:border-color 0.15s; }
+.match-card:hover { border-color:var(--warm); }
+.match-card.selected { border-color:var(--green); background:#f0faf7; }
+.matches-row { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.4rem; }
+.top-row { display:flex; gap:0.8rem; align-items:center; margin-bottom:1.2rem; flex-wrap:wrap; }
+.stat { font-size:0.8rem; color:var(--muted); }
+.stat strong { color:var(--ink); }
+#log { font-size:0.72rem; color:var(--muted); max-height:120px; overflow-y:auto; background:var(--card); border:1px solid var(--border); border-radius:4px; padding:0.6rem 0.8rem; margin-top:0.6rem; display:none; }
+</style>
+</head>
+<body>
+
+<h1>TMDB <span>Backfill</span></h1>
+<p class="subtitle">Fill in IMDb links · language · cast · director for existing entries</p>
+
+<div class="top-row">
+  <button class="btn" id="load-btn" onclick="loadAndScan()">Load & Scan Watchlist</button>
+  <button class="btn green" id="save-btn" onclick="saveAll()" style="display:none">💾 Save All Changes</button>
+  <span class="stat" id="stat-line"></span>
+</div>
+
+<div class="progress-bar" id="progress-bar" style="display:none"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+<div class="status-line" id="status-line"></div>
+<div id="log"></div>
+
+<!-- Needs Review -->
+<div id="review-section" style="display:none">
+  <div class="section-head">⚠ Needs Review — multiple matches found</div>
+  <div id="review-list"></div>
+</div>
+
+<!-- Auto-filled -->
+<div id="filled-section" style="display:none">
+  <div class="section-head">✓ Auto-filled</div>
+  <div id="filled-list"></div>
+</div>
+
+<!-- Already complete -->
+<div id="complete-section" style="display:none">
+  <div class="section-head">Already complete</div>
+  <div id="complete-list"></div>
+</div>
+
+<script>
+const DB_URL = 'https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+const TMDB   = '60a9d5e588c206cf1d895394aa72d581';
+
+function jsonp(url, file) {
+  return new Promise((res, rej) => {
+    const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const s  = document.createElement('script');
+    window[cb] = d => { delete window[cb]; s.remove(); res(d); };
+    s.onerror  = () => { delete window[cb]; s.remove(); rej(); };
+    s.src = url + '?file=' + file + '&callback=' + cb;
+    document.head.appendChild(s);
+  });
+}
+async function driveRead(file) { return { data: await jsonp(DB_URL, file) }; }
+async function driveWrite(file, data) {
+  await fetch(DB_URL, { method:'POST', body: JSON.stringify({ file, data }) });
+}
+
+const LANG_MAP = {en:'English',hi:'Hindi',ta:'Tamil',te:'Telugu',ml:'Malayalam',kn:'Kannada',ja:'Japanese',ko:'Korean',fr:'French',de:'German',es:'Spanish',it:'Italian',pt:'Portuguese',zh:'Chinese',ru:'Russian',ar:'Arabic',tr:'Turkish',th:'Thai',sv:'Swedish',da:'Danish',nl:'Dutch',pl:'Polish',fi:'Finnish',no:'Norwegian',he:'Hebrew',id:'Indonesian',ms:'Malay'};
+function langName(c) { return LANG_MAP[c] || c; }
+
+let entries = [];
+let pendingChanges = {}; // id -> patch object
+
+function log(msg) {
+  const el = document.getElementById('log');
+  el.style.display = 'block';
+  el.innerHTML += msg + '<br>';
+  el.scrollTop = el.scrollHeight;
+}
+
+function setStatus(msg) { document.getElementById('status-line').textContent = msg; }
+function setProgress(pct) {
+  document.getElementById('progress-bar').style.display = 'block';
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+async function fetchDetails(tmdbId, type) {
+  const ep = type === 'show' ? 'tv' : 'movie';
+  const [main, ext, cred] = await Promise.all([
+    fetch(`https://api.themoviedb.org/3/${ep}/${tmdbId}?api_key=${TMDB}`).then(r=>r.json()),
+    fetch(`https://api.themoviedb.org/3/${ep}/${tmdbId}/external_ids?api_key=${TMDB}`).then(r=>r.json()),
+    fetch(`https://api.themoviedb.org/3/${ep}/${tmdbId}/credits?api_key=${TMDB}`).then(r=>r.json()),
+  ]);
+  const cast = (cred.cast||[]).slice(0,10).map(p=>p.name);
+  const director = type==='movie'
+    ? (cred.crew||[]).filter(p=>p.job==='Director').map(p=>p.name).join(', ')
+    : (main.created_by||[]).map(p=>p.name).join(', ');
+  const imdbId = ext.imdb_id || '';
+  const language = langName(main.original_language || '');
+  const status = main.status || '';
+  return { imdbId, language, cast, director, status };
+}
+
+async function searchTmdb(title, year, type) {
+  const ep = type === 'show' ? 'tv' : 'movie';
+  const q  = encodeURIComponent(title);
+  const r  = await fetch(`https://api.themoviedb.org/3/search/${ep}?api_key=${TMDB}&query=${q}&year=${year||''}&page=1`);
+  const d  = await r.json();
+  return (d.results || []).slice(0, 4).map(x => ({
+    tmdbId: String(x.id),
+    title:  x.title || x.name,
+    year:   (x.release_date || x.first_air_date || '').substring(0,4),
+    poster: x.poster_path ? `https://image.tmdb.org/t/p/w92${x.poster_path}` : ''
+  }));
+}
+
+async function loadAndScan() {
+  document.getElementById('load-btn').disabled = true;
+  document.getElementById('load-btn').textContent = 'Loading…';
+  setStatus('Loading watchlist…');
+
+  try {
+    const r = await driveRead('watchlist.json');
+    entries = r.data;
+  } catch(e) {
+    setStatus('❌ Could not load watchlist: ' + e.message);
+    document.getElementById('load-btn').disabled = false;
+    document.getElementById('load-btn').textContent = 'Load & Scan Watchlist';
+    return;
+  }
+
+  const needsFill  = entries.filter(e => !e.cast || !e.cast.length || !e.imdbId);
+  const alreadyOk  = entries.filter(e => e.cast && e.cast.length && e.imdbId);
+
+  document.getElementById('stat-line').innerHTML =
+    `<strong>${entries.length}</strong> entries · <strong>${needsFill.length}</strong> need filling · <strong>${alreadyOk.length}</strong> already complete`;
+
+  // Render already-complete
+  if (alreadyOk.length) {
+    document.getElementById('complete-section').style.display = 'block';
+    document.getElementById('complete-list').innerHTML = alreadyOk.map(e => `
+      <div class="item">
+        ${e.poster ? `<img src="${e.poster}" alt="${e.title}">` : '<div class="item-ph">📖</div>'}
+        <div class="item-body">
+          <div class="item-title">${e.title} <span class="badge ${e.type}">${e.type==='show'?'Series':'Movie'}</span></div>
+          <div class="item-meta">${e.year} · ${e.language||'—'} · <a href="https://www.imdb.com/title/${e.imdbId}/" target="_blank">${e.imdbId}</a></div>
+          <div class="item-cast">${(e.cast||[]).slice(0,5).join(', ')}${e.director?' · Dir: '+e.director:''}</div>
+        </div>
+        <span class="badge ok">✓ Complete</span>
+      </div>`).join('');
+  }
+
+  if (!needsFill.length) {
+    setStatus('✅ Everything is already filled in!');
+    document.getElementById('load-btn').disabled = false;
+    document.getElementById('load-btn').textContent = 'Reload';
+    return;
+  }
+
+  // Now scan entries that need filling
+  setStatus(`Scanning ${needsFill.length} entries via TMDB…`);
+  setProgress(0);
+
+  const autoFilled = [];
+  const needsReview = [];
+
+  for (let i = 0; i < needsFill.length; i++) {
+    const e = needsFill[i];
+    setProgress(Math.round((i / needsFill.length) * 100));
+    setStatus(`(${i+1}/${needsFill.length}) Searching: ${e.title}…`);
+
+    try {
+      // If we have a tmdbId already, just fetch details directly
+      if (e.tmdbId) {
+        const details = await fetchDetails(e.tmdbId, e.type);
+        pendingChanges[e.id] = details;
+        autoFilled.push({ entry: e, details });
+        log(`✓ ${e.title} — fetched via tmdbId`);
+      } else {
+        // Search by name + year
+        const results = await searchTmdb(e.title, e.year, e.type);
+        if (!results.length) {
+          needsReview.push({ entry: e, results: [], reason: 'No results found' });
+          log(`? ${e.title} — no results`);
+        } else {
+          // Check if top result is a confident match
+          const top = results[0];
+          const titleMatch = top.title.toLowerCase().trim() === e.title.toLowerCase().trim();
+          const yearMatch  = !e.year || !top.year || Math.abs(parseInt(top.year)-parseInt(e.year)) <= 1;
+
+          if (titleMatch && yearMatch) {
+            // Confident match
+            const details = await fetchDetails(top.tmdbId, e.type);
+            pendingChanges[e.id] = { tmdbId: top.tmdbId, ...details };
+            autoFilled.push({ entry: e, match: top, details });
+            log(`✓ ${e.title} — auto-matched to tmdbId ${top.tmdbId}`);
+          } else {
+            // Multiple or uncertain matches — needs review
+            needsReview.push({ entry: e, results, reason: 'Multiple matches' });
+            log(`? ${e.title} — needs review (${results.length} results)`);
+          }
+        }
+      }
+    } catch(err) {
+      needsReview.push({ entry: e, results: [], reason: 'Error: ' + err.message });
+      log(`✗ ${e.title} — ${err.message}`);
+    }
+
+    await new Promise(r => setTimeout(r, 250)); // rate limit
+  }
+
+  setProgress(100);
+  setStatus(`Done. ${autoFilled.length} auto-filled, ${needsReview.length} need review.`);
+
+  // Render auto-filled
+  if (autoFilled.length) {
+    document.getElementById('filled-section').style.display = 'block';
+    document.getElementById('filled-list').innerHTML = autoFilled.map(({entry: e, details: d}) => `
+      <div class="item">
+        ${e.poster ? `<img src="${e.poster}" alt="${e.title}">` : '<div class="item-ph">🎬</div>'}
+        <div class="item-body">
+          <div class="item-title">${e.title} <span class="badge ${e.type}">${e.type==='show'?'Series':'Movie'}</span></div>
+          <div class="item-meta">${e.year} · ${d.language||'—'} · ${d.imdbId ? `<a href="https://www.imdb.com/title/${d.imdbId}/" target="_blank">${d.imdbId}</a>` : 'no IMDb'}</div>
+          <div class="item-cast">${(d.cast||[]).slice(0,5).join(', ')}${d.director?' · Dir: '+d.director:''}</div>
+        </div>
+        <span class="badge ok">✓ Auto</span>
+      </div>`).join('');
+  }
+
+  // Render needs-review
+  if (needsReview.length) {
+    document.getElementById('review-section').style.display = 'block';
+    document.getElementById('review-list').innerHTML = needsReview.map(({entry: e, results, reason}) => `
+      <div class="item" id="review-${e.id}" style="flex-direction:column;gap:0.5rem">
+        <div style="display:flex;gap:0.9rem;align-items:flex-start;width:100%">
+          ${e.poster ? `<img src="${e.poster}" alt="${e.title}">` : '<div class="item-ph">🎬</div>'}
+          <div class="item-body">
+            <div class="item-title">${e.title} <span class="badge ${e.type}">${e.type==='show'?'Series':'Movie'}</span></div>
+            <div class="item-meta">${e.year||'?'} · ${reason}</div>
+          </div>
+          <button class="btn sm ghost" onclick="skipReview('${e.id}')">Skip</button>
+        </div>
+        ${results.length ? `
+        <div style="font-size:0.72rem;color:var(--muted);margin-left:0.2rem">Select correct match:</div>
+        <div class="matches-row" id="matches-${e.id}">
+          ${results.map(m=>`
+            <div class="match-card" id="match-${e.id}-${m.tmdbId}" onclick="selectMatch('${e.id}','${m.tmdbId}','${e.type}',this)">
+              ${m.poster?`<img src="${m.poster}" style="width:30px;height:45px;object-fit:cover;border-radius:2px;display:block;margin-bottom:0.3rem" alt="">`:''}
+              <div style="font-weight:500;font-size:0.77rem">${m.title}</div>
+              <div style="font-size:0.68rem;color:var(--muted)">${m.year}</div>
+            </div>`).join('')}
+          <div class="match-card" onclick="skipReview('${e.id}')" style="display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:0.75rem;min-width:60px">None</div>
+        </div>` : `<div style="font-size:0.75rem;color:var(--muted);margin-left:0.2rem">No results — <button class="btn sm ghost" onclick="skipReview('${e.id}')">Skip</button></div>`}
+      </div>`).join('');
+  }
+
+  document.getElementById('save-btn').style.display = 'inline-block';
+  document.getElementById('load-btn').disabled = false;
+  document.getElementById('load-btn').textContent = 'Rescan';
+}
+
+async function selectMatch(entryId, tmdbId, type, el) {
+  // Deselect others in this group
+  document.querySelectorAll(`#matches-${entryId} .match-card`).forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  el.textContent = 'Fetching…';
+
+  try {
+    const details = await fetchDetails(tmdbId, type);
+    pendingChanges[entryId] = { tmdbId, ...details };
+    el.textContent = '✓ Selected';
+    // Update the review item to show fetched info
+    const row = document.getElementById(`review-${entryId}`);
+    const meta = row.querySelector('.item-meta');
+    if (meta) meta.innerHTML = `${details.language} · ${details.imdbId ? `<a href="https://www.imdb.com/title/${details.imdbId}/" target="_blank">${details.imdbId}</a>` : 'no IMDb'} · Dir: ${details.director||'—'}`;
+  } catch(err) {
+    el.textContent = 'Error';
+    el.classList.remove('selected');
+    log(`✗ selectMatch error: ${err.message}`);
+  }
+}
+
+function skipReview(entryId) {
+  delete pendingChanges[entryId];
+  const row = document.getElementById(`review-${entryId}`);
+  if (row) { row.style.opacity='0.4'; row.style.pointerEvents='none'; }
+}
+
+async function saveAll() {
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true; btn.textContent = 'Saving…';
+
+  const ids = Object.keys(pendingChanges);
+  if (!ids.length) { setStatus('Nothing to save.'); btn.disabled=false; btn.textContent='💾 Save All Changes'; return; }
+
+  // Apply patches
+  for (const id of ids) {
+    const idx = entries.findIndex(e=>e.id===id);
+    if (idx === -1) continue;
+    Object.assign(entries[idx], pendingChanges[id]);
+  }
+
+  try {
+    await driveWrite('watchlist.json', entries);
+    setStatus(`✅ Saved ${ids.length} updates to watchlist.json`);
+    pendingChanges = {};
+    btn.textContent = '✓ Saved!';
+    setTimeout(()=>{ btn.disabled=false; btn.textContent='💾 Save All Changes'; }, 3000);
+  } catch(err) {
+    setStatus('❌ Save failed: ' + err.message);
+    btn.disabled = false; btn.textContent = '💾 Save All Changes';
+  }
+}
+</script>
+</body>
+</html>
