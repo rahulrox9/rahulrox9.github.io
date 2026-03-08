@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rahul Subbaraman</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1a1208;
+  --parchment:#faf6ef;
+  --warm:#c8873a;
+  --warm-light:#f0d9be;
+  --muted:#8a7560;
+  --card:#fff9f2;
+  --border:#e8dfd0;
+  --green:#2d6b5e;
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--parchment);
+  color:var(--ink);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── Grain overlay ── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:0.4;
+}
+
+/* ── Hero ── */
+.hero{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  position:relative;
+}
+
+.hero-left{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:6rem 4rem 6rem 6rem;
+  position:relative;
+}
+
+.hero-right{
+  background:var(--ink);
+  position:relative;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* Decorative circles on right panel */
+.hero-right::before{
+  content:'';
+  position:absolute;
+  width:500px;height:500px;
+  border-radius:50%;
+  border:1px solid rgba(200,135,58,0.2);
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+}
+.hero-right::after{
+  content:'';
+  position:absolute;
+  width:320px;height:320px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(200,135,58,0.12) 0%, transparent 70%);
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+}
+
+.hero-monogram{
+  font-family:'Playfair Display',serif;
+  font-size:14rem;
+  font-weight:700;
+  color:rgba(200,135,58,0.15);
+  line-height:1;
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  letter-spacing:-0.05em;
+  user-select:none;
+}
+
+.hero-globe{
+  font-size:4rem;
+  position:relative;
+  z-index:2;
+  animation:float 4s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-12px)}
+}
+
+/* Decorative line */
+.hero-left::before{
+  content:'';
+  position:absolute;
+  top:0;bottom:0;right:0;
+  width:1px;
+  background:linear-gradient(to bottom, transparent, var(--border) 20%, var(--border) 80%, transparent);
+}
+
+.eyebrow{
+  font-size:0.7rem;
+  font-weight:500;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--warm);
+  margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:0.6rem;
+}
+.eyebrow::before{
+  content:'';
+  display:inline-block;
+  width:24px;height:1px;
+  background:var(--warm);
+}
+
+.hero-name{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(3rem, 6vw, 5.5rem);
+  font-weight:700;
+  line-height:1.05;
+  letter-spacing:-0.02em;
+  margin-bottom:1.5rem;
+}
+.hero-name em{
+  font-style:italic;
+  color:var(--warm);
+  display:block;
+}
+
+.hero-desc{
+  font-size:1rem;
+  color:var(--muted);
+  line-height:1.75;
+  max-width:420px;
+  margin-bottom:3rem;
+  font-weight:300;
+}
+
+.hero-links{
+  display:flex;gap:1rem;flex-wrap:wrap;
+}
+.hero-link{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.6rem 1.4rem;
+  border-radius:2px;
+  font-size:0.8rem;
+  font-weight:500;
+  letter-spacing:0.04em;
+  text-decoration:none;
+  transition:all 0.2s;
+}
+.hero-link.primary{
+  background:var(--ink);
+  color:var(--parchment);
+}
+.hero-link.primary:hover{background:var(--warm)}
+.hero-link.ghost{
+  border:1px solid var(--border);
+  color:var(--muted);
+}
+.hero-link.ghost:hover{border-color:var(--warm);color:var(--warm)}
+
+/* ── Section ── */
+section{padding:6rem 6rem;max-width:1200px;margin:0 auto}
+
+.section-label{
+  font-size:0.68rem;
+  font-weight:500;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--warm);
+  margin-bottom:0.6rem;
+}
+
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2rem,3.5vw,3rem);
+  font-weight:700;
+  line-height:1.1;
+  letter-spacing:-0.02em;
+  margin-bottom:3rem;
+}
+
+/* ── Cards grid ── */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1.5px;
+  background:var(--border);
+  border:1px solid var(--border);
+}
+
+.card{
+  background:var(--card);
+  padding:2.5rem 2rem;
+  text-decoration:none;
+  color:var(--ink);
+  display:flex;flex-direction:column;
+  position:relative;
+  overflow:hidden;
+  transition:background 0.2s;
+}
+.card:hover{background:var(--parchment)}
+.card:hover .card-arrow{transform:translate(4px,-4px)}
+
+.card-icon{
+  font-size:2rem;
+  margin-bottom:1.5rem;
+  display:block;
+}
+
+.card-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.3rem;
+  font-weight:700;
+  margin-bottom:0.6rem;
+  line-height:1.2;
+}
+
+.card-desc{
+  font-size:0.82rem;
+  color:var(--muted);
+  line-height:1.65;
+  flex:1;
+  font-weight:300;
+}
+
+.card-arrow{
+  display:inline-block;
+  margin-top:1.5rem;
+  font-size:0.75rem;
+  color:var(--warm);
+  letter-spacing:0.06em;
+  transition:transform 0.2s;
+}
+
+.card-tag{
+  position:absolute;
+  top:1.2rem;right:1.2rem;
+  font-size:0.6rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--muted);
+  border:1px solid var(--border);
+  padding:0.15rem 0.5rem;
+  border-radius:1px;
+}
+
+/* ── Divider ── */
+.divider{
+  width:100%;
+  height:1px;
+  background:linear-gradient(to right, transparent, var(--border) 20%, var(--border) 80%, transparent);
+  margin:0 6rem;
+  width:calc(100% - 12rem);
+}
+
+/* ── About strip ── */
+.about-strip{
+  background:var(--ink);
+  padding:5rem 6rem;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4rem;
+  align-items:center;
+}
+
+.about-strip .section-label{color:rgba(200,135,58,0.8)}
+.about-strip .section-title{color:var(--parchment);margin-bottom:1.5rem}
+.about-strip p{color:rgba(250,246,239,0.6);font-size:0.9rem;line-height:1.8;font-weight:300}
+
+.about-stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.08);
+}
+.stat{
+  padding:2rem 1.5rem;
+  background:rgba(255,255,255,0.03);
+}
+.stat-num{
+  font-family:'Playfair Display',serif;
+  font-size:2.8rem;
+  font-weight:700;
+  color:var(--warm);
+  line-height:1;
+  margin-bottom:0.4rem;
+}
+.stat-lbl{
+  font-size:0.72rem;
+  color:rgba(250,246,239,0.4);
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+}
+
+/* ── Footer ── */
+footer{
+  padding:3rem 6rem;
+  border-top:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.footer-name{
+  font-family:'Playfair Display',serif;
+  font-size:1rem;
+  font-style:italic;
+  color:var(--muted);
+}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{
+  font-size:0.75rem;
+  color:var(--muted);
+  text-decoration:none;
+  letter-spacing:0.05em;
+  transition:color 0.15s;
+}
+.footer-links a:hover{color:var(--warm)}
+
+/* ── Animations ── */
+.fade-up{
+  opacity:0;
+  transform:translateY(24px);
+  animation:fadeUp 0.7s ease forwards;
+}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.delay-1{animation-delay:0.1s}
+.delay-2{animation-delay:0.2s}
+.delay-3{animation-delay:0.35s}
+.delay-4{animation-delay:0.5s}
+.delay-5{animation-delay:0.65s}
+
+/* ── Responsive ── */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;min-height:auto}
+  .hero-right{display:none}
+  .hero-left{padding:5rem 2rem 4rem}
+  .hero-left::before{display:none}
+  section{padding:4rem 2rem}
+  .cards{grid-template-columns:1fr}
+  .about-strip{grid-template-columns:1fr;padding:4rem 2rem;gap:2rem}
+  .divider{margin:0 2rem;width:calc(100% - 4rem)}
+  footer{padding:2rem;flex-direction:column;gap:1rem;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="eyebrow fade-up">Personal space</div>
+    <h1 class="hero-name fade-up delay-1">
+      Rahul
+      <em>Subbaraman</em>
+    </h1>
+    <p class="hero-desc fade-up delay-2">
+      A corner of the internet where I track what I watch, where I've been, and what I've read. Everything hand-curated, nothing algorithmic.
+    </p>
+    <div class="hero-links fade-up delay-3">
+      <a class="hero-link primary" href="watchlist.html">Rahul's Watchlist →</a>
+      <a class="hero-link ghost" href="https://github.com/rahulrox9" target="_blank">GitHub</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-monogram">RS</div>
+    <div class="hero-globe">🌍</div>
+  </div>
+</div>
+
+<!-- ── COLLECTIONS ── -->
+<section>
+  <div class="section-label">Collections</div>
+  <h2 class="section-title">What I've been<br><em style="font-style:italic;color:var(--warm)">up to</em></h2>
+
+  <div class="cards">
+    <a class="card" href="watchlist.html">
+      <span class="card-icon">🎬</span>
+      <div class="card-tag">Live</div>
+      <div class="card-title">Rahul's Watchlist</div>
+      <div class="card-desc">Every film and series I've watched, rated, and reviewed. Filterable by language, sorted by rating or date.</div>
+      <span class="card-arrow">View collection ↗</span>
+    </a>
+    <a class="card" href="travel.html">
+      <span class="card-icon">🗺️</span>
+      <div class="card-tag">Live</div>
+      <div class="card-title">Rahul's Travels</div>
+      <div class="card-desc">An interactive map of every place I've visited — cities, temples, airports — pinned with flag emojis.</div>
+      <span class="card-arrow">Explore the map ↗</span>
+    </a>
+    <a class="card" href="books.html">
+      <span class="card-icon">📚</span>
+      <div class="card-tag">Live</div>
+      <div class="card-title">Rahul's Bookshelf</div>
+      <div class="card-desc">My reading history pulled live from Goodreads. Covers, ratings, genres, and dates all in one place.</div>
+      <span class="card-arrow">Browse books ↗</span>
+    </a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── ABOUT ── -->
+<div class="about-strip">
+  <div>
+    <div class="section-label">About this site</div>
+    <h2 class="section-title">Built by hand,<br>not by template</h2>
+    <p>This site is a personal project — no Wix, no Squarespace, no website builder. Just HTML, a Google Apps Script backend, and a lot of tinkering. Everything you see is stored in Google Drive and rendered fresh.</p>
+  </div>
+  <div class="about-stats">
+    <div class="stat">
+      <div class="stat-num" id="stat-movies">—</div>
+      <div class="stat-lbl">Films watched</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="stat-shows">—</div>
+      <div class="stat-lbl">Series watched</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="stat-places">—</div>
+      <div class="stat-lbl">Places visited</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="stat-books">—</div>
+      <div class="stat-lbl">Books read</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-name">Rahul Subbaraman</div>
+  <div class="footer-links">
+    <a href="watchlist.html">Watchlist</a>
+    <a href="travel.html">Travels</a>
+    <a href="books.html">Bookshelf</a>
+    <a href="https://github.com/rahulrox9" target="_blank">GitHub</a>
+  </div>
+</footer>
+
+<script>
+// Pull live counts from Drive to populate the stats
+const DB = 'https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+
+function jsonp(url, file) {
+  return new Promise((res, rej) => {
+    const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const s  = document.createElement('script');
+    window[cb] = d => { delete window[cb]; s.remove(); res(d); };
+    s.onerror  = () => { delete window[cb]; s.remove(); rej(); };
+    s.src = `${url}?file=${file}&callback=${cb}`;
+    document.head.appendChild(s);
+  });
+}
+
+async function loadStats() {
+  try {
+    const [watchlist, pins] = await Promise.all([
+      jsonp(DB, 'watchlist.json'),
+      jsonp(DB, 'travel_pins.json')
+    ]);
+    if (Array.isArray(watchlist)) {
+      document.getElementById('stat-movies').textContent = watchlist.filter(e=>e.type==='movie').length;
+      document.getElementById('stat-shows').textContent  = watchlist.filter(e=>e.type==='show').length;
+    }
+    if (Array.isArray(pins)) {
+      document.getElementById('stat-places').textContent = pins.length;
+    }
+  } catch(e) {}
+
+  // Books from Goodreads RSS
+  try {
+    const r = await fetch('https://api.rss2json.com/v1/api.json?rss_url=' +
+      encodeURIComponent('https://www.goodreads.com/review/list_rss/104699560?shelf=read&sort=date_read&order=d'));
+    const d = await r.json();
+    if (d.items) document.getElementById('stat-books').textContent = d.items.length + '+';
+  } catch(e) {}
+}
+
+loadStats();
+</script>
+</body>
+</html>
