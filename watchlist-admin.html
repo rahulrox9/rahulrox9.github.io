@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watchlist Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --ink:#1a1208; --parchment:#faf6ef; --warm:#c8873a; --muted:#8a7560; --card:#fff9f2; --border:#e8dfd0; --green:#2d6b5e; --red:#c0392b; }
+body { font-family:'DM Sans',sans-serif; background:var(--parchment); color:var(--ink); padding:1.5rem; max-width:740px; margin:0 auto; }
+h1 { font-family:'Playfair Display',serif; font-size:1.7rem; margin-bottom:0.2rem; }
+h1 span { color:var(--warm); font-style:italic; }
+.subtitle { color:var(--muted); font-size:0.78rem; margin-bottom:1.5rem; letter-spacing:0.06em; text-transform:uppercase; }
+.card { background:var(--card); border:1px solid var(--border); border-radius:6px; padding:1.4rem; margin-bottom:1.2rem; }
+.card-title { font-family:'Playfair Display',serif; font-size:1rem; margin-bottom:1rem; }
+.field { margin-bottom:1rem; }
+label { display:block; font-size:0.7rem; font-weight:500; letter-spacing:0.07em; text-transform:uppercase; color:var(--muted); margin-bottom:0.3rem; }
+input[type=text],input[type=url],input[type=date],textarea,select { width:100%; padding:0.5rem 0.75rem; border:1px solid var(--border); border-radius:4px; background:var(--parchment); font-family:'DM Sans',sans-serif; font-size:0.87rem; color:var(--ink); outline:none; transition:border-color 0.2s; }
+input:focus,textarea:focus,select:focus { border-color:var(--warm); }
+textarea { resize:vertical; min-height:65px; }
+.btn { background:var(--warm); color:#fff; border:none; padding:0.55rem 1.4rem; border-radius:4px; font-family:'DM Sans',sans-serif; font-size:0.86rem; font-weight:500; cursor:pointer; transition:opacity 0.2s; }
+.btn:hover { opacity:0.85; }
+.btn.ghost { background:transparent; color:var(--muted); border:1px solid var(--border); }
+.btn.danger { background:var(--red); }
+.btn.green { background:var(--green); }
+.btn.sm { padding:0.3rem 0.75rem; font-size:0.76rem; }
+.row { display:flex; gap:0.5rem; align-items:center; }
+.msg { padding:0.6rem 0.9rem; border-radius:4px; font-size:0.82rem; margin-top:0.7rem; display:none; }
+.msg.ok { background:#ddf0ec; color:var(--green); display:block; }
+.msg.err { background:#fde8e8; color:var(--red); display:block; }
+hr { border:none; border-top:1px solid var(--border); margin:1.5rem 0; }
+
+/* Preview */
+.preview { display:none; gap:0.9rem; align-items:flex-start; padding:0.9rem; background:var(--parchment); border:1px solid var(--border); border-radius:4px; margin:0.7rem 0 1rem; }
+.preview.on { display:flex; }
+.preview img { width:55px; height:82px; object-fit:cover; border-radius:2px; flex-shrink:0; }
+.p-title { font-family:'Playfair Display',serif; font-weight:700; font-size:0.95rem; }
+.p-meta { color:var(--muted); font-size:0.76rem; margin-top:0.15rem; }
+.badge { display:inline-block; font-size:0.6rem; font-weight:500; letter-spacing:0.07em; text-transform:uppercase; padding:0.1rem 0.4rem; border-radius:8px; }
+.badge.movie { background:#fdecd8; color:var(--warm); }
+.badge.show { background:#ddf0ec; color:var(--green); }
+
+/* Stars */
+.stars-row { display:flex; align-items:center; gap:0.6rem; }
+.stars-input { display:flex; gap:1px; }
+.stars-input span { font-size:1.25rem; cursor:pointer; color:var(--border); transition:color 0.1s; user-select:none; line-height:1; }
+.stars-input span.on { color:var(--warm); }
+.star-lbl { font-size:0.8rem; color:var(--muted); min-width:44px; }
+
+/* Tabs */
+.tabs { display:flex; border-bottom:1px solid var(--border); margin-bottom:1.2rem; }
+.tab { padding:0.45rem 1.1rem; font-size:0.8rem; cursor:pointer; color:var(--muted); border-bottom:2px solid transparent; margin-bottom:-1px; background:none; border-top:none; border-left:none; border-right:none; font-family:'DM Sans',sans-serif; }
+.tab.on { color:var(--warm); border-bottom-color:var(--warm); font-weight:500; }
+
+/* Entry list */
+.entry-list { display:flex; flex-direction:column; gap:0.6rem; }
+.entry { background:var(--card); border:1px solid var(--border); border-radius:4px; padding:0.8rem 1rem; display:flex; gap:0.8rem; align-items:center; }
+.entry img { width:34px; height:51px; object-fit:cover; border-radius:2px; flex-shrink:0; }
+.entry-info { flex:1; min-width:0; }
+.entry-title { font-family:'Playfair Display',serif; font-size:0.86rem; font-weight:700; }
+.entry-meta { font-size:0.72rem; color:var(--muted); margin-top:0.1rem; }
+.entry-actions { display:flex; gap:0.4rem; flex-shrink:0; }
+.icon-btn { background:none; border:none; cursor:pointer; color:var(--muted); font-size:0.95rem; padding:0.2rem 0.35rem; border-radius:3px; transition:color 0.15s; }
+.icon-btn:hover { color:var(--ink); }
+.icon-btn.del:hover { color:var(--red); }
+.empty { text-align:center; padding:2rem; color:var(--muted); font-style:italic; font-family:'Playfair Display',serif; }
+
+/* Season block */
+.season-tabs-nav { display:flex; gap:0; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.season-tracker { margin-top:0.6rem; border:1px solid var(--border); border-radius:4px; overflow:hidden; }
+.season-tracker-toggle { display:flex; align-items:center; justify-content:space-between; padding:0.35rem 0.6rem; cursor:pointer; background:var(--parchment); font-size:0.74rem; color:var(--muted); user-select:none; }
+.season-tracker-toggle:hover { background:var(--border); }
+.season-tracker-toggle .tog-label { font-weight:500; }
+.season-tracker-toggle .tog-arrow { font-size:0.6rem; transition:transform 0.2s; }
+.season-tracker-body { display:none; padding:0.6rem; }
+.season-tracker-body.on { display:block; }
+.season-tracker.open .tog-arrow { transform:rotate(180deg); }
+.season-tab-btn { padding:0.35rem 0.85rem; font-size:0.74rem; cursor:pointer; color:var(--muted); border-bottom:2px solid transparent; margin-bottom:-1px; background:none; border-top:none; border-left:none; border-right:none; font-family:'DM Sans',sans-serif; white-space:nowrap; transition:color 0.15s; }
+.season-tab-btn.on { color:var(--warm); border-bottom-color:var(--warm); font-weight:500; }
+.season-tab-panel { display:none; padding:0.8rem 0 0; }
+.season-tab-panel.on { display:block; }
+.season-panel-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.6rem; }
+.season-name { font-size:0.8rem; font-weight:500; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); }
+.ep-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:0.4rem; margin-top:0.5rem; }
+
+/* Episode tracker */
+.ep-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:0.4rem; margin-top:0.5rem; }
+.ep-item { display:flex; align-items:center; gap:0.4rem; font-size:0.76rem; cursor:pointer; padding:0.25rem 0.4rem; border-radius:3px; transition:background 0.15s; }
+.ep-item:hover { background:var(--border); }
+.ep-item input[type=checkbox] { accent-color:var(--warm); width:13px; height:13px; flex-shrink:0; cursor:pointer; }
+.ep-item.done { color:var(--green); }
+.ep-progress { font-size:0.75rem; color:var(--muted); margin-top:0.4rem; }
+
+/* Season review prompt modal */
+.overlay { display:none; position:fixed; inset:0; background:rgba(26,18,8,0.55); z-index:999; align-items:center; justify-content:center; padding:1rem; }
+.overlay.on { display:flex; }
+.modal { background:var(--card); border-radius:6px; max-width:480px; width:100%; padding:1.6rem; animation:pop 0.2s ease; }
+@keyframes pop { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
+.modal h3 { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:1rem; }
+</style>
+</head>
+<body>
+
+<h1>What I've <span>Watched</span></h1>
+<p class="subtitle">Admin · Manage your watchlist <span id="save-indicator" style="margin-left:1rem;font-size:0.75rem;font-weight:500"></span></p>
+
+<!-- ADD / EDIT FORM -->
+<div class="card" id="form-card">
+  <div class="card-title" id="form-title">Add New Entry</div>
+
+  <div class="field">
+    <label>IMDb or TMDB URL</label>
+    <div class="row">
+      <input type="url" id="url-input" placeholder="Paste IMDb or TMDB URL…" style="flex:1">
+      <button class="btn" onclick="onSearch()">Search</button>
+    </div>
+  </div>
+
+  <div class="preview" id="preview">
+    <div id="preview-content" style="color:var(--muted);font-style:italic;font-size:0.85rem">Fetching…</div>
+  </div>
+
+  <!-- MOVIE FIELDS -->
+  <div id="movie-fields" style="display:none">
+    <div class="field">
+      <label>My Rating</label>
+      <div class="stars-row"><div class="stars-input" id="m-stars"></div><span class="star-lbl" id="m-star-lbl">—</span></div>
+    </div>
+    <div class="field"><label>My Review <span style="font-weight:300;text-transform:none">(optional)</span></label><textarea id="m-review" placeholder="What did you think?"></textarea></div>
+    <div class="field"><label>Watched <span style="font-weight:300;text-transform:none">(optional)</span></label><input type="date" id="m-watched"></div>
+  </div>
+
+  <!-- SERIES FIELDS -->
+  <div id="show-fields" style="display:none">
+    <div class="field"><label>Overall Review <span style="font-weight:300;text-transform:none">(optional — add after finishing)</span></label><textarea id="s-review" placeholder="Overall thoughts on the series…"></textarea></div>
+  </div>
+
+  <div style="display:flex;gap:0.6rem;margin-top:0.5rem">
+    <button class="btn" id="submit-btn" onclick="submitEntry()" style="display:none">Add to Watchlist</button>
+    <button class="btn ghost" id="cancel-edit-btn" onclick="cancelEdit()" style="display:none">Cancel</button>
+  </div>
+  <div class="msg" id="form-msg"></div>
+</div>
+
+<!-- SEASON REVIEW PROMPT MODAL -->
+<div class="overlay" id="season-modal">
+  <div class="modal">
+    <h3 id="season-modal-title">Season Complete! 🎉</h3>
+    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">You've finished all episodes. Add your rating and review!</p>
+    <div class="field">
+      <label>Rating</label>
+      <div class="stars-row"><div class="stars-input" id="sm-stars"></div><span class="star-lbl" id="sm-star-lbl">—</span></div>
+    </div>
+    <div class="field"><label>Review <span style="font-weight:300;text-transform:none">(optional)</span></label><textarea id="sm-review" placeholder="Thoughts on this season…"></textarea></div>
+    <div style="display:flex;gap:0.6rem;margin-top:0.5rem">
+      <button class="btn green" onclick="saveSeasonReview()">Save Review</button>
+      <button class="btn ghost" onclick="dismissSeasonModal()">Skip for Now</button>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ENTRY LIST -->
+<div class="tabs">
+  <button class="tab on" onclick="switchTab('movie',this)">Movies <span id="mc">0</span></button>
+  <button class="tab" onclick="switchTab('show',this)">Series <span id="sc">0</span></button>
+</div>
+<div class="entry-list" id="entry-list"><div class="empty">No entries yet</div></div>
+
+<script>
+const DB_URL   = 'https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+const LANG_NAMES = {
+  'af':'Afrikaans','ar':'Arabic','bg':'Bulgarian','bn':'Bengali','cs':'Czech',
+  'da':'Danish','de':'German','el':'Greek','en':'English','es':'Spanish',
+  'et':'Estonian','fa':'Persian','fi':'Finnish','fr':'French','gu':'Gujarati',
+  'he':'Hebrew','hi':'Hindi','hr':'Croatian','hu':'Hungarian','id':'Indonesian',
+  'it':'Italian','ja':'Japanese','kn':'Kannada','ko':'Korean','lt':'Lithuanian',
+  'lv':'Latvian','ml':'Malayalam','mr':'Marathi','ms':'Malay','nl':'Dutch',
+  'no':'Norwegian','pa':'Punjabi','pl':'Polish','pt':'Portuguese','ro':'Romanian',
+  'ru':'Russian','sk':'Slovak','sl':'Slovenian','sq':'Albanian','sr':'Serbian',
+  'sv':'Swedish','sw':'Swahili','ta':'Tamil','te':'Telugu','th':'Thai',
+  'tr':'Turkish','uk':'Ukrainian','ur':'Urdu','vi':'Vietnamese','zh':'Chinese',
+  'cn':'Cantonese','zz':'Unknown'
+};
+function langName(code) { return LANG_NAMES[code] || code || ''; }
+
+const TMDB_KEY = '60a9d5e588c206cf1d895394aa72d581';
+
+let entries    = [];
+let fetched    = null;
+let editId     = null;
+let currentTab = 'movie';
+let pendingSeasonReview = null; // { entryId, seasonNum }
+window._stars  = {};
+
+// ── Stars ────────────────────────────────────────────────
+function makeStar(wrapperId, lblId, key) {
+  const w = document.getElementById(wrapperId);
+  if (!w) return;
+  w.innerHTML = '';
+  _stars[key] = 0;
+  for (let i = 1; i <= 10; i++) {
+    const s = document.createElement('span');
+    s.textContent = '★';
+    s.onmouseover = () => litStars(wrapperId, i-1);
+    s.onmouseout  = () => litStars(wrapperId, _stars[key]-1);
+    s.onclick     = () => { _stars[key]=i; document.getElementById(lblId).textContent=i+'/10'; litStars(wrapperId,i-1); };
+    w.appendChild(s);
+  }
+}
+function litStars(id, upto) {
+  document.getElementById(id)?.querySelectorAll('span').forEach((s,i)=>s.classList.toggle('on',i<=upto));
+}
+function setStar(wrapperId, lblId, key, val) {
+  _stars[key] = val;
+  document.getElementById(lblId).textContent = val ? val+'/10' : '—';
+  litStars(wrapperId, val-1);
+}
+
+makeStar('m-stars','m-star-lbl','m');
+makeStar('s-stars','s-star-lbl','s');
+makeStar('sm-stars','sm-star-lbl','sm');
+
+// ── URL parsing ──────────────────────────────────────────
+function getImdbId(u) { const m=u.match(/tt\d+/); return m?m[0]:null; }
+function getTmdbId(u) {
+  let m = u.match(/themoviedb\.org\/movie\/(\d+)/); if(m) return {id:m[1],type:'movie'};
+  m = u.match(/themoviedb\.org\/tv\/(\d+)/); if(m) return {id:m[1],type:'show'};
+  return null;
+}
+
+async function onSearch() {
+  const url = document.getElementById('url-input').value.trim();
+  const tmdb = getTmdbId(url);
+  const imdb = getImdbId(url);
+  if (tmdb) await fetchTmdb(tmdb.id, tmdb.type);
+  else if (imdb) await fetchByImdb(imdb);
+  else showPreviewMsg('Please enter a valid IMDb or TMDB URL.', true);
+}
+
+function showPreviewMsg(msg, err) {
+  const p = document.getElementById('preview');
+  p.classList.add('on');
+  document.getElementById('preview-content').innerHTML = `<span style="color:${err?'var(--red)':'var(--muted)'};font-style:italic;font-size:0.85rem">${msg}</span>`;
+}
+
+async function fetchByImdb(imdbId) {
+  showPreviewMsg('Fetching…');
+  document.getElementById('preview').classList.add('on');
+  fetched = null;
+  try {
+    const r = await fetch(`https://api.themoviedb.org/3/find/${imdbId}?api_key=${TMDB_KEY}&external_source=imdb_id`);
+    const d = await r.json();
+    const movie = d.movie_results?.[0], show = d.tv_results?.[0];
+    const res = movie || show;
+    if (!res) throw new Error('Not found');
+    const type = show ? 'show' : 'movie';
+    await fetchTmdb(res.id, type, imdbId);
+  } catch(e) { showPreviewMsg('Could not find this title: '+e.message, true); }
+}
+
+async function fetchTmdb(tmdbId, type, imdbIdHint) {
+  showPreviewMsg('Fetching…');
+  document.getElementById('preview').classList.add('on');
+  fetched = null;
+  try {
+    const ep = type==='show' ? 'tv' : 'movie';
+    const [mainRes, extRes] = await Promise.all([
+      fetch(`https://api.themoviedb.org/3/${ep}/${tmdbId}?api_key=${TMDB_KEY}`),
+      fetch(`https://api.themoviedb.org/3/${ep}/${tmdbId}/external_ids?api_key=${TMDB_KEY}`)
+    ]);
+    const d = await mainRes.json();
+    const ext = await extRes.json();
+    if (d.success===false) throw new Error('Not found');
+
+    const title  = d.title||d.name||'';
+    const year   = (d.release_date||d.first_air_date||'').substring(0,4);
+    const poster = d.poster_path ? `https://image.tmdb.org/t/p/w300${d.poster_path}` : '';
+    const imdbId = imdbIdHint || ext.imdb_id || '';
+
+    // For shows, fetch all seasons with episode lists
+    let seasonsData = [];
+    if (type==='show' && d.seasons) {
+      const seasonFetches = d.seasons
+        .filter(s => s.season_number > 0)
+        .map(s => fetch(`https://api.themoviedb.org/3/tv/${tmdbId}/season/${s.season_number}?api_key=${TMDB_KEY}`).then(r=>r.json()));
+      const seasonResults = await Promise.all(seasonFetches);
+      seasonsData = seasonResults.map(s => ({
+        season: s.season_number,
+        name: s.name || `Season ${s.season_number}`,
+        episodes: (s.episodes||[]).map(e => ({
+          ep: e.episode_number,
+          name: e.name,
+          watched: false
+        })),
+        rating: 0,
+        review: '',
+        reviewDone: false
+      }));
+    }
+
+    const language = d.original_language || '';
+    fetched = { imdbId, tmdbId: String(tmdbId), type, title, year, poster, seasonsData, language };
+
+    document.getElementById('preview-content').innerHTML = `
+      ${poster ? `<img src="${poster}" alt="${title}">` : ''}
+      <div>
+        <span class="badge ${type}">${type==='show'?'Series':'Movie'}</span>
+        <div class="p-title" style="margin-top:0.2rem">${title}</div>
+        <div class="p-meta">${year}${type==='show'?' · '+seasonsData.length+' seasons':''}${language?' · '+langName(language):''}</div>
+      </div>`;
+
+    document.getElementById('movie-fields').style.display = type==='movie' ? 'block' : 'none';
+    document.getElementById('show-fields').style.display  = type==='show'  ? 'block' : 'none';
+    document.getElementById('submit-btn').style.display   = 'inline-block';
+    makeStar('m-stars','m-star-lbl','m');
+    makeStar('s-stars','s-star-lbl','s');
+    const langFull = langName(language);
+    if (document.getElementById('m-language')) document.getElementById('m-language').value = langFull;
+    if (document.getElementById('s-language')) document.getElementById('s-language').value = langFull;
+  } catch(e) { showPreviewMsg('Error: '+e.message, true); }
+}
+
+// ── Submit / Edit ────────────────────────────────────────
+async function submitEntry() {
+  const msg = document.getElementById('form-msg');
+  msg.className = 'msg';
+
+  if (editId) {
+    // Editing existing entry
+    const idx = entries.findIndex(e=>e.id===editId);
+    if (idx === -1) return;
+    const e = entries[idx];
+    if (e.type==='movie') {
+      e.myRating = _stars['m']||0;
+      e.review   = document.getElementById('m-review').value.trim();
+      const rd   = document.getElementById('m-watched').value;
+      e.watched  = rd ? new Date(rd).toLocaleDateString('en-GB',{month:'short',year:'numeric'}) : '';
+      e.language = document.getElementById('m-language').value.trim();
+    } else {
+      e.review   = document.getElementById('s-review').value.trim();
+      // Auto-compute overall rating as mean of reviewed seasons
+      const ratedSeasons = (e.seasonsData||[]).filter(s=>s.reviewDone && s.rating);
+      e.myRating = ratedSeasons.length ? Math.round(ratedSeasons.reduce((a,s)=>a+s.rating,0)/ratedSeasons.length*10)/10 : 0;
+    }
+    // If fetched new URL, update metadata
+    if (fetched && fetched.imdbId !== e.imdbId) {
+      e.imdbId = fetched.imdbId; e.tmdbId = fetched.tmdbId;
+      e.title = fetched.title; e.year = fetched.year; e.poster = fetched.poster;
+      if (fetched.type==='show' && (!e.seasonsData||!e.seasonsData.length)) {
+        e.seasonsData = fetched.seasonsData;
+      }
+    }
+    await save();
+    cancelEdit();
+    msg.className='msg ok'; msg.textContent=`"${e.title}" updated!`;
+    setTimeout(()=>msg.className='msg',3000);
+    return;
+  }
+
+  if (!fetched) { msg.className='msg err'; msg.textContent='Please search for a title first.'; return; }
+  if (entries.find(e => (fetched.imdbId && e.imdbId===fetched.imdbId) || (fetched.tmdbId && e.tmdbId===fetched.tmdbId))) {
+    msg.className='msg err'; msg.textContent='Already in your watchlist.'; return;
+  }
+
+  const entry = {
+    id: Date.now().toString(),
+    ...fetched,
+    addedAt: Date.now(),
+    myRating: 0,
+    review: '',
+    watched: '',
+  };
+
+  if (fetched.type==='movie') {
+    entry.myRating = _stars['m']||0;
+    entry.review   = document.getElementById('m-review').value.trim();
+    const rd       = document.getElementById('m-watched').value;
+    entry.watched  = rd ? new Date(rd).toLocaleDateString('en-GB',{month:'short',year:'numeric'}) : '';
+    entry.language = document.getElementById('m-language').value.trim();
+  } else {
+    entry.review   = document.getElementById('s-review').value.trim();
+    entry.myRating = 0; // computed from season ratings as you watch
+  }
+
+  entries.unshift(entry);
+  await save();
+  resetForm();
+  renderList();
+  msg.className='msg ok'; msg.textContent=`"${entry.title}" added!`;
+  setTimeout(()=>msg.className='msg',3000);
+}
+
+function startEdit(id) {
+  const e = entries.find(x=>x.id===id);
+  if (!e) return;
+  editId = id;
+  fetched = null;
+
+  document.getElementById('form-title').textContent = `Editing: ${e.title}`;
+  document.getElementById('url-input').value = e.imdbId ? `https://www.imdb.com/title/${e.imdbId}/` : '';
+
+  // Show existing entry preview
+  const preview = document.getElementById('preview');
+  preview.classList.add('on');
+  document.getElementById('preview-content').innerHTML = `
+    ${e.poster ? `<img src="${e.poster}" alt="${e.title}">` : ''}
+    <div>
+      <span class="badge ${e.type}">${e.type==='show'?'Series':'Movie'}</span>
+      <div class="p-title" style="margin-top:0.2rem">${e.title}</div>
+      <div class="p-meta">${e.year||''}${e.type==='show'&&e.seasonsData?' · '+e.seasonsData.length+' seasons':''}</div>
+    </div>`;
+
+  document.getElementById('movie-fields').style.display = e.type==='movie' ? 'block' : 'none';
+  document.getElementById('show-fields').style.display  = e.type==='show'  ? 'block' : 'none';
+  document.getElementById('submit-btn').style.display   = 'inline-block';
+  document.getElementById('submit-btn').textContent     = 'Save Changes';
+  document.getElementById('cancel-edit-btn').style.display = 'inline-block';
+
+  makeStar('m-stars','m-star-lbl','m'); setStar('m-stars','m-star-lbl','m', e.myRating||0);
+  if (e.type==='movie') {
+    document.getElementById('m-review').value  = e.review||'';
+    document.getElementById('m-watched').value = '';
+  } else {
+    document.getElementById('s-review').value = e.review||'';
+  }
+  document.getElementById('form-card').scrollIntoView({behavior:'smooth'});
+}
+
+function cancelEdit() {
+  editId = null;
+  resetForm();
+}
+
+function resetForm() {
+  fetched = null; editId = null;
+  document.getElementById('form-title').textContent = 'Add New Entry';
+  document.getElementById('url-input').value = '';
+  document.getElementById('m-review').value = '';
+  document.getElementById('m-watched').value = '';
+  document.getElementById('s-review').value = '';
+  document.getElementById('preview').classList.remove('on');
+  document.getElementById('movie-fields').style.display = 'none';
+  document.getElementById('show-fields').style.display  = 'none';
+  document.getElementById('submit-btn').style.display   = 'none';
+  document.getElementById('submit-btn').textContent     = 'Add to Watchlist';
+  document.getElementById('cancel-edit-btn').style.display = 'none';
+  _stars = {}; makeStar('m-stars','m-star-lbl','m');
+}
+
+// ── Episode tracking ─────────────────────────────────────
+function toggleEp(entryId, seasonNum, epNum, checkbox) {
+  const e = entries.find(x=>x.id===entryId);
+  if (!e) return;
+  const season = e.seasonsData?.find(s=>s.season===seasonNum);
+  if (!season) return;
+  const ep = season.episodes?.find(ep=>ep.ep===epNum);
+  if (!ep) return;
+  ep.watched = !ep.watched;
+
+  // Update just this checkbox label style in place
+  if (checkbox) checkbox.closest('label')?.classList.toggle('done', ep.watched);
+
+  // Update progress bar + header count in place
+  updateSeasonProgressUI(entryId, seasonNum, season);
+
+  // Check if all episodes in this season are done
+  const allDone = season.episodes.every(ep=>ep.watched);
+  if (allDone && !season.reviewDone) {
+    pendingSeasonReview = { entryId, seasonNum };
+    document.getElementById('season-modal-title').textContent = `${e.title} — ${season.name} Complete! 🎉`;
+    makeStar('sm-stars','sm-star-lbl','sm');
+    document.getElementById('sm-review').value = '';
+    document.getElementById('season-modal').classList.add('on');
+  }
+
+  save(); // no renderList — stay on current tab
+}
+
+function updateSeasonProgressUI(entryId, seasonNum, season) {
+  const done  = season.episodes?.filter(ep=>ep.watched).length||0;
+  const total = season.episodes?.length||0;
+  const pct   = total ? Math.round(done/total*100) : 0;
+  const allDone = done===total && total>0;
+  const panel = document.getElementById(`stp-${entryId}-${seasonNum}`);
+  if (!panel) return;
+
+  // Update count label
+  const lbl = panel.querySelector('.season-name');
+  if (lbl) lbl.textContent = `${done}/${total} episodes${season.reviewDone?' · ✓ Reviewed':''}`;
+
+  // Update progress bar
+  const fill = panel.querySelector('.ep-progress div div');
+  if (fill) fill.style.width = pct+'%';
+
+  // Swap ✓ All / ✕ Clear button
+  const btnWrap = panel.querySelector('.season-panel-header div');
+  if (btnWrap) {
+    const existing = btnWrap.querySelector('.toggle-all-btn');
+    if (existing) existing.remove();
+    const btn = document.createElement('button');
+    btn.className = 'btn sm toggle-all-btn ' + (allDone ? 'ghost' : 'green');
+    btn.style.cssText = 'padding:0.2rem 0.6rem;font-size:0.7rem' + (allDone?';color:var(--red);border-color:var(--red)':'');
+    btn.textContent = allDone ? '✕ Clear' : '✓ All';
+    btn.onclick = () => markSeasonAll(entryId, seasonNum, !allDone);
+    btnWrap.appendChild(btn);
+  }
+
+  // Update tab label
+  const nav = document.getElementById('stnav-'+entryId);
+  const tabBtn = nav?.querySelectorAll('.season-tab-btn')[seasonNum-1];
+  if (tabBtn) {
+    const base = tabBtn.textContent.replace(/\s[\d✓].*$/, '').trim();
+    tabBtn.textContent = allDone ? base+' ✓' : base+` ${done}/${total}`;
+  }
+}
+
+function saveSeasonReview() {
+  if (!pendingSeasonReview) return;
+  const { entryId, seasonNum } = pendingSeasonReview;
+  const e = entries.find(x=>x.id===entryId);
+  const season = e?.seasonsData?.find(s=>s.season===seasonNum);
+  if (season) {
+    season.rating     = _stars['sm']||0;
+    season.review     = document.getElementById('sm-review').value.trim();
+    season.reviewDone = true;
+    // Recompute overall rating as mean of all reviewed seasons
+    const ratedSeasons = (e.seasonsData||[]).filter(s=>s.reviewDone && s.rating);
+    e.myRating = ratedSeasons.length ? Math.round(ratedSeasons.reduce((a,s)=>a+s.rating,0)/ratedSeasons.length*10)/10 : 0;
+  }
+  dismissSeasonModal();
+  save().then(()=>renderList());
+}
+
+function dismissSeasonModal() {
+  document.getElementById('season-modal').classList.remove('on');
+  pendingSeasonReview = null;
+}
+
+// ── Render ───────────────────────────────────────────────
+function switchTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  renderList();
+}
+
+function renderList() {
+  const movies = entries.filter(e=>e.type==='movie');
+  const shows  = entries.filter(e=>e.type==='show');
+  document.getElementById('mc').textContent = movies.length;
+  document.getElementById('sc').textContent = shows.length;
+
+  const list    = document.getElementById('entry-list');
+  const visible = currentTab==='movie' ? movies : shows;
+  if (!visible.length) { list.innerHTML='<div class="empty">Nothing here yet</div>'; return; }
+
+  list.innerHTML = visible.map(e => {
+    return `<div class="entry">
+      ${e.poster?`<img src="${e.poster}" alt="${e.title}">`:''}
+      <div class="entry-info">
+        <div class="entry-title">${e.title} <span class="badge ${e.type}">${e.type==='show'?'Series':'Movie'}</span></div>
+        <div class="entry-meta">${e.year}${e.language?' · '+e.language:''}${e.myRating?' · '+e.myRating+'/10':''}</div>
+        ${e.review?`<div class="entry-meta" style="font-style:italic;margin-top:0.15rem">"${e.review.substring(0,70)}${e.review.length>70?'…':''}"</div>`:''}
+        ${e.type==='show'?renderSeasonTracker(e):''}
+      </div>
+      <div class="entry-actions">
+        <button class="icon-btn" onclick="startEdit('${e.id}')" title="Edit">✏️</button>
+        <button class="icon-btn del" onclick="removeEntry('${e.id}')" title="Remove">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderSeasonTracker(e) {
+  if (!e.seasonsData?.length) return '';
+  // Find first incomplete season to default to
+  const firstActive = e.seasonsData.find(s => {
+    const done = s.episodes?.filter(ep=>ep.watched).length||0;
+    const total = s.episodes?.length||0;
+    return done < total;
+  }) || e.seasonsData[e.seasonsData.length-1];
+  const defaultSeason = firstActive?.season || e.seasonsData[0]?.season;
+
+  const tabs = e.seasonsData.map(s => {
+    const done  = s.episodes?.filter(ep=>ep.watched).length||0;
+    const total = s.episodes?.length||0;
+    const label = s.name?.startsWith('Season') ? s.name.replace('Season','S') : s.name;
+    const tick  = done===total&&total>0 ? ' ✓' : ` ${done}/${total}`;
+    return `<button class="season-tab-btn ${s.season===defaultSeason?'on':''}" onclick="switchAdminSeason('${e.id}',${s.season},this)">${label}${tick}</button>`;
+  }).join('');
+
+  const panels = e.seasonsData.map(s => {
+    const done  = s.episodes?.filter(ep=>ep.watched).length||0;
+    const total = s.episodes?.length||0;
+    const pct   = total ? Math.round(done/total*100) : 0;
+    const allDone = done === total && total > 0;
+    return `
+    <div class="season-tab-panel ${s.season===defaultSeason?'on':''}" id="stp-${e.id}-${s.season}">
+      <div class="season-panel-header">
+        <span class="season-name">${done}/${total} episodes${s.reviewDone?' · ✓ Reviewed':''}</span>
+        <div style="display:flex;align-items:center;gap:0.4rem">
+          ${s.reviewDone&&s.rating?`<span style="font-size:0.78rem;color:var(--warm)">${s.rating}/10</span>`:''}
+          <button class="btn sm ghost" onclick="editSeasonReview('${e.id}',${s.season})" style="padding:0.15rem 0.5rem;font-size:0.68rem">${s.reviewDone?'✏️ Edit review':'＋ Review'}</button>
+          ${!allDone
+            ? `<button class="btn sm green" onclick="markSeasonAll('${e.id}',${s.season},true)" style="padding:0.2rem 0.6rem;font-size:0.7rem">✓ All</button>`
+            : `<button class="btn sm ghost" onclick="markSeasonAll('${e.id}',${s.season},false)" style="padding:0.2rem 0.6rem;font-size:0.7rem;color:var(--red);border-color:var(--red)">✕ Clear</button>`
+          }
+        </div>
+      </div>
+      <div class="ep-grid">
+        ${(s.episodes||[]).map(ep=>`
+          <label class="ep-item ${ep.watched?'done':''}">
+            <input type="checkbox" ${ep.watched?'checked':''} onchange="toggleEp('${e.id}',${s.season},${ep.ep},this)">
+            E${ep.ep}${ep.name?' · '+ep.name.substring(0,14):''}
+          </label>`).join('')}
+      </div>
+      <div class="ep-progress" style="margin-top:0.5rem">
+        <div style="background:var(--border);border-radius:99px;height:4px;overflow:hidden">
+          <div style="background:var(--warm);height:100%;width:${pct}%;transition:width 0.3s"></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const prog = e.seasonsData.map(s=>{
+    const done = s.episodes?.filter(ep=>ep.watched).length||0;
+    const total = s.episodes?.length||0;
+    return `S${s.season}: ${done}/${total}`;
+  }).join(' · ');
+
+  return `<div class="season-tracker" id="stracker-${e.id}">
+    <div class="season-tracker-toggle" onclick="toggleSeasonTracker('${e.id}')">
+      <span class="tog-label">Episodes · <span style="font-weight:300">${prog}</span></span>
+      <span class="tog-arrow">▼</span>
+    </div>
+    <div class="season-tracker-body" id="stbody-${e.id}">
+      <div class="season-tabs-nav" id="stnav-${e.id}">${tabs}</div>
+      ${panels}
+    </div>
+  </div>`;
+}
+
+function editSeasonReview(entryId, seasonNum) {
+  const e = entries.find(x=>x.id===entryId);
+  const season = e?.seasonsData?.find(s=>s.season===seasonNum);
+  if (!e || !season) return;
+  pendingSeasonReview = { entryId, seasonNum };
+  document.getElementById('season-modal-title').textContent = `${e.title} — ${season.name||'Season '+seasonNum}`;
+  makeStar('sm-stars','sm-star-lbl','sm');
+  if (season.rating) setStar('sm-stars','sm-star-lbl','sm', season.rating);
+  document.getElementById('sm-review').value = season.review||'';
+  document.getElementById('season-modal').classList.add('on');
+}
+
+function toggleSeasonTracker(entryId) {
+  const tracker = document.getElementById('stracker-'+entryId);
+  const body    = document.getElementById('stbody-'+entryId);
+  if (!tracker || !body) return;
+  const isOpen = tracker.classList.toggle('open');
+  body.classList.toggle('on', isOpen);
+}
+
+function switchAdminSeason(entryId, seasonNum, btn) {
+  // Switch tabs for this specific entry
+  const nav = document.getElementById('stnav-'+entryId);
+  nav?.querySelectorAll('.season-tab-btn').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  // Hide all panels for this entry, show selected
+  document.querySelectorAll(`[id^="stp-${entryId}-"]`).forEach(p=>p.classList.remove('on'));
+  document.getElementById(`stp-${entryId}-${seasonNum}`)?.classList.add('on');
+}
+
+function markSeasonAll(entryId, seasonNum, watched) {
+  const e = entries.find(x=>x.id===entryId);
+  const s = e?.seasonsData?.find(s=>s.season===seasonNum);
+  if (!s) return;
+  s.episodes?.forEach(ep => ep.watched = watched);
+  if (watched && !s.reviewDone) {
+    pendingSeasonReview = { entryId, seasonNum };
+    document.getElementById('season-modal-title').textContent = `${e.title} — ${s.name} Complete! 🎉`;
+    makeStar('sm-stars','sm-star-lbl','sm');
+    document.getElementById('sm-review').value = '';
+    document.getElementById('season-modal').classList.add('on');
+  }
+  save().then(()=>renderList());
+}
+
+// ── Storage ──────────────────────────────────────────────
+async function save() {
+  localStorage.setItem('wl3', JSON.stringify(entries));
+  try {
+    console.log('Saving', entries.length, 'entries to Drive…');
+    const r = await fetch(DB_URL, { method:'POST', body:JSON.stringify({file:'watchlist.json', data:entries}) });
+    const text = await r.text();
+    console.log('Drive response:', text);
+    const ind = document.getElementById('save-indicator');
+    if (ind) { ind.textContent = '✓ Saved'; ind.style.color='var(--green)'; setTimeout(()=>ind.textContent='',2000); }
+  } catch(e) {
+    console.error('Save to Drive failed:', e);
+    const ind = document.getElementById('save-indicator');
+    if (ind) { ind.textContent = '⚠ Save failed'; ind.style.color='var(--red)'; }
+  }
+}
+
+function jsonp(url) {
+  return new Promise((res,rej) => {
+    const cb = 'cb_'+Date.now();
+    const s  = document.createElement('script');
+    window[cb] = d => { delete window[cb]; s.remove(); res(d); };
+    s.onerror  = () => { delete window[cb]; s.remove(); rej(new Error('JSONP failed')); };
+    s.src      = url+'?file=watchlist.json&callback='+cb;
+    document.head.appendChild(s);
+  });
+}
+
+async function load() {
+  try {
+    entries = await jsonp(DB_URL);
+  } catch(e) {
+    try { entries = JSON.parse(localStorage.getItem('wl3')||'[]'); } catch(e2) { entries=[]; }
+  }
+  // Migrate old entries without id
+  entries.forEach(e=>{ if(!e.id) e.id=Date.now().toString()+Math.random(); });
+  renderList();
+}
+
+async function removeEntry(id) {
+  if (!confirm('Remove this entry?')) return;
+  entries = entries.filter(e=>e.id!==id);
+  await save();
+  renderList();
+}
+
+load();
+</script>
+</body>
+</html>

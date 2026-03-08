@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Country Backfill</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e;--red:#c0392b}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);padding:2rem;max-width:680px;margin:0 auto}
+h1{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:0.3rem}
+h1 span{color:var(--warm);font-style:italic}
+.sub{color:var(--muted);font-size:0.8rem;margin-bottom:1.5rem;line-height:1.6}
+.btn{background:var(--warm);color:#fff;border:none;padding:0.5rem 1.4rem;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;cursor:pointer}
+.btn:hover{opacity:0.85}
+.btn:disabled{opacity:0.4;cursor:not-allowed}
+.btn.ghost{background:none;color:var(--muted);border:1px solid var(--border)}
+.progress-wrap{margin:1rem 0;display:none}
+.bar{height:6px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:0.4rem}
+.fill{height:100%;background:var(--warm);width:0%;transition:width 0.3s}
+.lbl{font-size:0.75rem;color:var(--muted)}
+.log{max-height:320px;overflow-y:auto;font-size:0.71rem;font-family:monospace;background:var(--card);border:1px solid var(--border);border-radius:4px;padding:0.6rem;margin-top:1rem;line-height:1.9;display:none}
+.log .ok{color:var(--green)}
+.log .sk{color:var(--muted)}
+.log .err{color:var(--red)}
+.done-msg{margin-top:1rem;padding:0.6rem 0.9rem;border-radius:4px;font-size:0.82rem;font-weight:500;display:none}
+.done-msg.ok{background:#ddf0ec;color:var(--green)}
+.done-msg.err{background:#fde8e8;color:var(--red)}
+</style>
+</head>
+<body>
+<h1>Country <span>Backfill</span></h1>
+<p class="sub">Loads all travel pins from Drive, finds any missing a country, reverse-geocodes them via Nominatim using their coordinates, then saves everything back.<br><br>Nominatim allows 1 request/second — 160 pins will take about 3 minutes. Don't close the tab.</p>
+
+<div style="display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center">
+  <button class="btn" id="run-btn" onclick="run()">Run Backfill</button>
+  <button class="btn ghost" id="stop-btn" onclick="shouldStop=true" style="display:none">Stop</button>
+  <label style="font-size:0.78rem;color:var(--muted)">
+    <input type="checkbox" id="force-all" style="margin-right:0.3rem">
+    Re-lookup all pins (even ones with a country)
+  </label>
+</div>
+
+<div class="progress-wrap" id="prog-wrap">
+  <div class="bar"><div class="fill" id="fill"></div></div>
+  <div class="lbl" id="lbl">Loading pins…</div>
+</div>
+<div class="log" id="log"></div>
+<div class="done-msg" id="done-msg"></div>
+
+<script>
+const DB_URL = 'https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+let shouldStop = false;
+
+function jsonp(url) {
+  return new Promise((res, rej) => {
+    const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const s  = document.createElement('script');
+    window[cb] = d => { delete window[cb]; s.remove(); res(d); };
+    s.onerror  = () => { delete window[cb]; s.remove(); rej(new Error('JSONP failed')); };
+    s.src = url + '?file=travel_pins.json&callback=' + cb;
+    document.head.appendChild(s);
+  });
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function log(msg, cls='') {
+  const el = document.getElementById('log');
+  el.style.display = 'block';
+  el.innerHTML += `<div class="${cls}">${msg}</div>`;
+  el.scrollTop = el.scrollHeight;
+}
+
+function setProgress(done, total) {
+  document.getElementById('fill').style.width = Math.round(done / total * 100) + '%';
+  document.getElementById('lbl').textContent  = `${done} / ${total} processed`;
+}
+
+async function run() {
+  shouldStop = false;
+  const forceAll = document.getElementById('force-all').checked;
+
+  document.getElementById('run-btn').disabled = true;
+  document.getElementById('stop-btn').style.display = 'inline-block';
+  document.getElementById('prog-wrap').style.display = 'block';
+  document.getElementById('log').innerHTML = '';
+  document.getElementById('log').style.display = 'block';
+  document.getElementById('done-msg').style.display = 'none';
+
+  // ── Load pins ──────────────────────────────────────────
+  let pins;
+  try {
+    pins = await jsonp(DB_URL);
+    if (!Array.isArray(pins)) throw new Error('Unexpected data format');
+  } catch(e) {
+    log('✗ Failed to load pins: ' + e.message, 'err');
+    document.getElementById('run-btn').disabled = false;
+    return;
+  }
+
+  log(`Loaded ${pins.length} pins`, 'sk');
+
+  const toProcess = forceAll
+    ? pins.filter(p => p.lat && p.lng)
+    : pins.filter(p => p.lat && p.lng && (!p.country || p.country === '—' || p.country === ''));
+
+  const skipped = pins.length - toProcess.length;
+  log(`${toProcess.length} need country lookup · ${skipped} already have one`, 'sk');
+
+  if (!toProcess.length) {
+    document.getElementById('lbl').textContent = 'Nothing to update!';
+    document.getElementById('fill').style.width = '100%';
+    showDone(`✓ All pins already have countries set.`, true);
+    finish();
+    return;
+  }
+
+  log(`Starting — this will take ~${Math.ceil(toProcess.length * 1.1 / 60)} min at 1 req/sec…`, 'sk');
+
+  let done = 0, updated = 0, failed = 0;
+
+  for (const pin of toProcess) {
+    if (shouldStop) { log('— Stopped by user', 'sk'); break; }
+
+    try {
+      const r = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${pin.lat}&lon=${pin.lng}&format=json`,
+        { headers: { 'Accept-Language': 'en' } }
+      );
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const d = await r.json();
+
+      const country     = d.address?.country || '';
+      const countryCode = d.address?.country_code?.toLowerCase() || '';
+
+      if (country) {
+        pin.country     = country;
+        pin.countryCode = countryCode;
+        updated++;
+        log(`<span class="ok">✓</span> ${pin.name} → ${country}`);
+      } else {
+        log(`<span class="err">?</span> ${pin.name} — no country in response`);
+        failed++;
+      }
+    } catch(e) {
+      log(`<span class="err">✗</span> ${pin.name} — ${e.message}`, 'err');
+      failed++;
+    }
+
+    done++;
+    setProgress(done, toProcess.length);
+    if (done < toProcess.length) await sleep(1100); // Nominatim 1 req/sec
+  }
+
+  // ── Save back ──────────────────────────────────────────
+  if (updated > 0) {
+    log(`Saving ${updated} updates to Drive…`, 'sk');
+    try {
+      const r = await fetch(DB_URL, {
+        method: 'POST',
+        body: JSON.stringify({ file: 'travel_pins.json', data: pins })
+      });
+      const txt = await r.text();
+      log('✓ Saved to Drive', 'ok');
+    } catch(e) {
+      log('✗ Save failed: ' + e.message, 'err');
+      showDone(`Save failed — ${e.message}. Try again.`, false);
+      finish();
+      return;
+    }
+  }
+
+  showDone(`✓ Done — ${updated} pins updated · ${skipped} already had countries · ${failed} failed`, true);
+  finish();
+}
+
+function showDone(msg, ok) {
+  const el = document.getElementById('done-msg');
+  el.className = 'done-msg ' + (ok ? 'ok' : 'err');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function finish() {
+  document.getElementById('run-btn').disabled = false;
+  document.getElementById('stop-btn').style.display = 'none';
+}
+</script>
+</body>
+</html>

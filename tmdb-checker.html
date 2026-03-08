@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TMDB Checker</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e;--red:#c0392b}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);padding:1.5rem;max-width:860px;margin:0 auto}
+h1{font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:0.2rem}
+h1 span{color:var(--warm);font-style:italic}
+.sub{color:var(--muted);font-size:0.8rem;margin-bottom:1.5rem}
+
+/* Upload area */
+.upload-row{display:flex;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
+.upload-box{flex:1;min-width:200px;border:2px dashed var(--border);border-radius:6px;padding:1rem;text-align:center;cursor:pointer;font-size:0.8rem;color:var(--muted);transition:border-color 0.2s;background:var(--card)}
+.upload-box:hover,.upload-box.has-file{border-color:var(--warm);color:var(--warm)}
+.upload-box input{display:none}
+.upload-box .fname{margin-top:0.3rem;font-size:0.72rem;color:var(--green);font-weight:500}
+
+/* Controls */
+.controls{display:flex;gap:0.8rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem}
+.btn{background:var(--warm);color:#fff;border:none;padding:0.5rem 1.2rem;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:0.84rem;font-weight:500;cursor:pointer}
+.btn:hover{opacity:0.85}
+.btn:disabled{opacity:0.4;cursor:not-allowed}
+.btn.ghost{background:none;color:var(--muted);border:1px solid var(--border)}
+select,input[type=number]{padding:0.42rem 0.65rem;border:1px solid var(--border);border-radius:4px;background:var(--card);font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--ink);outline:none}
+select:focus,input:focus{border-color:var(--warm)}
+
+/* Progress */
+.progress-wrap{margin-bottom:1rem;display:none}
+.progress-bar{height:6px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:0.4rem}
+.progress-fill{height:100%;background:var(--warm);width:0%;transition:width 0.3s}
+.progress-label{font-size:0.75rem;color:var(--muted)}
+
+/* Results */
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;flex-wrap:wrap;gap:0.5rem}
+.results-header h2{font-size:0.95rem;font-weight:600}
+.pill{display:inline-block;font-size:0.68rem;padding:0.15rem 0.5rem;border-radius:10px;margin-left:0.3rem;font-weight:500}
+.pill.not-found{background:#fde8e8;color:var(--red)}
+.pill.found{background:#ddf0ec;color:var(--green)}
+.pill.skipped{background:#f5f0e8;color:var(--muted)}
+
+/* Table */
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:6px}
+table{width:100%;border-collapse:collapse;font-size:0.8rem}
+th{background:var(--parchment);padding:0.5rem 0.75rem;text-align:left;font-size:0.68rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border)}
+td{padding:0.5rem 0.75rem;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--parchment)}
+.status-found{color:var(--green);font-weight:500}
+.status-notfound{color:var(--red);font-weight:500}
+.status-skip{color:var(--muted)}
+.match-title{font-size:0.75rem;color:var(--muted);margin-top:0.1rem}
+.tmdb-link{font-size:0.72rem;color:var(--warm);text-decoration:none}
+.tmdb-link:hover{text-decoration:underline}
+.filter-tabs{display:flex;gap:0;margin-bottom:0.8rem;border:1px solid var(--border);border-radius:4px;overflow:hidden;width:fit-content}
+.ftab{padding:0.35rem 0.85rem;font-size:0.76rem;cursor:pointer;background:var(--card);border:none;font-family:'DM Sans',sans-serif;color:var(--muted);border-right:1px solid var(--border)}
+.ftab:last-child{border-right:none}
+.ftab.on{background:var(--warm);color:#fff}
+.export-btn{font-size:0.72rem;padding:0.3rem 0.7rem}
+.log{max-height:120px;overflow-y:auto;font-size:0.7rem;font-family:monospace;background:var(--card);border:1px solid var(--border);border-radius:4px;padding:0.5rem;margin-bottom:1rem;display:none;line-height:1.7;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<h1>TMDB <span>Checker</span></h1>
+<p class="sub">Upload your CSV files, run the check, and see which entries TMDB can't find.</p>
+
+<div class="upload-row">
+  <div class="upload-box" onclick="document.getElementById('movie-csv').click()" id="movie-box">
+    🎬 Drop / click for <strong>Movies CSV</strong>
+    <div class="fname" id="movie-fname"></div>
+    <input type="file" id="movie-csv" accept=".csv" onchange="loadCsv(this,'movie')">
+  </div>
+  <div class="upload-box" onclick="document.getElementById('series-csv').click()" id="series-box">
+    📺 Drop / click for <strong>Series CSV</strong>
+    <div class="fname" id="series-fname"></div>
+    <input type="file" id="series-csv" accept=".csv" onchange="loadCsv(this,'series')">
+  </div>
+</div>
+
+<div class="controls">
+  <button class="btn" id="run-btn" onclick="runCheck()" disabled>Run Check</button>
+  <button class="btn ghost" id="stop-btn" onclick="stopCheck()" style="display:none">Stop</button>
+  <label style="font-size:0.8rem;color:var(--muted)">Delay between requests:
+    <input type="number" id="delay" value="300" min="100" max="2000" style="width:70px;margin-left:0.3rem"> ms
+  </label>
+</div>
+
+<div class="progress-wrap" id="progress-wrap">
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="progress-label" id="progress-label">Starting…</div>
+</div>
+<div class="log" id="log"></div>
+
+<div id="results-section" style="display:none">
+  <div class="results-header">
+    <h2 id="results-title">Results</h2>
+    <button class="btn ghost export-btn" onclick="exportCsv()">⬇ Export not-found CSV</button>
+  </div>
+  <div class="filter-tabs">
+    <button class="ftab on" onclick="setFilter('all',this)">All</button>
+    <button class="ftab" onclick="setFilter('not-found',this)">Not found</button>
+    <button class="ftab" onclick="setFilter('found',this)">Found</button>
+  </div>
+  <div class="table-wrap">
+    <table id="results-table">
+      <thead><tr>
+        <th>#</th><th>Title (CSV)</th><th>Year</th><th>Type</th><th>Status</th><th>TMDB match</th>
+      </tr></thead>
+      <tbody id="results-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const TMDB_KEY = '60a9d5e588c206cf1d895394aa72d581';
+const csvData  = {movie:[], series:[]};
+let results    = [];
+let running    = false;
+let shouldStop = false;
+
+// ── CSV loading ──────────────────────────────────────────
+function loadCsv(input, type) {
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const rows = parseCsv(e.target.result);
+    csvData[type] = rows;
+    document.getElementById(type+'-fname').textContent = `✓ ${file.name} (${rows.length} rows)`;
+    document.getElementById(type+'-box').classList.add('has-file');
+    updateRunBtn();
+  };
+  reader.readAsText(file);
+}
+
+function parseCsv(text) {
+  const lines = text.trim().split('\n');
+  if (!lines.length) return [];
+  const headers = parseRow(lines[0]).map(h => h.toLowerCase().trim());
+  return lines.slice(1).map(line => {
+    const vals = parseRow(line);
+    const obj  = {};
+    headers.forEach((h, i) => obj[h] = (vals[i]||'').trim());
+    return obj;
+  }).filter(r => Object.values(r).some(v => v)); // skip blank rows
+}
+
+function parseRow(line) {
+  const result = []; let cur = ''; let inQ = false;
+  for (const ch of line) {
+    if (ch === '"') { inQ = !inQ; }
+    else if (ch === ',' && !inQ) { result.push(cur); cur = ''; }
+    else cur += ch;
+  }
+  result.push(cur);
+  return result;
+}
+
+function getField(row, ...candidates) {
+  for (const c of candidates) {
+    const key = Object.keys(row).find(k => k.toLowerCase().includes(c.toLowerCase()));
+    if (key && row[key]) return row[key];
+  }
+  return '';
+}
+
+function updateRunBtn() {
+  const hasData = csvData.movie.length > 0 || csvData.series.length > 0;
+  document.getElementById('run-btn').disabled = !hasData;
+}
+
+// ── TMDB search ──────────────────────────────────────────
+async function searchTmdb(title, year, type) {
+  const endpoint = type === 'series' ? 'tv' : 'movie';
+  const q = encodeURIComponent(title);
+  const y = year ? `&${type==='series'?'first_air_date_year':'year'}=${year}` : '';
+  const url = `https://api.themoviedb.org/3/search/${endpoint}?api_key=${TMDB_KEY}&query=${q}${y}&page=1`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('HTTP '+r.status);
+  const data = await r.json();
+  if (data.results?.length) return data.results[0];
+
+  // Retry without year if no results
+  if (year) {
+    const r2 = await fetch(`https://api.themoviedb.org/3/search/${endpoint}?api_key=${TMDB_KEY}&query=${q}&page=1`);
+    const d2 = await r2.json();
+    if (d2.results?.length) return d2.results[0];
+  }
+  return null;
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ── Run ──────────────────────────────────────────────────
+async function runCheck() {
+  results = []; shouldStop = false; running = true;
+
+  const delay = parseInt(document.getElementById('delay').value) || 300;
+  const log   = document.getElementById('log');
+  log.style.display = 'block'; log.innerHTML = '';
+
+  document.getElementById('run-btn').style.display   = 'none';
+  document.getElementById('stop-btn').style.display  = 'inline-block';
+  document.getElementById('progress-wrap').style.display = 'block';
+  document.getElementById('results-section').style.display = 'none';
+
+  // Build work list
+  const items = [
+    ...csvData.movie.map(r  => ({row:r, type:'movie'})),
+    ...csvData.series.map(r => ({row:r, type:'series'}))
+  ];
+
+  const total = items.length;
+  let done = 0, notFound = 0, found = 0;
+
+  for (const item of items) {
+    if (shouldStop) break;
+
+    const title = getField(item.row, 'title','name','film','movie','serie','show') || '';
+    const year  = getField(item.row, 'year','date','released','aired') || '';
+    const yearNum = year ? year.match(/\d{4}/)?.[0] : '';
+
+    if (!title) {
+      results.push({title:'(blank)',year:'',type:item.type,status:'skip',match:null,row:item.row});
+      done++;
+      updateProgress(done, total, found, notFound);
+      continue;
+    }
+
+    try {
+      const match = await searchTmdb(title, yearNum, item.type);
+      const matchName = match ? (match.title||match.name) : null;
+      const matchYear = match ? ((match.release_date||match.first_air_date||'').slice(0,4)) : null;
+      const tmdbId    = match?.id || null;
+
+      results.push({
+        title, year:yearNum||'', type:item.type,
+        status: match ? 'found' : 'not-found',
+        match: match ? {name:matchName, year:matchYear, id:tmdbId} : null,
+        row: item.row
+      });
+
+      if (match) { found++; log.innerHTML += `<span style="color:var(--green)">✓ ${title}</span> → ${matchName} (${matchYear})\n`; }
+      else        { notFound++; log.innerHTML += `<span style="color:var(--red)">✗ ${title}</span> — not found\n`; }
+    } catch(e) {
+      results.push({title, year:yearNum||'', type:item.type, status:'error', match:null, row:item.row});
+      log.innerHTML += `<span style="color:orange">! ${title}</span> — error: ${e.message}\n`;
+    }
+
+    log.scrollTop = log.scrollHeight;
+    done++;
+    updateProgress(done, total, found, notFound);
+    await sleep(delay);
+  }
+
+  running = false;
+  document.getElementById('run-btn').style.display  = 'inline-block';
+  document.getElementById('stop-btn').style.display = 'none';
+  showResults('all');
+}
+
+function stopCheck() { shouldStop = true; }
+
+function updateProgress(done, total, found, notFound) {
+  const pct = Math.round(done/total*100);
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('progress-label').textContent =
+    `${done}/${total} checked · ${found} found · ${notFound} not found`;
+}
+
+// ── Results display ──────────────────────────────────────
+let currentFilter = 'all';
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  showResults(f);
+}
+
+function showResults(filter) {
+  const notFound = results.filter(r=>r.status==='not-found');
+  const found    = results.filter(r=>r.status==='found');
+  const skipped  = results.filter(r=>r.status==='skip');
+
+  document.getElementById('results-title').innerHTML =
+    `Results <span class="pill not-found">${notFound.length} not found</span>` +
+    `<span class="pill found">${found.length} found</span>` +
+    (skipped.length ? `<span class="pill skipped">${skipped.length} skipped</span>` : '');
+
+  const visible = filter === 'not-found' ? notFound
+                : filter === 'found'     ? found
+                : results;
+
+  const tbody = document.getElementById('results-body');
+  tbody.innerHTML = visible.map((r, i) => {
+    const statusHtml = r.status === 'found'
+      ? `<span class="status-found">✓ Found</span>`
+      : r.status === 'not-found'
+      ? `<span class="status-notfound">✗ Not found</span>`
+      : `<span class="status-skip">Skipped</span>`;
+
+    const matchHtml = r.match
+      ? `${r.match.name} (${r.match.year||'?'})
+         <br><a class="tmdb-link" href="https://www.themoviedb.org/${r.type==='series'?'tv':'movie'}/${r.match.id}" target="_blank">View on TMDB →</a>`
+      : '—';
+
+    return `<tr>
+      <td style="color:var(--muted);width:36px">${i+1}</td>
+      <td><strong>${r.title}</strong></td>
+      <td style="color:var(--muted)">${r.year||'—'}</td>
+      <td style="color:var(--muted)">${r.type}</td>
+      <td>${statusHtml}</td>
+      <td>${matchHtml}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('results-section').style.display = 'block';
+}
+
+// ── Export ───────────────────────────────────────────────
+function exportCsv() {
+  const notFound = results.filter(r => r.status === 'not-found');
+  if (!notFound.length) { alert('No not-found entries to export.'); return; }
+
+  const header = 'Title,Year,Type';
+  const rows   = notFound.map(r => `"${r.title}","${r.year}","${r.type}"`);
+  const blob   = new Blob([[header, ...rows].join('\n')], {type:'text/csv'});
+  const a      = document.createElement('a');
+  a.href       = URL.createObjectURL(blob);
+  a.download   = 'not-found.csv';
+  a.click();
+}
+</script>
+</body>
+</html>

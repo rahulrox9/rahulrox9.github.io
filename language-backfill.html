@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Language Backfill</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e;--red:#c0392b}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);padding:2rem;max-width:680px;margin:0 auto}
+h1{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:0.3rem}
+h1 span{color:var(--warm);font-style:italic}
+.sub{color:var(--muted);font-size:0.8rem;margin-bottom:1.5rem;line-height:1.5}
+.btn{background:var(--warm);color:#fff;border:none;padding:0.5rem 1.4rem;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;cursor:pointer}
+.btn:hover{opacity:0.85}
+.btn:disabled{opacity:0.4;cursor:not-allowed}
+.btn.ghost{background:none;color:var(--muted);border:1px solid var(--border)}
+.progress-wrap{margin:1rem 0;display:none}
+.bar{height:6px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:0.4rem}
+.fill{height:100%;background:var(--warm);width:0%;transition:width 0.3s}
+.lbl{font-size:0.75rem;color:var(--muted)}
+.log{max-height:300px;overflow-y:auto;font-size:0.71rem;font-family:monospace;background:var(--card);border:1px solid var(--border);border-radius:4px;padding:0.6rem;margin-top:1rem;line-height:1.8;display:none}
+.log .ok{color:var(--green)}
+.log .sk{color:var(--muted)}
+.log .err{color:var(--red)}
+.done-msg{margin-top:1rem;padding:0.6rem 0.9rem;background:#ddf0ec;color:var(--green);border-radius:4px;font-size:0.82rem;font-weight:500;display:none}
+</style>
+</head>
+<body>
+<h1>Language <span>Backfill</span></h1>
+<p class="sub">This tool loads all your watchlist entries, fetches the original language from TMDB for any entry missing it, and saves the updated data back to Drive.<br><br>Run it once — after that language filtering on the public page will work instantly.</p>
+
+<div style="display:flex;gap:0.6rem">
+  <button class="btn" id="run-btn" onclick="run()">Run Backfill</button>
+  <button class="btn ghost" id="stop-btn" onclick="stop=true" style="display:none">Stop</button>
+</div>
+
+<div class="progress-wrap" id="prog-wrap">
+  <div class="bar"><div class="fill" id="fill"></div></div>
+  <div class="lbl" id="lbl">Loading entries…</div>
+</div>
+<div class="log" id="log"></div>
+<div class="done-msg" id="done-msg"></div>
+
+<script>
+const DB_URL   = 'https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+const TMDB_KEY = '60a9d5e588c206cf1d895394aa72d581';
+
+const LANG_NAMES = {
+  'af':'Afrikaans','ar':'Arabic','bg':'Bulgarian','bn':'Bengali','cs':'Czech',
+  'da':'Danish','de':'German','el':'Greek','en':'English','es':'Spanish',
+  'et':'Estonian','fa':'Persian','fi':'Finnish','fr':'French','gu':'Gujarati',
+  'he':'Hebrew','hi':'Hindi','hr':'Croatian','hu':'Hungarian','id':'Indonesian',
+  'it':'Italian','ja':'Japanese','kn':'Kannada','ko':'Korean','lt':'Lithuanian',
+  'lv':'Latvian','ml':'Malayalam','mr':'Marathi','ms':'Malay','nl':'Dutch',
+  'no':'Norwegian','pa':'Punjabi','pl':'Polish','pt':'Portuguese','ro':'Romanian',
+  'ru':'Russian','sk':'Slovak','sl':'Slovenian','sq':'Albanian','sr':'Serbian',
+  'sv':'Swedish','sw':'Swahili','ta':'Tamil','te':'Telugu','th':'Thai',
+  'tr':'Turkish','uk':'Ukrainian','ur':'Urdu','vi':'Vietnamese','zh':'Chinese',
+  'cn':'Cantonese','zz':'Unknown'
+};
+
+let stop = false;
+
+function jsonp(url) {
+  return new Promise((res, rej) => {
+    const cb = 'cb_' + Date.now();
+    const s  = document.createElement('script');
+    window[cb] = d => { delete window[cb]; s.remove(); res(d); };
+    s.onerror  = () => { delete window[cb]; s.remove(); rej(new Error('JSONP failed')); };
+    s.src = url + '?file=watchlist.json&callback=' + cb;
+    document.head.appendChild(s);
+  });
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function log(msg, cls='') {
+  const el = document.getElementById('log');
+  el.style.display = 'block';
+  el.innerHTML += `<div class="${cls}">${msg}</div>`;
+  el.scrollTop = el.scrollHeight;
+}
+
+async function run() {
+  stop = false;
+  document.getElementById('run-btn').disabled = true;
+  document.getElementById('stop-btn').style.display = 'inline-block';
+  document.getElementById('prog-wrap').style.display = 'block';
+  document.getElementById('log').innerHTML = '';
+  document.getElementById('log').style.display = 'block';
+  document.getElementById('done-msg').style.display = 'none';
+
+  // Load entries
+  let entries;
+  try {
+    entries = await jsonp(DB_URL);
+    if (!Array.isArray(entries)) throw new Error('Bad data');
+  } catch(e) {
+    log('✗ Failed to load entries: ' + e.message, 'err');
+    document.getElementById('run-btn').disabled = false;
+    return;
+  }
+
+  log(`Loaded ${entries.length} entries`, 'sk');
+
+  const toUpdate = entries.filter(e => !e.language && (e.tmdbId || e.imdbId));
+  const skipped  = entries.length - toUpdate.length;
+  log(`${toUpdate.length} need language · ${skipped} already have it or have no ID`, 'sk');
+
+  if (!toUpdate.length) {
+    document.getElementById('lbl').textContent = 'Nothing to update!';
+    document.getElementById('fill').style.width = '100%';
+    document.getElementById('done-msg').style.display = 'block';
+    document.getElementById('done-msg').textContent = '✓ All entries already have language set.';
+    document.getElementById('run-btn').disabled = false;
+    document.getElementById('stop-btn').style.display = 'none';
+    return;
+  }
+
+  let done = 0, updated = 0, failed = 0;
+
+  for (const entry of toUpdate) {
+    if (stop) { log('— Stopped by user', 'sk'); break; }
+
+    try {
+      const ep = entry.type === 'show' ? 'tv' : 'movie';
+      let tmdbId = entry.tmdbId;
+
+      // Resolve via IMDb if no TMDB id
+      if (!tmdbId && entry.imdbId) {
+        const f  = await fetch(`https://api.themoviedb.org/3/find/${entry.imdbId}?api_key=${TMDB_KEY}&external_source=imdb_id`);
+        const fd = await f.json();
+        const r  = fd.movie_results?.[0] || fd.tv_results?.[0];
+        if (r) tmdbId = String(r.id);
+      }
+
+      if (!tmdbId) { log(`⚠ ${entry.title} — no TMDB ID`, 'err'); failed++; done++; updateProgress(done, toUpdate.length); continue; }
+
+      const r    = await fetch(`https://api.themoviedb.org/3/${ep}/${tmdbId}?api_key=${TMDB_KEY}`);
+      const det  = await r.json();
+      const code = det.original_language || '';
+      const name = LANG_NAMES[code] || code;
+
+      entry.language = name;
+      updated++;
+      log(`<span class="ok">✓</span> ${entry.title} → ${name}`);
+    } catch(e) {
+      log(`✗ ${entry.title} — ${e.message}`, 'err');
+      failed++;
+    }
+
+    done++;
+    updateProgress(done, toUpdate.length);
+    await sleep(250);
+  }
+
+  // Save back to Drive
+  if (updated > 0) {
+    log(`Saving ${updated} updates to Drive…`, 'sk');
+    try {
+      await fetch(DB_URL, { method:'POST', body: JSON.stringify({file:'watchlist.json', data:entries}) });
+      log('✓ Saved to Drive!', 'ok');
+    } catch(e) {
+      log('✗ Save failed: ' + e.message, 'err');
+    }
+  }
+
+  document.getElementById('done-msg').style.display = 'block';
+  document.getElementById('done-msg').textContent =
+    `✓ Done — ${updated} entries updated, ${skipped} already had language, ${failed} failed.`;
+  document.getElementById('run-btn').disabled = false;
+  document.getElementById('stop-btn').style.display = 'none';
+}
+
+function updateProgress(done, total) {
+  document.getElementById('fill').style.width = Math.round(done/total*100) + '%';
+  document.getElementById('lbl').textContent  = `${done}/${total} processed`;
+}
+</script>
+</body>
+</html>

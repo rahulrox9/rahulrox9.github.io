@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watchlist Importer</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e;--red:#c0392b}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);padding:2rem 1.5rem;max-width:700px;margin:0 auto}
+h1{font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:0.3rem}
+h1 span{color:var(--warm);font-style:italic}
+.sub{color:var(--muted);font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.8rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.4rem;margin-bottom:1.2rem}
+.card h2{font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:1rem}
+.upload-row{display:flex;gap:0.8rem;align-items:center;margin-bottom:0.7rem;flex-wrap:wrap}
+.upload-row label{font-size:0.7rem;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);min-width:90px}
+input[type=file]{font-size:0.82rem;color:var(--muted)}
+.btn{background:var(--warm);color:#fff;border:none;padding:0.6rem 1.5rem;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:0.86rem;font-weight:500;cursor:pointer;transition:opacity 0.2s}
+.btn:hover{opacity:0.85}
+.btn:disabled{opacity:0.4;cursor:not-allowed}
+.btn.green{background:var(--green)}
+.progress-wrap{margin-top:1rem;display:none}
+.progress-bar{height:8px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:0.5rem}
+.progress-fill{height:100%;background:var(--warm);border-radius:99px;width:0%;transition:width 0.3s}
+.progress-lbl{font-size:0.78rem;color:var(--muted)}
+.log{margin-top:1rem;max-height:280px;overflow-y:auto;font-size:0.74rem;font-family:monospace;background:var(--parchment);border:1px solid var(--border);border-radius:4px;padding:0.7rem;display:none;line-height:1.7}
+.log .ok{color:var(--green)}
+.log .warn{color:var(--warm)}
+.log .err{color:var(--red)}
+.stats{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:1rem}
+.stat{text-align:center}
+.stat-n{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--warm)}
+.stat-l{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em}
+.warn-box{background:#fef9ec;border:1px solid #f0d58c;border-radius:4px;padding:0.9rem 1rem;font-size:0.82rem;color:#7a6020;margin-bottom:1rem}
+</style>
+</head>
+<body>
+
+<h1>Watchlist <span>Importer</span></h1>
+<p class="sub">One-time bulk import from MustApp CSVs</p>
+
+<div class="warn-box">
+  ⚠️ This will fetch ~3,400 titles from TMDB including episode lists for all series. Keep this tab open — it may take <strong>30–60 minutes</strong>. Don't close the browser.
+</div>
+
+<div class="card">
+  <h2>Step 1 — Upload your CSVs</h2>
+  <div class="upload-row">
+    <label>Movies CSV</label>
+    <input type="file" id="movies-file" accept=".csv">
+  </div>
+  <div class="upload-row">
+    <label>Series CSV</label>
+    <input type="file" id="series-file" accept=".csv">
+  </div>
+</div>
+
+<div class="card">
+  <h2>Step 2 — Import</h2>
+  <button class="btn" id="start-btn" onclick="startImport()">Start Import</button>
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-lbl" id="progress-lbl">Starting…</div>
+    <div class="stats" id="stats" style="display:none">
+      <div class="stat"><div class="stat-n" id="s-done">0</div><div class="stat-l">Done</div></div>
+      <div class="stat"><div class="stat-n" id="s-skip">0</div><div class="stat-l">Not Found</div></div>
+      <div class="stat"><div class="stat-n" id="s-total">0</div><div class="stat-l">Total</div></div>
+    </div>
+  </div>
+  <div class="log" id="log"></div>
+</div>
+
+<div class="card" id="save-card" style="display:none">
+  <h2>Step 3 — Save to your watchlist</h2>
+  <p style="font-size:0.84rem;color:var(--muted);margin-bottom:1rem">All titles fetched. Click below to push everything to Google Drive.</p>
+  <button class="btn green" onclick="saveToDb()">Save to Watchlist</button>
+  <div id="save-msg" style="margin-top:0.7rem;font-size:0.82rem"></div>
+</div>
+
+<script>
+const TMDB_KEY = '60a9d5e588c206cf1d895394aa72d581';
+const DB_URL   = 'https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+const DELAY_MS = 220; // ~4.5 req/s well under 40/s limit
+
+let finalEntries = [];
+
+function parseCSV(text) {
+  const lines = text.replace(/\r/g,'').split('\n').filter(l=>l.trim());
+  const headers = lines[0].split(',').map(h=>h.trim());
+  return lines.slice(1).map(line => {
+    // handle commas inside quotes
+    const cols = [];
+    let cur = '', inQ = false;
+    for (const ch of line) {
+      if (ch==='"') { inQ=!inQ; continue; }
+      if (ch===',' && !inQ) { cols.push(cur.trim()); cur=''; }
+      else cur += ch;
+    }
+    cols.push(cur.trim());
+    const obj = {};
+    headers.forEach((h,i) => obj[h] = cols[i]||'');
+    return obj;
+  }).filter(r => r.Title);
+}
+
+function readFile(input) {
+  return new Promise((res,rej) => {
+    const f = input.files[0];
+    if (!f) { res([]); return; }
+    const r = new FileReader();
+    r.onload = e => res(parseCSV(e.target.result));
+    r.onerror = rej;
+    r.readAsText(f);
+  });
+}
+
+function log(msg, cls='') {
+  const el = document.getElementById('log');
+  el.style.display = 'block';
+  el.innerHTML += `<div class="${cls}">${msg}</div>`;
+  el.scrollTop = el.scrollHeight;
+}
+
+function setProgress(done, total) {
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('progress-lbl').textContent  = `${done} / ${total} (${pct}%)`;
+  document.getElementById('s-done').textContent  = done;
+  document.getElementById('s-total').textContent = total;
+}
+
+function sleep(ms) { return new Promise(r=>setTimeout(r,ms)); }
+
+async function tmdbSearch(title, year, type) {
+  const ep = type==='show' ? 'tv' : 'movie';
+  const url = `https://api.themoviedb.org/3/search/${ep}?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}&year=${year}&include_adult=false`;
+  try {
+    const r = await fetch(url);
+    const d = await r.json();
+    // Try year-exact first, then first result
+    const results = d.results||[];
+    const exact = results.find(x=>{
+      const y = (x.release_date||x.first_air_date||'').substring(0,4);
+      return y===String(year);
+    });
+    return exact || results[0] || null;
+  } catch(e) { return null; }
+}
+
+async function fetchSeasons(tmdbId, showData) {
+  const seasons = (showData.seasons||[]).filter(s=>s.season_number>0);
+  const result  = [];
+  for (const s of seasons) {
+    try {
+      const r  = await fetch(`https://api.themoviedb.org/3/tv/${tmdbId}/season/${s.season_number}?api_key=${TMDB_KEY}`);
+      const sd = await r.json();
+      result.push({
+        season: s.season_number,
+        name: sd.name || `Season ${s.season_number}`,
+        episodes: (sd.episodes||[]).map(e=>({ ep:e.episode_number, name:e.name, watched:false })),
+        rating: 0, review: '', reviewDone: false
+      });
+      await sleep(DELAY_MS);
+    } catch(e) { /* skip */ }
+  }
+  return result;
+}
+
+async function startImport() {
+  const moviesData = await readFile(document.getElementById('movies-file'));
+  const seriesData = await readFile(document.getElementById('series-file'));
+
+  if (!moviesData.length && !seriesData.length) {
+    alert('Please upload at least one CSV file.'); return;
+  }
+
+  document.getElementById('start-btn').disabled = true;
+  document.getElementById('progress-wrap').style.display = 'block';
+  document.getElementById('stats').style.display = 'flex';
+
+  const total   = moviesData.length + seriesData.length;
+  let done = 0, skipped = 0;
+  finalEntries  = [];
+
+  setProgress(0, total);
+  log(`Starting import: ${moviesData.length} movies + ${seriesData.length} series`);
+
+  // ── Movies ──
+  for (const row of moviesData) {
+    const title = row.Title, year = row.Year;
+    const res   = await tmdbSearch(title, year, 'movie');
+    if (!res) {
+      log(`✗ Not found: ${title} (${year})`, 'err');
+      skipped++;
+    } else {
+      const poster = res.poster_path ? `https://image.tmdb.org/t/p/w300${res.poster_path}` : '';
+      const rating = Math.round((parseFloat(row.Rating10)||0) * 2);
+      const watched = row.WatchedDate ? new Date(row.WatchedDate).toLocaleDateString('en-GB',{month:'short',year:'numeric'}) : '';
+      finalEntries.push({
+        id: 'imp_'+Date.now()+'_'+Math.random().toString(36).slice(2),
+        type: 'movie',
+        title: res.title||title,
+        year: (res.release_date||year+'').substring(0,4)||String(year),
+        poster,
+        imdbId: '',
+        tmdbId: String(res.id),
+        myRating: rating,
+        review: row.Review||'',
+        watched,
+        addedAt: Date.now(),
+        seasonsData: []
+      });
+      log(`✓ ${title} (${year})`, 'ok');
+    }
+    done++;
+    document.getElementById('s-skip').textContent = skipped;
+    setProgress(done, total);
+    await sleep(DELAY_MS);
+  }
+
+  // ── Series ──
+  for (const row of seriesData) {
+    const title = row.Title, year = row.Year;
+    const res   = await tmdbSearch(title, year, 'show');
+    if (!res) {
+      log(`✗ Not found: ${title} (${year})`, 'err');
+      skipped++;
+    } else {
+      const poster = res.poster_path ? `https://image.tmdb.org/t/p/w300${res.poster_path}` : '';
+      const rating = Math.round((parseFloat(row.Rating10)||0) * 2);
+      // Fetch full show detail for seasons list
+      let seasonsData = [];
+      try {
+        const dr = await fetch(`https://api.themoviedb.org/3/tv/${res.id}?api_key=${TMDB_KEY}`);
+        const dd = await dr.json();
+        await sleep(DELAY_MS);
+        log(`  ↳ Fetching ${(dd.seasons||[]).filter(s=>s.season_number>0).length} seasons for ${title}…`, 'warn');
+        seasonsData = await fetchSeasons(res.id, dd);
+      } catch(e) {}
+      const watched = row.WatchedDate ? new Date(row.WatchedDate).toLocaleDateString('en-GB',{month:'short',year:'numeric'}) : '';
+      finalEntries.push({
+        id: 'imp_'+Date.now()+'_'+Math.random().toString(36).slice(2),
+        type: 'show',
+        title: res.name||title,
+        year: (res.first_air_date||year+'').substring(0,4)||String(year),
+        poster,
+        imdbId: '',
+        tmdbId: String(res.id),
+        myRating: rating,
+        review: row.Review||'',
+        watched,
+        addedAt: Date.now(),
+        seasonsData
+      });
+      log(`✓ ${title} (${year}) — ${seasonsData.length} seasons`, 'ok');
+    }
+    done++;
+    document.getElementById('s-skip').textContent = skipped;
+    setProgress(done, total);
+    await sleep(DELAY_MS);
+  }
+
+  log(`\n✅ Done! ${finalEntries.length} entries ready. ${skipped} not found.`, 'ok');
+  document.getElementById('save-card').style.display = 'block';
+}
+
+async function saveToDb() {
+  const btn = event.target;
+  const msg = document.getElementById('save-msg');
+  btn.disabled = true;
+  msg.textContent = 'Saving to Google Drive…';
+
+  // Chunk into batches of 500 to avoid payload limits
+  // First fetch existing, then merge
+  try {
+    msg.textContent = 'Fetching existing watchlist…';
+    let existing = [];
+    try {
+      const r = await fetch(DB_URL);
+      existing = await r.json();
+    } catch(e) {}
+
+    // Deduplicate by tmdbId
+    const existingIds = new Set(existing.map(e=>e.tmdbId).filter(Boolean));
+    const newEntries  = finalEntries.filter(e=>!existingIds.has(e.tmdbId));
+    const merged      = [...existing, ...newEntries];
+
+    msg.textContent = `Saving ${merged.length} entries…`;
+    const r2 = await fetch(DB_URL, { method:'POST', body:JSON.stringify(merged) });
+    if (r2.ok) {
+      msg.style.color = 'var(--green)';
+      msg.textContent = `✅ Saved! ${newEntries.length} new entries added (${finalEntries.length - newEntries.length} duplicates skipped).`;
+    } else {
+      throw new Error('HTTP '+r2.status);
+    }
+  } catch(e) {
+    msg.style.color = 'var(--red)';
+    msg.textContent = 'Error: '+e.message+'. Try again.';
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>
