@@ -273,6 +273,19 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 
 <script>
 
+const DB = 'https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+
+function jsonp(url, file) {
+  return new Promise((res, rej) => {
+    const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const s  = document.createElement('script');
+    window[cb] = d => { delete window[cb]; s.remove(); res(d); };
+    s.onerror  = () => { delete window[cb]; s.remove(); rej(); };
+    s.src = url + '?file=' + file + '&callback=' + cb;
+    document.head.appendChild(s);
+  });
+}
+
 async function loadStats() {
   try {
     const [watchlist, pins] = await Promise.all([
