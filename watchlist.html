@@ -224,7 +224,7 @@ const LANG_NAMES = {
   'ru':'Russian','sk':'Slovak','sl':'Slovenian','sq':'Albanian','sr':'Serbian',
   'sv':'Swedish','sw':'Swahili','ta':'Tamil','te':'Telugu','th':'Thai',
   'tr':'Turkish','uk':'Ukrainian','ur':'Urdu','vi':'Vietnamese','zh':'Chinese',
-  'cn':'Cantonese','zz':'Unknown'
+  'cn':'Cantonese','tl':'Filipino','zz':'Unknown'
 };
 function langName(code) { return LANG_NAMES[code] || code || ''; }
 
@@ -240,7 +240,7 @@ function buildLangFilters() {
   if (!div) return;
   if (!langs.length) { div.innerHTML=''; return; }
   div.innerHTML = ['<button class="lang-pill on" onclick="setLang(\'\',this)">All</button>',
-    ...langs.map(l=>`<button class="lang-pill" onclick="setLang('${l}',this)">${l}</button>`)
+    ...langs.map(l=>`<button class="lang-pill" onclick="setLang('${l}',this)">${langName(l)}</button>`)
   ].join('');
 }
 
