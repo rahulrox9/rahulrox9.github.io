@@ -98,12 +98,21 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 const POSTS = [
   {
     id: 1,
-    tag: 'Sanskrit',
+    tag: ['Sanskrit','Poetry'],
     title: 'मम माता — My Mother',
     excerpt: "A Sanskrit poem about a mother's boundless love — written in the classical style, with an English rendering alongside.",
     date: 'Mar 2026',
     featured: true,
     file: 'Writing/mama-mata.html'
+  },
+  {
+    id: 2,
+    tag: ['English','Poetry'],
+    title: 'Love',
+    excerpt: "Love is not like weather, that changes from time to time. A Valentine's Day poem written at age 14.",
+    date: 'Feb 2014',
+    featured: false,
+    file: 'Writing/love.html'
   },
   {
     id: 2,
@@ -120,7 +129,7 @@ let activeTag = 'all';
 
 function render() {
   const grid = document.getElementById('posts-grid');
-  const filtered = activeTag === 'all' ? POSTS : POSTS.filter(p => p.tag === activeTag);
+  const filtered = activeTag === 'all' ? POSTS : POSTS.filter(p => p.tag.includes(activeTag));
 
   if (!filtered.length) {
     grid.innerHTML = '<div class="empty-state">No posts yet — coming soon.</div>';
