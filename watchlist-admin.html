@@ -331,7 +331,7 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
 
 <!-- DISCOVER PANEL -->
 <div class="section-panel" id="panel-discover">
-  <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.8rem">Trending this week on TMDB, filtered by language. Click any card to preview and add.</p>
+  <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.8rem">Trending this week (English) or most popular right now (Indian languages). Click any card to preview and add.</p>
   <div class="lang-filter-row" id="discover-langs">
     <button class="lang-pill on" onclick="setDiscoverLang('',this)">All</button>
     <button class="lang-pill" onclick="setDiscoverLang('en',this)">English</button>
@@ -1120,21 +1120,29 @@ async function loadDiscover() {
   const container=document.getElementById('discover-results');
   container.innerHTML='<div class="empty">Loading…</div>';
   try {
-    // Fetch up to 3 pages to get enough results for non-English filtering
-    const pages = discoverLang ? [1,2,3] : [1];
-    const fetches = pages.map(pg =>
-      fetch(`https://api.themoviedb.org/3/trending/${discoverType}/week?api_key=${TMDB_KEY}&page=${pg}`).then(r=>r.json())
-    );
-    const responses = await Promise.all(fetches);
-    let allResults = responses.flatMap(d => d.results||[]);
+    let allResults = [];
 
-    // Filter by language client-side
-    if (discoverLang) {
-      allResults = allResults.filter(item => item.original_language === discoverLang);
+    if (!discoverLang || discoverLang==='en') {
+      // English: use trending endpoint, fetch 2 pages
+      const pages = [1,2];
+      const fetches = pages.map(pg =>
+        fetch(`https://api.themoviedb.org/3/trending/${discoverType}/week?api_key=${TMDB_KEY}&page=${pg}`).then(r=>r.json())
+      );
+      const responses = await Promise.all(fetches);
+      allResults = responses.flatMap(d => d.results||[]);
+      if (discoverLang) allResults = allResults.filter(item => item.original_language === discoverLang);
+    } else {
+      // Non-English: use discover endpoint sorted by popularity with language filter
+      const ep = discoverType==='tv' ? 'tv' : 'movie';
+      const fetches = [1,2,3].map(pg =>
+        fetch(`https://api.themoviedb.org/3/discover/${ep}?api_key=${TMDB_KEY}&with_original_language=${discoverLang}&sort_by=popularity.desc&page=${pg}`).then(r=>r.json())
+      );
+      const responses = await Promise.all(fetches);
+      allResults = responses.flatMap(d => d.results||[]);
     }
 
     const results = allResults.slice(0,20);
-    if (!results.length) { container.innerHTML='<div class="empty">No results for this language in trending this week.</div>'; return; }
+    if (!results.length) { container.innerHTML='<div class="empty">No results found.</div>'; return; }
     container.style.display='grid';
     container.innerHTML = results.map(item=>{
       const tid=String(item.id);
