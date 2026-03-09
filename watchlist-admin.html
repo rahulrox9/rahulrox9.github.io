@@ -1132,25 +1132,27 @@ async function loadDiscover() {
       allResults = responses.flatMap(d => d.results||[]);
       if (discoverLang) allResults = allResults.filter(item => item.original_language === discoverLang);
     } else {
-      // Non-English: use discover endpoint sorted by popularity, last 3 months
+      // Non-English: use discover endpoint sorted by popularity
       const ep = discoverType==='tv' ? 'tv' : 'movie';
-      const dateFrom = new Date();
-      dateFrom.setMonth(dateFrom.getMonth() - 3);
-      const dateStr = dateFrom.toISOString().substring(0,10);
 
       if (discoverType==='tv') {
-        // For series: fetch popular, then filter by last_air_date >= 3 months ago
-        const fetches = [1,2,3,4,5].map(pg =>
-          fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_KEY}&with_original_language=${discoverLang}&sort_by=popularity.desc&page=${pg}`).then(r=>r.json())
+        // Series: last 1 month by air date
+        const tvDateFrom = new Date();
+        tvDateFrom.setMonth(tvDateFrom.getMonth() - 1);
+        const tvDateStr = tvDateFrom.toISOString().substring(0,10);
+        const today = new Date().toISOString().substring(0,10);
+        const fetches = [1,2,3].map(pg =>
+          fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_KEY}&with_original_language=${discoverLang}&sort_by=popularity.desc&air_date.gte=${tvDateStr}&air_date.lte=${today}&page=${pg}`).then(r=>r.json())
         );
         const responses = await Promise.all(fetches);
-        allResults = responses.flatMap(d => d.results||[])
-          .filter(item => item.last_air_date && item.last_air_date >= dateStr);
+        allResults = responses.flatMap(d => d.results||[]);
       } else {
-        // For movies: filter by release date
-        const dateParam = `primary_release_date.gte=${dateStr}`;
+        // Movies: last 3 months by release date
+        const movDateFrom = new Date();
+        movDateFrom.setMonth(movDateFrom.getMonth() - 3);
+        const movDateStr = movDateFrom.toISOString().substring(0,10);
         const fetches = [1,2,3].map(pg =>
-          fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_KEY}&with_original_language=${discoverLang}&sort_by=popularity.desc&${dateParam}&page=${pg}`).then(r=>r.json())
+          fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_KEY}&with_original_language=${discoverLang}&sort_by=popularity.desc&primary_release_date.gte=${movDateStr}&page=${pg}`).then(r=>r.json())
         );
         const responses = await Promise.all(fetches);
         allResults = responses.flatMap(d => d.results||[]);
