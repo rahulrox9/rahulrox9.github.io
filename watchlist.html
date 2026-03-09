@@ -333,10 +333,8 @@ function renderCurrent() {
       </div>`).join('')}</div>`;
   } else {
     el.innerHTML = `<div class="show-list">${vis.map((e,i)=>{
-      const totalEps  = e.seasonsData?.reduce((a,s)=>a+(s.episodes?.length||0),0)||0;
-      const watchedEps= e.seasonsData?.reduce((a,s)=>a+(s.episodes?.filter(ep=>ep.watched).length||0),0)||0;
-      const pct       = totalEps ? Math.round(watchedEps/totalEps*100) : 0;
-      const completedSeasons = e.seasonsData?.filter(s=>s.reviewDone).length||0;
+      const totalSeasons     = e.seasonsData?.length || 0;
+      const reviewedSeasons  = e.seasonsData?.filter(s=>s.reviewDone).length || 0;
       return `
       <div class="show-card" style="animation-delay:${i*0.04}s" onclick="openModal('${e.id}')">
         <div class="show-card-inner">
@@ -344,13 +342,11 @@ function renderCurrent() {
           <div class="info">
             <span class="badge show">Series</span>
             <div class="entry-title">${e.title}</div>
-            ${e.year?`<div class="meta">${e.year}${e.seasonsData?' · '+e.seasonsData.length+' seasons':''}</div>`:''}
+            ${e.year?`<div class="meta">${e.year}${e.language?' · '+langName(e.language):''}</div>`:''}
+            ${totalSeasons?`<div class="meta">${totalSeasons} season${totalSeasons!==1?'s':''} · ${reviewedSeasons} reviewed</div>`:''}
             ${e.franchise?`<span class="franchise-tag" onclick="event.stopPropagation();filterByFranchise('${e.franchise.replace(/'/g,"\\'")}')" title="Filter: ${e.franchise}">🎬 ${e.franchise}</span>`:''}
             ${e.myRating?`<div class="my-rating">${e.myRating}<span class="oo">/10</span></div>`:''}
             ${e.review?`<div class="review-snip">${e.review}</div>`:''}
-            ${totalEps?`
-              <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
-              <div class="prog-lbl">${watchedEps}/${totalEps} episodes · ${completedSeasons} season${completedSeasons!==1?'s':''} reviewed</div>`:''}
           </div>
         </div>
       </div>`}).join('')}</div>`;
