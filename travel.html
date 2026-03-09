@@ -144,6 +144,7 @@ async function driveWrite(file, data) {
 }
 
 const map = L.map('map',{center:[20,10],zoom:3,zoomControl:false});
+setTimeout(()=>map.invalidateSize(),100);
 L.control.zoom({position:'bottomright'}).addTo(map);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
   attribution:'© OpenStreetMap © CartoDB',maxZoom:19
@@ -270,7 +271,6 @@ async function load() {
     const countries = new Set(allPins.map(p=>p.country).filter(Boolean));
     document.getElementById('place-count').textContent   = allPins.length;
     document.getElementById('country-count').textContent = countries.size + ' countries';
-    document.getElementById('header-stats').textContent  = `${allPins.length} places · ${countries.size} countries`;
 
     allPins.forEach(p => {
       if (!p.lat || !p.lng) return;
