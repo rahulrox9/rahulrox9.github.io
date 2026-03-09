@@ -114,11 +114,12 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
 .season-tab-panel.on { display:block; }
 .season-panel-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.6rem; }
 .season-name { font-size:0.8rem; font-weight:500; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); }
-.ep-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:0.4rem; margin-top:0.5rem; }
+.ep-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:0.4rem; margin-top:0.5rem; }
 .ep-item { display:flex; align-items:center; gap:0.4rem; font-size:0.76rem; cursor:pointer; padding:0.25rem 0.4rem; border-radius:3px; transition:background 0.15s; }
 .ep-item:hover { background:var(--border); }
 .ep-item input[type=checkbox] { accent-color:var(--warm); width:13px; height:13px; flex-shrink:0; cursor:pointer; }
 .ep-item.done { color:var(--green); }
+.ep-item.future { color:var(--muted); opacity:0.6; cursor:default; }
 .ep-progress { font-size:0.75rem; color:var(--muted); margin-top:0.4rem; }
 
 /* Season review modal */
@@ -165,6 +166,27 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
 .lang-filter-row { display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:1rem; }
 .lang-pill { padding:0.2rem 0.65rem; border-radius:12px; border:1px solid var(--border); background:var(--card); color:var(--muted); font-size:0.72rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s; }
 .lang-pill.on { background:var(--warm); color:#fff; border-color:var(--warm); }
+
+@media(max-width:680px){
+  body { padding:0.8rem; }
+  nav { margin:-0.8rem -0.8rem 1rem; padding:0 1rem; }
+  .nav-links a:not(.active) { display:none; }
+  .tabs { gap:0.3rem; }
+  .tab { font-size:0.72rem; padding:0.35rem 0.7rem; }
+  .entry { flex-wrap:wrap; gap:0.5rem; }
+  .entry img { width:40px; height:60px; }
+  .entry-actions { width:100%; justify-content:flex-start; flex-wrap:wrap; gap:0.3rem; }
+  .entry-actions .btn, .entry-actions .icon-btn, .entry-actions .track-btn { font-size:0.7rem; padding:0.25rem 0.5rem; }
+  .season-panel-header { flex-wrap:wrap; gap:0.4rem; }
+  .season-panel-header div { flex-wrap:wrap; gap:0.3rem; }
+  .season-panel-header .btn { font-size:0.65rem !important; padding:0.2rem 0.45rem !important; }
+  .ep-grid { grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); }
+  .ep-item { font-size:0.7rem; padding:0.3rem 0.4rem; }
+  .card { padding:1rem; }
+  .form-row { flex-direction:column; }
+  .result-grid { grid-template-columns:repeat(2,1fr) !important; }
+  .result-card { font-size:0.78rem; }
+}
 </style>
 </head>
 <body>
@@ -581,7 +603,7 @@ async function fetchTmdb(tmdbId, type, imdbIdHint) {
       const seasonResults = await Promise.all(seasonFetches);
       seasonsData = seasonResults.map(s=>({
         season: s.season_number, name: s.name||`Season ${s.season_number}`,
-        episodes: (s.episodes||[]).map(e=>({ ep:e.episode_number, name:e.name, watched:false })),
+        episodes: (s.episodes||[]).map(e=>({ ep:e.episode_number, name:e.name, airDate:e.air_date||'', watched:false })),
         rating:0, review:'', reviewDone:false
       }));
     }
@@ -775,7 +797,17 @@ function dismissWatchedModal() {
 // ── Render ───────────────────────────────────────────────
 function renderList() {
   const movies  = entries.filter(e=>e.type==='movie' && !e.toWatch);
-  const shows   = entries.filter(e=>e.type==='show'  && !e.toWatch).sort((a,b)=>{
+  const ENDED = ['Ended','Canceled','Cancelled'];
+  const shows   = entries.filter(e=>e.type==='show' && !e.toWatch).sort((a,b)=>{
+    const aTracking = !!a.tracking;
+    const bTracking = !!b.tracking;
+    const aEnded = ENDED.includes(a.status);
+    const bEnded = ENDED.includes(b.status);
+    // Tracking bunch above non-tracking bunch
+    if (aTracking !== bTracking) return bTracking - aTracking;
+    // Within same tracking group: ended/cancelled go last
+    if (aEnded !== bEnded) return aEnded - bEnded;
+    // Within same group+ended status: last edited first
     return (b.lastActivity||b.addedAt||0) - (a.lastActivity||a.addedAt||0);
   });
   const towatch = entries.filter(e=>e.toWatch);
@@ -859,11 +891,17 @@ function renderSeasonTracker(e) {
                     :`<button class="btn sm ghost" onclick="markSeasonAll('${e.id}',${s.season},false)" style="padding:0.2rem 0.6rem;font-size:0.7rem;color:var(--red);border-color:var(--red)">✕ Clear</button>`}
         </div>
       </div>
-      <div class="ep-grid">${(s.episodes||[]).map(ep=>`
-        <label class="ep-item ${ep.watched?'done':''}">
-          <input type="checkbox" ${ep.watched?'checked':''} onchange="toggleEp('${e.id}',${s.season},${ep.ep},this)">
-          E${ep.ep}${ep.name?' · '+ep.name.substring(0,14):''}
-        </label>`).join('')}</div>
+      <div class="ep-grid">${(s.episodes||[]).map(ep=>{
+        const today = new Date().toISOString().substring(0,10);
+        const aired = ep.airDate && ep.airDate <= today;
+        const future = ep.airDate && ep.airDate > today;
+        const fmtDate = d => { if(!d) return ''; const dt=new Date(d+'T00:00:00'); return dt.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); };
+        const dateLabel = ep.airDate ? (future ? ` · 🗓 ${fmtDate(ep.airDate)}` : ` · ${fmtDate(ep.airDate)}`) : '';
+        return `<label class="ep-item ${ep.watched?'done':''} ${future?'future':''}">
+          <input type="checkbox" ${ep.watched?'checked':''} ${future?'disabled':''} onchange="toggleEp('${e.id}',${s.season},${ep.ep},this)">
+          E${ep.ep}${ep.name?' · '+ep.name.substring(0,14):''}${dateLabel}
+        </label>`;
+      }).join('')}</div>
       <div class="ep-progress" style="margin-top:0.5rem">
         <div style="background:var(--border);border-radius:99px;height:4px;overflow:hidden">
           <div style="background:var(--warm);height:100%;width:${pct}%;transition:width 0.3s"></div>
@@ -1035,7 +1073,7 @@ async function refreshEpisodes(id) {
       const existing=e.seasonsData?.find(x=>x.season===s);
       newSeasons.push({
         season:s, name:sj.name||'Season '+s,
-        episodes:(sj.episodes||[]).map(ep=>({ ep:ep.episode_number, name:ep.name, watched:existing?.episodes?.find(x=>x.ep===ep.episode_number)?.watched||false })),
+        episodes:(sj.episodes||[]).map(ep=>({ ep:ep.episode_number, name:ep.name, airDate:ep.air_date||'', watched:existing?.episodes?.find(x=>x.ep===ep.episode_number)?.watched||false })),
         rating:existing?.rating||0, review:existing?.review||'', reviewDone:existing?.reviewDone||false
       });
     }
@@ -1064,7 +1102,7 @@ async function refreshSeries() {
           const sj=await fetch(`https://api.themoviedb.org/3/tv/${e.tmdbId}/season/${s}?api_key=${TMDB_KEY}`).then(r=>r.json());
           const existing=e.seasonsData?.find(x=>x.season===s);
           newSeasons.push({ season:s, name:sj.name||'Season '+s,
-            episodes:(sj.episodes||[]).map(ep=>({ ep:ep.episode_number, name:ep.name, watched:existing?.episodes?.find(x=>x.ep===ep.episode_number)?.watched||false })),
+            episodes:(sj.episodes||[]).map(ep=>({ ep:ep.episode_number, name:ep.name, airDate:ep.air_date||'', watched:existing?.episodes?.find(x=>x.ep===ep.episode_number)?.watched||false })),
             rating:existing?.rating||0, review:existing?.review||'', reviewDone:existing?.reviewDone||false
           });
         }
