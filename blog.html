@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Writing | Rahul Subbaraman</title>
+<title>Writing — Rahul Subbaraman</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -20,7 +20,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 .nav-links a.active{color:var(--ink);font-weight:500}
 .nav-admin{font-size:0.72rem;color:var(--muted);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;padding:0.25rem 0.65rem;border:1px solid var(--border);border-radius:3px;transition:all 0.15s}
 .nav-admin:hover{color:var(--warm);border-color:var(--warm)}
-@media(max-width:680px){nav{padding:0 1.2rem}.nav-links a:not(.active){display:none}}
+@media(max-width:680px){nav{padding:0 1.2rem}.nav-links a:not(.active):not(.nav-admin){display:none}.nav-admin{display:flex!important}}
 .page-header{max-width:1200px;margin:0 auto;padding:4rem 4rem 2rem}
 .eyebrow{font-size:0.68rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.6rem}
 .eyebrow::before{content:'';display:inline-block;width:24px;height:1px;background:var(--warm)}
@@ -36,8 +36,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 .post-card{background:var(--card);padding:2rem 1.8rem;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;transition:background 0.2s;position:relative}
 .post-card:hover{background:var(--parchment)}
 .post-card:hover .post-arrow{transform:translate(3px,-3px)}
-.post-tag{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--warm);margin-bottom:0.6rem;font-weight:500} 
-.post-tag span{margin-right:0.4rem;}
+.post-tag{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--warm);margin-bottom:0.6rem;font-weight:500}
 .post-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;line-height:1.3;margin-bottom:0.6rem}
 .post-excerpt{font-size:0.8rem;color:var(--muted);line-height:1.65;flex:1;font-weight:300}
 .post-footer{display:flex;align-items:center;justify-content:space-between;margin-top:1.2rem}
@@ -99,18 +98,18 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 const POSTS = [
   {
     id: 1,
-    tag: ['Sanskrit','Poetry'],
-    title: 'मम माता – My Mother',
-    excerpt: "A Sanskrit poem about a mother's boundless love – written in the classical style, with an English rendering alongside.",
-    date: 'Apr 2014',
-    featured: false,
+    tag: 'Sanskrit',
+    title: 'मम माता — My Mother',
+    excerpt: "A Sanskrit poem about a mother's boundless love — written in the classical style, with an English rendering alongside.",
+    date: 'Mar 2026',
+    featured: true,
     file: 'Writing/mama-mata.html'
   },
   {
     id: 2,
-    tag: ['English','Poetry'],
+    tag: 'Poetry',
     title: 'Love',
-    excerpt: "A poem on Love written for the school's annual magazine in class/grade 9.",
+    excerpt: "Love is not like weather, that changes from time to time. A Valentine's Day poem written at age 14.",
     date: 'Feb 2014',
     featured: false,
     file: 'Writing/love.html'
@@ -121,10 +120,10 @@ let activeTag = 'all';
 
 function render() {
   const grid = document.getElementById('posts-grid');
-  const filtered = activeTag === 'all' ? POSTS : POSTS.filter(p => p.tag.inlcudes(activeTag));
+  const filtered = activeTag === 'all' ? POSTS : POSTS.filter(p => p.tag === activeTag);
 
   if (!filtered.length) {
-    grid.innerHTML = '<div class="empty-state">No posts yet – coming soon.</div>';
+    grid.innerHTML = '<div class="empty-state">No posts yet — coming soon.</div>';
     return;
   }
 
@@ -132,7 +131,7 @@ function render() {
     const isFull = p.featured && i === 0;
     return `<a class="post-card${isFull?' full':''}${p.featured?' post-featured':''}" href="${p.file}">
       <div>
-        <div class="post-tag">${p.tag.map(t => `<span>${t}</span>`).join(' ')}</div>
+        <div class="post-tag">${p.tag.join(' · ')}</div>
         <div class="post-title">${p.title}</div>
         <div class="post-excerpt">${p.excerpt}</div>
       </div>

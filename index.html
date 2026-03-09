@@ -119,10 +119,10 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 /* ── RESPONSIVE ── */
 @media(max-width:960px){
   nav{padding:0 1.5rem}
-  .nav-links a:not(.active){display:none}
+  .nav-links a:not(.active):not(.nav-admin){display:none}
+  .nav-admin{display:flex!important}
   .hero{grid-template-columns:1fr;padding:3rem 1.5rem;min-height:auto;gap:3rem}
   .hero-photo-wrap{max-width:280px;margin:0 auto}
-
   .collections{padding:3rem 1.5rem}
   .cards-grid{grid-template-columns:1fr}
   .writing-section{padding:3rem 1.5rem}

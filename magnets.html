@@ -82,6 +82,8 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 
 @media(max-width:900px){
   nav{padding:0 1.5rem}
+  .nav-links a:not(.active):not(.nav-admin){display:none}
+  .nav-admin{display:flex!important}
   .page-header,.filter-bar,.gallery{padding-left:1.5rem;padding-right:1.5rem}
   footer{padding:1.5rem;flex-direction:column;gap:1rem;text-align:center}
 }

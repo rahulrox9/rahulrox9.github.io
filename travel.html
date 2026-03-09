@@ -11,11 +11,17 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e}
 html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink)}
-header{padding:1rem 1.5rem 0.8rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--card)}
-.site-title{font-family:'Playfair Display',serif;font-size:1.3rem}
-.site-title span{color:var(--warm);font-style:italic}
-.stats{font-size:0.75rem;color:var(--muted);letter-spacing:0.05em}
-#map{height:calc(100vh - 58px);width:100%}
+nav{position:sticky;top:0;z-index:1000;background:rgba(250,246,239,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:52px}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;text-decoration:none;color:var(--ink)}
+.nav-logo span{color:var(--warm);font-style:italic}
+.nav-links{display:flex;gap:1.4rem;align-items:center}
+.nav-links a{font-size:0.76rem;color:var(--muted);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
+.nav-links a:hover{color:var(--warm)}
+.nav-links a.active{color:var(--ink);font-weight:500}
+.nav-admin{font-size:0.72rem;color:var(--muted);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;padding:0.25rem 0.65rem;border:1px solid var(--border);border-radius:3px;transition:all 0.15s}
+.nav-admin:hover{color:var(--warm);border-color:var(--warm)}
+#map{height:calc(100vh - 52px);width:100%}
+@media(max-width:680px){nav{padding:0 1rem}.nav-links a:not(.active):not(.nav-admin){display:none}.nav-admin{display:flex!important}}
 
 /* Pin */
 .flag-pin{display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 2px 5px rgba(0,0,0,0.35))}
@@ -68,10 +74,18 @@ header{padding:1rem 1.5rem 0.8rem;border-bottom:1px solid var(--border);display:
 </style>
 </head>
 <body>
-<header>
-  <div class="site-title">Rahul's <span>Travels</span></div>
-  <div class="stats" id="header-stats">Loading…</div>
-</header>
+<nav>
+  <a class="nav-logo" href="index.html">Rahul <span>Subbaraman</span></a>
+  <div class="nav-links">
+    <a href="watchlist.html">Watchlist</a>
+    <a href="travel.html" class="active">Travels</a>
+    <a href="books.html">Bookshelf</a>
+    <a href="magnets.html">Magnets</a>
+    <a href="postcards.html">Postcards</a>
+    <a href="blog.html">Writing</a>
+    <a class="nav-admin" href="admin.html">Admin</a>
+  </div>
+</nav>
 <div style="position:relative">
   <div id="map"></div>
 
