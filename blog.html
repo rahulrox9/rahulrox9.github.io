@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Writing | Rahul Subbaraman</title>
+<title>Writing — Rahul Subbaraman</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -98,18 +98,18 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 const POSTS = [
   {
     id: 1,
-    tag: ['Poetry', 'Sanskrit'],
+    tag: 'Sanskrit',
     title: 'मम माता — My Mother',
     excerpt: "A Sanskrit poem about a mother's boundless love — written in the classical style, with an English rendering alongside.",
-    date: 'Apr 2014',
-    featured: false,
+    date: 'Mar 2026',
+    featured: true,
     file: 'Writing/mama-mata.html'
   },
   {
     id: 2,
-    tag: ['Poetry', 'English'],
+    tag: 'Poetry',
     title: 'Love',
-    excerpt: "A poem on love written for the school's annual magazine in Class 9.",
+    excerpt: "Love is not like weather, that changes from time to time. A Valentine's Day poem written at age 14.",
     date: 'Feb 2014',
     featured: false,
     file: 'Writing/love.html'
@@ -120,7 +120,7 @@ let activeTag = 'all';
 
 function render() {
   const grid = document.getElementById('posts-grid');
-  const filtered = activeTag === 'all' ? POSTS : POSTS.filter(p => p.tag.includes(activeTag));
+  const filtered = activeTag === 'all' ? POSTS : POSTS.filter(p => p.tag === activeTag);
 
   if (!filtered.length) {
     grid.innerHTML = '<div class="empty-state">No posts yet — coming soon.</div>';
@@ -131,7 +131,7 @@ function render() {
     const isFull = p.featured && i === 0;
     return `<a class="post-card${isFull?' full':''}${p.featured?' post-featured':''}" href="${p.file}">
       <div>
-        <div class="post-tag">${p.tag}</div>
+        <div class="post-tag">${p.tag.join(' · ')}</div>
         <div class="post-title">${p.title}</div>
         <div class="post-excerpt">${p.excerpt}</div>
       </div>
@@ -142,7 +142,7 @@ function render() {
     </a>`;
   }).join('');
 
-  const tags = ['all', ...new Set(POSTS.map(p => p.tag))];
+  const tags = ['all', ...new Set(POSTS.flatMap(p => p.tag))];
   document.getElementById('tag-bar').innerHTML = tags.map(t =>
     `<button class="tag-btn${t===activeTag?' on':''}" onclick="filterTag('${t}',this)">${t==='all'?'All':t}</button>`
   ).join('');
