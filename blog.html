@@ -128,7 +128,7 @@ function render() {
   }
 
   grid.innerHTML = filtered.map((p, i) => {
-    const isFull = p.featured && i === 0;
+    const isFull = p.featured;
     return `<a class="post-card${isFull?' full':''}${p.featured?' post-featured':''}" href="${p.file}">
       <div>
         <div class="post-tag">${p.tag.join(' · ')}</div>
