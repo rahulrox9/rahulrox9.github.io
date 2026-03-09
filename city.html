@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City | Rahul Subbaraman</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);overflow:hidden}
+
+/* Grain */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35}
+
+/* Nav */
+nav{position:relative;z-index:200;background:rgba(250,246,239,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:52px;flex-shrink:0}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;text-decoration:none;color:var(--ink)}
+.nav-logo span{color:var(--warm);font-style:italic}
+.nav-links{display:flex;gap:1.4rem;align-items:center}
+.nav-links a{font-size:0.76rem;color:var(--muted);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
+.nav-links a:hover,.nav-links a.active{color:var(--ink);font-weight:500}
+.nav-admin{font-size:0.72rem;color:var(--muted);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;padding:0.25rem 0.65rem;border:1px solid var(--border);border-radius:3px;transition:all 0.15s}
+.nav-admin:hover{color:var(--warm);border-color:var(--warm)}
+
+/* Layout */
+.shell{display:flex;height:calc(100vh - 52px)}
+
+/* Left: map panel */
+.map-panel{flex:1;position:relative;min-width:0}
+#city-map{width:100%;height:100%}
+
+/* City header overlay on map */
+.city-header{position:absolute;top:1rem;left:50%;transform:translateX(-50%);z-index:100;background:rgba(250,246,239,0.95);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:6px;padding:0.6rem 1.2rem;text-align:center;pointer-events:none;white-space:nowrap}
+.city-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--ink)}
+.city-sub{font-size:0.68rem;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-top:0.1rem}
+
+/* Place list strip below map header */
+.place-strip{position:absolute;bottom:0;left:0;right:0;z-index:100;background:rgba(250,246,239,0.95);backdrop-filter:blur(8px);border-top:1px solid var(--border);padding:0.5rem 0.8rem;display:flex;gap:0.4rem;overflow-x:auto;scrollbar-width:none}
+.place-strip::-webkit-scrollbar{display:none}
+.place-chip{flex-shrink:0;padding:0.28rem 0.75rem;border-radius:99px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.18s;white-space:nowrap}
+.place-chip:hover{border-color:var(--warm);color:var(--warm)}
+.place-chip.active{background:var(--warm);color:#fff;border-color:var(--warm)}
+
+/* Right: viewer panel */
+.viewer-panel{width:420px;flex-shrink:0;border-left:1px solid var(--border);display:flex;flex-direction:column;background:var(--card);overflow:hidden}
+
+/* Viewer empty state */
+.viewer-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;color:var(--muted);padding:2rem;text-align:center}
+.viewer-empty-icon{font-size:2.5rem;opacity:0.4}
+.viewer-empty p{font-size:0.82rem;line-height:1.6;font-weight:300}
+.viewer-empty em{font-family:'Playfair Display',serif;font-style:italic;font-size:0.9rem;color:var(--ink)}
+
+/* Viewer place header */
+.viewer-header{padding:1.2rem 1.4rem 0.8rem;border-bottom:1px solid var(--border);flex-shrink:0}
+.viewer-place-name{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;line-height:1.2;margin-bottom:0.25rem}
+.viewer-place-meta{font-size:0.72rem;color:var(--muted);letter-spacing:0.04em}
+
+/* Photo carousel */
+.carousel{flex:1;position:relative;overflow:hidden;background:#1a1208;min-height:0}
+.carousel-track{display:flex;height:100%;transition:transform 0.35s cubic-bezier(0.4,0,0.2,1)}
+.carousel-slide{flex-shrink:0;width:100%;height:100%;position:relative}
+.carousel-slide img{width:100%;height:100%;object-fit:cover;display:block}
+.carousel-slide-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;background:linear-gradient(135deg,#2a2218,#1a1208);color:rgba(255,255,255,0.15)}
+
+/* Carousel controls */
+.carousel-prev,.carousel-next{position:absolute;top:50%;transform:translateY(-50%);z-index:10;background:rgba(250,246,239,0.85);border:none;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all 0.15s;backdrop-filter:blur(4px)}
+.carousel-prev{left:0.8rem}
+.carousel-next{right:0.8rem}
+.carousel-prev:hover,.carousel-next:hover{background:var(--card);box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.carousel-prev:disabled,.carousel-next:disabled{opacity:0.3;cursor:default}
+
+/* Carousel dots */
+.carousel-dots{position:absolute;bottom:0.7rem;left:50%;transform:translateX(-50%);display:flex;gap:0.35rem;z-index:10}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.45);cursor:pointer;transition:all 0.2s}
+.dot.active{background:#fff;width:18px;border-radius:3px}
+
+/* Caption */
+.viewer-caption{padding:1rem 1.4rem 1.2rem;border-top:1px solid var(--border);flex-shrink:0;max-height:180px;overflow-y:auto}
+.caption-photo-num{font-size:0.65rem;color:var(--warm);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.4rem;font-weight:500}
+.caption-text{font-size:0.84rem;color:var(--ink);line-height:1.7;font-weight:300}
+.caption-text em{font-style:italic;color:var(--muted)}
+
+/* Leaflet pin overrides */
+.city-pin{display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));cursor:pointer;transition:filter 0.2s}
+.city-pin.active-pin{filter:drop-shadow(0 0 8px rgba(200,135,58,0.8)) drop-shadow(0 2px 4px rgba(0,0,0,0.4))}
+.pin-circle{width:32px;height:32px;border-radius:50%;border:3px solid #fff;background:var(--warm);display:flex;align-items:center;justify-content:center;font-size:15px;line-height:1;color:#fff;font-family:'DM Sans',sans-serif;font-weight:700;transition:background 0.2s}
+.city-pin.active-pin .pin-circle{background:#1a1208;border-color:var(--warm)}
+.pin-stem{width:2.5px;height:12px;background:#666;margin-top:-1px}
+.pin-tip{width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid #666;margin-top:-1px}
+
+/* Leaflet popup */
+.leaflet-popup-content-wrapper{background:var(--card);border:1px solid var(--border);border-radius:4px;box-shadow:0 4px 16px rgba(26,18,8,0.15);padding:0}
+.leaflet-popup-content{margin:0;font-family:'DM Sans',sans-serif;min-width:130px}
+.leaflet-popup-tip{background:var(--card)}
+.popup-inner{padding:0.6rem 0.85rem}
+.popup-name{font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700}
+.popup-count{font-size:0.68rem;color:var(--muted);margin-top:0.1rem}
+.popup-click{font-size:0.65rem;color:var(--warm);margin-top:0.25rem;cursor:pointer}
+
+/* Mobile */
+@media(max-width:768px){
+  html,body{overflow:auto}
+  .shell{flex-direction:column;height:auto}
+  .map-panel{height:55vw;min-height:260px}
+  .viewer-panel{width:100%;border-left:none;border-top:1px solid var(--border);min-height:420px}
+  nav{padding:0 1rem}
+  .nav-links a:not(.active):not(.nav-admin){display:none}
+  .nav-admin{display:flex!important}
+  .city-header{top:0.5rem;padding:0.4rem 0.9rem}
+  .city-name{font-size:0.95rem}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">Rahul <span>Subbaraman</span></a>
+  <div class="nav-links">
+    <a href="watchlist.html">Watchlist</a>
+    <a href="travel.html" class="active">Travels</a>
+    <a href="books.html">Bookshelf</a>
+    <a href="magnets.html">Magnets</a>
+    <a href="postcards.html">Postcards</a>
+    <a href="blog.html">Writing</a>
+    <a class="nav-admin" href="admin.html">Admin</a>
+  </div>
+</nav>
+
+<div class="shell">
+  <div class="map-panel">
+    <div id="city-map"></div>
+    <div class="city-header" id="city-header">
+      <div class="city-name" id="city-name">Loading…</div>
+      <div class="city-sub" id="city-sub"></div>
+    </div>
+    <div class="place-strip" id="place-strip"></div>
+  </div>
+
+  <div class="viewer-panel" id="viewer-panel">
+    <div class="viewer-empty" id="viewer-empty">
+      <div class="viewer-empty-icon">📍</div>
+      <p><em>Tap a pin or place name</em><br>to explore photos and stories from that spot.</p>
+    </div>
+    <div id="viewer-content" style="display:none;flex-direction:column;flex:1;overflow:hidden;display:none">
+      <div class="viewer-header">
+        <div class="viewer-place-name" id="viewer-place-name"></div>
+        <div class="viewer-place-meta" id="viewer-place-meta"></div>
+      </div>
+      <div class="carousel" id="carousel">
+        <div class="carousel-track" id="carousel-track"></div>
+        <button class="carousel-prev" id="carousel-prev" onclick="carouselMove(-1)">‹</button>
+        <button class="carousel-next" id="carousel-next" onclick="carouselMove(1)">›</button>
+        <div class="carousel-dots" id="carousel-dots"></div>
+      </div>
+      <div class="viewer-caption">
+        <div class="caption-photo-num" id="caption-num"></div>
+        <div class="caption-text" id="caption-text"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CITY DATA ─────────────────────────────────────────────
+// In future this will load from Drive via city_places.json
+// For now Manchester is hardcoded as a sample
+const CITIES = {
+  manchester: {
+    name: 'Manchester',
+    country: 'United Kingdom',
+    lat: 53.4808,
+    lng: -2.2426,
+    zoom: 13,
+    places: [
+      {
+        id: 'rylands',
+        name: 'John Rylands Library',
+        emoji: '📚',
+        lat: 53.4792,
+        lng: -2.2497,
+        photos: [
+          {
+            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/John_Rylands_Library%2C_Manchester%2C_UK_-_Diliff.jpg/1280px-John_Rylands_Library%2C_Manchester%2C_UK_-_Diliff.jpg',
+            caption: 'The neo-Gothic reading room — one of the most breathtaking interiors in England. Built in 1900 in memory of John Rylands by his wife Enriqueta. The arched ceilings and stained glass make it feel like studying inside a cathedral.'
+          },
+          {
+            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/John_Rylands_Library_Manchester_Reading_Room.jpg/1280px-John_Rylands_Library_Manchester_Reading_Room.jpg',
+            caption: 'The historic reading room from the upper gallery. The shelves hold some of the oldest printed books in the world, including a fragment of the Gospel of John dating to 125 AD — the oldest known piece of New Testament text.'
+          },
+          {
+            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/John_Rylands_Library_exterior.jpg/1024px-John_Rylands_Library_exterior.jpg',
+            caption: 'Deansgate facade at dusk. Hidden in plain sight on one of Manchester\'s busiest shopping streets, most people walk past without realising what\'s inside. Entry is free — arguably the best free attraction in the city.'
+          }
+        ]
+      },
+      {
+        id: 'corn-exchange',
+        name: 'Corn Exchange',
+        emoji: '🏛️',
+        lat: 53.4837,
+        lng: -2.2417,
+        photos: [
+          {
+            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Corn_Exchange%2C_Manchester.jpg/1280px-Corn_Exchange%2C_Manchester.jpg',
+            caption: 'The Victorian Corn Exchange, now home to independent restaurants and bars. The original trading floor has been transformed into a food hall with stained glass dome overhead. A wonderful example of adaptive reuse.'
+          },
+          {
+            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Manchester_Corn_Exchange_interior.jpg/1280px-Manchester_Corn_Exchange_interior.jpg',
+            caption: 'Looking up at the spectacular iron and glass dome from the ground floor. The building dates to 1903 and was designed by James Corbridge. Today it buzzes with people eating and drinking beneath the same roof where merchants once traded grain.'
+          }
+        ]
+      },
+      {
+        id: 'northern-quarter',
+        name: 'Northern Quarter',
+        emoji: '🎨',
+        lat: 53.4849,
+        lng: -2.2340,
+        photos: [
+          {
+            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Northern_Quarter%2C_Manchester_%281%29.jpg/1280px-Northern_Quarter%2C_Manchester_%281%29.jpg',
+            caption: 'Stevenson Square at golden hour. The Northern Quarter is Manchester\'s bohemian heart — independent coffee shops, vintage record stores, street art and some of the best bars in the city tucked down narrow Victorian streets.'
+          },
+          {
+            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Afflecks_Manchester.jpg/1024px-Afflecks_Manchester.jpg',
+            caption: 'Affleck\'s Palace — a four-storey emporium of vintage, alternative and independent traders that has been a Manchester institution since 1982. Think Camden Market but indoors and distinctly Mancunian.'
+          }
+        ]
+      },
+      {
+        id: 'anfield',
+        name: 'Etihad Stadium',
+        emoji: '⚽',
+        lat: 53.4831,
+        lng: -2.2004,
+        photos: [
+          {
+            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Etihad_Stadium%2C_Manchester.jpg/1280px-Etihad_Stadium%2C_Manchester.jpg',
+            caption: 'Etihad Stadium from the east stand. Home of Manchester City FC since 2003, with a capacity of 53,400. The stadium was originally built for the 2002 Commonwealth Games before being converted for football.'
+          }
+        ]
+      },
+      {
+        id: 'whitworth',
+        name: 'Whitworth Art Gallery',
+        emoji: '🖼️',
+        lat: 53.4607,
+        lng: -2.2303,
+        photos: [
+          {
+            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Whitworth_Art_Gallery.jpg/1280px-Whitworth_Art_Gallery.jpg',
+            caption: 'The Whitworth, set in Whitworth Park in south Manchester. Part of the University of Manchester, it holds one of the finest textile and wallpaper collections in the world alongside an impressive permanent art collection. Completely free to visit.'
+          },
+          {
+            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Whitworth_Gallery_interior.jpg/1280px-Whitworth_Gallery_interior.jpg',
+            caption: 'The light-filled central hall after the 2015 extension. The renovation by MUMA Architects opened up the building to the park behind, creating a seamless connection between gallery and landscape. Pick up a coffee from the café and watch the trees through the glass wall.'
+          }
+        ]
+      },
+      {
+        id: 'mediacity',
+        name: 'MediaCityUK',
+        emoji: '📺',
+        lat: 53.4727,
+        lng: -2.2980,
+        photos: [
+          {
+            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/MediaCityUK_Salford.jpg/1280px-MediaCityUK_Salford.jpg',
+            caption: 'MediaCityUK on the banks of the Salford Quays. Home to BBC North, ITV and countless digital and creative businesses. The waterfront area has transformed what was once derelict dockland into one of Greater Manchester\'s most striking modern quarters.'
+          }
+        ]
+      }
+    ]
+  }
+};
+
+// ── STATE ────────────────────────────────────────────────
+let cityData = null;
+let activePlace = null;
+let carouselIndex = 0;
+let pinMarkers = {}; // place id → marker
+
+// ── INIT ─────────────────────────────────────────────────
+function getCity() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('city') || 'manchester';
+}
+
+const map = L.map('city-map', { zoomControl: false });
+L.control.zoom({ position: 'bottomright' }).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© OpenStreetMap © CartoDB', maxZoom: 19
+}).addTo(map);
+
+function init() {
+  const cityKey = getCity();
+  cityData = CITIES[cityKey];
+
+  if (!cityData) {
+    document.getElementById('city-name').textContent = 'City not found';
+    return;
+  }
+
+  document.title = cityData.name + ' | Rahul Subbaraman';
+  document.getElementById('city-name').textContent = cityData.name;
+  document.getElementById('city-sub').textContent = cityData.country + ' · ' + cityData.places.length + ' places';
+
+  map.setView([cityData.lat, cityData.lng], cityData.zoom);
+
+  // Build place strip
+  const strip = document.getElementById('place-strip');
+  strip.innerHTML = cityData.places.map(p =>
+    `<button class="place-chip" id="chip-${p.id}" onclick="selectPlace('${p.id}')">${p.emoji} ${p.name}</button>`
+  ).join('');
+
+  // Add pins
+  cityData.places.forEach(p => {
+    const icon = makePlacePin(p);
+    const marker = L.marker([p.lat, p.lng], { icon })
+      .addTo(map)
+      .bindPopup(`<div class="popup-inner">
+        <div class="popup-name">${p.emoji} ${p.name}</div>
+        <div class="popup-count">${p.photos.length} photo${p.photos.length !== 1 ? 's' : ''}</div>
+        <div class="popup-click" onclick="selectPlace('${p.id}')">Tap to explore →</div>
+      </div>`, { maxWidth: 180 });
+
+    marker.on('click', () => selectPlace(p.id));
+    pinMarkers[p.id] = marker;
+  });
+}
+
+function makePlacePin(p, active = false) {
+  const html = `<div class="city-pin${active ? ' active-pin' : ''}">
+    <div class="pin-circle">${p.emoji}</div>
+    <div class="pin-stem"></div>
+    <div class="pin-tip"></div>
+  </div>`;
+  return L.divIcon({ html, className: '', iconSize: [32, 50], iconAnchor: [16, 50], popupAnchor: [0, -54] });
+}
+
+// ── SELECT PLACE ─────────────────────────────────────────
+function selectPlace(id) {
+  const place = cityData.places.find(p => p.id === id);
+  if (!place) return;
+
+  // Deactivate previous
+  if (activePlace) {
+    const prev = cityData.places.find(p => p.id === activePlace);
+    if (prev && pinMarkers[prev.id]) {
+      pinMarkers[prev.id].setIcon(makePlacePin(prev, false));
+    }
+    document.getElementById('chip-' + activePlace)?.classList.remove('active');
+  }
+
+  activePlace = id;
+
+  // Activate pin
+  if (pinMarkers[id]) {
+    pinMarkers[id].setIcon(makePlacePin(place, true));
+    map.flyTo([place.lat, place.lng], Math.max(map.getZoom(), 15), { duration: 0.6 });
+    pinMarkers[id].closePopup();
+  }
+
+  // Activate chip
+  document.getElementById('chip-' + id)?.classList.add('active');
+
+  // Show viewer
+  document.getElementById('viewer-empty').style.display = 'none';
+  const vc = document.getElementById('viewer-content');
+  vc.style.display = 'flex';
+  vc.style.flexDirection = 'column';
+  vc.style.flex = '1';
+  vc.style.overflow = 'hidden';
+
+  document.getElementById('viewer-place-name').textContent = place.emoji + ' ' + place.name;
+  document.getElementById('viewer-place-meta').textContent = place.photos.length + ' photo' + (place.photos.length !== 1 ? 's' : '');
+
+  // Build carousel
+  carouselIndex = 0;
+  buildCarousel(place);
+}
+
+// ── CAROUSEL ─────────────────────────────────────────────
+function buildCarousel(place) {
+  const track = document.getElementById('carousel-track');
+  const dots  = document.getElementById('carousel-dots');
+
+  track.innerHTML = place.photos.map(ph => `
+    <div class="carousel-slide">
+      ${ph.url
+        ? `<img src="${ph.url}" alt="${place.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'carousel-slide-ph\\'>🖼️</div>'">`
+        : `<div class="carousel-slide-ph">📷</div>`}
+    </div>
+  `).join('');
+
+  dots.innerHTML = place.photos.map((_, i) =>
+    `<div class="dot${i === 0 ? ' active' : ''}" onclick="goToSlide(${i})"></div>`
+  ).join('');
+
+  updateCarousel(place);
+}
+
+function updateCarousel(place) {
+  if (!place) place = cityData.places.find(p => p.id === activePlace);
+  if (!place) return;
+
+  const track = document.getElementById('carousel-track');
+  track.style.transform = `translateX(-${carouselIndex * 100}%)`;
+
+  // Dots
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === carouselIndex));
+
+  // Arrows
+  document.getElementById('carousel-prev').disabled = carouselIndex === 0;
+  document.getElementById('carousel-next').disabled = carouselIndex === place.photos.length - 1;
+
+  // Caption
+  const photo = place.photos[carouselIndex];
+  document.getElementById('caption-num').textContent = `Photo ${carouselIndex + 1} of ${place.photos.length}`;
+  document.getElementById('caption-text').textContent = photo?.caption || '';
+}
+
+function carouselMove(dir) {
+  const place = cityData.places.find(p => p.id === activePlace);
+  if (!place) return;
+  carouselIndex = Math.max(0, Math.min(place.photos.length - 1, carouselIndex + dir));
+  updateCarousel(place);
+}
+
+function goToSlide(i) {
+  carouselIndex = i;
+  updateCarousel();
+}
+
+// Swipe support
+let touchStartX = 0;
+document.getElementById('carousel').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+document.getElementById('carousel').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 40) carouselMove(dx < 0 ? 1 : -1);
+});
+
+// Keyboard support
+document.addEventListener('keydown', e => {
+  if (!activePlace) return;
+  if (e.key === 'ArrowLeft') carouselMove(-1);
+  if (e.key === 'ArrowRight') carouselMove(1);
+});
+
+init();
+</script>
+</body>
+</html>

@@ -178,12 +178,14 @@ function makePin(category, country, countryCode) {
 
 function makePopup(p) {
   const emoji = countryToEmoji(p.country||'', p.countryCode||'');
+  const cityKey = p.cityPage || null; // set cityPage:'manchester' on the pin to enable link
   return `<div class="popup-inner">
     ${emoji?`<div style="font-size:1.4rem;margin-bottom:0.3rem">${emoji}</div>`:''}
     <div class="popup-name">${p.name}</div>
     ${p.country?`<div class="popup-country">${p.country}</div>`:''}
     ${p.category?`<span class="popup-cat ${p.category}">${p.category}</span>`:''}
     ${p.notes?`<div class="popup-notes">${p.notes}</div>`:''}
+    ${cityKey?`<div style="margin-top:0.5rem"><a href="city.html?city=${cityKey}" style="font-size:0.7rem;color:var(--warm);text-decoration:none;font-weight:500;letter-spacing:0.04em">Explore city →</a></div>`:''}
   </div>`;
 }
 
