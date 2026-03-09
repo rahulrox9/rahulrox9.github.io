@@ -108,7 +108,7 @@ const POSTS = [
   },
   {
     id: 2,
-    tag: ['Poetry','Poetry'],
+    tag: ['English','Poetry'],
     title: 'Love',
     excerpt: "A poem on Love written for the school's annual magazine in class/grade 9.",
     date: 'Feb 2014',
@@ -121,7 +121,7 @@ let activeTag = 'all';
 
 function render() {
   const grid = document.getElementById('posts-grid');
-  const filtered = activeTag === 'all' ? POSTS : POSTS.filter(p => p.tag === activeTag);
+  const filtered = activeTag === 'all' ? POSTS : POSTS.filter(p => p.tag.inlcudes(activeTag));
 
   if (!filtered.length) {
     grid.innerHTML = '<div class="empty-state">No posts yet – coming soon.</div>';
