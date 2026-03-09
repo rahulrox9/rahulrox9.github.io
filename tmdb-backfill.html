@@ -153,7 +153,9 @@ async function fetchDetails(tmdbId, type) {
   const imdbId = ext.imdb_id || '';
   const language = langName(main.original_language || '');
   const status = main.status || '';
-  return { imdbId, language, cast, director, status };
+  const franchise = (type==='movie' && main.belongs_to_collection) ? main.belongs_to_collection.name : '';
+  const franchiseId = (type==='movie' && main.belongs_to_collection) ? main.belongs_to_collection.id : null;
+  return { imdbId, language, cast, director, status, franchise, franchiseId };
 }
 
 async function searchTmdb(title, year, type) {
@@ -184,8 +186,8 @@ async function loadAndScan() {
     return;
   }
 
-  const needsFill  = entries.filter(e => !e.cast || !e.cast.length || !e.imdbId);
-  const alreadyOk  = entries.filter(e => e.cast && e.cast.length && e.imdbId);
+  const needsFill  = entries.filter(e => !e.cast || !e.cast.length || !e.imdbId || (e.type==='movie' && e.franchise === undefined));
+  const alreadyOk  = entries.filter(e => e.cast && e.cast.length && e.imdbId && (e.type!=='movie' || e.franchise !== undefined));
 
   document.getElementById('stat-line').innerHTML =
     `<strong>${entries.length}</strong> entries · <strong>${needsFill.length}</strong> need filling · <strong>${alreadyOk.length}</strong> already complete`;
