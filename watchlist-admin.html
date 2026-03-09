@@ -143,7 +143,7 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
 .result-card.already::after { content:'✓'; position:absolute; top:0.3rem; right:0.3rem; background:var(--green); color:#fff; border-radius:99px; width:18px; height:18px; display:flex; align-items:center; justify-content:center; font-size:0.65rem; }
 
 /* Stats */
-.stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem; }
+.stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem; align-items:start; }
 .stat-block { background:var(--parchment); border:1px solid var(--border); border-radius:4px; padding:0.9rem 1rem; }
 .stat-block h4 { font-size:0.68rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--warm); margin-bottom:0.7rem; }
 .stat-row { display:flex; align-items:center; justify-content:space-between; padding:0.3rem 0; border-bottom:1px solid var(--border); font-size:0.8rem; cursor:pointer; transition:color 0.15s; }
@@ -1210,39 +1210,38 @@ async function searchFindMore() {
 
 // ── Stats ────────────────────────────────────────────────
 function renderStats() {
-  const watched = entries.filter(e=>!e.toWatch);
-  // Top directors
-  const dirCount={};
-  watched.forEach(e=>{ if(e.director) e.director.split(',').forEach(d=>{ const n=d.trim(); if(n) dirCount[n]=(dirCount[n]||0)+1; }); });
-  const topDirs = Object.entries(dirCount).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  // Top cast
-  const castCount={};
-  watched.forEach(e=>{ (e.cast||[]).forEach(c=>{ castCount[c]=(castCount[c]||0)+1; }); });
-  const topCast = Object.entries(castCount).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  // By language
-  const langCount={};
-  watched.forEach(e=>{ const l=langName(e.language||''); if(l) langCount[l]=(langCount[l]||0)+1; });
-  const topLangs = Object.entries(langCount).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  // By franchise
-  const franCount={};
-  watched.forEach(e=>{ if(e.franchise) franCount[e.franchise]=(franCount[e.franchise]||0)+1; });
-  const topFrans = Object.entries(franCount).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const movies  = entries.filter(e=>!e.toWatch && e.type==='movie');
+  const shows   = entries.filter(e=>!e.toWatch && e.type==='show');
+  const all     = entries.filter(e=>!e.toWatch);
+
+  function topDirs(arr)  { const c={}; arr.forEach(e=>{ if(e.director) e.director.split(',').forEach(d=>{ const n=d.trim(); if(n) c[n]=(c[n]||0)+1; }); }); return Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,10); }
+  function topCast(arr)  { const c={}; arr.forEach(e=>{ (e.cast||[]).forEach(x=>{ c[x]=(c[x]||0)+1; }); }); return Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,10); }
+  function topLangs(arr) { const c={}; arr.forEach(e=>{ const l=langName(e.language||''); if(l) c[l]=(c[l]||0)+1; }); return Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,10); }
+  function topFrans(arr) { const c={}; arr.forEach(e=>{ if(e.franchise) c[e.franchise]=(c[e.franchise]||0)+1; }); return Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,10); }
 
   const makeBlock = (title, rows, clickFn) => `
     <div class="stat-block">
       <h4>${title}</h4>
-      ${rows.map(([name,count])=>`
-        <div class="stat-row" onclick="${clickFn?`${clickFn}('${name.replace(/'/g,"\\'")}')`:''}" title="Find more from ${name}">
+      ${rows.length ? rows.map(([name,count])=>`
+        <div class="stat-row" onclick="${clickFn?`${clickFn}('${name.replace(/'/g,"\\'")}')`:''}" style="${clickFn?'':'cursor:default'}" title="${clickFn?'Find more from '+name:''}">
           <span>${name}</span>
           <span class="stat-count">${count}</span>
-        </div>`).join('')}
+        </div>`).join('') : '<div style="font-size:0.78rem;color:var(--muted);font-style:italic;padding:0.4rem 0">No data yet</div>'}
     </div>`;
 
+  const sectionHead = (label) => `<div style="grid-column:1/-1;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;padding:1rem 0 0.2rem;border-bottom:1px solid var(--border);margin-bottom:0.2rem">${label}</div>`;
+
   document.getElementById('stats-grid').innerHTML =
-    makeBlock('Top Directors', topDirs, 'findMoreFrom') +
-    makeBlock('Top Cast', topCast, 'findMoreFrom') +
-    makeBlock('By Language', topLangs, null) +
-    makeBlock('By Franchise', topFrans, null);
+    sectionHead('🎬 Movies') +
+    makeBlock('Top Directors', topDirs(movies), 'findMoreFrom') +
+    makeBlock('Top Cast', topCast(movies), 'findMoreFrom') +
+    makeBlock('By Language', topLangs(movies), null) +
+    sectionHead('📺 Series') +
+    makeBlock('Top Creators', topDirs(shows), 'findMoreFrom') +
+    makeBlock('Top Cast', topCast(shows), 'findMoreFrom') +
+    makeBlock('By Language', topLangs(shows), null) +
+    sectionHead('🎭 Franchises (Movies + Series)') +
+    makeBlock('By Franchise', topFrans(all), null);
 }
 
 function findMoreFrom(name) {
