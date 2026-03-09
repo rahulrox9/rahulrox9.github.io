@@ -1120,11 +1120,21 @@ async function loadDiscover() {
   const container=document.getElementById('discover-results');
   container.innerHTML='<div class="empty">Loading…</div>';
   try {
-    let url = `https://api.themoviedb.org/3/trending/${discoverType}/week?api_key=${TMDB_KEY}`;
-    if (discoverLang) url += `&with_original_language=${discoverLang}`;
-    const d = await fetch(url).then(r=>r.json());
-    const results = (d.results||[]).slice(0,20);
-    if (!results.length) { container.innerHTML='<div class="empty">No results.</div>'; return; }
+    // Fetch up to 3 pages to get enough results for non-English filtering
+    const pages = discoverLang ? [1,2,3] : [1];
+    const fetches = pages.map(pg =>
+      fetch(`https://api.themoviedb.org/3/trending/${discoverType}/week?api_key=${TMDB_KEY}&page=${pg}`).then(r=>r.json())
+    );
+    const responses = await Promise.all(fetches);
+    let allResults = responses.flatMap(d => d.results||[]);
+
+    // Filter by language client-side
+    if (discoverLang) {
+      allResults = allResults.filter(item => item.original_language === discoverLang);
+    }
+
+    const results = allResults.slice(0,20);
+    if (!results.length) { container.innerHTML='<div class="empty">No results for this language in trending this week.</div>'; return; }
     container.style.display='grid';
     container.innerHTML = results.map(item=>{
       const tid=String(item.id);
