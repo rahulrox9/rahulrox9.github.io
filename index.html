@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rahul Subbaraman</title>
 <meta name="description" content="Volcanic petrologist, data nerd, and PhD candidate at University of Manchester. Personal site tracking films, travels, books and writing.">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a1208">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -273,7 +278,9 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 </footer>
 
 <script>
-
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
 </script>
 </body>
 </html>
