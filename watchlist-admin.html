@@ -1132,13 +1132,29 @@ async function loadDiscover() {
       allResults = responses.flatMap(d => d.results||[]);
       if (discoverLang) allResults = allResults.filter(item => item.original_language === discoverLang);
     } else {
-      // Non-English: use discover endpoint sorted by popularity with language filter
+      // Non-English: use discover endpoint sorted by popularity, last 3 months
       const ep = discoverType==='tv' ? 'tv' : 'movie';
-      const fetches = [1,2,3].map(pg =>
-        fetch(`https://api.themoviedb.org/3/discover/${ep}?api_key=${TMDB_KEY}&with_original_language=${discoverLang}&sort_by=popularity.desc&page=${pg}`).then(r=>r.json())
-      );
-      const responses = await Promise.all(fetches);
-      allResults = responses.flatMap(d => d.results||[]);
+      const dateFrom = new Date();
+      dateFrom.setMonth(dateFrom.getMonth() - 3);
+      const dateStr = dateFrom.toISOString().substring(0,10);
+
+      if (discoverType==='tv') {
+        // For series: fetch popular, then filter by last_air_date >= 3 months ago
+        const fetches = [1,2,3,4,5].map(pg =>
+          fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_KEY}&with_original_language=${discoverLang}&sort_by=popularity.desc&page=${pg}`).then(r=>r.json())
+        );
+        const responses = await Promise.all(fetches);
+        allResults = responses.flatMap(d => d.results||[])
+          .filter(item => item.last_air_date && item.last_air_date >= dateStr);
+      } else {
+        // For movies: filter by release date
+        const dateParam = `primary_release_date.gte=${dateStr}`;
+        const fetches = [1,2,3].map(pg =>
+          fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_KEY}&with_original_language=${discoverLang}&sort_by=popularity.desc&${dateParam}&page=${pg}`).then(r=>r.json())
+        );
+        const responses = await Promise.all(fetches);
+        allResults = responses.flatMap(d => d.results||[]);
+      }
     }
 
     const results = allResults.slice(0,20);
