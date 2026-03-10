@@ -769,8 +769,8 @@ function switchTab(id, btn) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
   if (btn) btn.classList.add('on');
   document.getElementById('tab-' + id).classList.add('on');
+  if (id === 'city') loadCityPlaces();
 }
-
 // ── KML import ───────────────────────────────────────────
 async function handleKml(input) {
   const file = input.files[0]; if (!file) return;
@@ -1364,13 +1364,6 @@ function showMsg(id, text, type) {
   el.textContent = text;
   el.className = 'form-msg ' + type;
   setTimeout(() => { el.className = 'form-msg'; }, 3000);
-}
-
-// Load city places when Cities tab is opened
-const _origSwitchTab = switchTab;
-function switchTab(id, btn) {
-  _origSwitchTab(id, btn);
-  if (id === 'city') loadCityPlaces();
 }
 
 init();
