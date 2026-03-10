@@ -164,9 +164,22 @@ nav{position:relative;z-index:200;background:rgba(250,246,239,0.96);backdrop-fil
 
 <script>
 // ── CITY DATA ─────────────────────────────────────────────
-// In future this will load from Drive via city_places.json
-// For now Manchester is hardcoded as a sample
-const CITIES = {
+// Loads from Drive (city_places.json), falls back to sample data
+const DB_URL = 'https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+
+function jsonp(url, file) {
+  return new Promise((res, rej) => {
+    const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const s = document.createElement('script');
+    window[cb] = d => { delete window[cb]; s.remove(); res(d); };
+    s.onerror = () => { delete window[cb]; s.remove(); rej(); };
+    s.src = url + '?file=' + file + '&callback=' + cb;
+    document.head.appendChild(s);
+  });
+}
+
+// Sample Manchester data (used as fallback if Drive not available)
+const SAMPLE_CITIES = {
   manchester: {
     name: 'Manchester',
     country: 'United Kingdom',
@@ -180,19 +193,11 @@ const CITIES = {
         emoji: '📚',
         lat: 53.4792,
         lng: -2.2497,
+        date: 'Oct 2023',
         photos: [
-          {
-            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/John_Rylands_Library%2C_Manchester%2C_UK_-_Diliff.jpg/1280px-John_Rylands_Library%2C_Manchester%2C_UK_-_Diliff.jpg',
-            caption: 'The neo-Gothic reading room — one of the most breathtaking interiors in England. Built in 1900 in memory of John Rylands by his wife Enriqueta. The arched ceilings and stained glass make it feel like studying inside a cathedral.'
-          },
-          {
-            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/John_Rylands_Library_Manchester_Reading_Room.jpg/1280px-John_Rylands_Library_Manchester_Reading_Room.jpg',
-            caption: 'The historic reading room from the upper gallery. The shelves hold some of the oldest printed books in the world, including a fragment of the Gospel of John dating to 125 AD — the oldest known piece of New Testament text.'
-          },
-          {
-            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/John_Rylands_Library_exterior.jpg/1024px-John_Rylands_Library_exterior.jpg',
-            caption: 'Deansgate facade at dusk. Hidden in plain sight on one of Manchester\'s busiest shopping streets, most people walk past without realising what\'s inside. Entry is free — arguably the best free attraction in the city.'
-          }
+          { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/John_Rylands_Library%2C_Manchester%2C_UK_-_Diliff.jpg/1280px-John_Rylands_Library%2C_Manchester%2C_UK_-_Diliff.jpg', caption: 'The neo-Gothic reading room — one of the most breathtaking interiors in England. Built in 1900 in memory of John Rylands by his wife Enriqueta.' },
+          { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/John_Rylands_Library_Manchester_Reading_Room.jpg/1280px-John_Rylands_Library_Manchester_Reading_Room.jpg', caption: 'The historic reading room from the upper gallery. The shelves hold some of the oldest printed books in the world.' },
+          { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/John_Rylands_Library_exterior.jpg/1024px-John_Rylands_Library_exterior.jpg', caption: 'Deansgate facade. Hidden in plain sight on one of Manchester\'s busiest shopping streets. Entry is free.' }
         ]
       },
       {
@@ -201,15 +206,9 @@ const CITIES = {
         emoji: '🏛️',
         lat: 53.4837,
         lng: -2.2417,
+        date: 'Nov 2023',
         photos: [
-          {
-            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Corn_Exchange%2C_Manchester.jpg/1280px-Corn_Exchange%2C_Manchester.jpg',
-            caption: 'The Victorian Corn Exchange, now home to independent restaurants and bars. The original trading floor has been transformed into a food hall with stained glass dome overhead. A wonderful example of adaptive reuse.'
-          },
-          {
-            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Manchester_Corn_Exchange_interior.jpg/1280px-Manchester_Corn_Exchange_interior.jpg',
-            caption: 'Looking up at the spectacular iron and glass dome from the ground floor. The building dates to 1903 and was designed by James Corbridge. Today it buzzes with people eating and drinking beneath the same roof where merchants once traded grain.'
-          }
+          { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Corn_Exchange%2C_Manchester.jpg/1280px-Corn_Exchange%2C_Manchester.jpg', caption: 'The Victorian Corn Exchange, now home to independent restaurants and bars. The original trading floor has been transformed into a food hall with stained glass dome overhead.' }
         ]
       },
       {
@@ -218,28 +217,20 @@ const CITIES = {
         emoji: '🎨',
         lat: 53.4849,
         lng: -2.2340,
+        date: 'Sep 2023',
         photos: [
-          {
-            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Northern_Quarter%2C_Manchester_%281%29.jpg/1280px-Northern_Quarter%2C_Manchester_%281%29.jpg',
-            caption: 'Stevenson Square at golden hour. The Northern Quarter is Manchester\'s bohemian heart — independent coffee shops, vintage record stores, street art and some of the best bars in the city tucked down narrow Victorian streets.'
-          },
-          {
-            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Afflecks_Manchester.jpg/1024px-Afflecks_Manchester.jpg',
-            caption: 'Affleck\'s Palace — a four-storey emporium of vintage, alternative and independent traders that has been a Manchester institution since 1982. Think Camden Market but indoors and distinctly Mancunian.'
-          }
+          { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Northern_Quarter%2C_Manchester_%281%29.jpg/1280px-Northern_Quarter%2C_Manchester_%281%29.jpg', caption: 'Stevenson Square at golden hour. The Northern Quarter is Manchester\'s bohemian heart — independent coffee shops, vintage record stores, street art.' }
         ]
       },
       {
-        id: 'anfield',
+        id: 'etihad',
         name: 'Etihad Stadium',
         emoji: '⚽',
         lat: 53.4831,
         lng: -2.2004,
+        date: 'Mar 2024',
         photos: [
-          {
-            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Etihad_Stadium%2C_Manchester.jpg/1280px-Etihad_Stadium%2C_Manchester.jpg',
-            caption: 'Etihad Stadium from the east stand. Home of Manchester City FC since 2003, with a capacity of 53,400. The stadium was originally built for the 2002 Commonwealth Games before being converted for football.'
-          }
+          { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Etihad_Stadium%2C_Manchester.jpg/1280px-Etihad_Stadium%2C_Manchester.jpg', caption: 'Etihad Stadium from the east stand. Home of Manchester City FC since 2003, capacity 53,400.' }
         ]
       },
       {
@@ -248,15 +239,9 @@ const CITIES = {
         emoji: '🖼️',
         lat: 53.4607,
         lng: -2.2303,
+        date: 'Jan 2024',
         photos: [
-          {
-            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Whitworth_Art_Gallery.jpg/1280px-Whitworth_Art_Gallery.jpg',
-            caption: 'The Whitworth, set in Whitworth Park in south Manchester. Part of the University of Manchester, it holds one of the finest textile and wallpaper collections in the world alongside an impressive permanent art collection. Completely free to visit.'
-          },
-          {
-            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Whitworth_Gallery_interior.jpg/1280px-Whitworth_Gallery_interior.jpg',
-            caption: 'The light-filled central hall after the 2015 extension. The renovation by MUMA Architects opened up the building to the park behind, creating a seamless connection between gallery and landscape. Pick up a coffee from the café and watch the trees through the glass wall.'
-          }
+          { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Whitworth_Art_Gallery.jpg/1280px-Whitworth_Art_Gallery.jpg', caption: 'The Whitworth, set in Whitworth Park. Holds one of the finest textile and wallpaper collections in the world. Completely free to visit.' }
         ]
       },
       {
@@ -265,16 +250,16 @@ const CITIES = {
         emoji: '📺',
         lat: 53.4727,
         lng: -2.2980,
+        date: 'Feb 2024',
         photos: [
-          {
-            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/MediaCityUK_Salford.jpg/1280px-MediaCityUK_Salford.jpg',
-            caption: 'MediaCityUK on the banks of the Salford Quays. Home to BBC North, ITV and countless digital and creative businesses. The waterfront area has transformed what was once derelict dockland into one of Greater Manchester\'s most striking modern quarters.'
-          }
+          { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/MediaCityUK_Salford.jpg/1280px-MediaCityUK_Salford.jpg', caption: 'MediaCityUK on the banks of the Salford Quays. Home to BBC North, ITV and countless creative businesses.' }
         ]
       }
     ]
   }
 };
+
+let CITIES = {};
 
 // ── STATE ────────────────────────────────────────────────
 let cityData = null;
@@ -294,25 +279,39 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   attribution: '© OpenStreetMap © CartoDB', maxZoom: 19
 }).addTo(map);
 
-function init() {
+async function init() {
   const cityKey = getCity();
-  cityData = CITIES[cityKey];
+  document.getElementById('city-name').textContent = 'Loading…';
 
+  // Try loading from Drive
+  try {
+    const data = await jsonp(DB_URL, 'city_places.json');
+    if (data && typeof data === 'object' && Object.keys(data).length) {
+      CITIES = data;
+    } else {
+      CITIES = SAMPLE_CITIES;
+    }
+  } catch(e) {
+    CITIES = SAMPLE_CITIES;
+  }
+
+  cityData = CITIES[cityKey];
   if (!cityData) {
     document.getElementById('city-name').textContent = 'City not found';
+    document.getElementById('city-sub').textContent = 'No data for "' + cityKey + '"';
     return;
   }
 
   document.title = cityData.name + ' | Rahul Subbaraman';
   document.getElementById('city-name').textContent = cityData.name;
-  document.getElementById('city-sub').textContent = cityData.country + ' · ' + cityData.places.length + ' places';
+  document.getElementById('city-sub').textContent = (cityData.country || '') + ' · ' + cityData.places.length + ' places';
 
-  map.setView([cityData.lat, cityData.lng], cityData.zoom);
+  map.setView([cityData.lat, cityData.lng], cityData.zoom || 13);
 
   // Build place strip
   const strip = document.getElementById('place-strip');
   strip.innerHTML = cityData.places.map(p =>
-    `<button class="place-chip" id="chip-${p.id}" onclick="selectPlace('${p.id}')">${p.emoji} ${p.name}</button>`
+    `<button class="place-chip" id="chip-${p.id}" onclick="selectPlace('${p.id}')">${p.emoji || '📍'} ${p.name}</button>`
   ).join('');
 
   // Add pins
@@ -321,8 +320,8 @@ function init() {
     const marker = L.marker([p.lat, p.lng], { icon })
       .addTo(map)
       .bindPopup(`<div class="popup-inner">
-        <div class="popup-name">${p.emoji} ${p.name}</div>
-        <div class="popup-count">${p.photos.length} photo${p.photos.length !== 1 ? 's' : ''}</div>
+        <div class="popup-name">${p.emoji || '📍'} ${p.name}</div>
+        <div class="popup-count">${(p.photos||[]).length} photo${(p.photos||[]).length !== 1 ? 's' : ''}${p.date ? ' · ' + p.date : ''}</div>
         <div class="popup-click" onclick="selectPlace('${p.id}')">Tap to explore →</div>
       </div>`, { maxWidth: 180 });
 

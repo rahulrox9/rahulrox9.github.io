@@ -85,7 +85,20 @@ textarea{resize:vertical;min-height:48px}
 .import-msg.ok{background:#ddf0ec;color:var(--green);display:block}
 .import-msg.err{background:#fde8e8;color:var(--red);display:block}
 
-/* ── Map pins ── */
+/* ── City Places tab ── */
+.city-place-item{display:flex;align-items:center;gap:0.4rem;padding:0.35rem 0.5rem;border-radius:3px;border:1px solid var(--border);background:var(--card);cursor:pointer;transition:background 0.1s}
+.city-place-item:hover{background:var(--parchment)}
+.city-place-item.active{border-color:var(--warm);background:#fef5ea}
+.cpi-emoji{font-size:1rem;flex-shrink:0}
+.cpi-info{flex:1;min-width:0}
+.cpi-name{font-size:0.78rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cpi-meta{font-size:0.65rem;color:var(--muted)}
+.cpi-actions{display:flex;gap:0.1rem;flex-shrink:0}
+.photo-item{display:flex;gap:0.5rem;align-items:center;padding:0.35rem 0.5rem;border:1px solid var(--border);border-radius:3px;background:var(--card)}
+.photo-thumb{width:36px;height:36px;object-fit:cover;border-radius:2px;flex-shrink:0;background:var(--border)}
+.photo-caption-preview{font-size:0.72rem;color:var(--muted);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-style:italic}
+.custom-cat-chip{padding:0.2rem 0.5rem;border-radius:99px;border:1px solid var(--border);font-size:0.72rem;background:var(--parchment);cursor:pointer;display:flex;align-items:center;gap:0.25rem}
+.custom-cat-chip:hover{border-color:var(--red);color:var(--red)}
 .flag-pin{display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 2px 5px rgba(0,0,0,0.3))}
 .flag-circle{width:28px;height:28px;border-radius:50%;border:2.5px solid #fff;background:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1}
 .flag-stem{width:2.5px;height:12px;background:#555;margin-top:-1px}
@@ -141,6 +154,7 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
       <button class="stab on" id="stab-add" onclick="switchTab('add',this)">Add Pin</button>
       <button class="stab" id="stab-pins" onclick="switchTab('pins',this)">All Pins</button>
       <button class="stab" id="stab-import" onclick="switchTab('import',this)">Import</button>
+      <button class="stab" id="stab-city" onclick="switchTab('city',this)">Cities</button>
     </div>
 
     <!-- ── ADD PIN ── -->
@@ -211,7 +225,177 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
       <div class="import-log" id="import-log"></div>
       <div class="import-msg" id="import-msg"></div>
     </div>
-  </div>
+    <!-- ── CITY PLACES ── -->
+    <div class="panel" id="tab-city">
+
+      <!-- City selector -->
+      <div class="field">
+        <label>City</label>
+        <div style="display:flex;gap:0.4rem">
+          <select id="city-select" onchange="loadCity()" style="flex:1">
+            <option value="">— select city —</option>
+          </select>
+          <button class="btn" style="width:auto;padding:0.42rem 0.65rem" onclick="showNewCityForm()">＋</button>
+        </div>
+      </div>
+
+      <!-- New city form (hidden by default) -->
+      <div id="new-city-form" style="display:none;background:var(--parchment);border:1px solid var(--border);border-radius:4px;padding:0.7rem;margin-bottom:0.8rem">
+        <div style="font-size:0.7rem;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem">New City</div>
+        <div class="field"><label>City name *</label><input type="text" id="new-city-name" placeholder="e.g. Edinburgh"></div>
+        <div class="field"><label>Country</label><input type="text" id="new-city-country" placeholder="e.g. United Kingdom"></div>
+        <div class="coord-row" style="margin-bottom:0.5rem">
+          <input type="number" id="new-city-lat" placeholder="Lat" step="any">
+          <input type="number" id="new-city-lng" placeholder="Lng" step="any">
+        </div>
+        <div style="display:flex;gap:0.4rem">
+          <button class="btn green" style="flex:1" onclick="createCity()">Create</button>
+          <button class="btn ghost" style="flex:1" onclick="document.getElementById('new-city-form').style.display='none'">Cancel</button>
+        </div>
+      </div>
+
+      <!-- City pin link -->
+      <div id="city-pin-row" style="display:none;margin-bottom:0.8rem">
+        <label>Link to world map pin</label>
+        <select id="city-pin-link" style="width:100%;padding:0.42rem 0.65rem;border:1px solid var(--border);border-radius:4px;background:var(--parchment);font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--ink);outline:none">
+          <option value="">— not linked —</option>
+        </select>
+        <button class="btn ghost" style="margin-top:0.35rem" onclick="saveCityPinLink()">Save link</button>
+      </div>
+
+      <div id="city-body" style="display:none;flex-direction:column;flex:1;overflow:hidden;display:none">
+
+        <!-- Place list -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
+          <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted)">Places <span id="place-count-lbl"></span></div>
+          <button class="btn" style="width:auto;padding:0.25rem 0.6rem;font-size:0.72rem" onclick="showPlaceForm()">＋ Add place</button>
+        </div>
+
+        <div id="city-place-list" style="display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.8rem;max-height:160px;overflow-y:auto"></div>
+
+        <!-- Place form -->
+        <div id="place-form" style="display:none;background:var(--parchment);border:1px solid var(--border);border-radius:4px;padding:0.7rem;margin-bottom:0.7rem">
+          <input type="hidden" id="editing-place-id">
+          <div style="font-size:0.7rem;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem" id="place-form-title">Add Place</div>
+
+          <!-- Place search -->
+          <div class="search-wrap" style="margin-bottom:0.5rem">
+            <input type="text" id="city-place-search" placeholder="Search place…" autocomplete="off" oninput="onCityPlaceSearch()" onkeydown="onCityPlaceSearchKey(event)">
+            <span class="search-icon">🔍</span>
+            <div class="suggestions" id="city-place-suggestions"></div>
+          </div>
+
+          <div class="field"><label>Place name *</label><input type="text" id="place-name" placeholder="e.g. John Rylands Library"></div>
+
+          <!-- Category / emoji -->
+          <div class="field">
+            <label>Category</label>
+            <select id="place-cat" onchange="updatePlaceEmoji()">
+              <option value="place">📍 Place</option>
+              <option value="temple">🕉️ Temple</option>
+              <option value="church">⛪ Church</option>
+              <option value="museum">🏛️ Museum / Gallery</option>
+              <option value="park">🌳 Park</option>
+              <option value="hill">⛰️ Hill / Mountain</option>
+              <option value="lake">🏞️ Lake</option>
+              <option value="river">🌊 River</option>
+              <option value="cafe">☕ Café</option>
+              <option value="restaurant">🍽️ Restaurant</option>
+              <option value="stadium">🏟️ Stadium</option>
+              <option value="market">🛍️ Market</option>
+              <option value="custom">✏️ Custom emoji…</option>
+            </select>
+          </div>
+
+          <div id="custom-emoji-row" style="display:none" class="field">
+            <label>Custom emoji</label>
+            <input type="text" id="place-custom-emoji" placeholder="Paste emoji here e.g. 🎭" maxlength="4">
+          </div>
+
+          <div class="field"><label>Emoji preview</label>
+            <div id="place-emoji-preview" style="font-size:1.8rem;padding:0.3rem 0"></div>
+          </div>
+
+          <div class="coord-row" style="margin-bottom:0.5rem">
+            <input type="number" id="place-lat" placeholder="Lat" step="any">
+            <input type="number" id="place-lng" placeholder="Lng" step="any">
+          </div>
+
+          <div class="field"><label>Date visited <span style="font-weight:300;text-transform:none">(optional)</span></label>
+            <input type="text" id="place-date" placeholder="e.g. Mar 2024 or 15 Mar 2024">
+          </div>
+
+          <div style="display:flex;gap:0.4rem;margin-top:0.3rem">
+            <button class="btn green" style="flex:1" onclick="savePlace()">Save Place</button>
+            <button class="btn ghost" style="flex:1" onclick="hidePlaceForm()">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Photo manager -->
+        <div id="photo-manager" style="display:none;flex-direction:column">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
+            <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted)">Photos for <span id="photo-place-name" style="color:var(--warm)"></span></div>
+            <button class="btn" style="width:auto;padding:0.25rem 0.6rem;font-size:0.72rem" onclick="showAddPhotoForm()">＋ Photo</button>
+          </div>
+
+          <div id="photo-list" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.6rem;max-height:200px;overflow-y:auto"></div>
+
+          <!-- Add photo form -->
+          <div id="add-photo-form" style="display:none;background:var(--parchment);border:1px solid var(--border);border-radius:4px;padding:0.7rem">
+            <input type="hidden" id="editing-photo-idx" value="-1">
+            <div style="font-size:0.7rem;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:0.5rem" id="photo-form-title">Add Photo</div>
+
+            <!-- URL input modes -->
+            <div style="display:flex;gap:0.3rem;margin-bottom:0.5rem">
+              <button class="btn ghost" id="url-mode-btn" onclick="setUrlMode('url')" style="flex:1;font-size:0.7rem;padding:0.25rem 0">🔗 URL</button>
+              <button class="btn ghost" id="gdrive-mode-btn" onclick="setUrlMode('gdrive')" style="flex:1;font-size:0.7rem;padding:0.25rem 0">📂 Drive ID</button>
+            </div>
+
+            <div id="url-input-wrap" class="field">
+              <label>Image URL</label>
+              <input type="text" id="photo-url-input" placeholder="https://…" oninput="previewPhoto()">
+            </div>
+            <div id="gdrive-input-wrap" class="field" style="display:none">
+              <label>Google Drive file ID</label>
+              <input type="text" id="photo-gdrive-input" placeholder="Paste Drive file ID" oninput="previewPhotoFromDrive()">
+              <div style="font-size:0.67rem;color:var(--muted);margin-top:0.2rem">Get ID from share link: drive.google.com/file/d/<strong>FILE_ID</strong>/view</div>
+            </div>
+
+            <!-- Photo preview -->
+            <div id="photo-preview-wrap" style="display:none;margin-bottom:0.5rem;border-radius:4px;overflow:hidden;max-height:120px">
+              <img id="photo-preview-img" style="width:100%;height:120px;object-fit:cover;display:block">
+            </div>
+
+            <!-- Caption -->
+            <div class="field">
+              <label>Caption</label>
+              <textarea id="photo-caption" placeholder="Write your caption…" style="min-height:60px"></textarea>
+            </div>
+
+            <div style="display:flex;gap:0.4rem">
+              <button class="btn green" style="flex:1" onclick="savePhoto()">Save</button>
+              <button class="btn ghost" style="flex:1" onclick="hideAddPhotoForm()">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /city-body -->
+
+      <!-- Custom category manager -->
+      <div style="margin-top:auto;padding-top:0.8rem;border-top:1px solid var(--border)">
+        <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem">Custom Categories</div>
+        <div id="custom-cat-list" style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.4rem"></div>
+        <div style="display:flex;gap:0.3rem">
+          <input type="text" id="new-cat-emoji" placeholder="🎭" style="width:48px;text-align:center;padding:0.38rem 0.3rem">
+          <input type="text" id="new-cat-name" placeholder="Category name" style="flex:1">
+          <button class="btn" style="width:auto;padding:0.38rem 0.6rem" onclick="addCustomCategory()">＋</button>
+        </div>
+      </div>
+
+      <div class="form-msg" id="city-msg"></div>
+    </div><!-- /tab-city -->
+
+  </div><!-- /sidebar -->
 </div>
 </div>
 
@@ -702,7 +886,495 @@ async function init() {
   const b = pins.filter(p=>p.lat&&p.lng).map(p=>[p.lat,p.lng]);
   if (b.length) map.fitBounds(b, {padding:[40,40]});
 }
+
+// ── CITY PLACES ─────────────────────────────────────────
+let cityPlaces = {}; // { cityKey: { name, country, lat, lng, zoom, places:[] } }
+let customCategories = []; // [{emoji, name}]
+let activeCityKey = null;
+let activePlaceId = null;
+let urlMode = 'url';
+
+const CAT_EMOJIS = {
+  place:'📍', temple:'🕉️', church:'⛪', museum:'🏛️', park:'🌳',
+  hill:'⛰️', lake:'🏞️', river:'🌊', cafe:'☕', restaurant:'🍽️',
+  stadium:'🏟️', market:'🛍️'
+};
+
+async function loadCityPlaces() {
+  try {
+    const r = await driveRead('city_places.json');
+    cityPlaces = r.data && typeof r.data === 'object' ? r.data : {};
+  } catch(e) { cityPlaces = {}; }
+  try {
+    const r = await driveRead('city_categories.json');
+    customCategories = Array.isArray(r.data) ? r.data : [];
+  } catch(e) { customCategories = []; }
+  rebuildCitySelect();
+  rebuildCategorySelect();
+  renderCustomCatList();
+}
+
+async function saveCityPlaces() {
+  await driveWrite('city_places.json', cityPlaces);
+}
+
+async function saveCustomCategories() {
+  await driveWrite('city_categories.json', customCategories);
+}
+
+function rebuildCitySelect() {
+  const sel = document.getElementById('city-select');
+  const keys = Object.keys(cityPlaces).sort();
+  sel.innerHTML = '<option value="">— select city —</option>' +
+    keys.map(k => `<option value="${k}"${k===activeCityKey?' selected':''}>${cityPlaces[k].name}</option>`).join('');
+}
+
+function rebuildCategorySelect() {
+  const sel = document.getElementById('place-cat');
+  const builtIn = Object.entries(CAT_EMOJIS).map(([v,e]) => {
+    const label = v.charAt(0).toUpperCase()+v.slice(1).replace(/_/g,' ');
+    return `<option value="${v}">${e} ${label}</option>`;
+  }).join('');
+  const custom = customCategories.map(c =>
+    `<option value="custom_${c.name}">${c.emoji} ${c.name}</option>`
+  ).join('');
+  sel.innerHTML = builtIn + custom + `<option value="custom">✏️ Custom emoji…</option>`;
+}
+
+function showNewCityForm() {
+  document.getElementById('new-city-form').style.display = 'block';
+}
+
+async function createCity() {
+  const name = document.getElementById('new-city-name').value.trim();
+  if (!name) return;
+  const key = name.toLowerCase().replace(/[^a-z0-9]/g,'_');
+  const lat = parseFloat(document.getElementById('new-city-lat').value) || 0;
+  const lng = parseFloat(document.getElementById('new-city-lng').value) || 0;
+  cityPlaces[key] = {
+    name,
+    country: document.getElementById('new-city-country').value.trim(),
+    lat, lng, zoom: 13, places: []
+  };
+  await saveCityPlaces();
+  rebuildCitySelect();
+  document.getElementById('city-select').value = key;
+  document.getElementById('new-city-form').style.display = 'none';
+  document.getElementById('new-city-name').value = '';
+  document.getElementById('new-city-country').value = '';
+  document.getElementById('new-city-lat').value = '';
+  document.getElementById('new-city-lng').value = '';
+  loadCity();
+}
+
+function loadCity() {
+  activeCityKey = document.getElementById('city-select').value;
+  activePlaceId = null;
+  hidePlaceForm();
+  document.getElementById('photo-manager').style.display = 'none';
+
+  if (!activeCityKey) {
+    document.getElementById('city-body').style.display = 'none';
+    document.getElementById('city-pin-row').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('city-body').style.display = 'flex';
+  document.getElementById('city-body').style.flexDirection = 'column';
+  document.getElementById('city-body').style.flex = '1';
+  document.getElementById('city-body').style.overflow = 'hidden';
+  document.getElementById('city-pin-row').style.display = 'block';
+
+  // Populate pin link dropdown with world map pins
+  const sel = document.getElementById('city-pin-link');
+  const city = cityPlaces[activeCityKey];
+  sel.innerHTML = '<option value="">— not linked —</option>' +
+    pins.map(p => `<option value="${p.id}"${p.cityPage===activeCityKey?' selected':''}>${p.name}${p.country?' ('+p.country+')':''}</option>`).join('');
+
+  renderCityPlaces();
+}
+
+async function saveCityPinLink() {
+  const pinId = document.getElementById('city-pin-link').value;
+  // Remove cityPage from all pins first for this city
+  pins.forEach(p => { if (p.cityPage === activeCityKey) delete p.cityPage; });
+  // Set on selected pin
+  if (pinId) {
+    const pin = pins.find(p => p.id === pinId);
+    if (pin) pin.cityPage = activeCityKey;
+  }
+  await savePins();
+  showMsg('city-msg', '✓ Pin linked', 'ok');
+}
+
+function renderCityPlaces() {
+  const city = cityPlaces[activeCityKey];
+  if (!city) return;
+  const list = document.getElementById('city-place-list');
+  document.getElementById('place-count-lbl').textContent = `(${city.places.length})`;
+  if (!city.places.length) {
+    list.innerHTML = '<div style="font-size:0.76rem;color:var(--muted);font-style:italic;padding:0.3rem 0">No places yet — add one above.</div>';
+    return;
+  }
+  list.innerHTML = city.places.map(p => {
+    const emoji = getPlaceEmoji(p);
+    return `<div class="city-place-item${p.id===activePlaceId?' active':''}" onclick="selectCityPlace('${p.id}')">
+      <span class="cpi-emoji">${emoji}</span>
+      <div class="cpi-info">
+        <div class="cpi-name">${p.name}</div>
+        <div class="cpi-meta">${p.photos?.length||0} photo${(p.photos?.length||0)!==1?'s':''}${p.date?' · '+p.date:''}</div>
+      </div>
+      <div class="cpi-actions">
+        <button class="icon-btn" onclick="event.stopPropagation();editPlace('${p.id}')" title="Edit">✏️</button>
+        <button class="icon-btn del" onclick="event.stopPropagation();deletePlace('${p.id}')" title="Delete">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function getPlaceEmoji(p) {
+  if (p.emoji) return p.emoji;
+  if (p.category && p.category.startsWith('custom_')) {
+    const name = p.category.replace('custom_','');
+    const c = customCategories.find(c=>c.name===name);
+    return c ? c.emoji : '📍';
+  }
+  return CAT_EMOJIS[p.category] || '📍';
+}
+
+function showPlaceForm(reset=true) {
+  document.getElementById('place-form').style.display = 'block';
+  document.getElementById('place-form-title').textContent = 'Add Place';
+  document.getElementById('editing-place-id').value = '';
+  if (reset) {
+    document.getElementById('place-name').value = '';
+    document.getElementById('place-cat').value = 'place';
+    document.getElementById('place-lat').value = '';
+    document.getElementById('place-lng').value = '';
+    document.getElementById('place-date').value = '';
+    document.getElementById('custom-emoji-row').style.display = 'none';
+    updatePlaceEmoji();
+  }
+}
+
+function hidePlaceForm() {
+  document.getElementById('place-form').style.display = 'none';
+}
+
+function editPlace(id) {
+  const city = cityPlaces[activeCityKey];
+  const p = city.places.find(x=>x.id===id);
+  if (!p) return;
+  showPlaceForm(false);
+  document.getElementById('place-form-title').textContent = 'Edit Place';
+  document.getElementById('editing-place-id').value = id;
+  document.getElementById('place-name').value = p.name;
+  document.getElementById('place-cat').value = p.category || 'place';
+  document.getElementById('place-lat').value = p.lat || '';
+  document.getElementById('place-lng').value = p.lng || '';
+  document.getElementById('place-date').value = p.date || '';
+  if (p.category === 'custom' && p.emoji) {
+    document.getElementById('place-cat').value = 'custom';
+    document.getElementById('custom-emoji-row').style.display = 'block';
+    document.getElementById('place-custom-emoji').value = p.emoji;
+  }
+  updatePlaceEmoji();
+}
+
+async function savePlace() {
+  const name = document.getElementById('place-name').value.trim();
+  if (!name) return;
+  const city = cityPlaces[activeCityKey];
+  const editId = document.getElementById('editing-place-id').value;
+  const cat = document.getElementById('place-cat').value;
+  let emoji = '';
+  if (cat === 'custom') {
+    emoji = document.getElementById('place-custom-emoji').value.trim();
+  } else if (cat.startsWith('custom_')) {
+    const cname = cat.replace('custom_','');
+    const cc = customCategories.find(c=>c.name===cname);
+    emoji = cc ? cc.emoji : '📍';
+  }
+
+  const placeData = {
+    id: editId || 'pl'+Date.now(),
+    name,
+    category: cat,
+    emoji: emoji || undefined,
+    lat: parseFloat(document.getElementById('place-lat').value)||0,
+    lng: parseFloat(document.getElementById('place-lng').value)||0,
+    date: document.getElementById('place-date').value.trim() || undefined,
+    photos: editId ? (city.places.find(p=>p.id===editId)?.photos||[]) : []
+  };
+
+  if (editId) {
+    const idx = city.places.findIndex(p=>p.id===editId);
+    if (idx>=0) city.places[idx] = placeData;
+  } else {
+    city.places.push(placeData);
+  }
+
+  await saveCityPlaces();
+  hidePlaceForm();
+  renderCityPlaces();
+  showMsg('city-msg','✓ Place saved','ok');
+}
+
+async function deletePlace(id) {
+  if (!confirm('Delete this place and all its photos?')) return;
+  const city = cityPlaces[activeCityKey];
+  city.places = city.places.filter(p=>p.id!==id);
+  if (activePlaceId===id) {
+    activePlaceId=null;
+    document.getElementById('photo-manager').style.display='none';
+  }
+  await saveCityPlaces();
+  renderCityPlaces();
+}
+
+function selectCityPlace(id) {
+  activePlaceId = id;
+  renderCityPlaces();
+  showPhotoManager(id);
+}
+
+function showPhotoManager(placeId) {
+  const city = cityPlaces[activeCityKey];
+  const place = city.places.find(p=>p.id===placeId);
+  if (!place) return;
+  document.getElementById('photo-manager').style.display = 'flex';
+  document.getElementById('photo-manager').style.flexDirection = 'column';
+  document.getElementById('photo-place-name').textContent = place.name;
+  renderPhotoList(place);
+  hideAddPhotoForm();
+}
+
+function renderPhotoList(place) {
+  const list = document.getElementById('photo-list');
+  if (!place.photos?.length) {
+    list.innerHTML = '<div style="font-size:0.74rem;color:var(--muted);font-style:italic">No photos yet.</div>';
+    return;
+  }
+  list.innerHTML = place.photos.map((ph,i) => `
+    <div class="photo-item">
+      <img class="photo-thumb" src="${ph.url}" onerror="this.style.background='var(--border)';this.removeAttribute('src')">
+      <div class="photo-caption-preview">${ph.caption||'<em>No caption</em>'}</div>
+      <div class="cpi-actions">
+        <button class="icon-btn" onclick="editPhoto(${i})" title="Edit">✏️</button>
+        <button class="icon-btn del" onclick="deletePhoto(${i})" title="Delete">✕</button>
+        ${i>0?`<button class="icon-btn" onclick="movePhoto(${i},-1)" title="Move up">↑</button>`:''}
+        ${i<place.photos.length-1?`<button class="icon-btn" onclick="movePhoto(${i},1)" title="Move down">↓</button>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function showAddPhotoForm() {
+  document.getElementById('add-photo-form').style.display = 'block';
+  document.getElementById('photo-form-title').textContent = 'Add Photo';
+  document.getElementById('editing-photo-idx').value = '-1';
+  document.getElementById('photo-url-input').value = '';
+  document.getElementById('photo-gdrive-input').value = '';
+  document.getElementById('photo-caption').value = '';
+  document.getElementById('photo-preview-wrap').style.display = 'none';
+  setUrlMode('url');
+}
+
+function hideAddPhotoForm() {
+  document.getElementById('add-photo-form').style.display = 'none';
+}
+
+function editPhoto(idx) {
+  const city = cityPlaces[activeCityKey];
+  const place = city.places.find(p=>p.id===activePlaceId);
+  if (!place) return;
+  const ph = place.photos[idx];
+  showAddPhotoForm();
+  document.getElementById('photo-form-title').textContent = 'Edit Photo';
+  document.getElementById('editing-photo-idx').value = idx;
+  document.getElementById('photo-url-input').value = ph.url||'';
+  document.getElementById('photo-caption').value = ph.caption||'';
+  if (ph.url) {
+    document.getElementById('photo-preview-img').src = ph.url;
+    document.getElementById('photo-preview-wrap').style.display = 'block';
+  }
+}
+
+async function savePhoto() {
+  const city = cityPlaces[activeCityKey];
+  const place = city.places.find(p=>p.id===activePlaceId);
+  if (!place) return;
+  const url = urlMode==='gdrive'
+    ? driveImageUrl(document.getElementById('photo-gdrive-input').value.trim())
+    : document.getElementById('photo-url-input').value.trim();
+  const caption = document.getElementById('photo-caption').value.trim();
+  if (!url) return;
+
+  const ph = { url, caption };
+  const editIdx = parseInt(document.getElementById('editing-photo-idx').value);
+  if (editIdx >= 0) {
+    place.photos[editIdx] = ph;
+  } else {
+    if (!place.photos) place.photos = [];
+    place.photos.push(ph);
+  }
+  await saveCityPlaces();
+  renderPhotoList(place);
+  hideAddPhotoForm();
+}
+
+async function deletePhoto(idx) {
+  if (!confirm('Delete this photo?')) return;
+  const city = cityPlaces[activeCityKey];
+  const place = city.places.find(p=>p.id===activePlaceId);
+  place.photos.splice(idx,1);
+  await saveCityPlaces();
+  renderPhotoList(place);
+}
+
+async function movePhoto(idx, dir) {
+  const city = cityPlaces[activeCityKey];
+  const place = city.places.find(p=>p.id===activePlaceId);
+  const newIdx = idx+dir;
+  if (newIdx<0||newIdx>=place.photos.length) return;
+  [place.photos[idx],place.photos[newIdx]] = [place.photos[newIdx],place.photos[idx]];
+  await saveCityPlaces();
+  renderPhotoList(place);
+}
+
+function setUrlMode(mode) {
+  urlMode = mode;
+  document.getElementById('url-input-wrap').style.display = mode==='url'?'block':'none';
+  document.getElementById('gdrive-input-wrap').style.display = mode==='gdrive'?'block':'none';
+  document.getElementById('url-mode-btn').className = 'btn'+(mode==='url'?'':' ghost');
+  document.getElementById('gdrive-mode-btn').className = 'btn'+(mode==='gdrive'?'':' ghost');
+}
+
+function driveImageUrl(id) {
+  if (!id) return '';
+  // Extract ID from full URL if pasted
+  const m = id.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (m) id = m[1];
+  return `https://drive.google.com/uc?export=view&id=${id}`;
+}
+
+function previewPhoto() {
+  const url = document.getElementById('photo-url-input').value.trim();
+  if (!url) { document.getElementById('photo-preview-wrap').style.display='none'; return; }
+  document.getElementById('photo-preview-img').src = url;
+  document.getElementById('photo-preview-wrap').style.display = 'block';
+}
+
+function previewPhotoFromDrive() {
+  const url = driveImageUrl(document.getElementById('photo-gdrive-input').value.trim());
+  if (!url) { document.getElementById('photo-preview-wrap').style.display='none'; return; }
+  document.getElementById('photo-preview-img').src = url;
+  document.getElementById('photo-preview-wrap').style.display = 'block';
+}
+
+function updatePlaceEmoji() {
+  const cat = document.getElementById('place-cat').value;
+  const isCustom = cat === 'custom';
+  document.getElementById('custom-emoji-row').style.display = isCustom ? 'block' : 'none';
+  let emoji = '';
+  if (isCustom) {
+    emoji = document.getElementById('place-custom-emoji').value || '❓';
+  } else if (cat.startsWith('custom_')) {
+    const cname = cat.replace('custom_','');
+    const cc = customCategories.find(c=>c.name===cname);
+    emoji = cc ? cc.emoji : '📍';
+  } else {
+    emoji = CAT_EMOJIS[cat] || '📍';
+  }
+  document.getElementById('place-emoji-preview').textContent = emoji;
+}
+
+function renderCustomCatList() {
+  const wrap = document.getElementById('custom-cat-list');
+  if (!customCategories.length) {
+    wrap.innerHTML = '<span style="font-size:0.72rem;color:var(--muted);font-style:italic">None yet</span>';
+    return;
+  }
+  wrap.innerHTML = customCategories.map((c,i) =>
+    `<div class="custom-cat-chip" onclick="removeCustomCategory(${i})" title="Click to remove">
+      ${c.emoji} ${c.name} ✕
+    </div>`
+  ).join('');
+}
+
+async function addCustomCategory() {
+  const emoji = document.getElementById('new-cat-emoji').value.trim();
+  const name  = document.getElementById('new-cat-name').value.trim();
+  if (!emoji || !name) return;
+  customCategories.push({ emoji, name });
+  await saveCustomCategories();
+  document.getElementById('new-cat-emoji').value = '';
+  document.getElementById('new-cat-name').value = '';
+  rebuildCategorySelect();
+  renderCustomCatList();
+}
+
+async function removeCustomCategory(idx) {
+  if (!confirm('Remove this category?')) return;
+  customCategories.splice(idx,1);
+  await saveCustomCategories();
+  rebuildCategorySelect();
+  renderCustomCatList();
+}
+
+// City place search (Nominatim)
+let cityPlaceTimer;
+function onCityPlaceSearch() {
+  clearTimeout(cityPlaceTimer);
+  cityPlaceTimer = setTimeout(async () => {
+    const q = document.getElementById('city-place-search').value.trim();
+    const sugg = document.getElementById('city-place-suggestions');
+    if (q.length < 3) { sugg.style.display='none'; return; }
+    const city = cityPlaces[activeCityKey];
+    const cityName = city ? city.name : '';
+    try {
+      const r = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q+' '+cityName)}&format=json&limit=5`,{headers:{'Accept-Language':'en'}});
+      const d = await r.json();
+      if (!d.length) { sugg.style.display='none'; return; }
+      sugg.innerHTML = d.map((item,i)=>`<div class="sugg-item" onclick="pickCityPlace(${i})">
+        <strong>${item.display_name.split(',')[0]}</strong>
+        <span>${item.display_name.split(',').slice(1,3).join(',')}</span>
+      </div>`).join('');
+      sugg._results = d;
+      sugg.style.display = 'block';
+    } catch(e) { sugg.style.display='none'; }
+  }, 350);
+}
+
+function onCityPlaceSearchKey(e) {
+  if (e.key==='Escape') document.getElementById('city-place-suggestions').style.display='none';
+}
+
+function pickCityPlace(i) {
+  const sugg = document.getElementById('city-place-suggestions');
+  const item = sugg._results[i];
+  document.getElementById('place-name').value = item.display_name.split(',')[0];
+  document.getElementById('place-lat').value = parseFloat(item.lat).toFixed(6);
+  document.getElementById('place-lng').value = parseFloat(item.lon).toFixed(6);
+  document.getElementById('city-place-search').value = '';
+  sugg.style.display = 'none';
+}
+
+function showMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = 'form-msg ' + type;
+  setTimeout(() => { el.className = 'form-msg'; }, 3000);
+}
+
+// Load city places when Cities tab is opened
+const _origSwitchTab = switchTab;
+function switchTab(id, btn) {
+  _origSwitchTab(id, btn);
+  if (id === 'city') loadCityPlaces();
+}
+
 init();
 </script>
+
 </body>
 </html>
