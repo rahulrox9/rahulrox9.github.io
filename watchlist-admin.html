@@ -325,13 +325,12 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
   <h3>
     🔔 What's New
     <button class="refresh-btn" id="refresh-btn" onclick="refreshSeries()">↻ Refresh tracking</button>
-    <button class="refresh-btn" id="refresh-all-btn" onclick="refreshAllSeries()" style="margin-left:0.4rem;border-color:var(--warm);color:var(--warm)">↻ Refresh ALL series</button>
   </h3>
   <div id="whats-new-list"></div>
 </div>
 
 <!-- MAIN TABS -->
-<div class="tabs">
+<div class="tabs" style="display:flex;align-items:center;flex-wrap:wrap;gap:0">
   <button class="tab on"  onclick="switchSection('watched',this)">Movies <span id="mc">0</span></button>
   <button class="tab"     onclick="switchSection('shows',this)">Series <span id="sc">0</span></button>
   <button class="tab"     onclick="switchSection('towatch',this)">To Watch <span id="twc">0</span></button>
@@ -339,6 +338,7 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
   <button class="tab"     onclick="switchSection('findmore',this)">Find More</button>
   <button class="tab"     onclick="switchSection('stats',this)">Stats</button>
   <button class="tab"     onclick="switchSection('franchises',this)">Franchises</button>
+  <button id="refresh-all-btn" onclick="refreshAllSeries()" style="margin-left:auto;background:none;border:1px solid var(--warm);border-radius:4px;padding:0.28rem 0.8rem;font-size:0.72rem;color:var(--warm);cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0">↻ Refresh all series</button>
 </div>
 
 <!-- SEARCH BAR (shown for watched/shows/towatch) -->
