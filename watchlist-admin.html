@@ -324,7 +324,8 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
 <div class="whats-new-bar" id="whats-new-bar" style="display:none">
   <h3>
     🔔 What's New
-    <button class="refresh-btn" id="refresh-btn" onclick="refreshSeries()">↻ Refresh Series</button>
+    <button class="refresh-btn" id="refresh-btn" onclick="refreshSeries()">↻ Refresh tracking</button>
+    <button class="refresh-btn" id="refresh-all-btn" onclick="refreshAllSeries()" style="margin-left:0.4rem;border-color:var(--warm);color:var(--warm)">↻ Refresh ALL series</button>
   </h3>
   <div id="whats-new-list"></div>
 </div>
@@ -1114,7 +1115,65 @@ async function refreshSeries() {
     await new Promise(r=>setTimeout(r,300));
   }
   await save(); renderList(); renderWhatsNew();
-  btn.disabled=false; btn.textContent='↻ Refresh Series';
+  btn.disabled=false; btn.textContent='↻ Refresh tracking';
+}
+
+// ── Refresh ALL series (force re-fetch every show regardless of status) ───────
+async function refreshAllSeries() {
+  const btn = document.getElementById('refresh-all-btn');
+  const allShows = entries.filter(e => e.type === 'show' && e.tmdbId);
+  if (!allShows.length) return;
+
+  if (!confirm(`This will re-fetch all ${allShows.length} series from TMDB (air dates, episode names, status). May take a minute. Continue?`)) return;
+
+  btn.disabled = true;
+  const total = allShows.length;
+  let done = 0;
+
+  for (const e of allShows) {
+    btn.textContent = `↻ ${done}/${total}…`;
+    try {
+      const d = await fetch(`https://api.themoviedb.org/3/tv/${e.tmdbId}?api_key=${TMDB_KEY}`).then(r => r.json());
+      e.status = d.status;
+      const newSeasons = [];
+      for (let s = 1; s <= (d.number_of_seasons || 0); s++) {
+        const sj = await fetch(`https://api.themoviedb.org/3/tv/${e.tmdbId}/season/${s}?api_key=${TMDB_KEY}`).then(r => r.json());
+        const existing = e.seasonsData?.find(x => x.season === s);
+        newSeasons.push({
+          season: s,
+          name: sj.name || 'Season ' + s,
+          episodes: (sj.episodes || []).map(ep => ({
+            ep: ep.episode_number,
+            name: ep.name,
+            airDate: ep.air_date || '',
+            watched: existing?.episodes?.find(x => x.ep === ep.episode_number)?.watched || false
+          })),
+          rating: existing?.rating || 0,
+          review: existing?.review || '',
+          reviewDone: existing?.reviewDone || false
+        });
+      }
+      // Check if new episodes appeared
+      const oldEpCount = e.seasonsData?.reduce((a, s) => a + (s.episodes?.length || 0), 0) || 0;
+      const newEpCount = newSeasons.reduce((a, s) => a + s.episodes.length, 0);
+      if (newEpCount > oldEpCount) {
+        e.hasNew = true;
+        e.newDesc = `${newEpCount - oldEpCount} new episode${newEpCount - oldEpCount > 1 ? 's' : ''} available`;
+      }
+      e.seasonsData = newSeasons;
+      e.lastActivity = e.lastActivity || Date.now();
+    } catch (err) {
+      console.error('Refresh ALL error', e.title, err);
+    }
+    done++;
+    // Respect TMDB rate limit (~40 req/s, we do ~2 per show so pace at 500ms)
+    await new Promise(r => setTimeout(r, 500));
+  }
+
+  await save(); renderList(); renderWhatsNew();
+  btn.disabled = false;
+  btn.textContent = `↻ Refresh ALL series`;
+  alert(`✓ All ${total} series refreshed.`);
 }
 
 // ── What's New ───────────────────────────────────────────
