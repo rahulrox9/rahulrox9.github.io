@@ -30,10 +30,8 @@ html,body{height:100%;font-family:'DM Mono',monospace;background:var(--bg);color
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
 .card{background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden;position:relative}
 .card img{width:100%;height:140px;object-fit:cover;cursor:pointer}
-.card-del{position:absolute;top:5px;right:5px;background:rgba(0,0,0,0.6);color:var(--red);border:none;width:24px;height:24px;border-radius:2px;cursor:pointer;font-size:0.8rem;display:flex;align-items:center;justify-content:center;transition:background 0.2s}
-.card-del:hover{background:var(--red);color:#fff}
+.card-del{position:absolute;top:5px;right:5px;background:rgba(0,0,0,0.6);color:var(--red);border:none;width:24px;height:24px;border-radius:2px;cursor:pointer;font-size:0.8rem;display:flex;align-items:center;justify-content:center;z-index:10}
 .card-foot{padding:0.5rem;display:flex;justify-content:space-between;font-size:0.65rem}
-
 .modal-bg{display:none;position:fixed;inset:0;background:#000;z-index:1000;flex-direction:column}
 .modal-bg.open{display:flex}
 .crop-container{position:relative;flex:1;display:flex;align-items:center;justify-content:center;background:#111;overflow:hidden}
@@ -71,7 +69,10 @@ html,body{height:100%;font-family:'DM Mono',monospace;background:var(--bg);color
   <div class="main">
     <div class="main-head">
         <div style="font-size:0.8rem">Processed: <span id="count">0</span></div>
-        <button class="btn danger" onclick="clearAll()">Clear All</button>
+        <div style="display:flex;gap:0.5rem">
+            <button class="btn" onclick="downloadAll()">Download All</button>
+            <button class="btn danger" onclick="clearAll()">Clear All</button>
+        </div>
     </div>
     <div class="grid-wrap"><div class="grid" id="card-grid"></div></div>
   </div>
@@ -108,25 +109,30 @@ let draggingEdge = null;
 let modalScale = 1;
 let rawCanvas = null;
 
+const fileInput = document.getElementById('file-input');
 const dropArea = document.getElementById('drop-area');
 const statusText = document.getElementById('upload-status');
+const procBtn = document.getElementById('proc-btn');
+const cropCanvas = document.getElementById('crop-canvas');
+const ctx = cropCanvas.getContext('2d');
+const lc = document.getElementById('loupe-canvas');
+const lctx = lc.getContext('2d');
 
-document.getElementById('file-input').onchange = (e) => {
+fileInput.onchange = (e) => {
     if(e.target.files.length) {
         const count = e.target.files.length;
         statusText.innerText = `${count} PDF${count > 1 ? 's' : ''} staged`;
         statusText.style.display = 'block';
         dropArea.classList.add('active');
-        document.getElementById('proc-btn').disabled = false;
-        document.getElementById('proc-btn')._files = [...e.target.files];
+        procBtn.disabled = false;
+        procBtn._files = [...e.target.files];
     }
 };
 
 async function processPDF() {
-    const files = document.getElementById('proc-btn')._files;
+    const files = procBtn._files;
     const dpi = parseFloat(document.getElementById('dpi').value);
     document.getElementById('progress-wrap').style.display = 'block';
-    
     for (const file of files) {
         const pdf = await pdfjsLib.getDocument(await file.arrayBuffer()).promise;
         for (let i = 1; i <= pdf.numPages; i++) {
@@ -135,21 +141,15 @@ async function processPDF() {
             const canv = document.createElement('canvas');
             canv.width = vp.width; canv.height = vp.height;
             await page.render({ canvasContext: canv.getContext('2d'), viewport: vp }).promise;
-            
             const id = 'pg-' + Math.random().toString(36).substr(2,9);
             const detCorners = detectPostcard(canv);
             const thumb = renderOutput(canv, detCorners, 0);
-            
-            const pg = { id, raw: canv, corners: detCorners, thumb, rotation: 0 };
-            pages.push(pg);
-            addCard(pg);
+            pages.push({ id, raw: canv, corners: detCorners, thumb, rotation: 0 });
+            addCard(pages[pages.length-1]);
             updateCount();
-            document.getElementById('p-txt').innerText = `Processing ${pages.length}...`;
         }
     }
     document.getElementById('progress-wrap').style.display = 'none';
-    statusText.style.display = 'none';
-    dropArea.classList.remove('active');
 }
 
 function detectPostcard(canv) {
@@ -193,38 +193,21 @@ function dist(a,b) { return Math.hypot(b.x-a.x, b.y-a.y); }
 function addCard(pg) {
     const div = document.createElement('div');
     div.className = 'card'; div.id = pg.id;
-    div.innerHTML = `
-        <button class="card-del" onclick="removePage('${pg.id}')">✕</button>
-        <img src="${pg.thumb}" onclick="openModal('${pg.id}')">
-        <div class="card-foot"><span>Postcard</span><span>Edit</span></div>`;
+    div.innerHTML = `<button class="card-del" onclick="removePage('${pg.id}')">✕</button><img src="${pg.thumb}" onclick="openModal('${pg.id}')"><div class="card-foot"><span>Postcard</span><span>Edit</span></div>`;
     document.getElementById('card-grid').appendChild(div);
 }
 
-function removePage(id) {
-    pages = pages.filter(p => p.id !== id);
-    document.getElementById(id).remove();
-    updateCount();
-}
+function removePage(id) { pages = pages.filter(p => p.id !== id); document.getElementById(id).remove(); updateCount(); }
 
-function clearAll() {
-    if(confirm('Clear all processed pages?')) {
-        pages = [];
-        document.getElementById('card-grid').innerHTML = '';
-        updateCount();
-    }
-}
+function clearAll() { if(confirm('Clear all?')) { pages = []; document.getElementById('card-grid').innerHTML = ''; updateCount(); } }
 
 function updateCount() { document.getElementById('count').innerText = pages.length; }
 
 function openModal(id) {
     const pg = pages.find(p => p.id === id);
-    modalPageId = id; rawCanvas = pg.raw;
-    corners = pg.corners.map(c => ({...c}));
-    rotation = pg.rotation || 0;
-    document.getElementById('rotate-range').value = rotation;
-    document.getElementById('rotate-val').innerText = rotation + '°';
-    document.getElementById('modal-bg').classList.add('open');
-    draw();
+    modalPageId = id; rawCanvas = pg.raw; corners = pg.corners.map(c => ({...c})); rotation = pg.rotation || 0;
+    document.getElementById('rotate-range').value = rotation; document.getElementById('rotate-val').innerText = rotation + '°';
+    document.getElementById('modal-bg').classList.add('open'); draw();
 }
 
 function closeModal() { document.getElementById('modal-bg').classList.remove('open'); document.getElementById('loupe-container').style.display='none'; }
@@ -235,41 +218,34 @@ function quickRotate(deg) { rotation = (rotation + deg) % 360; document.getEleme
 function draw() {
     const s = Math.min((window.innerWidth*0.9)/rawCanvas.width, (window.innerHeight*0.7)/rawCanvas.height, 1);
     modalScale = s;
-    const cropCanvas = document.getElementById('crop-canvas');
-    const ctx = cropCanvas.getContext('2d');
     cropCanvas.width = rawCanvas.width; cropCanvas.height = rawCanvas.height;
     cropCanvas.style.width = (rawCanvas.width * s) + 'px'; cropCanvas.style.height = (rawCanvas.height * s) + 'px';
     ctx.drawImage(rawCanvas, 0, 0);
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath(); ctx.rect(0,0,cropCanvas.width, cropCanvas.height);
-    ctx.moveTo(corners[0].x, corners[0].y); ctx.lineTo(corners[1].x, corners[1].y);
-    ctx.lineTo(corners[2].x, corners[2].y); ctx.lineTo(corners[3].x, corners[3].y);
+    ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.beginPath(); ctx.rect(0,0,cropCanvas.width, cropCanvas.height);
+    ctx.moveTo(corners[0].x, corners[0].y); ctx.lineTo(corners[1].x, corners[1].y); ctx.lineTo(corners[2].x, corners[2].y); ctx.lineTo(corners[3].x, corners[3].y);
     ctx.closePath(); ctx.fill('evenodd');
     ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 2/s; ctx.setLineDash([10/s, 10/s]);
-    ctx.beginPath(); ctx.moveTo(corners[0].x, corners[0].y);
-    corners.forEach(p => ctx.lineTo(p.x, p.y)); ctx.closePath(); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(corners[0].x, corners[0].y); corners.forEach(p => ctx.lineTo(p.x, p.y)); ctx.closePath(); ctx.stroke(); ctx.setLineDash([]);
     const len = 30 / s; ctx.lineWidth = 4 / s; ctx.strokeStyle = '#e8a83e'; ctx.lineCap = 'round';
     const drawKink = (p, dx, dy) => { ctx.beginPath(); ctx.moveTo(p.x + (dx * len), p.y); ctx.lineTo(p.x, p.y); ctx.lineTo(p.x, p.y + (dy * len)); ctx.stroke(); };
     drawKink(corners[0], 1, 1); drawKink(corners[1], -1, 1); drawKink(corners[2], -1, -1); drawKink(corners[3], 1, -1);
-    const drawMid = (p1, p2, horiz) => {
-        const mx = (p1.x+p2.x)/2, my = (p1.y+p2.y)/2;
-        ctx.beginPath(); if(horiz) { ctx.moveTo(mx-len, my); ctx.lineTo(mx+len, my); } else { ctx.moveTo(mx, my-len); ctx.lineTo(mx, my+len); } ctx.stroke();
-    };
-    drawMid(corners[0], corners[1], true); drawMid(corners[2], corners[3], true);
-    drawMid(corners[0], corners[3], false); drawMid(corners[1], corners[2], false);
+    const drawMid = (p1, p2, h) => { const mx = (p1.x+p2.x)/2, my = (p1.y+p2.y)/2; ctx.beginPath(); if(h){ctx.moveTo(mx-len,my);ctx.lineTo(mx+len,my);}else{ctx.moveTo(mx,my-len);ctx.lineTo(mx,my+len);} ctx.stroke(); };
+    drawMid(corners[0], corners[1], true); drawMid(corners[2], corners[3], true); drawMid(corners[0], corners[3], false); drawMid(corners[1], corners[2], false);
     document.getElementById('hud-coords').innerHTML = corners.map((c,i)=>`P${i}: <span>${Math.round(c.x)},${Math.round(c.y)}</span>`).join('');
 }
 
-function getMouse(e) { const r = document.getElementById('crop-canvas').getBoundingClientRect(); return { x: (e.clientX-r.left)/modalScale, y: (e.clientY-r.top)/modalScale }; }
+function getMouse(e) { const r = cropCanvas.getBoundingClientRect(); return { x: (e.clientX-r.left)/modalScale, y: (e.clientY-r.top)/modalScale }; }
 
-document.getElementById('crop-canvas').onmousedown = (e) => {
+cropCanvas.onmousedown = (e) => {
     const m = getMouse(e), hit = 40/modalScale;
     dragging = corners.findIndex(p => Math.hypot(p.x-m.x, p.y-m.y) < hit);
     if(dragging !== -1) return;
-    if(Math.abs(m.y - corners[0].y) < hit) draggingEdge = 'top';
-    else if(Math.abs(m.y - corners[2].y) < hit) draggingEdge = 'bottom';
-    else if(Math.abs(m.x - corners[0].x) < hit) draggingEdge = 'left';
-    else if(Math.abs(m.x - corners[1].x) < hit) draggingEdge = 'right';
+    const midTop = (corners[0].y + corners[1].y) / 2, midBot = (corners[2].y + corners[3].y) / 2;
+    const midL = (corners[0].x + corners[3].x) / 2, midR = (corners[1].x + corners[2].x) / 2;
+    if(Math.abs(m.y - midTop) < hit && m.x > corners[0].x && m.x < corners[1].x) draggingEdge = 'top';
+    else if(Math.abs(m.y - midBot) < hit && m.x > corners[3].x && m.x < corners[2].x) draggingEdge = 'bottom';
+    else if(Math.abs(m.x - midL) < hit && m.y > corners[0].y && m.y < corners[3].y) draggingEdge = 'left';
+    else if(Math.abs(m.x - midR) < hit && m.y > corners[1].y && m.y < corners[2].y) draggingEdge = 'right';
 };
 
 window.onmousemove = (e) => {
@@ -278,32 +254,32 @@ window.onmousemove = (e) => {
     if(dragging !== null) { corners[dragging].x = m.x; corners[dragging].y = m.y; }
     else if(draggingEdge) {
         if(draggingEdge === 'top') { corners[0].y = m.y; corners[1].y = m.y; }
-        if(draggingEdge === 'bottom') { corners[2].y = m.y; corners[3].y = m.y; }
-        if(draggingEdge === 'left') { corners[0].x = m.x; corners[3].x = m.x; }
-        if(draggingEdge === 'right') { corners[1].x = m.x; corners[2].x = m.x; }
+        else if(draggingEdge === 'bottom') { corners[2].y = m.y; corners[3].y = m.y; }
+        else if(draggingEdge === 'left') { corners[0].x = m.x; corners[3].x = m.x; }
+        else if(draggingEdge === 'right') { corners[1].x = m.x; corners[2].x = m.x; }
     }
     const focus = dragging !== null ? corners[dragging] : m;
-    const lc = document.getElementById('loupe-canvas');
-    const lctx = lc.getContext('2d');
     document.getElementById('loupe-container').style.display = 'block';
     lc.width = 200; lc.height = 200;
-    const sx = Math.max(0, focus.x - 50); const sy = Math.max(0, focus.y - 50);
+    const sx = Math.max(0, focus.x - 50), sy = Math.max(0, focus.y - 50);
     lctx.drawImage(rawCanvas, sx, sy, 100, 100, 0, 0, 200, 200);
     lctx.strokeStyle = '#e8a83e'; lctx.lineWidth = 2; lctx.strokeRect(95, 95, 10, 10);
     draw();
 };
 
 window.onmouseup = () => { dragging = null; draggingEdge = null; document.getElementById('loupe-container').style.display='none'; };
-
 function autoDetectCorners() { corners = detectPostcard(rawCanvas); draw(); }
-
 function applyCrop() {
     const pg = pages.find(p => p.id === modalPageId);
-    pg.corners = corners.map(c => ({...c}));
-    pg.rotation = rotation;
+    pg.corners = corners.map(c => ({...c})); pg.rotation = rotation;
     pg.thumb = renderOutput(rawCanvas, corners, rotation);
     document.getElementById(pg.id).querySelector('img').src = pg.thumb;
     closeModal();
+}
+function downloadAll() {
+    pages.forEach((p, i) => {
+        const a = document.createElement('a'); a.href = p.thumb; a.download = `postcard-${i+1}.jpg`; a.click();
+    });
 }
 </script>
 </body>
