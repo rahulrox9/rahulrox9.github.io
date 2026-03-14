@@ -11,471 +11,325 @@
 :root{
   --bg:#0f0e0c;--surface:#1a1814;--card:#222018;--border:#2e2b26;
   --amber:#e8a83e;--amber-dim:#7a5820;--cream:#f5efe4;--muted:#6b6459;
-  --red:#c0392b;--green:#2d6b5e;
 }
-html,body{height:100%;font-family:'DM Mono',monospace;background:var(--bg);color:var(--cream)}
-.shell{display:grid;grid-template-columns:340px 1fr;height:100vh;overflow:hidden}
-.sidebar{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
-.main{display:flex;flex-direction:column;overflow:hidden}
-.sidebar-head{padding:1.4rem 1.4rem 1rem;border-bottom:1px solid var(--border)}
-.logo{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:700;color:var(--amber);letter-spacing:-0.02em}
-.logo span{font-style:italic;font-weight:300;color:var(--cream);opacity:0.6;font-size:0.9rem;display:block;margin-top:0.1rem}
-.drop-zone{margin:1rem 1.2rem;border:1.5px dashed var(--border);border-radius:6px;padding:1.8rem 1rem;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
-.drop-zone:hover,.drop-zone.drag{border-color:var(--amber);background:rgba(232,168,62,0.04)}
-.drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.drop-icon{font-size:2rem;margin-bottom:0.6rem;opacity:0.5}
-.drop-label{font-size:0.7rem;color:var(--muted);line-height:1.7}
-.drop-label strong{color:var(--amber);display:block;font-size:0.78rem;margin-bottom:0.2rem}
-.settings{padding:0 1.2rem;flex:1;overflow-y:auto}
-.setting-group{margin-bottom:1.2rem}
-.sg-title{font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;padding-bottom:0.35rem;border-bottom:1px solid var(--border)}
-.row{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem}
-.row label{font-size:0.72rem;color:var(--cream);opacity:0.8}
-.row input[type=range]{width:120px;accent-color:var(--amber)}
-.row select{background:var(--card);border:1px solid var(--border);color:var(--cream);font-family:'DM Mono',monospace;font-size:0.71rem;padding:0.22rem 0.4rem;border-radius:3px;outline:none}
-.val{font-size:0.68rem;color:var(--amber);min-width:32px;text-align:right}
-.toggle-row{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem}
-.toggle{position:relative;width:32px;height:18px;cursor:pointer}
-.toggle input{opacity:0;position:absolute}
-.toggle-track{position:absolute;inset:0;border-radius:99px;background:var(--border);transition:background 0.2s}
-.toggle input:checked ~ .toggle-track{background:var(--amber-dim)}
-.toggle-thumb{position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:#fff;transition:transform 0.2s}
-.toggle input:checked ~ .toggle-thumb{transform:translateX(14px)}
-.toggle-label{font-size:0.72rem;color:var(--cream);opacity:0.8}
-.progress-wrap{padding:0 1.2rem 1rem;display:none}
-.progress-bar{height:3px;background:var(--border);border-radius:99px;overflow:hidden}
-.progress-fill{height:100%;background:var(--amber);width:0%;transition:width 0.3s}
-.progress-txt{font-size:0.65rem;color:var(--muted);margin-top:0.3rem}
-.action-wrap{padding:1rem 1.2rem;border-top:1px solid var(--border)}
-.btn-proc{width:100%;padding:0.7rem;background:var(--amber);color:#0f0e0c;font-family:'DM Mono',monospace;font-size:0.8rem;font-weight:500;border:none;border-radius:4px;cursor:pointer;letter-spacing:0.04em;transition:opacity 0.2s}
-.btn-proc:hover{opacity:0.85}
-.btn-proc:disabled{opacity:0.4;cursor:not-allowed}
-.main-head{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.main-title{font-family:'Fraunces',serif;font-size:1rem;font-weight:300;color:var(--cream);opacity:0.6}
-.main-title strong{color:var(--cream);opacity:1;font-weight:700}
-.head-actions{display:flex;gap:0.5rem}
-.btn-sm{padding:0.28rem 0.7rem;font-size:0.68rem;font-family:'DM Mono',monospace;border-radius:3px;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--cream);letter-spacing:0.04em;transition:all 0.15s}
-.btn-sm:hover{border-color:var(--amber);color:var(--amber)}
-.btn-sm.green{border-color:var(--green);color:var(--green)}
-.btn-sm.green:hover{background:var(--green);color:#fff}
+html,body{height:100%;font-family:'DM Mono',monospace;background:var(--bg);color:var(--cream);overflow:hidden}
+.shell{display:grid;grid-template-columns:340px 1fr;height:100vh}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column}
+.main{display:flex;flex-direction:column}
+
+/* ── UI Components ── */
+.sidebar-head{padding:1.4rem;border-bottom:1px solid var(--border)}
+.logo{font-family:'Fraunces',serif;font-size:1.5rem;color:var(--amber)}
+.drop-zone{margin:1rem;border:1.5px dashed var(--border);padding:1.5rem;text-align:center;cursor:pointer;position:relative}
+.drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.settings{padding:1.2rem;flex:1;overflow-y:auto}
+.row{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;font-size:0.75rem}
+.row input[type=range]{width:100px;accent-color:var(--amber)}
+
+/* ── Grid ── */
 .grid-wrap{flex:1;overflow-y:auto;padding:1.2rem}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
-.card{background:var(--card);border:1px solid var(--border);border-radius:6px;overflow:hidden;transition:border-color 0.15s}
-.card:hover{border-color:var(--amber-dim)}
-.card.selected{border-color:var(--amber);box-shadow:0 0 0 1px var(--amber)}
-.card-img-wrap{position:relative;cursor:pointer}
-.card-img-wrap img{width:100%;display:block;height:160px;object-fit:cover;background:var(--border)}
-.card-badge{position:absolute;top:6px;left:6px;font-size:0.6rem;padding:0.15rem 0.4rem;border-radius:2px;font-family:'DM Mono',monospace;letter-spacing:0.06em}
-.badge-cropped{background:rgba(45,107,94,0.85);color:#a0d9ce}
-.card-foot{padding:0.5rem 0.6rem;display:flex;align-items:center;justify-content:space-between}
-.card-label{font-size:0.65rem;color:var(--muted)}
-.card-actions{display:flex;gap:0.25rem}
-.icon-btn{background:none;border:none;cursor:pointer;font-size:0.8rem;padding:0.15rem;opacity:0.5;transition:opacity 0.15s}
-.icon-btn:hover{opacity:1}
-.modal-bg{display:none;position:fixed;inset:0;background:#0a0908;z-index:1000;flex-direction:column}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.card img{width:100%;height:140px;object-fit:cover}
+.card-foot{padding:0.5rem;display:flex;justify-content:space-between;font-size:0.65rem}
+
+/* ── Modal & Crop ── */
+.modal-bg{display:none;position:fixed;inset:0;background:#000;z-index:1000;flex-direction:column}
 .modal-bg.open{display:flex}
-.crop-canvas-wrap{position:relative;flex:1;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#111}
-#crop-canvas{cursor:crosshair;display:block;max-width:100%;max-height:100%}
-.crop-hud-top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0.7rem 1.2rem;background:linear-gradient(to bottom,rgba(10,9,8,0.95) 0%,transparent 100%);z-index:10;pointer-events:none}
-.crop-hud-top *{pointer-events:auto}
-.crop-hud-title{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--amber)}
-.crop-hud-bottom{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;padding:0.8rem 1.2rem;background:linear-gradient(to top,rgba(10,9,8,0.97) 0%,transparent 100%);z-index:10;pointer-events:none}
-.crop-hud-bottom *{pointer-events:auto}
-.hud-sep{width:1px;height:20px;background:var(--border);flex-shrink:0}
-.hud-label{font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
-.corner-list{display:flex;gap:0.5rem}
-.corner-item{display:flex;gap:0.25rem;align-items:center}
-.corner-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.corner-coords{font-size:0.6rem;color:var(--cream);opacity:0.65}
-.btn-modal{padding:0.38rem 0.85rem;font-family:'DM Mono',monospace;font-size:0.72rem;border-radius:4px;cursor:pointer;border:1px solid var(--border);background:rgba(26,24,20,0.92);color:var(--cream);letter-spacing:0.03em;transition:all 0.15s;white-space:nowrap}
-.btn-modal:hover{border-color:var(--amber);color:var(--amber)}
-.btn-modal.primary{background:var(--amber);border-color:var(--amber);color:#0f0e0c;font-weight:500}
-.btn-modal.primary:hover{opacity:0.88}
-.hud-rotate-wrap{display:flex;align-items:center;gap:0.4rem}
-.hud-rotate-wrap input[type=range]{width:90px;accent-color:var(--amber)}
-#loupe-canvas{position:absolute;width:180px;height:180px;border-radius:50%;border:2px solid var(--amber);box-shadow:0 6px 28px rgba(0,0,0,0.75);pointer-events:none;display:none;background:#111;z-index:1001}
-.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.8rem;opacity:0.35}
-.empty-icon{font-size:3.5rem}
-.empty-txt{font-size:0.78rem;color:var(--muted);text-align:center;line-height:1.8}
-.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:4px;padding:0.6rem 1rem;font-size:0.72rem;color:var(--cream);z-index:2000;transform:translateY(80px);opacity:0;transition:all 0.25s;pointer-events:none}
-.toast.show{transform:translateY(0);opacity:1}
-.toast.green{border-color:var(--green);color:#a0d9ce}
+.crop-container{position:relative;flex:1;display:flex;align-items:center;justify-content:center;background:#111;overflow:hidden}
+#crop-canvas{cursor:crosshair;max-width:95vw;max-height:80vh}
+
+/* Fixed Inset Loupe */
+#loupe-container{
+    position:absolute;top:20px;left:20px;
+    width:200px;height:200px;
+    border:2px solid var(--amber);
+    background:#000;display:none;
+    box-shadow:0 10px 30px rgba(0,0,0,0.8);
+    z-index:1010;pointer-events:none;
+}
+#loupe-canvas{width:100%;height:100%}
+
+.hud-bottom{padding:1rem;background:var(--surface);display:flex;gap:1rem;align-items:center;justify-content:center}
+.btn{padding:0.5rem 1rem;background:var(--border);color:var(--cream);border:none;cursor:pointer;font-family:inherit;font-size:0.75rem}
+.btn.primary{background:var(--amber);color:#000;font-weight:600}
+
+/* ── Progress ── */
+#progress-wrap{padding:1rem;display:none}
+.p-bar{height:4px;background:var(--border);width:100%}
+#p-fill{height:100%;background:var(--amber);width:0%}
 </style>
 </head>
 <body>
 
 <div class="shell">
   <div class="sidebar">
-    <div class="sidebar-head">
-      <div class="logo">Postcard Scanner<span>PDF → cropped images</span></div>
-    </div>
-    <div class="drop-zone" id="drop-zone">
+    <div class="sidebar-head"><div class="logo">Postcard Scanner</div></div>
+    <div class="drop-zone">
       <input type="file" id="file-input" accept=".pdf" multiple>
-      <div class="drop-icon">📮</div>
-      <div class="drop-label"><strong>Drop PDF here</strong>or click to browse</div>
+      <strong>Drop PDF</strong><br><span style="font-size:0.7rem;opacity:0.5">Multi-page support</span>
     </div>
     <div class="settings">
-      <div class="setting-group">
-        <div class="sg-title">Rendering</div>
-        <div class="row"><label>DPI scale</label><input type="range" id="dpi" min="1" max="4" step="0.5" value="2" oninput="document.getElementById('dpi-val').textContent=this.value+'×'"><span class="val" id="dpi-val">2×</span></div>
-        <div class="row"><label>Output format</label><select id="fmt"><option value="image/jpeg">JPEG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></div>
-        <div class="row"><label>Quality</label><input type="range" id="quality" min="60" max="100" step="5" value="92" oninput="document.getElementById('q-val').textContent=this.value+'%'"><span class="val" id="q-val">92%</span></div>
-      </div>
-      <div class="setting-group">
-        <div class="sg-title">Auto-crop</div>
-        <div class="toggle-row"><label class="toggle"><input type="checkbox" id="auto-crop" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label><span class="toggle-label">Auto-detect postcard edges</span></div>
-        <div class="toggle-row"><label class="toggle"><input type="checkbox" id="perspective" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label><span class="toggle-label">Perspective correction</span></div>
-      </div>
+        <div class="row"><label>DPI</label><input type="range" id="dpi" min="1" max="4" step="1" value="2"></div>
+        <div class="row"><label>Quality</label><input type="range" id="quality" min="60" max="100" value="90"></div>
     </div>
-    <div class="progress-wrap" id="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-      <div class="progress-txt" id="progress-txt">Processing…</div>
-    </div>
-    <div class="action-wrap"><button class="btn-proc" id="proc-btn" disabled onclick="processPDF()">Load a PDF first</button></div>
+    <div id="progress-wrap"><div class="p-bar"><div id="p-fill"></div></div><div id="p-txt" style="font-size:0.6rem;margin-top:4px"></div></div>
+    <div style="padding:1rem"><button class="btn primary" id="proc-btn" style="width:100%" disabled onclick="processPDF()">Process PDF</button></div>
   </div>
   <div class="main">
-    <div class="main-head">
-      <div class="main-title"><strong id="count-label">No pages</strong> processed</div>
-      <div class="head-actions">
-        <button class="btn-sm" onclick="downloadAll()">⬇ Download all</button>
-        <button class="btn-sm green" onclick="selectAll()">Select all</button>
-        <button class="btn-sm" onclick="clearAll()" style="border-color:#c0392b;color:#c0392b">✕ Clear</button>
-      </div>
-    </div>
-    <div class="grid-wrap" id="grid-wrap">
-      <div class="empty" id="empty-state">
-        <div class="empty-icon">📬</div>
-        <div class="empty-txt">Load a scanned PDF</div>
-      </div>
-      <div class="grid" id="card-grid" style="display:none"></div>
-    </div>
+    <div class="grid-wrap"><div class="grid" id="card-grid"></div></div>
   </div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
-  <div class="crop-canvas-wrap" id="crop-canvas-wrap">
+  <div class="crop-container">
+    <div id="loupe-container"><canvas id="loupe-canvas"></canvas></div>
     <canvas id="crop-canvas"></canvas>
-    <canvas id="loupe-canvas"></canvas>
-    <div class="crop-hud-top">
-      <div class="crop-hud-title">✂️ Adjust Crop</div>
-      <div style="display:flex;gap:0.5rem;align-items:center">
-        <button class="btn-modal" onclick="autoDetectCorners()">⟳ Re-detect</button>
-        <button class="btn-modal" onclick="resetCorners()">Reset</button>
-        <button class="btn-modal" onclick="closeModal()" style="padding:0.38rem 0.6rem">✕</button>
-      </div>
-    </div>
-    <div class="crop-hud-bottom">
-      <span class="hud-label">Corners</span>
-      <div class="corner-list" id="corner-list"></div>
-      <div class="hud-sep"></div>
-      <button class="btn-modal primary" onclick="applyCrop()">✓ Apply crop</button>
-    </div>
+  </div>
+  <div class="hud-bottom">
+    <button class="btn" onclick="autoDetectCorners()">Re-detect</button>
+    <button class="btn" onclick="closeModal()">Cancel</button>
+    <button class="btn primary" onclick="applyCrop()">Apply Crop</button>
   </div>
 </div>
-
-<div class="toast" id="toast"></div>
 
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 let pages = [];
 let modalPageId = null;
-let cropCanvas, cropCtx;
-let corners = [];
-let dragging = null;
-let draggingEdge = null;
+let corners = []; 
+let dragging = null; // index 0-3
+let draggingEdge = null; // 'top','bottom','left','right'
 let modalScale = 1;
-let rawModalCanvas = null;
+let rawCanvas = null;
 
-const CORNER_COLORS = ['#e8a83e','#5cb8e8','#e85c8a','#7ae85c'];
-const CORNER_NAMES  = ['TL','TR','BR','BL'];
+const cropCanvas = document.getElementById('crop-canvas');
+const ctx = cropCanvas.getContext('2d');
+const loupeCanvas = document.getElementById('loupe-canvas');
+const lctx = loupeCanvas.getContext('2d');
 
-const dropZone = document.getElementById('drop-zone');
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
-dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
-dropZone.addEventListener('drop', e => {
-  e.preventDefault(); dropZone.classList.remove('drag');
-  const files = [...e.dataTransfer.files].filter(f => f.type==='application/pdf');
-  if (files.length) loadFiles(files);
-});
-document.getElementById('file-input').addEventListener('change', e => {
-  if (e.target.files.length) loadFiles([...e.target.files]);
-});
-
-async function loadFiles(files) {
-  const btn = document.getElementById('proc-btn');
-  btn.textContent = `Process ${files.length} PDF${files.length>1?'s':''}`;
-  btn.disabled = false;
-  btn._files = files;
-}
+document.getElementById('file-input').onchange = (e) => {
+    if(e.target.files.length) {
+        document.getElementById('proc-btn').disabled = false;
+        document.getElementById('proc-btn')._files = [...e.target.files];
+    }
+};
 
 async function processPDF() {
-  const files = document.getElementById('proc-btn')._files;
-  if (!files?.length) return;
-  const dpi = parseFloat(document.getElementById('dpi').value);
-  const autoCrop = document.getElementById('auto-crop').checked;
-  const btn = document.getElementById('proc-btn');
-  btn.disabled = true;
-  pages = [];
-  document.getElementById('card-grid').innerHTML = '';
-  document.getElementById('card-grid').style.display = 'none';
-  document.getElementById('empty-state').style.display = 'flex';
-  const pw = document.getElementById('progress-wrap');
-  pw.style.display = 'block';
+    const files = document.getElementById('proc-btn')._files;
+    const dpi = parseFloat(document.getElementById('dpi').value);
+    pages = [];
+    document.getElementById('card-grid').innerHTML = '';
+    document.getElementById('progress-wrap').style.display = 'block';
 
-  let totalPages = 0, donePages = 0;
-  for (const file of files) {
-    const buf = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-    totalPages += pdf.numPages;
-  }
-
-  for (const file of files) {
-    const buf = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-    for (let p = 1; p <= pdf.numPages; p++) {
-      const page = await pdf.getPage(p);
-      const vp = page.getViewport({ scale: dpi });
-      const canvas = document.createElement('canvas');
-      canvas.width = vp.width; canvas.height = vp.height;
-      const ctx = canvas.getContext('2d');
-      await page.render({ canvasContext: ctx, viewport: vp }).promise;
-      const id = `page-${Date.now()}-${p}`;
-      const detected = autoCrop ? detectCorners(canvas) : defaultCorners(canvas);
-      const croppedDataUrl = applyCropTransform(canvas, detected);
-      pages.push({ id, rawCanvas: canvas, croppedDataUrl, corners: detected });
-      donePages++;
-      setProgress(donePages/totalPages, `${donePages}/${totalPages}`);
-      renderCard(pages[pages.length-1]);
+    for (const file of files) {
+        const pdf = await pdfjsLib.getDocument(await file.arrayBuffer()).promise;
+        for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const vp = page.getViewport({ scale: dpi });
+            const canv = document.createElement('canvas');
+            canv.width = vp.width; canv.height = vp.height;
+            await page.render({ canvasContext: canv.getContext('2d'), viewport: vp }).promise;
+            
+            const id = 'pg-' + Math.random().toString(36).substr(2,9);
+            const detCorners = detectPostcard(canv);
+            const dataUrl = renderOutput(canv, detCorners);
+            
+            const pg = { id, raw: canv, corners: detCorners, thumb: dataUrl };
+            pages.push(pg);
+            addCard(pg);
+            
+            const prog = (pages.length / (files.length * pdf.numPages)) * 100;
+            document.getElementById('p-fill').style.width = prog + '%';
+            document.getElementById('p-txt').innerText = `Processing ${pages.length}...`;
+        }
     }
-  }
-  document.getElementById('empty-state').style.display = 'none';
-  document.getElementById('card-grid').style.display = 'grid';
-  updateCountLabel();
-  pw.style.display = 'none';
-  btn.disabled = false;
+    document.getElementById('progress-wrap').style.display = 'none';
 }
 
-function detectCorners(canvas) {
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
-  const imgData = ctx.getImageData(0, 0, W, H).data;
-  const isBg = (r, g, b) => (r > 240 && g > 240 && b > 240);
-  const margin = 8;
-  let minX = W, maxX = 0, minY = H, maxY = 0;
-
-  for (let y = 0; y < H; y += 4) {
-    for (let x = 0; x < W; x += 4) {
-      const i = (y * W + x) * 4;
-      if (!isBg(imgData[i], imgData[i+1], imgData[i+2])) { if (y < minY) minY = y; break; }
+function detectPostcard(canv) {
+    const w = canv.width, h = canv.height;
+    const data = canv.getContext('2d').getImageData(0,0,w,h).data;
+    const isDark = (r,g,b) => (r < 235 || g < 235 || b < 235);
+    
+    let x1 = w, y1 = h, x2 = 0, y2 = 0;
+    // Fast scan
+    for(let y=0; y<h; y+=10) {
+        for(let x=0; x<w; x+=10) {
+            const i = (y*w + x) * 4;
+            if(isDark(data[i], data[i+1], data[i+2])) {
+                if(x < x1) x1 = x; if(x > x2) x2 = x;
+                if(y < y1) y1 = y; if(y > y2) y2 = y;
+            }
+        }
     }
-    if (minY !== H && y > minY + 100) break; 
-  }
-  for (let y = H - 1; y >= 0; y -= 4) {
-    for (let x = 0; x < W; x += 4) {
-      const i = (y * W + x) * 4;
-      if (!isBg(imgData[i], imgData[i+1], imgData[i+2])) { if (y > maxY) maxY = y; break; }
-    }
-    if (maxY !== 0 && y < maxY - 100) break;
-  }
-  for (let x = 0; x < W; x += 4) {
-    for (let y = 0; y < H; y += 4) {
-      const i = (y * W + x) * 4;
-      if (!isBg(imgData[i], imgData[i+1], imgData[i+2])) { if (x < minX) minX = x; break; }
-    }
-    if (minX !== W && x > minX + 100) break;
-  }
-  for (let x = W - 1; x >= 0; x -= 4) {
-    for (let y = 0; y < H; y += 4) {
-      const i = (y * W + x) * 4;
-      if (!isBg(imgData[i], imgData[i+1], imgData[i+2])) { if (x > maxX) maxX = x; break; }
-    }
-    if (maxX !== 0 && x < maxX - 100) break;
-  }
-
-  if (minX >= maxX || minY >= maxY) return defaultCorners(canvas);
-  return [
-    {x: Math.max(0, minX - margin), y: Math.max(0, minY - margin)},
-    {x: Math.min(W, maxX + margin), y: Math.max(0, minY - margin)},
-    {x: Math.min(W, maxX + margin), y: Math.min(H, maxY + margin)},
-    {x: Math.max(0, minX - margin), y: Math.min(H, maxY + margin)}
-  ];
+    const m = 10;
+    return [
+        {x: Math.max(0, x1-m), y: Math.max(0, y1-m)},
+        {x: Math.min(w, x2+m), y: Math.max(0, y1-m)},
+        {x: Math.min(w, x2+m), y: Math.min(h, y2+m)},
+        {x: Math.max(0, x1-m), y: Math.min(h, y2+m)}
+    ];
 }
 
-function defaultCorners(canvas) {
-  const W = canvas.width, H = canvas.height, p = 20;
-  return [{x:p,y:p},{x:W-p,y:p},{x:W-p,y:H-p},{x:p,y:H-p}];
+function renderOutput(src, c) {
+    const ow = Math.max(dist(c[0],c[1]), dist(c[3],c[2]));
+    const oh = Math.max(dist(c[0],c[3]), dist(c[1],c[2]));
+    const out = document.createElement('canvas');
+    out.width = ow; out.height = oh;
+    const octx = out.getContext('2d');
+    
+    // Simplistic perspective warp
+    octx.drawImage(src, c[0].x, c[0].y, c[1].x-c[0].x, c[3].y-c[0].y, 0, 0, ow, oh);
+    return out.toDataURL('image/jpeg', 0.9);
 }
 
-function applyCropTransform(srcCanvas, c) {
-  const outW = Math.round(Math.max(dist(c[0],c[1]), dist(c[3],c[2])));
-  const outH = Math.round(Math.max(dist(c[0],c[3]), dist(c[1],c[2])));
-  const out = document.createElement('canvas');
-  out.width = outW; out.height = outH;
-  const ctx = out.getContext('2d');
-  const imgData = srcCanvas.getContext('2d').getImageData(0,0,srcCanvas.width,srcCanvas.height);
-  const outData = ctx.createImageData(outW, outH);
+function dist(a,b) { return Math.hypot(b.x-a.x, b.y-a.y); }
 
-  for (let y = 0; y < outH; y++) {
-    const ty = y / outH;
-    for (let x = 0; x < outW; x++) {
-      const tx = x / outW;
-      const sx = (1-tx)*(1-ty)*c[0].x + tx*(1-ty)*c[1].x + tx*ty*c[2].x + (1-tx)*ty*c[3].x;
-      const sy = (1-tx)*(1-ty)*c[0].y + tx*(1-ty)*c[1].y + tx*ty*c[2].y + (1-tx)*ty*c[3].y;
-      const si = (Math.round(sy)*srcCanvas.width + Math.round(sx))*4;
-      const di = (y*outW+x)*4;
-      outData.data[di]=imgData.data[si]; outData.data[di+1]=imgData.data[si+1];
-      outData.data[di+2]=imgData.data[si+2]; outData.data[di+3]=255;
-    }
-  }
-  ctx.putImageData(outData,0,0);
-  return out.toDataURL(document.getElementById('fmt').value, parseInt(document.getElementById('quality').value)/100);
+function addCard(pg) {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.id = pg.id;
+    div.onclick = () => openModal(pg.id);
+    div.innerHTML = `<img src="${pg.thumb}"><div class="card-foot"><span>Postcard</span><span>Edit</span></div>`;
+    document.getElementById('card-grid').appendChild(div);
 }
-
-function dist(a,b){ return Math.hypot(b.x-a.x, b.y-a.y); }
-
-function renderCard(pg) {
-  const grid = document.getElementById('card-grid');
-  const div = document.createElement('div');
-  div.className = 'card'; div.id = 'card-'+pg.id;
-  div.innerHTML = `
-    <div class="card-img-wrap" onclick="openModal('${pg.id}')">
-      <img src="${pg.croppedDataUrl}">
-    </div>
-    <div class="card-foot">
-      <span class="card-label">Postcard</span>
-      <div class="card-actions">
-        <button class="icon-btn" onclick="event.stopPropagation();removePage('${pg.id}')">✕</button>
-      </div>
-    </div>`;
-  grid.appendChild(div);
-}
-
-function removePage(id) {
-  pages = pages.filter(p=>p.id!==id);
-  document.getElementById('card-'+id)?.remove();
-  updateCountLabel();
-}
-
-function updateCountLabel() {
-  document.getElementById('count-label').textContent = pages.length ? pages.length+' pages' : 'No pages';
-}
-
-cropCanvas = document.getElementById('crop-canvas');
-cropCtx = cropCanvas.getContext('2d');
 
 function openModal(id) {
-  const pg = pages.find(p=>p.id===id);
-  if (!pg) return;
-  modalPageId = id; rawModalCanvas = pg.rawCanvas;
-  corners = pg.corners.map(c=>({...c}));
-  document.getElementById('modal-bg').classList.add('open');
-  drawCropModal();
+    const pg = pages.find(p => p.id === id);
+    modalPageId = id;
+    rawCanvas = pg.raw;
+    corners = pg.corners.map(c => ({...c}));
+    document.getElementById('modal-bg').classList.add('open');
+    draw();
 }
 
-function closeModal() { document.getElementById('modal-bg').classList.remove('open'); hideLoupe(); }
-
-function drawCropModal() {
-  const s = Math.min((window.innerWidth-40)/rawModalCanvas.width, (window.innerHeight-150)/rawModalCanvas.height, 1);
-  modalScale = s;
-  cropCanvas.width = rawModalCanvas.width; cropCanvas.height = rawModalCanvas.height;
-  cropCanvas.style.width = (rawModalCanvas.width*s)+'px'; cropCanvas.style.height = (rawModalCanvas.height*s)+'px';
-  cropCtx.drawImage(rawModalCanvas,0,0);
-  _drawCropOverlay();
-  updateCornerList();
+function closeModal() {
+    document.getElementById('modal-bg').classList.remove('open');
+    document.getElementById('loupe-container').style.display = 'none';
 }
 
-function _drawCropOverlay() {
-  const c = corners, inv = 1/modalScale;
-  cropCtx.fillStyle = 'rgba(0,0,0,0.5)';
-  cropCtx.beginPath();
-  cropCtx.rect(0,0,cropCanvas.width,cropCanvas.height);
-  cropCtx.moveTo(c[0].x,c[0].y); cropCtx.lineTo(c[1].x,c[1].y);
-  cropCtx.lineTo(c[2].x,c[2].y); cropCtx.lineTo(c[3].x,c[3].y);
-  cropCtx.closePath();
-  cropCtx.fill('evenodd');
+function draw() {
+    const s = Math.min((window.innerWidth*0.9)/rawCanvas.width, (window.innerHeight*0.7)/rawCanvas.height, 1);
+    modalScale = s;
+    cropCanvas.width = rawCanvas.width;
+    cropCanvas.height = rawCanvas.height;
+    cropCanvas.style.width = (rawCanvas.width * s) + 'px';
+    cropCanvas.style.height = (rawCanvas.height * s) + 'px';
+    
+    ctx.drawImage(rawCanvas, 0, 0);
+    
+    // Dim outside
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.rect(0,0,cropCanvas.width, cropCanvas.height);
+    ctx.moveTo(corners[0].x, corners[0].y);
+    ctx.lineTo(corners[1].x, corners[1].y);
+    ctx.lineTo(corners[2].x, corners[2].y);
+    ctx.lineTo(corners[3].x, corners[3].y);
+    ctx.closePath();
+    ctx.fill('evenodd');
 
-  cropCtx.strokeStyle = '#e8a83e'; cropCtx.lineWidth = 2*inv;
-  cropCtx.setLineDash([5*inv, 5*inv]);
-  cropCtx.beginPath();
-  c.forEach((p,i)=>i===0?cropCtx.moveTo(p.x,p.y):cropCtx.lineTo(p.x,p.y));
-  cropCtx.closePath(); cropCtx.stroke();
-  cropCtx.setLineDash([]);
+    // Dashed lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+    ctx.setLineDash([10/s, 10/s]);
+    ctx.lineWidth = 2/s;
+    ctx.beginPath();
+    ctx.moveTo(corners[0].x, corners[0].y);
+    corners.forEach(p => ctx.lineTo(p.x, p.y));
+    ctx.closePath();
+    ctx.stroke();
+    ctx.setLineDash([]);
 
-  c.forEach((p,i)=>{
-    cropCtx.fillStyle = CORNER_COLORS[i];
-    cropCtx.beginPath(); cropCtx.arc(p.x,p.y,8*inv,0,Math.PI*2); cropCtx.fill();
-  });
+    // Google Photos style "Kinks" (L-brackets)
+    const len = 40 / s;
+    ctx.lineWidth = 4 / s;
+    ctx.strokeStyle = '#e8a83e';
+    ctx.lineCap = 'round';
+    
+    const drawKink = (p, dx, dy) => {
+        ctx.beginPath();
+        ctx.moveTo(p.x + (dx * len), p.y);
+        ctx.lineTo(p.x, p.y);
+        ctx.lineTo(p.x, p.y + (dy * len));
+        ctx.stroke();
+    };
+
+    drawKink(corners[0], 1, 1);
+    drawKink(corners[1], -1, 1);
+    drawKink(corners[2], -1, -1);
+    drawKink(corners[3], 1, -1);
 }
 
-function evToCanvas(e) {
-  const r = cropCanvas.getBoundingClientRect();
-  return { cx: e.clientX-r.left, cy: e.clientY-r.top, px: (e.clientX-r.left)/modalScale, py: (e.clientY-r.top)/modalScale };
+function getMouse(e) {
+    const rect = cropCanvas.getBoundingClientRect();
+    return {
+        x: (e.clientX - rect.left) / modalScale,
+        y: (e.clientY - rect.top) / modalScale
+    };
 }
 
-cropCanvas.addEventListener('mousedown', e => {
-  const { px, py } = evToCanvas(e), hitR = 30/modalScale;
-  dragging = corners.findIndex(p => Math.hypot(p.x-px, p.y-py) < hitR);
-  if (dragging !== -1) return;
+cropCanvas.onmousedown = (e) => {
+    const m = getMouse(e);
+    const hit = 40 / modalScale;
+    
+    // Check Corners
+    dragging = corners.findIndex(p => Math.hypot(p.x-m.x, p.y-m.y) < hit);
+    if(dragging !== -1) return;
 
-  const threshold = 20/modalScale;
-  if (Math.abs(py - corners[0].y) < threshold && px > corners[0].x && px < corners[1].x) draggingEdge = 'top';
-  else if (Math.abs(py - corners[2].y) < threshold && px > corners[3].x && px < corners[2].x) draggingEdge = 'bottom';
-  else if (Math.abs(px - corners[0].x) < threshold && py > corners[0].y && py < corners[3].y) draggingEdge = 'left';
-  else if (Math.abs(px - corners[1].x) < threshold && py > corners[1].y && py < corners[2].y) draggingEdge = 'right';
-});
+    // Check Edges (Linear Crop)
+    if(Math.abs(m.y - corners[0].y) < hit) draggingEdge = 'top';
+    else if(Math.abs(m.y - corners[2].y) < hit) draggingEdge = 'bottom';
+    else if(Math.abs(m.x - corners[0].x) < hit) draggingEdge = 'left';
+    else if(Math.abs(m.x - corners[1].x) < hit) draggingEdge = 'right';
+    
+    if(draggingEdge || dragging !== -1) {
+        document.getElementById('loupe-container').style.display = 'block';
+    }
+};
 
-cropCanvas.addEventListener('mousemove', e => {
-  if (dragging === null && draggingEdge === null) return;
-  const { cx, cy, px, py } = evToCanvas(e);
-  if (dragging !== null && dragging >= 0) {
-    corners[dragging] = {x:px, y:py};
-  } else if (draggingEdge) {
-    if (draggingEdge === 'top') { corners[0].y = py; corners[1].y = py; }
-    else if (draggingEdge === 'bottom') { corners[2].y = py; corners[3].y = py; }
-    else if (draggingEdge === 'left') { corners[0].x = px; corners[3].x = px; }
-    else if (draggingEdge === 'right') { corners[1].x = px; corners[2].x = px; }
-  }
-  cropCtx.drawImage(rawModalCanvas,0,0);
-  _drawCropOverlay(); updateCornerList(); drawLoupe(cx, cy, px, py);
-});
+window.onmousemove = (e) => {
+    if(dragging === null && !draggingEdge) return;
+    const m = getMouse(e);
+    
+    if(dragging !== null && dragging >= 0) {
+        corners[dragging].x = m.x;
+        corners[dragging].y = m.y;
+    } else if(draggingEdge) {
+        if(draggingEdge === 'top') { corners[0].y = m.y; corners[1].y = m.y; }
+        if(draggingEdge === 'bottom') { corners[2].y = m.y; corners[3].y = m.y; }
+        if(draggingEdge === 'left') { corners[0].x = m.x; corners[3].x = m.x; }
+        if(draggingEdge === 'right') { corners[1].x = m.x; corners[2].x = m.x; }
+    }
+    
+    // Update Loupe
+    const focus = dragging !== -1 ? corners[dragging] : m;
+    loupeCanvas.width = 200; loupeCanvas.height = 200;
+    lctx.drawImage(rawCanvas, focus.x - 50, focus.y - 50, 100, 100, 0, 0, 200, 200);
+    lctx.strokeStyle = '#e8a83e';
+    lctx.lineWidth = 2;
+    lctx.strokeRect(95, 95, 10, 10); // Crosshair
 
-window.addEventListener('mouseup', () => { dragging = null; draggingEdge = null; hideLoupe(); });
+    draw();
+};
 
-function updateCornerList() {
-  document.getElementById('corner-list').innerHTML = corners.map((c,i)=>`<div class="corner-item"><div class="corner-dot" style="background:${CORNER_COLORS[i]}"></div><span class="corner-coords">${Math.round(c.x)},${Math.round(c.y)}</span></div>`).join('');
+window.onmouseup = () => {
+    dragging = null; draggingEdge = null;
+    document.getElementById('loupe-container').style.display = 'none';
+};
+
+function autoDetectCorners() {
+    corners = detectPostcard(rawCanvas);
+    draw();
 }
 
 function applyCrop() {
-  const pg = pages.find(p=>p.id===modalPageId);
-  pg.corners = corners.map(c=>({...c}));
-  pg.croppedDataUrl = applyCropTransform(pg.rawCanvas, pg.corners);
-  document.querySelector(`#card-${pg.id} img`).src = pg.croppedDataUrl;
-  closeModal();
-}
-
-const loupeCanvas = document.getElementById('loupe-canvas');
-const loupeCtx = loupeCanvas.getContext('2d');
-function drawLoupe(cx, cy, px, py) {
-  loupeCanvas.width = 180; loupeCanvas.height = 180;
-  loupeCtx.clearRect(0,0,180,180);
-  loupeCtx.save();
-  loupeCtx.beginPath(); loupeCtx.arc(90,90,90,0,Math.PI*2); loupeCtx.clip();
-  loupeCtx.drawImage(rawModalCanvas, px-22.5, py-22.5, 45, 45, 0, 0, 180, 180);
-  loupeCtx.strokeStyle = '#e8a83e'; loupeCtx.lineWidth = 2;
-  loupeCtx.beginPath(); loupeCtx.moveTo(90,0); loupeCtx.lineTo(90,180); loupeCtx.moveTo(0,90); loupeCtx.lineTo(180,90); loupeCtx.stroke();
-  loupeCtx.restore();
-  loupeCanvas.style.display = 'block';
-  loupeCanvas.style.left = (cx + 20) + 'px'; loupeCanvas.style.top = (cy - 200) + 'px';
-}
-function hideLoupe(){ loupeCanvas.style.display = 'none'; }
-function setProgress(f, t){ document.getElementById('progress-fill').style.width = (f*100)+'%'; document.getElementById('progress-txt').textContent = t; }
-function selectAll(){ document.querySelectorAll('.card').forEach(c=>c.classList.toggle('selected')); }
-function clearAll(){ pages=[]; document.getElementById('card-grid').innerHTML=''; updateCountLabel(); }
-function downloadAll() {
-  pages.forEach((p,i) => {
-    const a = document.createElement('a'); a.href = p.croppedDataUrl; a.download = `postcard-${i+1}.jpg`; a.click();
-  });
+    const pg = pages.find(p => p.id === modalPageId);
+    pg.corners = corners.map(c => ({...c}));
+    pg.thumb = renderOutput(rawCanvas, corners);
+    document.getElementById(pg.id).querySelector('img').src = pg.thumb;
+    closeModal();
 }
 </script>
 </body>
