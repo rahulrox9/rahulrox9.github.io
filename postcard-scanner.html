@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rahul's Postcard Scanner</title>
+<title>Rahul's Postcard Scanner 14:08</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
 <style>
@@ -154,20 +154,32 @@ async function processPDF() {
 
 function detectPostcard(canv) {
     const w = canv.width, h = canv.height;
-    const data = canv.getContext('2d').getImageData(0,0,w,h).data;
-    const isDark = (r,g,b) => (r < 240 || g < 240 || b < 240);
-    let x1 = w, y1 = h, x2 = 0, y2 = 0;
-    for(let y=0; y<h; y+=10) {
-        for(let x=0; x<w; x+=10) {
-            const i = (y*w + x) * 4;
-            if(isDark(data[i], data[i+1], data[i+2])) {
-                if(x < x1) x1 = x; if(x > x2) x2 = x;
-                if(y < y1) y1 = y; if(y > y2) y2 = y;
-            }
-        }
-    }
-    const m = 10;
-    return [{x:Math.max(0,x1-m),y:Math.max(0,y1-m)},{x:Math.min(w,x2+m),y:Math.max(0,y1-m)},{x:Math.min(w,x2+m),y:Math.min(h,y2+m)},{x:Math.max(0,x1-m),y:Math.min(h,y2+m)}];
+    const ctx = canv.getContext('2d');
+    const data = ctx.getImageData(0, 0, w, h).data;
+    const getLum = (x, y) => {
+        const i = (y * w + x) * 4;
+        return 0.2126 * data[i] + 0.7152 * data[i+1] + 0.0722 * data[i+2];
+    };
+
+    const cx = Math.floor(w / 2), cy = Math.floor(h / 2);
+    let x1 = 0, x2 = w, y1 = 0, y2 = h;
+    const thresh = 15;
+
+    // Center-out scan (more robust for scanners)
+    for (let x = cx; x > 0; x--) if (Math.abs(getLum(x, cy) - getLum(x - 1, cy)) > thresh) { x1 = x; break; }
+    for (let x = cx; x < w - 1; x++) if (Math.abs(getLum(x, cy) - getLum(x + 1, cy)) > thresh) { x2 = x; break; }
+    for (let y = cy; y > 0; y--) if (Math.abs(getLum(cx, y) - getLum(cx, y - 1)) > thresh) { y1 = y; break; }
+    for (let y = cy; y < h - 1; y++) if (Math.abs(getLum(cx, y) - getLum(cx, y + 1)) > thresh) { y2 = y; break; }
+
+    if (x2 - x1 < 50 || y2 - y1 < 50) return [{x:50,y:50},{x:w-50,y:50},{x:w-50,y:h-50},{x:50,y:h-50}];
+    
+    const m = 5;
+    return [
+        {x: Math.max(0, x1 - m), y: Math.max(0, y1 - m)},
+        {x: Math.min(w, x2 + m), y: Math.max(0, y1 - m)},
+        {x: Math.min(w, x2 + m), y: Math.min(h, y2 + m)},
+        {x: Math.max(0, x1 - m), y: Math.min(h, y2 + m)}
+    ];
 }
 
 function renderOutput(src, c, rot) {
@@ -198,9 +210,7 @@ function addCard(pg) {
 }
 
 function removePage(id) { pages = pages.filter(p => p.id !== id); document.getElementById(id).remove(); updateCount(); }
-
 function clearAll() { if(confirm('Clear all?')) { pages = []; document.getElementById('card-grid').innerHTML = ''; updateCount(); } }
-
 function updateCount() { document.getElementById('count').innerText = pages.length; }
 
 function openModal(id) {
@@ -222,7 +232,8 @@ function draw() {
     cropCanvas.style.width = (rawCanvas.width * s) + 'px'; cropCanvas.style.height = (rawCanvas.height * s) + 'px';
     ctx.drawImage(rawCanvas, 0, 0);
     ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.beginPath(); ctx.rect(0,0,cropCanvas.width, cropCanvas.height);
-    ctx.moveTo(corners[0].x, corners[0].y); ctx.lineTo(corners[1].x, corners[1].y); ctx.lineTo(corners[2].x, corners[2].y); ctx.lineTo(corners[3].x, corners[3].y);
+    ctx.moveTo(corners[0].x, corners[0].y); ctx.lineTo(corners[1].x, corners[1].y);
+    ctx.lineTo(corners[2].x, corners[2].y); ctx.lineTo(corners[3].x, corners[3].y);
     ctx.closePath(); ctx.fill('evenodd');
     ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 2/s; ctx.setLineDash([10/s, 10/s]);
     ctx.beginPath(); ctx.moveTo(corners[0].x, corners[0].y); corners.forEach(p => ctx.lineTo(p.x, p.y)); ctx.closePath(); ctx.stroke(); ctx.setLineDash([]);
@@ -237,15 +248,15 @@ function draw() {
 function getMouse(e) { const r = cropCanvas.getBoundingClientRect(); return { x: (e.clientX-r.left)/modalScale, y: (e.clientY-r.top)/modalScale }; }
 
 cropCanvas.onmousedown = (e) => {
-    const m = getMouse(e), hit = 40/modalScale;
+    const m = getMouse(e), hit = 50/modalScale;
     dragging = corners.findIndex(p => Math.hypot(p.x-m.x, p.y-m.y) < hit);
     if(dragging !== -1) return;
-    const midTop = (corners[0].y + corners[1].y) / 2, midBot = (corners[2].y + corners[3].y) / 2;
-    const midL = (corners[0].x + corners[3].x) / 2, midR = (corners[1].x + corners[2].x) / 2;
-    if(Math.abs(m.y - midTop) < hit && m.x > corners[0].x && m.x < corners[1].x) draggingEdge = 'top';
-    else if(Math.abs(m.y - midBot) < hit && m.x > corners[3].x && m.x < corners[2].x) draggingEdge = 'bottom';
-    else if(Math.abs(m.x - midL) < hit && m.y > corners[0].y && m.y < corners[3].y) draggingEdge = 'left';
-    else if(Math.abs(m.x - midR) < hit && m.y > corners[1].y && m.y < corners[2].y) draggingEdge = 'right';
+    
+    // Improved edge handle hit detection
+    if(Math.abs(m.y - (corners[0].y + corners[1].y)/2) < hit && m.x > corners[0].x && m.x < corners[1].x) draggingEdge = 'top';
+    else if(Math.abs(m.y - (corners[2].y + corners[3].y)/2) < hit && m.x > corners[3].x && m.x < corners[2].x) draggingEdge = 'bottom';
+    else if(Math.abs(m.x - (corners[0].x + corners[3].x)/2) < hit && m.y > corners[0].y && m.y < corners[3].y) draggingEdge = 'left';
+    else if(Math.abs(m.x - (corners[1].x + corners[2].x)/2) < hit && m.y > corners[1].y && m.y < corners[2].y) draggingEdge = 'right';
 };
 
 window.onmousemove = (e) => {
@@ -261,7 +272,8 @@ window.onmousemove = (e) => {
     const focus = dragging !== null ? corners[dragging] : m;
     document.getElementById('loupe-container').style.display = 'block';
     lc.width = 200; lc.height = 200;
-    const sx = Math.max(0, focus.x - 50), sy = Math.max(0, focus.y - 50);
+    const sx = Math.max(0, Math.min(rawCanvas.width - 100, focus.x - 50)); 
+    const sy = Math.max(0, Math.min(rawCanvas.height - 100, focus.y - 50));
     lctx.drawImage(rawCanvas, sx, sy, 100, 100, 0, 0, 200, 200);
     lctx.strokeStyle = '#e8a83e'; lctx.lineWidth = 2; lctx.strokeRect(95, 95, 10, 10);
     draw();
