@@ -14,26 +14,18 @@
   --red:#c0392b;--green:#2d6b5e;
 }
 html,body{height:100%;font-family:'DM Mono',monospace;background:var(--bg);color:var(--cream)}
-
-/* ── Layout ── */
 .shell{display:grid;grid-template-columns:340px 1fr;height:100vh;overflow:hidden}
 .sidebar{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
 .main{display:flex;flex-direction:column;overflow:hidden}
-
-/* ── Header ── */
 .sidebar-head{padding:1.4rem 1.4rem 1rem;border-bottom:1px solid var(--border)}
 .logo{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:700;color:var(--amber);letter-spacing:-0.02em}
 .logo span{font-style:italic;font-weight:300;color:var(--cream);opacity:0.6;font-size:0.9rem;display:block;margin-top:0.1rem}
-
-/* ── Drop zone ── */
 .drop-zone{margin:1rem 1.2rem;border:1.5px dashed var(--border);border-radius:6px;padding:1.8rem 1rem;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
 .drop-zone:hover,.drop-zone.drag{border-color:var(--amber);background:rgba(232,168,62,0.04)}
 .drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .drop-icon{font-size:2rem;margin-bottom:0.6rem;opacity:0.5}
 .drop-label{font-size:0.7rem;color:var(--muted);line-height:1.7}
 .drop-label strong{color:var(--amber);display:block;font-size:0.78rem;margin-bottom:0.2rem}
-
-/* ── Settings panel ── */
 .settings{padding:0 1.2rem;flex:1;overflow-y:auto}
 .setting-group{margin-bottom:1.2rem}
 .sg-title{font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;padding-bottom:0.35rem;border-bottom:1px solid var(--border)}
@@ -50,20 +42,14 @@ html,body{height:100%;font-family:'DM Mono',monospace;background:var(--bg);color
 .toggle-thumb{position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:#fff;transition:transform 0.2s}
 .toggle input:checked ~ .toggle-thumb{transform:translateX(14px)}
 .toggle-label{font-size:0.72rem;color:var(--cream);opacity:0.8}
-
-/* ── Progress ── */
 .progress-wrap{padding:0 1.2rem 1rem;display:none}
 .progress-bar{height:3px;background:var(--border);border-radius:99px;overflow:hidden}
 .progress-fill{height:100%;background:var(--amber);width:0%;transition:width 0.3s}
 .progress-txt{font-size:0.65rem;color:var(--muted);margin-top:0.3rem}
-
-/* ── Action button ── */
 .action-wrap{padding:1rem 1.2rem;border-top:1px solid var(--border)}
 .btn-proc{width:100%;padding:0.7rem;background:var(--amber);color:#0f0e0c;font-family:'DM Mono',monospace;font-size:0.8rem;font-weight:500;border:none;border-radius:4px;cursor:pointer;letter-spacing:0.04em;transition:opacity 0.2s}
 .btn-proc:hover{opacity:0.85}
 .btn-proc:disabled{opacity:0.4;cursor:not-allowed}
-
-/* ── Main area ── */
 .main-head{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .main-title{font-family:'Fraunces',serif;font-size:1rem;font-weight:300;color:var(--cream);opacity:0.6}
 .main-title strong{color:var(--cream);opacity:1;font-weight:700}
@@ -72,8 +58,6 @@ html,body{height:100%;font-family:'DM Mono',monospace;background:var(--bg);color
 .btn-sm:hover{border-color:var(--amber);color:var(--amber)}
 .btn-sm.green{border-color:var(--green);color:var(--green)}
 .btn-sm.green:hover{background:var(--green);color:#fff}
-
-/* ── Grid ── */
 .grid-wrap{flex:1;overflow-y:auto;padding:1.2rem}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
 .card{background:var(--card);border:1px solid var(--border);border-radius:6px;overflow:hidden;transition:border-color 0.15s}
@@ -82,15 +66,12 @@ html,body{height:100%;font-family:'DM Mono',monospace;background:var(--bg);color
 .card-img-wrap{position:relative;cursor:pointer}
 .card-img-wrap img{width:100%;display:block;height:160px;object-fit:cover;background:var(--border)}
 .card-badge{position:absolute;top:6px;left:6px;font-size:0.6rem;padding:0.15rem 0.4rem;border-radius:2px;font-family:'DM Mono',monospace;letter-spacing:0.06em}
-.badge-raw{background:rgba(15,14,12,0.75);color:var(--muted)}
 .badge-cropped{background:rgba(45,107,94,0.85);color:#a0d9ce}
 .card-foot{padding:0.5rem 0.6rem;display:flex;align-items:center;justify-content:space-between}
 .card-label{font-size:0.65rem;color:var(--muted)}
 .card-actions{display:flex;gap:0.25rem}
 .icon-btn{background:none;border:none;cursor:pointer;font-size:0.8rem;padding:0.15rem;opacity:0.5;transition:opacity 0.15s}
 .icon-btn:hover{opacity:1}
-
-/* ── Fullscreen crop tool ── */
 .modal-bg{display:none;position:fixed;inset:0;background:#0a0908;z-index:1000;flex-direction:column}
 .modal-bg.open{display:flex}
 .crop-canvas-wrap{position:relative;flex:1;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#111}
@@ -112,28 +93,10 @@ html,body{height:100%;font-family:'DM Mono',monospace;background:var(--bg);color
 .btn-modal.primary:hover{opacity:0.88}
 .hud-rotate-wrap{display:flex;align-items:center;gap:0.4rem}
 .hud-rotate-wrap input[type=range]{width:90px;accent-color:var(--amber)}
-
-/* ── Loupe ── */
-#loupe-canvas{
-  position:absolute;
-  width:180px;height:180px;
-  border-radius:50%;
-  border:2px solid var(--amber);
-  box-shadow:0 6px 28px rgba(0,0,0,0.75), 0 0 0 1px rgba(232,168,62,0.2);
-  pointer-events:none;
-  display:none;
-  background:#111;
-}
-.loupe-crosshair{
-  position:absolute;
-  pointer-events:none;
-  display:none;
-}
+#loupe-canvas{position:absolute;width:180px;height:180px;border-radius:50%;border:2px solid var(--amber);box-shadow:0 6px 28px rgba(0,0,0,0.75);pointer-events:none;display:none;background:#111;z-index:1001}
 .empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.8rem;opacity:0.35}
 .empty-icon{font-size:3.5rem}
 .empty-txt{font-size:0.78rem;color:var(--muted);text-align:center;line-height:1.8}
-
-/* ── Toast ── */
 .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:4px;padding:0.6rem 1rem;font-size:0.72rem;color:var(--cream);z-index:2000;transform:translateY(80px);opacity:0;transition:all 0.25s;pointer-events:none}
 .toast.show{transform:translateY(0);opacity:1}
 .toast.green{border-color:var(--green);color:#a0d9ce}
@@ -142,95 +105,34 @@ html,body{height:100%;font-family:'DM Mono',monospace;background:var(--bg);color
 <body>
 
 <div class="shell">
-  <!-- ── SIDEBAR ── -->
   <div class="sidebar">
     <div class="sidebar-head">
       <div class="logo">Postcard Scanner<span>PDF → cropped images</span></div>
     </div>
-
     <div class="drop-zone" id="drop-zone">
       <input type="file" id="file-input" accept=".pdf" multiple>
       <div class="drop-icon">📮</div>
-      <div class="drop-label">
-        <strong>Drop PDF here</strong>
-        or click to browse<br>
-        Multi-page scans supported
-      </div>
+      <div class="drop-label"><strong>Drop PDF here</strong>or click to browse</div>
     </div>
-
     <div class="settings">
-
       <div class="setting-group">
         <div class="sg-title">Rendering</div>
-        <div class="row">
-          <label>DPI scale</label>
-          <input type="range" id="dpi" min="1" max="4" step="0.5" value="2" oninput="document.getElementById('dpi-val').textContent=this.value+'×'">
-          <span class="val" id="dpi-val">2×</span>
-        </div>
-        <div class="row">
-          <label>Output format</label>
-          <select id="fmt">
-            <option value="image/jpeg">JPEG</option>
-            <option value="image/png">PNG</option>
-            <option value="image/webp">WebP</option>
-          </select>
-        </div>
-        <div class="row">
-          <label>Quality</label>
-          <input type="range" id="quality" min="60" max="100" step="5" value="92" oninput="document.getElementById('q-val').textContent=this.value+'%'">
-          <span class="val" id="q-val">92%</span>
-        </div>
+        <div class="row"><label>DPI scale</label><input type="range" id="dpi" min="1" max="4" step="0.5" value="2" oninput="document.getElementById('dpi-val').textContent=this.value+'×'"><span class="val" id="dpi-val">2×</span></div>
+        <div class="row"><label>Output format</label><select id="fmt"><option value="image/jpeg">JPEG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></div>
+        <div class="row"><label>Quality</label><input type="range" id="quality" min="60" max="100" step="5" value="92" oninput="document.getElementById('q-val').textContent=this.value+'%'"><span class="val" id="q-val">92%</span></div>
       </div>
-
       <div class="setting-group">
         <div class="sg-title">Auto-crop</div>
-        <div class="toggle-row">
-          <label class="toggle">
-            <input type="checkbox" id="auto-crop" checked>
-            <div class="toggle-track"></div>
-            <div class="toggle-thumb"></div>
-          </label>
-          <span class="toggle-label">Auto-detect postcard edges</span>
-        </div>
-        <div class="toggle-row">
-          <label class="toggle">
-            <input type="checkbox" id="perspective" checked>
-            <div class="toggle-track"></div>
-            <div class="toggle-thumb"></div>
-          </label>
-          <span class="toggle-label">Perspective correction</span>
-        </div>
+        <div class="toggle-row"><label class="toggle"><input type="checkbox" id="auto-crop" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label><span class="toggle-label">Auto-detect postcard edges</span></div>
+        <div class="toggle-row"><label class="toggle"><input type="checkbox" id="perspective" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label><span class="toggle-label">Perspective correction</span></div>
       </div>
-
-      <div class="setting-group">
-        <div class="sg-title">Output</div>
-        <div class="toggle-row">
-          <label class="toggle">
-            <input type="checkbox" id="prefix-toggle" checked>
-            <div class="toggle-track"></div>
-            <div class="toggle-thumb"></div>
-          </label>
-          <span class="toggle-label">Number files</span>
-        </div>
-        <div class="row">
-          <label>Prefix</label>
-          <input type="text" id="prefix" value="postcard" style="background:var(--card);border:1px solid var(--border);color:var(--cream);font-family:'DM Mono',monospace;font-size:0.71rem;padding:0.22rem 0.4rem;border-radius:3px;outline:none;width:120px">
-        </div>
-      </div>
-
-    </div><!-- /settings -->
-
+    </div>
     <div class="progress-wrap" id="progress-wrap">
       <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
       <div class="progress-txt" id="progress-txt">Processing…</div>
     </div>
-
-    <div class="action-wrap">
-      <button class="btn-proc" id="proc-btn" disabled onclick="processPDF()">Load a PDF first</button>
-    </div>
-  </div><!-- /sidebar -->
-
-  <!-- ── MAIN ── -->
+    <div class="action-wrap"><button class="btn-proc" id="proc-btn" disabled onclick="processPDF()">Load a PDF first</button></div>
+  </div>
   <div class="main">
     <div class="main-head">
       <div class="main-title"><strong id="count-label">No pages</strong> processed</div>
@@ -240,25 +142,20 @@ html,body{height:100%;font-family:'DM Mono',monospace;background:var(--bg);color
         <button class="btn-sm" onclick="clearAll()" style="border-color:#c0392b;color:#c0392b">✕ Clear</button>
       </div>
     </div>
-
     <div class="grid-wrap" id="grid-wrap">
       <div class="empty" id="empty-state">
         <div class="empty-icon">📬</div>
-        <div class="empty-txt">Load a scanned postcard PDF<br>and press Process<br><br>Each page becomes a cropped image<br>ready to download or re-crop</div>
+        <div class="empty-txt">Load a scanned PDF</div>
       </div>
       <div class="grid" id="card-grid" style="display:none"></div>
     </div>
   </div>
 </div>
 
-<!-- ── CROP MODAL ── -->
 <div class="modal-bg" id="modal-bg">
-  <!-- Canvas fills entire screen -->
   <div class="crop-canvas-wrap" id="crop-canvas-wrap">
     <canvas id="crop-canvas"></canvas>
     <canvas id="loupe-canvas"></canvas>
-
-    <!-- Top HUD -->
     <div class="crop-hud-top">
       <div class="crop-hud-title">✂️ Adjust Crop</div>
       <div style="display:flex;gap:0.5rem;align-items:center">
@@ -267,27 +164,10 @@ html,body{height:100%;font-family:'DM Mono',monospace;background:var(--bg);color
         <button class="btn-modal" onclick="closeModal()" style="padding:0.38rem 0.6rem">✕</button>
       </div>
     </div>
-
-    <!-- Bottom HUD -->
     <div class="crop-hud-bottom">
-      <!-- Corner coords -->
       <span class="hud-label">Corners</span>
       <div class="corner-list" id="corner-list"></div>
       <div class="hud-sep"></div>
-      <!-- Fine rotation -->
-      <span class="hud-label">Rotate</span>
-      <div class="hud-rotate-wrap">
-        <input type="range" id="modal-rotate" min="-10" max="10" step="0.5" value="0" oninput="updateRotate(this.value)">
-        <span style="font-size:0.65rem;color:var(--amber);min-width:28px" id="modal-rotate-val">0°</span>
-      </div>
-      <div class="hud-sep"></div>
-      <!-- Quick rotate -->
-      <button class="btn-modal" onclick="quickRotate(-90)">↺ 90°</button>
-      <button class="btn-modal" onclick="quickRotate(90)">↻ 90°</button>
-      <button class="btn-modal" onclick="quickRotate(180)">↕ 180°</button>
-      <div class="hud-sep"></div>
-      <!-- Actions -->
-      <button class="btn-modal" onclick="closeModal()">Cancel</button>
       <button class="btn-modal primary" onclick="applyCrop()">✓ Apply crop</button>
     </div>
   </div>
@@ -298,22 +178,18 @@ html,body{height:100%;font-family:'DM Mono',monospace;background:var(--bg);color
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-// ── State ────────────────────────────────────────────────
-let pages = []; // { id, rawCanvas, croppedDataUrl, corners, rotation }
+let pages = [];
 let modalPageId = null;
 let cropCanvas, cropCtx;
-let corners = []; // [{x,y}] × 4
+let corners = [];
 let dragging = null;
+let draggingEdge = null;
 let modalScale = 1;
-let modalRotation = 0;
-let quickRotationOffset = 0;
 let rawModalCanvas = null;
 
 const CORNER_COLORS = ['#e8a83e','#5cb8e8','#e85c8a','#7ae85c'];
 const CORNER_NAMES  = ['TL','TR','BR','BL'];
-const HANDLE_R = 6;
 
-// ── Drop / file handling ──────────────────────────────────
 const dropZone = document.getElementById('drop-zone');
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
@@ -331,218 +207,148 @@ async function loadFiles(files) {
   btn.textContent = `Process ${files.length} PDF${files.length>1?'s':''}`;
   btn.disabled = false;
   btn._files = files;
-  toast(`${files.length} PDF${files.length>1?'s':''} ready — press Process`);
 }
 
-// ── Process PDF ───────────────────────────────────────────
 async function processPDF() {
   const files = document.getElementById('proc-btn')._files;
   if (!files?.length) return;
-
-  const dpi    = parseFloat(document.getElementById('dpi').value);
+  const dpi = parseFloat(document.getElementById('dpi').value);
   const autoCrop = document.getElementById('auto-crop').checked;
-  const btn    = document.getElementById('proc-btn');
-
+  const btn = document.getElementById('proc-btn');
   btn.disabled = true;
-  btn.textContent = 'Processing…';
   pages = [];
   document.getElementById('card-grid').innerHTML = '';
   document.getElementById('card-grid').style.display = 'none';
   document.getElementById('empty-state').style.display = 'flex';
-
   const pw = document.getElementById('progress-wrap');
   pw.style.display = 'block';
 
   let totalPages = 0, donePages = 0;
-
-  // Count total pages first
   for (const file of files) {
-    const buf  = await file.arrayBuffer();
-    const pdf  = await pdfjsLib.getDocument({ data: buf }).promise;
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
     totalPages += pdf.numPages;
   }
-
-  setProgress(0, `0 / ${totalPages} pages…`);
 
   for (const file of files) {
     const buf = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-
     for (let p = 1; p <= pdf.numPages; p++) {
-      const page   = await pdf.getPage(p);
-      const vp     = page.getViewport({ scale: dpi });
+      const page = await pdf.getPage(p);
+      const vp = page.getViewport({ scale: dpi });
       const canvas = document.createElement('canvas');
-      canvas.width  = vp.width;
-      canvas.height = vp.height;
+      canvas.width = vp.width; canvas.height = vp.height;
       const ctx = canvas.getContext('2d');
       await page.render({ canvasContext: ctx, viewport: vp }).promise;
-
-      const id      = `page-${Date.now()}-${p}`;
-      const corners = autoCrop ? detectCorners(canvas) : defaultCorners(canvas);
-      const croppedDataUrl = applyCropTransform(canvas, corners, 0, 0);
-
-      pages.push({ id, rawCanvas: canvas, rawDataUrl: canvas.toDataURL('image/png'), croppedDataUrl, corners, rotation: 0, quickRot: 0 });
+      const id = `page-${Date.now()}-${p}`;
+      const detected = autoCrop ? detectCorners(canvas) : defaultCorners(canvas);
+      const croppedDataUrl = applyCropTransform(canvas, detected);
+      pages.push({ id, rawCanvas: canvas, croppedDataUrl, corners: detected });
       donePages++;
-      setProgress(donePages/totalPages, `${donePages} / ${totalPages} pages`);
+      setProgress(donePages/totalPages, `${donePages}/${totalPages}`);
       renderCard(pages[pages.length-1]);
     }
   }
-
   document.getElementById('empty-state').style.display = 'none';
   document.getElementById('card-grid').style.display = 'grid';
   updateCountLabel();
   pw.style.display = 'none';
   btn.disabled = false;
-  btn.textContent = 'Re-process';
-  toast(`✓ ${pages.length} page${pages.length>1?'s':''} processed`, 'green');
 }
 
-function setProgress(frac, txt) {
-  document.getElementById('progress-fill').style.width = (frac*100)+'%';
-  document.getElementById('progress-txt').textContent = txt;
-}
-
-// ── Corner detection ──────────────────────────────────────
 function detectCorners(canvas) {
-  const ctx   = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
-  const imgData = ctx.getImageData(0, 0, W, H);
-  const data    = imgData.data;
-  const thresh  = 30;  // fixed: brightness difference to detect postcard edge
-  const margin  = 8;   // fixed: px padding around detected edge
-
-  // Find bounding box of non-white pixels
+  const imgData = ctx.getImageData(0, 0, W, H).data;
+  const isBg = (r, g, b) => (r > 240 && g > 240 && b > 240);
+  const margin = 8;
   let minX = W, maxX = 0, minY = H, maxY = 0;
 
-  for (let y = 0; y < H; y++) {
-    for (let x = 0; x < W; x++) {
-      const i = (y*W+x)*4;
-      const r = data[i], g = data[i+1], b = data[i+2];
-      // "non-white" = any channel significantly below 255
-      if (255-r > thresh || 255-g > thresh || 255-b > thresh) {
-        if (x < minX) minX = x;
-        if (x > maxX) maxX = x;
-        if (y < minY) minY = y;
-        if (y > maxY) maxY = y;
-      }
+  for (let y = 0; y < H; y += 4) {
+    for (let x = 0; x < W; x += 4) {
+      const i = (y * W + x) * 4;
+      if (!isBg(imgData[i], imgData[i+1], imgData[i+2])) { if (y < minY) minY = y; break; }
     }
+    if (minY !== H && y > minY + 100) break; 
+  }
+  for (let y = H - 1; y >= 0; y -= 4) {
+    for (let x = 0; x < W; x += 4) {
+      const i = (y * W + x) * 4;
+      if (!isBg(imgData[i], imgData[i+1], imgData[i+2])) { if (y > maxY) maxY = y; break; }
+    }
+    if (maxY !== 0 && y < maxY - 100) break;
+  }
+  for (let x = 0; x < W; x += 4) {
+    for (let y = 0; y < H; y += 4) {
+      const i = (y * W + x) * 4;
+      if (!isBg(imgData[i], imgData[i+1], imgData[i+2])) { if (x < minX) minX = x; break; }
+    }
+    if (minX !== W && x > minX + 100) break;
+  }
+  for (let x = W - 1; x >= 0; x -= 4) {
+    for (let y = 0; y < H; y += 4) {
+      const i = (y * W + x) * 4;
+      if (!isBg(imgData[i], imgData[i+1], imgData[i+2])) { if (x > maxX) maxX = x; break; }
+    }
+    if (maxX !== 0 && x < maxX - 100) break;
   }
 
-  // Fallback to full image if nothing found
-  if (minX > maxX || minY > maxY) return defaultCorners(canvas);
-
-  // Add margin
-  minX = Math.max(0, minX - margin);
-  minY = Math.max(0, minY - margin);
-  maxX = Math.min(W, maxX + margin);
-  maxY = Math.min(H, maxY + margin);
-
+  if (minX >= maxX || minY >= maxY) return defaultCorners(canvas);
   return [
-    {x:minX, y:minY}, // TL
-    {x:maxX, y:minY}, // TR
-    {x:maxX, y:maxY}, // BR
-    {x:minX, y:maxY}, // BL
+    {x: Math.max(0, minX - margin), y: Math.max(0, minY - margin)},
+    {x: Math.min(W, maxX + margin), y: Math.max(0, minY - margin)},
+    {x: Math.min(W, maxX + margin), y: Math.min(H, maxY + margin)},
+    {x: Math.max(0, minX - margin), y: Math.min(H, maxY + margin)}
   ];
 }
 
 function defaultCorners(canvas) {
-  const W = canvas.width, H = canvas.height;
-  const p = 10; // small default padding
-  return [
-    {x:p, y:p}, {x:W-p, y:p},
-    {x:W-p, y:H-p}, {x:p, y:H-p}
-  ];
+  const W = canvas.width, H = canvas.height, p = 20;
+  return [{x:p,y:p},{x:W-p,y:p},{x:W-p,y:H-p},{x:p,y:H-p}];
 }
 
-// ── Crop / perspective transform ──────────────────────────
-function applyCropTransform(srcCanvas, corners, rotationDeg, quickRotOffset) {
-  const fmt     = document.getElementById('fmt').value;
-  const quality = parseInt(document.getElementById('quality').value)/100;
-
-  const tl = corners[0], tr = corners[1], br = corners[2], bl = corners[3];
-
-  // Output dimensions from bounding box
-  const outW = Math.round(Math.max(dist(tl,tr), dist(bl,br)));
-  const outH = Math.round(Math.max(dist(tl,bl), dist(tr,br)));
-
+function applyCropTransform(srcCanvas, c) {
+  const outW = Math.round(Math.max(dist(c[0],c[1]), dist(c[3],c[2])));
+  const outH = Math.round(Math.max(dist(c[0],c[3]), dist(c[1],c[2])));
   const out = document.createElement('canvas');
-  out.width  = outW;
-  out.height = outH;
-  const ctx  = out.getContext('2d');
+  out.width = outW; out.height = outH;
+  const ctx = out.getContext('2d');
+  const imgData = srcCanvas.getContext('2d').getImageData(0,0,srcCanvas.width,srcCanvas.height);
+  const outData = ctx.createImageData(outW, outH);
 
-  if (document.getElementById('perspective').checked) {
-    // Bilinear perspective warp
-    const imgData = srcCanvas.getContext('2d').getImageData(0, 0, srcCanvas.width, srcCanvas.height);
-    const outData = ctx.createImageData(outW, outH);
-
-    for (let y = 0; y < outH; y++) {
-      const ty = y / outH;
-      for (let x = 0; x < outW; x++) {
-        const tx = x / outW;
-        // Bilinear interpolation in source space
-        const sx = (1-tx)*(1-ty)*tl.x + tx*(1-ty)*tr.x + tx*ty*br.x + (1-tx)*ty*bl.x;
-        const sy = (1-tx)*(1-ty)*tl.y + tx*(1-ty)*tr.y + tx*ty*br.y + (1-tx)*ty*bl.y;
-        const si = (Math.round(sy)*srcCanvas.width + Math.round(sx))*4;
-        const di = (y*outW+x)*4;
-        outData.data[di]   = imgData.data[si];
-        outData.data[di+1] = imgData.data[si+1];
-        outData.data[di+2] = imgData.data[si+2];
-        outData.data[di+3] = imgData.data[si+3] ?? 255;
-      }
+  for (let y = 0; y < outH; y++) {
+    const ty = y / outH;
+    for (let x = 0; x < outW; x++) {
+      const tx = x / outW;
+      const sx = (1-tx)*(1-ty)*c[0].x + tx*(1-ty)*c[1].x + tx*ty*c[2].x + (1-tx)*ty*c[3].x;
+      const sy = (1-tx)*(1-ty)*c[0].y + tx*(1-ty)*c[1].y + tx*ty*c[2].y + (1-tx)*ty*c[3].y;
+      const si = (Math.round(sy)*srcCanvas.width + Math.round(sx))*4;
+      const di = (y*outW+x)*4;
+      outData.data[di]=imgData.data[si]; outData.data[di+1]=imgData.data[si+1];
+      outData.data[di+2]=imgData.data[si+2]; outData.data[di+3]=255;
     }
-    ctx.putImageData(outData, 0, 0);
-  } else {
-    // Simple bounding box crop
-    const x = tl.x, y = tl.y, w = tr.x-tl.x, h = bl.y-tl.y;
-    ctx.drawImage(srcCanvas, x, y, w, h, 0, 0, outW, outH);
   }
-
-  // Apply rotation
-  const totalRot = rotationDeg + quickRotOffset;
-  if (totalRot !== 0) {
-    const tmp = document.createElement('canvas');
-    const rad = totalRot * Math.PI/180;
-    const cos = Math.abs(Math.cos(rad)), sin = Math.abs(Math.sin(rad));
-    tmp.width  = Math.round(outW*cos + outH*sin);
-    tmp.height = Math.round(outH*cos + outW*sin);
-    const tc = tmp.getContext('2d');
-    tc.translate(tmp.width/2, tmp.height/2);
-    tc.rotate(rad);
-    tc.drawImage(out, -outW/2, -outH/2);
-    return tmp.toDataURL(fmt, quality);
-  }
-
-  return out.toDataURL(fmt, quality);
+  ctx.putImageData(outData,0,0);
+  return out.toDataURL(document.getElementById('fmt').value, parseInt(document.getElementById('quality').value)/100);
 }
 
 function dist(a,b){ return Math.hypot(b.x-a.x, b.y-a.y); }
 
-// ── Render card ───────────────────────────────────────────
 function renderCard(pg) {
   const grid = document.getElementById('card-grid');
-  const ext  = fmtExt();
-  const div  = document.createElement('div');
-  div.className = 'card';
-  div.id = 'card-'+pg.id;
+  const div = document.createElement('div');
+  div.className = 'card'; div.id = 'card-'+pg.id;
   div.innerHTML = `
     <div class="card-img-wrap" onclick="openModal('${pg.id}')">
-      <img src="${pg.croppedDataUrl}" loading="lazy">
-      <span class="card-badge badge-cropped">✂ CROPPED</span>
+      <img src="${pg.croppedDataUrl}">
     </div>
     <div class="card-foot">
-      <span class="card-label">${pg.id.split('-').slice(-1)}.${ext}</span>
+      <span class="card-label">Postcard</span>
       <div class="card-actions">
-        <button class="icon-btn" title="Re-crop" onclick="event.stopPropagation();openModal('${pg.id}')">✂️</button>
-        <button class="icon-btn" title="Download" onclick="event.stopPropagation();downloadOne('${pg.id}')">⬇️</button>
-        <button class="icon-btn" title="Remove" onclick="event.stopPropagation();removePage('${pg.id}')" style="color:#c0392b">✕</button>
+        <button class="icon-btn" onclick="event.stopPropagation();removePage('${pg.id}')">✕</button>
       </div>
     </div>`;
   grid.appendChild(div);
-}
-
-function updateCard(pg) {
-  const img = document.querySelector(`#card-${pg.id} img`);
-  if (img) img.src = pg.croppedDataUrl;
 }
 
 function removePage(id) {
@@ -552,350 +358,124 @@ function removePage(id) {
 }
 
 function updateCountLabel() {
-  document.getElementById('count-label').textContent =
-    pages.length ? pages.length+' page'+(pages.length>1?'s':'') : 'No pages';
+  document.getElementById('count-label').textContent = pages.length ? pages.length+' pages' : 'No pages';
 }
-
-function fmtExt() {
-  const m = {'image/jpeg':'jpg','image/png':'png','image/webp':'webp'};
-  return m[document.getElementById('fmt').value] || 'jpg';
-}
-
-// ── Download ──────────────────────────────────────────────
-function downloadOne(id) {
-  const pg = pages.find(p=>p.id===id);
-  if (!pg) return;
-  const prefix = document.getElementById('prefix').value||'postcard';
-  const num    = document.getElementById('prefix-toggle').checked ? '-'+pages.indexOf(pg)+1 : '';
-  const a = document.createElement('a');
-  a.href = pg.croppedDataUrl;
-  a.download = `${prefix}${num}.${fmtExt()}`;
-  a.click();
-}
-
-function downloadAll() {
-  if (!pages.length) { toast('Nothing to download'); return; }
-  pages.forEach((pg,i) => {
-    setTimeout(() => {
-      const prefix = document.getElementById('prefix').value||'postcard';
-      const num    = document.getElementById('prefix-toggle').checked ? '-'+(i+1) : '';
-      const a = document.createElement('a');
-      a.href = pg.croppedDataUrl;
-      a.download = `${prefix}${num}.${fmtExt()}`;
-      a.click();
-    }, i*120);
-  });
-}
-
-function selectAll() {
-  document.querySelectorAll('.card').forEach(c=>c.classList.toggle('selected'));
-}
-
-function clearAll() {
-  if (!confirm('Clear all processed pages?')) return;
-  pages = [];
-  document.getElementById('card-grid').innerHTML = '';
-  document.getElementById('card-grid').style.display = 'none';
-  document.getElementById('empty-state').style.display = 'flex';
-  updateCountLabel();
-}
-
-// ── Crop modal ────────────────────────────────────────────
-// KEY PRINCIPLE:
-//   cropCanvas pixel size = rawCanvas size (full res, never downscaled)
-//   cropCanvas CSS size   = scaled to fit modal  
-//   modalScale            = CSS px / canvas px  (mouse → source coord mapping)
-//   loupe samples rawCanvas directly for zero quality loss
 
 cropCanvas = document.getElementById('crop-canvas');
-cropCtx    = cropCanvas.getContext('2d');
+cropCtx = cropCanvas.getContext('2d');
 
 function openModal(id) {
   const pg = pages.find(p=>p.id===id);
   if (!pg) return;
-  modalPageId         = id;
-  rawModalCanvas      = pg.rawCanvas;
-  quickRotationOffset = pg.quickRot || 0;
-  modalRotation       = pg.rotation || 0;
-  corners             = pg.corners.map(c=>({...c}));
-  document.getElementById('modal-rotate').value = modalRotation;
-  document.getElementById('modal-rotate-val').textContent = modalRotation + '°';
+  modalPageId = id; rawModalCanvas = pg.rawCanvas;
+  corners = pg.corners.map(c=>({...c}));
   document.getElementById('modal-bg').classList.add('open');
-  requestAnimationFrame(() => { drawCropModal(); updateCornerList(); });
+  drawCropModal();
 }
 
-function closeModal() {
-  document.getElementById('modal-bg').classList.remove('open');
-  modalPageId = null;
-  hideLoupe();
-}
-
-document.getElementById('modal-bg').addEventListener('click', e => {
-  if (e.target === document.getElementById('modal-bg')) closeModal();
-});
-
-function calcModalScale() {
-  // Use the full viewport minus HUD bars (~110px combined top+bottom)
-  const maxW = window.innerWidth  - 16;
-  const maxH = window.innerHeight - 120;
-  return Math.min(maxW / rawModalCanvas.width, maxH / rawModalCanvas.height, 1);
-}
+function closeModal() { document.getElementById('modal-bg').classList.remove('open'); hideLoupe(); }
 
 function drawCropModal() {
-  if (!rawModalCanvas) return;
-  const s = calcModalScale();
+  const s = Math.min((window.innerWidth-40)/rawModalCanvas.width, (window.innerHeight-150)/rawModalCanvas.height, 1);
   modalScale = s;
-
-  // Canvas PIXEL size = full resolution source (never downscale)
-  cropCanvas.width  = rawModalCanvas.width;
-  cropCanvas.height = rawModalCanvas.height;
-
-  // CSS display size = scaled to fit modal
-  cropCanvas.style.width  = Math.round(rawModalCanvas.width  * s) + 'px';
-  cropCanvas.style.height = Math.round(rawModalCanvas.height * s) + 'px';
-
-  // Draw full-res source directly
-  cropCtx.drawImage(rawModalCanvas, 0, 0);
+  cropCanvas.width = rawModalCanvas.width; cropCanvas.height = rawModalCanvas.height;
+  cropCanvas.style.width = (rawModalCanvas.width*s)+'px'; cropCanvas.style.height = (rawModalCanvas.height*s)+'px';
+  cropCtx.drawImage(rawModalCanvas,0,0);
   _drawCropOverlay();
+  updateCornerList();
 }
 
 function _drawCropOverlay() {
-  const c   = corners;
-  const W   = cropCanvas.width, H = cropCanvas.height;
-  const inv = 1 / modalScale; // 1 display px in canvas px
-
-  // Dim outside crop quad
-  cropCtx.save();
+  const c = corners, inv = 1/modalScale;
+  cropCtx.fillStyle = 'rgba(0,0,0,0.5)';
   cropCtx.beginPath();
-  cropCtx.rect(0, 0, W, H);
-  cropCtx.moveTo(c[0].x, c[0].y);
-  cropCtx.lineTo(c[1].x, c[1].y);
-  cropCtx.lineTo(c[2].x, c[2].y);
-  cropCtx.lineTo(c[3].x, c[3].y);
+  cropCtx.rect(0,0,cropCanvas.width,cropCanvas.height);
+  cropCtx.moveTo(c[0].x,c[0].y); cropCtx.lineTo(c[1].x,c[1].y);
+  cropCtx.lineTo(c[2].x,c[2].y); cropCtx.lineTo(c[3].x,c[3].y);
   cropCtx.closePath();
-  cropCtx.fillStyle = 'rgba(0,0,0,0.45)';
   cropCtx.fill('evenodd');
-  cropCtx.restore();
 
-  // Dashed outline
-  cropCtx.strokeStyle = 'rgba(232,168,62,0.95)';
-  cropCtx.lineWidth   = 2 * inv;
-  cropCtx.setLineDash([8 * inv, 5 * inv]);
+  cropCtx.strokeStyle = '#e8a83e'; cropCtx.lineWidth = 2*inv;
+  cropCtx.setLineDash([5*inv, 5*inv]);
   cropCtx.beginPath();
-  c.forEach((p, i) => i === 0 ? cropCtx.moveTo(p.x, p.y) : cropCtx.lineTo(p.x, p.y));
-  cropCtx.closePath();
-  cropCtx.stroke();
+  c.forEach((p,i)=>i===0?cropCtx.moveTo(p.x,p.y):cropCtx.lineTo(p.x,p.y));
+  cropCtx.closePath(); cropCtx.stroke();
   cropCtx.setLineDash([]);
 
-  // Corner handles — tiny L-shaped brackets, barely visible, just enough to grab
-  const arm = 12 * inv;   // length of each arm of the L
-  const lw2 = 2 * inv;    // line width
-  const dirs = [
-    [1, 1],   // TL: arms go right and down
-    [-1, 1],  // TR: arms go left and down
-    [-1, -1], // BR: arms go left and up
-    [1, -1],  // BL: arms go right and up
-  ];
-  c.forEach((p, i) => {
-    const [dx, dy] = dirs[i];
-    cropCtx.strokeStyle = CORNER_COLORS[i];
-    cropCtx.lineWidth = lw2;
-    cropCtx.lineCap = 'round';
-    cropCtx.beginPath();
-    cropCtx.moveTo(p.x + dx * arm, p.y);  // horizontal arm
-    cropCtx.lineTo(p.x, p.y);
-    cropCtx.lineTo(p.x, p.y + dy * arm);  // vertical arm
-    cropCtx.stroke();
+  c.forEach((p,i)=>{
+    cropCtx.fillStyle = CORNER_COLORS[i];
+    cropCtx.beginPath(); cropCtx.arc(p.x,p.y,8*inv,0,Math.PI*2); cropCtx.fill();
   });
-  cropCtx.lineCap = 'butt';
 }
 
 function evToCanvas(e) {
   const r = cropCanvas.getBoundingClientRect();
-  return {
-    cx: e.clientX - r.left,
-    cy: e.clientY - r.top,
-    px: (e.clientX - r.left) / modalScale,
-    py: (e.clientY - r.top)  / modalScale
-  };
-}
-
-function touchToCanvas(t) {
-  const r = cropCanvas.getBoundingClientRect();
-  return {
-    cx: t.clientX - r.left,
-    cy: t.clientY - r.top,
-    px: (t.clientX - r.left) / modalScale,
-    py: (t.clientY - r.top)  / modalScale
-  };
+  return { cx: e.clientX-r.left, cy: e.clientY-r.top, px: (e.clientX-r.left)/modalScale, py: (e.clientY-r.top)/modalScale };
 }
 
 cropCanvas.addEventListener('mousedown', e => {
-  const { px, py } = evToCanvas(e);
-  const hitR = 22 / modalScale;
-  dragging = corners.findIndex(p => Math.hypot(p.x - px, p.y - py) < hitR);
+  const { px, py } = evToCanvas(e), hitR = 30/modalScale;
+  dragging = corners.findIndex(p => Math.hypot(p.x-px, p.y-py) < hitR);
+  if (dragging !== -1) return;
+
+  const threshold = 20/modalScale;
+  if (Math.abs(py - corners[0].y) < threshold && px > corners[0].x && px < corners[1].x) draggingEdge = 'top';
+  else if (Math.abs(py - corners[2].y) < threshold && px > corners[3].x && px < corners[2].x) draggingEdge = 'bottom';
+  else if (Math.abs(px - corners[0].x) < threshold && py > corners[0].y && py < corners[3].y) draggingEdge = 'left';
+  else if (Math.abs(px - corners[1].x) < threshold && py > corners[1].y && py < corners[2].y) draggingEdge = 'right';
 });
 
 cropCanvas.addEventListener('mousemove', e => {
-  if (dragging === null || dragging < 0) return;
+  if (dragging === null && draggingEdge === null) return;
   const { cx, cy, px, py } = evToCanvas(e);
-  corners[dragging] = {
-    x: Math.max(0, Math.min(rawModalCanvas.width,  px)),
-    y: Math.max(0, Math.min(rawModalCanvas.height, py))
-  };
-  cropCtx.clearRect(0, 0, cropCanvas.width, cropCanvas.height);
-  cropCtx.drawImage(rawModalCanvas, 0, 0);
-  _drawCropOverlay();
-  updateCornerList();
-  drawLoupe(cx, cy, px, py);
+  if (dragging !== null && dragging >= 0) {
+    corners[dragging] = {x:px, y:py};
+  } else if (draggingEdge) {
+    if (draggingEdge === 'top') { corners[0].y = py; corners[1].y = py; }
+    else if (draggingEdge === 'bottom') { corners[2].y = py; corners[3].y = py; }
+    else if (draggingEdge === 'left') { corners[0].x = px; corners[3].x = px; }
+    else if (draggingEdge === 'right') { corners[1].x = px; corners[2].x = px; }
+  }
+  cropCtx.drawImage(rawModalCanvas,0,0);
+  _drawCropOverlay(); updateCornerList(); drawLoupe(cx, cy, px, py);
 });
 
-cropCanvas.addEventListener('mouseup',    () => { dragging = null; hideLoupe(); });
-cropCanvas.addEventListener('mouseleave', () => { dragging = null; hideLoupe(); });
-
-cropCanvas.addEventListener('touchstart', e => {
-  e.preventDefault();
-  const { px, py } = touchToCanvas(e.touches[0]);
-  const hitR = 20 / modalScale;
-  dragging = corners.findIndex(p => Math.hypot(p.x - px, p.y - py) < hitR);
-}, { passive: false });
-
-cropCanvas.addEventListener('touchmove', e => {
-  e.preventDefault();
-  if (dragging === null || dragging < 0) return;
-  const { cx, cy, px, py } = touchToCanvas(e.touches[0]);
-  corners[dragging] = {
-    x: Math.max(0, Math.min(rawModalCanvas.width,  px)),
-    y: Math.max(0, Math.min(rawModalCanvas.height, py))
-  };
-  cropCtx.clearRect(0, 0, cropCanvas.width, cropCanvas.height);
-  cropCtx.drawImage(rawModalCanvas, 0, 0);
-  _drawCropOverlay();
-  updateCornerList();
-  drawLoupe(cx, cy, px, py);
-}, { passive: false });
-
-cropCanvas.addEventListener('touchend', () => { dragging = null; hideLoupe(); });
+window.addEventListener('mouseup', () => { dragging = null; draggingEdge = null; hideLoupe(); });
 
 function updateCornerList() {
-  document.getElementById('corner-list').innerHTML = corners.map((c, i) => `
-    <div class="corner-item">
-      <div class="corner-dot" style="background:${CORNER_COLORS[i]}"></div>
-      <span class="corner-coords">${CORNER_NAMES[i]}: ${Math.round(c.x)}, ${Math.round(c.y)}</span>
-    </div>`).join('');
-}
-
-function autoDetectCorners() {
-  if (!rawModalCanvas) return;
-  corners = detectCorners(rawModalCanvas); drawCropModal(); updateCornerList();
-}
-
-function resetCorners() {
-  if (!rawModalCanvas) return;
-  corners = defaultCorners(rawModalCanvas); drawCropModal(); updateCornerList();
-}
-
-function updateRotate(val) {
-  modalRotation = parseFloat(val);
-  document.getElementById('modal-rotate-val').textContent = val + '°';
-}
-
-function quickRotate(deg) {
-  quickRotationOffset = (quickRotationOffset + deg) % 360;
+  document.getElementById('corner-list').innerHTML = corners.map((c,i)=>`<div class="corner-item"><div class="corner-dot" style="background:${CORNER_COLORS[i]}"></div><span class="corner-coords">${Math.round(c.x)},${Math.round(c.y)}</span></div>`).join('');
 }
 
 function applyCrop() {
-  const pg = pages.find(p => p.id === modalPageId);
-  if (!pg) return;
-  pg.corners  = corners.map(c => ({...c}));
-  pg.rotation = modalRotation;
-  pg.quickRot = quickRotationOffset;
-  pg.croppedDataUrl = applyCropTransform(pg.rawCanvas, pg.corners, pg.rotation, pg.quickRot);
-  updateCard(pg);
+  const pg = pages.find(p=>p.id===modalPageId);
+  pg.corners = corners.map(c=>({...c}));
+  pg.croppedDataUrl = applyCropTransform(pg.rawCanvas, pg.corners);
+  document.querySelector(`#card-${pg.id} img`).src = pg.croppedDataUrl;
   closeModal();
-  toast('✓ Crop applied', 'green');
 }
 
-// ── Loupe ─────────────────────────────────────────────────
-// cx/cy = CSS px on display canvas (for positioning the loupe)
-// px/py = rawCanvas pixel coords (for sampling — full resolution)
 const loupeCanvas = document.getElementById('loupe-canvas');
-const loupeCtx    = loupeCanvas.getContext('2d');
-const LOUPE_D     = 180;   // loupe CSS diameter
-const LOUPE_ZOOM  = 4;     // zoom factor
-
+const loupeCtx = loupeCanvas.getContext('2d');
 function drawLoupe(cx, cy, px, py) {
-  const pg = pages.find(p => p.id === modalPageId);
-  if (!pg?.rawCanvas) return;
-
-  const dpr = window.devicePixelRatio || 1;
-  const R   = LOUPE_D / 2;
-
-  // Backing pixels = physical screen pixels for max sharpness
-  loupeCanvas.width  = Math.round(LOUPE_D * dpr);
-  loupeCanvas.height = Math.round(LOUPE_D * dpr);
-  loupeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-  // Source region: how many rawCanvas px show across the loupe
-  const span = LOUPE_D / LOUPE_ZOOM;
-  const sx   = px - span / 2;
-  const sy   = py - span / 2;
-
-  loupeCtx.clearRect(0, 0, LOUPE_D, LOUPE_D);
+  loupeCanvas.width = 180; loupeCanvas.height = 180;
+  loupeCtx.clearRect(0,0,180,180);
   loupeCtx.save();
-  loupeCtx.beginPath();
-  loupeCtx.arc(R, R, R - 1, 0, Math.PI * 2);
-  loupeCtx.clip();
-
-  // Draw from rawCanvas — this is the full-resolution scan, no quality loss
-  loupeCtx.drawImage(pg.rawCanvas, sx, sy, span, span, 0, 0, LOUPE_D, LOUPE_D);
-
-  // Crosshair
-  loupeCtx.strokeStyle = 'rgba(232,168,62,0.9)';
-  loupeCtx.lineWidth = 0.8;
-  loupeCtx.setLineDash([4, 4]);
-  loupeCtx.beginPath();
-  loupeCtx.moveTo(R, 6);        loupeCtx.lineTo(R, LOUPE_D - 6);
-  loupeCtx.moveTo(6, R);        loupeCtx.lineTo(LOUPE_D - 6, R);
-  loupeCtx.stroke();
-  loupeCtx.setLineDash([]);
+  loupeCtx.beginPath(); loupeCtx.arc(90,90,90,0,Math.PI*2); loupeCtx.clip();
+  loupeCtx.drawImage(rawModalCanvas, px-22.5, py-22.5, 45, 45, 0, 0, 180, 180);
+  loupeCtx.strokeStyle = '#e8a83e'; loupeCtx.lineWidth = 2;
+  loupeCtx.beginPath(); loupeCtx.moveTo(90,0); loupeCtx.lineTo(90,180); loupeCtx.moveTo(0,90); loupeCtx.lineTo(180,90); loupeCtx.stroke();
   loupeCtx.restore();
-
-  // Coloured ring matching active corner
-  loupeCtx.beginPath();
-  loupeCtx.arc(R, R, R - 1, 0, Math.PI * 2);
-  loupeCtx.strokeStyle = dragging >= 0 ? CORNER_COLORS[dragging] : 'rgba(232,168,62,0.8)';
-  loupeCtx.lineWidth = 2.5;
-  loupeCtx.stroke();
-
-  // Position loupe relative to the canvas inside the fullscreen wrap
-  // cx/cy are already CSS px relative to the canvas element
-  const cr  = cropCanvas.getBoundingClientRect();
-  const wr  = document.getElementById('crop-canvas-wrap').getBoundingClientRect();
-  const relX = cr.left - wr.left + cx;
-  const relY = cr.top  - wr.top  + cy;
-  const off  = 24;
-  let lx = relX + off;
-  let ly = relY - LOUPE_D - off;
-  if (lx + LOUPE_D > wr.width  - 8) lx = relX - LOUPE_D - off;
-  if (ly < 70) ly = relY + off;   // 70 = clear the top HUD
-  if (ly + LOUPE_D > wr.height - 90) ly = relY - LOUPE_D - off; // clear bottom HUD
-  loupeCanvas.style.left    = lx + 'px';
-  loupeCanvas.style.top     = ly + 'px';
   loupeCanvas.style.display = 'block';
+  loupeCanvas.style.left = (cx + 20) + 'px'; loupeCanvas.style.top = (cy - 200) + 'px';
 }
-
-function hideLoupe() {
-  loupeCanvas.style.display = 'none';
-}
-
-
-function toast(msg, type='') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show ' + type;
-  clearTimeout(t._timer);
-  t._timer = setTimeout(()=>{ t.className='toast'; }, 2800);
+function hideLoupe(){ loupeCanvas.style.display = 'none'; }
+function setProgress(f, t){ document.getElementById('progress-fill').style.width = (f*100)+'%'; document.getElementById('progress-txt').textContent = t; }
+function selectAll(){ document.querySelectorAll('.card').forEach(c=>c.classList.toggle('selected')); }
+function clearAll(){ pages=[]; document.getElementById('card-grid').innerHTML=''; updateCountLabel(); }
+function downloadAll() {
+  pages.forEach((p,i) => {
+    const a = document.createElement('a'); a.href = p.croppedDataUrl; a.download = `postcard-${i+1}.jpg`; a.click();
+  });
 }
 </script>
 </body>
