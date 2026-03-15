@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="sa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn संस्कृतम् with राहुल् | Lesson 2 </title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@0,300;0,400;0,500&family=Tiro+Sanskrit:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--border:#e8dfd0}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);line-height:1.6;padding:2rem}
+.container{max-width:800px;margin:0 auto;background:#fff;padding:3rem;border:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,0.05)}
+
+h1,h2,h3{font-family:'Playfair Display',serif;margin-bottom:1.5rem}
+h1{font-size:2.5rem;border-bottom:2px solid var(--warm);padding-bottom:1rem}
+h2{font-size:1.8rem;color:var(--warm);margin-top:2.5rem;border-bottom:1px solid var(--border)}
+
+.lesson-part{margin-bottom:3rem}
+.sanskrit-text{font-family:'Tiro Sanskrit',serif;font-size:1.2rem;color:#000;display:block;margin-bottom:0.5rem}
+.translation{color:var(--muted);font-style:italic;font-size:0.95rem;margin-bottom:1.2rem;display:block}
+
+table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+th,td{border:1px solid var(--border);padding:0.8rem;text-align:left}
+th{background:#fcfaf7;font-family:'Playfair Display',serif;font-weight:700}
+tr:nth-child(even){background:#faf9f7}
+
+.highlight{color:var(--warm);font-weight:700}
+.task-box{background:#fdfcf0;border-left:4px solid var(--warm);padding:1.5rem;margin:2rem 0}
+
+@media(max-width:600px){.container{padding:1.5rem}}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Lesson 01: </h1>
+     <h2>Part 1: Grammar</h2>
+        <span class="sanskrit-text">स्वराः त्रिविधाः भवन्ति | ह्रस्वः दीर्घः प्लुतश्च |</span>
+        <span class="translation">Vowels are of 3 types: short, long and protracted.</span>
+        <p>For common use: ह्रस्व (short) and दीर्घ (long). Ignore the third.</p>
+    <section class="lesson-part">
+       
+        
+</div>
+
+</body>
+</html>
