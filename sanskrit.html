@@ -3,84 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sanskrit Lessons — Rahul Subbaraman</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@0,300;0,400;0,500&display=swap" rel="stylesheet">
+<title>Learn संस्कृतम् with राहुल्</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@0,300;0,400;0,500&family=Tiro+Sanskrit&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0}
-body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;padding:0;overflow-x:hidden}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--border:#e8dfd0}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);line-height:1.6;padding:2rem}
 
-/* ── NAV ── */
+/* grain */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35}
+
 nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 4rem;display:flex;align-items:center;justify-content:space-between;height:56px}
 .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;text-decoration:none;color:var(--ink)}
 .nav-logo span{color:var(--warm);font-style:italic}
-.nav-links{display:flex;gap:1.8rem;align-items:center}
-.nav-links a{font-size:0.78rem;color:var(--muted);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
-.nav-links a:hover{color:var(--warm)}
 
-/* ── CONTENT ── */
-.container{max-width:1200px;margin:0 auto;padding:5rem 4rem}
-.header{margin-bottom:4rem}
-.eyebrow{font-size:0.68rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.6rem}
-.eyebrow::before{content:'';display:inline-block;width:24px;height:1px;background:var(--warm)}
-.title{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:700;line-height:1.1;margin-bottom:1.5rem}
-.title em{font-style:italic;color:var(--warm)}
-.desc{font-size:1.1rem;color:var(--muted);line-height:1.7;max-width:600px;font-weight:300}
+.container{max-width:900px;margin:4rem auto;padding:0 2rem;position:relative;z-index:1}
+.header{margin-bottom:4rem;text-align:center}
+.eyebrow{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--warm);margin-bottom:1rem;display:block}
+h1{font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;margin-bottom:1rem}
+h1 span{font-family:'Tiro Sanskrit',serif;font-weight:400;color:var(--ink)}
+.sub{color:var(--muted);font-style:italic;max-width:500px;margin:0 auto}
 
-/* ── LESSON GRID ── */
-.lesson-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:2rem}
-.lesson-card{background:var(--card);border:1px solid var(--border);padding:2.5rem;text-decoration:none;color:var(--ink);transition:all 0.2s;display:flex;flex-direction:column}
-.lesson-card:hover{transform:translateY(-4px);border-color:var(--warm);box-shadow:0 10px 30px rgba(0,0,0,0.05)}
-.l-num{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--warm);margin-bottom:0.5rem;font-weight:600}
-.l-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:1rem;line-height:1.2}
-.l-summary{font-size:0.85rem;color:var(--muted);line-height:1.6;margin-bottom:2rem;flex:1}
-.l-link{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--ink);display:flex;align-items:center;gap:0.5rem}
-.l-link::after{content:'→';transition:transform 0.2s}
-.lesson-card:hover .l-link::after{transform:translateX(4px)}
+.lesson-list{display:flex;flex-direction:column;gap:1.5rem}
+.lesson-card{background:#fff;border:1px solid var(--border);padding:2rem;text-decoration:none;color:var(--ink);display:grid;grid-template-columns:80px 1fr auto;align-items:center;transition:transform 0.2s, box-shadow 0.2s}
+.lesson-card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.05);border-color:var(--warm)}
+.l-num{font-family:'Playfair Display',serif;font-size:1.5rem;font-style:italic;color:var(--warm)}
+.l-info h2{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:0.3rem}
+.l-info p{font-size:0.85rem;color:var(--muted);font-weight:300}
+.l-arrow{color:var(--warm);font-size:1.2rem}
 
-/* ── RESPONSIVE ── */
-@media(max-width:800px){
-  nav{padding:0 1.5rem}
-  .container{padding:3rem 1.5rem}
-}
+footer{margin-top:6rem;padding:2.5rem 0;border-top:1px solid var(--border);text-align:center;font-size:0.8rem;color:var(--muted)}
 </style>
 </head>
 <body>
 
 <nav>
   <a class="nav-logo" href="index.html">Rahul <span>Subbaraman</span></a>
-  <div class="nav-links">
-    <a href="watchlist.html">Watchlist</a>
-    <a href="travel.html">Travels</a>
-    <a href="books.html">Bookshelf</a>
-    <a href="sanskrit.html" style="color:var(--ink);font-weight:500">Sanskrit</a>
-    <a href="blog.html">Writing</a>
-    <a href="admin.html">Admin</a>
-  </div>
 </nav>
 
 <div class="container">
-  <header class="header">
-    <div class="eyebrow">Language & Philosophy</div>
-    <h1 class="title">Sanskrit <em>Lessons</em></h1>
-    <p class="desc">A digital notebook for my informal Sanskrit teaching and personal study. Tracking grammar, sandhi rules, and anatomy through ancient mantras.</p>
-  </header>
+    <header class="header">
+        <span class="eyebrow">Informal Pastime</span>
+        <h1>Learn <span>संस्कृतम्</span> with <span>राहुल्</span></h1>
+        <p class="sub">A collection of informal lessons on grammar, sandhi rules, and shlokas for teaching and practice.</p>
+    </header>
 
-  <div class="lesson-grid">
-    <div class="lesson-card" style="opacity: 0.5; pointer-events: none;">
-      <div class="l-num">Lesson 1</div>
-      <div class="l-title">Alphabet & Pronunciation</div>
-      <div class="l-summary">Introduction to Varnas, place of articulation (sthana), and the basic structure of Devanagari.</div>
-      <div class="l-link">Coming Soon</div>
+    <div class="lesson-list">
+        <a href="#" class="lesson-card" style="opacity:0.6; pointer-events:none;">
+            <div class="l-num">01</div>
+            <div class="l-info">
+                <h2>Introduction to Vowels and Consonants</h2>
+                <p>Basics of Devanagari script and the Sanskrit phonetic system.</p>
+            </div>
+            <div class="l-arrow">↗</div>
+        </a>
+
+        <a href="Sanskrit/Lesson2.html" class="lesson-card">
+            <div class="l-num">02</div>
+            <div class="l-info">
+                <h2>Sandhi Rules and Laghunyāsam</h2>
+                <p>Detailed study of Dīrgha, Pūrvarūpa, Yaṇ, and Visarga Sandhis with anatomical applications.</p>
+            </div>
+            <div class="l-arrow">↗</div>
+        </a>
     </div>
 
-    <a class="lesson-card" href="Sanskrit/Lesson2.html">
-      <div class="l-num">Lesson 2</div>
-      <div class="l-title">Sandhi & Laghunyāsam</div>
-      <div class="l-summary">Deep dive into euphonic combinations (Sandhi) and applying them to the parts of the human body.</div>
-      <div class="l-link">Read Lesson</div>
-    </a>
-  </div>
+    <footer>
+        &copy; 2026 Rahul Subbaraman · University of Manchester
+    </footer>
 </div>
 
 </body>
