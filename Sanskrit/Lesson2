@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="sa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sanskrit Lesson 2 — Rahul Subbaraman</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@0,300;0,400;0,500&family=Tiro+Sanskrit:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--border:#e8dfd0}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);line-height:1.6;padding:2rem}
+.container{max-width:800px;margin:0 auto;background:#fff;padding:3rem;border:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,0.05)}
+
+h1,h2,h3{font-family:'Playfair Display',serif;margin-bottom:1.5rem}
+h1{font-size:2.5rem;border-bottom:2px solid var(--warm);padding-bottom:1rem}
+h2{font-size:1.8rem;color:var(--warm);margin-top:2.5rem;border-bottom:1px solid var(--border)}
+
+.lesson-part{margin-bottom:3rem}
+.sanskrit-text{font-family:'Tiro Sanskrit',serif;font-size:1.2rem;color:#000;display:block;margin-bottom:0.5rem}
+.translation{color:var(--muted);font-style:italic;font-size:0.95rem;margin-bottom:1.2rem;display:block}
+
+table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+th,td{border:1px solid var(--border);padding:0.8rem;text-align:left}
+th{background:#fcfaf7;font-family:'Playfair Display',serif;font-weight:700}
+tr:nth-child(even){background:#faf9f7}
+
+.highlight{color:var(--warm);font-weight:700}
+.task-box{background:#fdfcf0;border-left:4px solid var(--warm);padding:1.5rem;margin:2rem 0}
+
+@media(max-width:600px){.container{padding:1.5rem}}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Lesson 2</h1>
+
+    <section class="lesson-part">
+        <h2>Part 1: Grammar</h2>
+        <span class="sanskrit-text">स्वराः त्रिविधाः भवन्ति | ह्रस्वः दीर्घः प्लुतश्च |</span>
+        <span class="translation">Vowels are of 3 types: short, long, and protracted.</span>
+        <p>For common use: ह्रस्व (short) and दीर्घ (long). Ignore the third.</p>
+
+        <br>
+        <p><strong>दीर्घसन्धिः | नियमः - अकः सवर्णे दीर्घः</strong></p>
+        <p>When अक् (अ, इ, उ, ऋ, ऌ) is followed by the same ह्रस्व or दीर्घ, they merge into their corresponding दीर्घ (long) form.</p>
+        <p>e.g.: विद्या + आलयः = विद्यालयः, कपि + ईशः = कपीशः, भानु + उदयः = भानूदयः, पितृ + ऋणम् = पितॄणम्</p>
+
+        <br>
+        <p><strong>पूर्वरूप सन्धि: | नियमः - एङः पदान्तादति or एङः पदान्तात् अति</strong></p>
+        <p>When a word ending with एङ् (ए or ओ) is followed a word starting with अ, the अ merges into the preceding ए or ओ, and its place is marked by an अवग्रह (ऽ).</p>
+        <p>e.g., गृहे + अस्ति = गृहेऽस्ति</p>
+
+        <br>
+        <p><strong>यण्-सन्धिः | नियमः - इको यणचि</strong></p>
+        <p>When इक् (इ, उ, ऋ, ऌ) is followed by a different vowel, it transforms into यण् (य्, व्, र्, ल् respectively)</p>
+        <p>e.g., इति + आदि = इत्यादि</p>
+
+        <br>
+        <p><strong>विसर्ग-रेफ-सन्धिः | नियमः - इचोऽशि विसर्गस्य रेफः or इचः अशि विसर्गस्य रेफः</strong></p>
+        <p>When a विसर्गः (ः) preceded by इच् (any स्वरः except अ or आ) and followed by अश् [स्वरः or a मृदु व्यञ्जनम् (voiced consonant): य, र, ल, व, and ह], the विसर्गः changes to र्.</p>
+        <p>e.g., ऋषिः + उवाच = ऋषिरुवाच</p>
+
+        <br>
+        <p><strong>विसर्ग-सत्त्व-सन्धिः | नियमः - विसर्जनीयस्य सः</strong></p>
+        <p>When a विसर्गः is followed by a hard consonant (त्, थ, च्, छ्, ट्, ठ्, प्, फ्, श्, ष्, स्), it transforms into स्.</p>
+        <p>e.g.: नमः + ते - नमस्ते</p>
+
+        <br>
+        <p><strong>विसर्ग-श्चुत्व-सन्धिः | नियमः – (स्तोः)* श्चुना श्चुः</strong></p>
+        <p>When a विसर्गः (acting as स् from the rule above) is followed by श्, च्, and छ्, it transforms into श्.</p>
+        <p>eg: रामः + च = रामश्च</p>
+    </section>
+
+    <section class="lesson-part">
+        <h2>Part 2: fun learning</h2>
+        <p><strong>BODY PARTS: Source Laghunyasam (light/little “installation mantra”)</strong></p>
+        <ul>
+            <li>प्रजनने ब्रह्मा तिष्ठतु । प्रजननम् = reproductive organs (स. एक. व.)</li>
+            <li>पादयोर्विष्णुस्तिष्ठतु । पाद = feet (स. द्वि. व.)</li>
+            <li>हस्तयोर्हरस्तिष्ठतु । हस्त = hands (स. द्वि. व.)</li>
+            <li>बाह्वोरिन्द्रस्तिष्ठतु । बाहु = arms (स. द्वि. व.)</li>
+            <li>जठरेऽग्निस्तिष्ठतु । जठर = stomach (स. एक. व.)</li>
+            <li>हृदये शिवस्तिष्ठतु । हृदय = heart (स. एक. व.)</li>
+            <li>कण्ठे वसवस्तिष्ठन्तु । कण्ठ = throat (स. एक. व.)</li>
+            <li>वक्त्रे सरस्वती तिष्ठतु । वक्त्र = mouth (स. एक. व.)</li>
+            <li>नासिकयो र्वायुस्तिष्ठतु । नासिका = nostrils (स. द्वि. व.)</li>
+            <li>नयनयो श्चन्द्रादित्यौ तिष्ठेताम् । नयन = eyes (स. द्वि. व.)</li>
+            <li>कर्णयो रश्विनौ तिष्ठेताम् । कर्ण = ears (स. द्वि. व.)</li>
+            <li>ललाटे रुद्रास्तिष्ठन्तु । ललाट = forehead (स. एक. व.)</li>
+            <li>मूर्ध्न्या दित्यास्तिष्ठन्तु । मूर्धन् = crown of the head (स. एक. व.)</li>
+            <li>शिरसि महादेवस्तिष्ठतु । शिरस् = head (स. एक. व.)</li>
+            <li>शिखायां वामदेवस्तिष्ठतु । शिखा = tuft of hair (स. एक. व.)</li>
+            <li>पृष्ठे पिनाकी तिष्ठतु । पृष्ठ = back (स. एक. व.)</li>
+            <li>पुरतः शूली तिष्ठतु । पुरस् = front (अव्यय)</li>
+            <li>पार्श्वयोः शिवाशङ्करौ तिष्ठेताम् । पार्श्व = sides (स. द्वि. व.)</li>
+            <li>सर्वेष्वङ्गेषु सर्वा देवता यथास्थानं तिष्ठन्तु । अङ्ग = parts (स. बहु. व)</li>
+        </ul>
+    </section>
+
+    <div class="task-box">
+        <h3>Part 3: Task</h3>
+        <p>Identify the लकार and सन्धिः throughout in Part 2</p>
+    </div>
+
+    <section class="lesson-part">
+        <h2>Solutions</h2>
+        <p><strong>लकार-सन्धि-विश्लेषणम् (Analysis of Lakāra and Sandhi)</strong></p>
+        
+        <br>
+        <p><strong>(A) क्रियापद-लकार-निर्धारणम् (Analysis of the Verb)</strong></p>
+        <p>Throughout this text, the primary verb is स्था (तिष्ठ्) which means to stand/reside.</p>
+        <p>The forms used (तिष्ठतु, तिष्ठन्तु, तिष्ठेताम्) belong to:</p>
+        <ul>
+            <li>लकारः: लोट्-लकारः (Imperative Mood / Command or Prayer).</li>
+            <li>तिष्ठतु: प्रथम-पुरुषः, एकवचनम्.</li>
+            <li>तिष्ठन्तु: प्रथम-पुरुषः, बहुवचनम्.</li>
+            <li>तिष्ठेताम्: प्रथम-पुरुषः, द्विवचनम्.</li>
+        </ul>
+
+        <br>
+        <p><strong>(B) पद-विश्लेषण-सारणी (Table of Analysis)</strong></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>वाक्यम् (Sentence)</th>
+                    <th>सन्धि-विच्छेदः (Split)</th>
+                    <th>सन्धि-प्रकारः (Sandhi Type)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>प्रजनने ब्रह्मा तिष्ठतु</td><td>प्रजनने + ब्रह्मा</td><td>No Sandhi change</td></tr>
+                <tr><td>पादयोर्विष्णुस्तिष्ठतु</td><td>१. पादयोः + विष्णुः<br>२. विष्णुः + तिष्ठतु</td><td>१. विसर्ग-रेफ<br>२. विसर्ग-सत्त्व</td></tr>
+                <tr><td>हस्तयोर्हरस्तिष्ठतु</td><td>१. हस्तयोः + हरः<br>२. हरः + तिष्ठतु</td><td>१. विसर्ग-रेफ<br>२. विसर्ग-सत्त्व</td></tr>
+                <tr><td>बाह्वोरिन्द्रस्तिष्ठतु</td><td>१. बाह्वोः + इन्द्रः<br>२. इन्द्रः + तिष्ठतु</td><td>१. विसर्ग-रेफ<br>२. विसर्ग-सत्त्व</td></tr>
+                <tr><td>जठरेऽग्निस्तिष्ठतु</td><td>१. जठरे + अग्निः<br>२. अग्निः + तिष्ठतु</td><td>१. पूर्वरूप सन्धि<br>२. विसर्ग-सत्त्व</td></tr>
+                <tr><td>हृदये शिवस्तिष्ठतु</td><td>शिवः + तिष्ठतु</td><td>विसर्ग-सत्त्व</td></tr>
+                <tr><td>कण्ठे वसवस्तिष्ठन्तु</td><td>वसवः + तिष्ठन्तु</td><td>विसर्ग-सत्त्व</td></tr>
+                <tr><td>वक्त्रे सरस्वती तिष्ठतु</td><td>-</td><td>No Sandhi change</td></tr>
+                <tr><td>नासिकयोर्वायुस्तिष्ठतु</td><td>१. नासिकयोः + वायुः<br>२. वायुः + तिष्ठतु</td><td>१. विसर्ग-रेफ<br>२. विसर्ग-सत्त्व</td></tr>
+                <tr><td>नयनयोश्चन्द्रादित्यौ...</td><td>नयनयोः + चन्द्रादित्यौ</td><td>विसर्ग-श्चुत्व</td></tr>
+                <tr><td>कर्णयोरश्विनौ...</td><td>कर्णयोः + अश्विनौ</td><td>विसर्ग-रेफ</td></tr>
+                <tr><td>ललाटे रुद्रास्तिष्ठन्तु</td><td>रुद्राः + तिष्ठन्तु</td><td>विसर्ग-सत्त्व</td></tr>
+                <tr><td>मूर्ध्न्यादित्यास्तिष्ठन्तु</td><td>१. मूर्ध्नि + आदित्याः<br>२. आदित्याः + तिष्ठन्तु</td><td>१. यण्-सन्धिः<br>२. विसर्ग-सत्त्व</td></tr>
+                <tr><td>शिरसि महादेवस्तिष्ठतु</td><td>महादेवः + तिष्ठतु</td><td>विसर्ग-सत्त्व</td></tr>
+                <tr><td>शिखायां वामदेवस्तिष्ठतु</td><td>-</td><td>No Sandhi change</td></tr>
+                <tr><td>पृष्ठे पिनाकी तिष्ठतु</td><td>-</td><td>No Sandhi change</td></tr>
+                <tr><td>पुरतः शूली तिष्ठतु</td><td>पुरतः + शूली</td><td>विसर्ग-विसर्ग</td></tr>
+                <tr><td>पार्श्वयोः शिवाशङ्करौ...</td><td>-</td><td>No Sandhi change</td></tr>
+                <tr><td>सर्वेष्वङ्गेषु...</td><td>सर्वेषु + अङ्गेषु</td><td>यण्-सन्धिः</td></tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+
+</body>
+</html>
