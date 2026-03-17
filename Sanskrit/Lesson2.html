@@ -11,54 +11,76 @@
 body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);line-height:1.6;padding:2rem}
 .container{max-width:800px;margin:0 auto;background:#fff;padding:3rem;border:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,0.05)}
 
-h1,h2,h3{font-family:'Playfair Display',serif;margin-bottom:1.5rem}
+h1,h2,h3{font-family:'Playfair Display',serif;margin-bottom:1rem}
 h1{font-size:2.5rem;border-bottom:2px solid var(--warm);padding-bottom:1rem}
 h2{font-size:1.8rem;color:var(--warm);margin-top:2.5rem;border-bottom:1px solid var(--border)}
 
 .lesson-part{margin-bottom:3rem}
-.sanskrit-text{font-family:'Tiro Sanskrit',serif;font-size:1rem;color:#000;display:block;margin-bottom:0.5rem}
-.translation{color:var(--muted);font-style:italic;font-size:0.95rem;margin-bottom:1.2rem;display:block}
+.sanskrit{font-family:'Tiro Sanskrit',serif;font-size:1rem;color:#000;display:block;margin-bottom:0.5rem}
+.engtrans{color:var(--muted); font-style:italic; font-size:0.95rem; margin-bottom:0.5rem; display:block; padding-left: 10px; font-weight: normal; font-style: italic; color: #555;}
 
-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+table{width:100%;border-collapse:collapse;margin:0.5rem 0;font-size:0.9rem}
 th,td{border:1px solid var(--border);padding:0.8rem;text-align:left}
-th{background:#fcfaf7;font-family:'Playfair Display',serif;font-weight:700}
+th{background:#fcfaf7;font-family:'Playfair Display',serif; font-weight:700}
 tr:nth-child(even){background:#faf9f7}
 
 .highlight{color:var(--warm);font-weight:700}
-.task-box{background:#fdfcf0;border-left:4px solid var(--warm);padding:1.5rem;margin:2rem 0}
+.task-box{background:#fdfcf0;border-left:4px solid var(--warm);padding:1.5rem; margin:2rem 0}
 
 @media(max-width:600px){.container{padding:1.5rem}}
+	
+hr { border: none; border-top: 1.5px solid var(--border); margin: 20px 0; } /* horizontal rule matches same colour as theme border */
+a { [target="_blank" rel="noopener"]; text-decoration: none; color: var(--warm); } /* hyperlink */
+ol { padding-left: 0; list-style-position: inside; } /* Removes the default indentation and ensures numbers stay inside the viewable area */
+
+.glossary { margin: 20px 0; padding: 10px; background-color: var(--parchment); border: 1px solid var(--border); border-radius: 4px; overflow-x: auto; }
+.glossary-table th:nth-child(1)::before { content: "Word"; }
+.glossary-table th:nth-child(2)::before { content: "Meaning"; }
+.glossary-table th:nth-child(3)::before { content: "Word"; }
+.glossary-table th:nth-child(4)::before { content: "Meaning"; }
+.glossary-table th:nth-child(5)::before { content: "Word"; }
+.glossary-table th:nth-child(6)::before { content: "Meaning"; }
+.glossary-table { width: 100%; border-collapse: collapse; color: var(--ink); font-size: 0.85em; table-layout: fixed; }
+/* Specific Column Widths */
+.glossary-table th:nth-child(1) { width: 14%; }
+.glossary-table th:nth-child(2) { width: 16%; }
+.glossary-table th:nth-child(3) { width: 14%; }
+.glossary-table th:nth-child(4) { width: 16%; }
+.glossary-table th:nth-child(5) { width: 18%; }
+.glossary-table th:nth-child(6) { width: 20%; }
+
+.glossary-table th { border-bottom: 2px solid var(--warm); text-align: center; padding: 5px 5px; color: var(--warm); text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px; white-space: nowrap; }
+.glossary-table td { padding: 5px 5px; border-bottom: 0.5px solid var(--border); vertical-align: middle; text-align: center; white-space: normal; overflow: hidden; text-overflow: clip; }
+
 </style>
+
 </head>
 <body>
 
 <div class="container">
-    <h1>Lesson 02: सन्धि:</h1>
-    <section class="lesson-part">
-        <h2>Part 1: Grammar</h2>
-        <p><strong>सन्धयः त्रयः सन्ति</strong> | Sandhiḥ is of three types:</p> <br>
-        
-        <ol>
-        <li> <strong>स्वरसन्धिः</strong> – द्वयोः स्वरयोः मेलनेन यः विकारः भवति सः स्वरसन्धिः। </li>
-        <span class="translation">The sandhiḥ involving a combination of two vowels.</span>
-        <li> <strong>व्यञ्जनसन्धिः</strong> – व्यञ्जनेन सह स्वरस्य व्यञ्जनस्य वा मेलनेन यः विकारः भवति सः व्यञ्जनसन्धिः। </li>
-        <span class="translation">The sandhiḥ involving a consonant combined with either a vowel or another consonant.</span>
-        <li> <strong>विसर्गसन्धिः</strong> – विसर्गेण सह स्वरस्य व्यञ्जनस्य वा मेलनेन यः विकारः भवति सः विसर्गसन्धिः। </li>
-        <span class="translation">The sandhiḥ involving a visargaḥ combined with either a vowel or a consonant sandhi.</span>
-        </ol>
- 
-
- <p><strong>दीर्घसन्धिः | नियमः - अकः सवर्णे दीर्घः 
-<a href="https://ashtadhyayi.com/sutra/6.1.101" target="_blank">६.१.१०१</a></strong></p>
-<p>When अक् (अ, आ, इ, ई, उ, ऊ, ऋ, ॠ, ऌ) is followed by the same vowel, they merge into the corresponding दीर्घ vowel.</p>
-<p><strong>Patterns:</strong> 
+<h1>Lesson 02: सन्धि:</h1>
+<section class="lesson-part">
+ <h2>भाग १: व्याकरणम् (Grammar)</h2>
+ <h3><span>★ </span><strong>एते त्रयः सन्धयः सन्ति:</strong> <span class="engtrans">These are the 3 types of Sandhiḥ:</span> </h3>        
+ <ol>
+  <li> <strong>स्वरसन्धिः</strong> – द्वयोः स्वरयोः मेलनेन यः विकारः भवति सः स्वरसन्धिः। 
+   <span class="engtrans">The sandhiḥ involving a combination of two vowels.</span> </li>
+  <li> <strong>व्यञ्जनसन्धिः</strong> – व्यञ्जनेन सह स्वरस्य व्यञ्जनस्य वा मेलनेन यः विकारः भवति सः व्यञ्जनसन्धिः। 
+   <span class="engtrans">The sandhiḥ involving a consonant combined with either a vowel or another consonant.</span> </li>
+  <li> <strong>विसर्गसन्धिः</strong> – विसर्गेण सह स्वरस्य व्यञ्जनस्य वा मेलनेन यः विकारः भवति सः विसर्गसन्धिः।
+   <span class="engtrans">The sandhiḥ involving a visargaḥ combined with either a vowel or a consonant sandhi.</span> </li>
+  </ol>
+<hr>
+ <h3><span>★ </span><strong>स्वरसन्धिः</strong></h3>  
+ <p><strong>दीर्घसन्धिः </strong> | नियमः - अकः सवर्णे दीर्घः <a href="https://ashtadhyayi.com/sutra/6.1.101"> (६.१.१०१)</a></p>
+<p>When <em>अक्</em> (अ, आ, इ, ई, उ, ऊ, ऋ, ॠ, ऌ) is followed by the ह्रस्व or दीर्घ form of the same vowel, they merge into the corresponding दीर्घ vowel.</p>
 <table>
 <colgroup> <col style="width: 22%;"> <col style="width: 78%;"> </colgroup>
 <thead> <tr>  <th>Combination</th>  <th>Example</th>  </tr> </thead>
 <tbody> <tr>  <td>अ/आ + अ/आ → आ</td>
-            <td> मुर + अरिः = मुरारिः, हिम + आलय: = हिमालय:, विद्या + अर्थी =	विद्यार्थी, दया + आनन्दः = दयानन्दः </td> </tr>
+            <td> राम + अयनम् = रामायणम्, हिम + आलय: = हिमालय:, विद्या + अर्थी = विद्यार्थी, दया + आत्मा = दयात्मा </td> </tr>
         <tr>  <td>इ/ई + इ/ई → ई</td>
-              <td>मुनि + इन्द्रः = मुनीन्द्रः, कपि + इन्द्रः = कपीन्द्रः, मही + इन्द्रः = महीन्द्रः, नदी + ईशः = नदीशः</td> </tr>
+              <td>परि + इक्षा = परीक्षा, कपि + ईश्वरः = कपीश्वरः, महती + इच्छा = महतीच्छा, लक्ष्मी + ईशः = लक्ष्मीशः</td> </tr>
         <tr>  <td>उ/ऊ + उ/ऊ → ऊ</td> 
               <td>गुरु + उपदेशः = गुरूपदेशः, वधू + उत्सवः = वधूत्सवः, सिन्धु + ऊर्मिः	= सिन्धूर्मिः, भू + ऊर्ध्वम् = भूर्ध्वम् </td>  </tr>
         <tr>  <td>ऋ/ॠ + ऋ/ॠ → ॠ</td>
@@ -164,7 +186,7 @@ tr:nth-child(even){background:#faf9f7}
             <thead>
                 <tr>
                     <th style="width: 50%;">Sanskrit Text</th>
-                    <th style="width: 50%;">Translation</th>
+                    <th style="width: 50%;">engtrans</th>
                 </tr>
             </thead>
             <tbody>
@@ -281,79 +303,48 @@ tr:nth-child(even){background:#faf9f7}
         </ul>
     </section>
 
-    <div class="container">
-        <hr>
-    <h3>शब्दकोशः (Glossary)</h3>
-    <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
-        <thead>
-            <tr style="background-color: #f2f2f2;">
-                <th style="padding: 10px; border: 1px solid #ddd;">Compound Word</th>
-                <th style="padding: 10px; border: 1px solid #ddd;">Word Breakdown & Meaning</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td style="padding: 10px; border: 1px solid #ddd;"><b>मुरारिः (Murāriḥ)</b></td>
-                <td style="padding: 10px; border: 1px solid #ddd;">
-                    <i>Mura</i> (name of a demon) + <i>Ari</i> (enemy) = Enemy of the demon Mura (Krishna).
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; border: 1px solid #ddd;"><b>हिमालयः (Himālayaḥ)</b></td>
-                <td style="padding: 10px; border: 1px solid #ddd;">
-                    <i>Hima</i> (snow) + <i>Ālaya</i> (abode/house) = The abode of snow.
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; border: 1px solid #ddd;"><b>विद्यार्थी (Vidyārthī)</b></td>
-                <td style="padding: 10px; border: 1px solid #ddd;">
-                    <i>Vidyā</i> (knowledge) + <i>Arthī</i> (seeker) = One who seeks knowledge (a student).
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; border: 1px solid #ddd;"><b>नदीशः (Nadīśaḥ)</b></td>
-                <td style="padding: 10px; border: 1px solid #ddd;">
-                    <i>Nadī</i> (river) + <i>Īśa</i> (lord) = The lord of rivers (the ocean).
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; border: 1px solid #ddd;"><b>भूर्ध्वम् (Bhūrdhvam)</b></td>
-                <td style="padding: 10px; border: 1px solid #ddd;">
-                    <i>Bhū</i> (earth) + <i>Ūrdhvam</i> (above/upwards) = Above the earth.
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    </div>
-        
+<div class="glossary">
+ <table class="glossary-table">
+ <thead> <tr><th></th><th></th><th></th><th></th><th></th><th></th></tr></thead>
+ <tbody> <tr> <td>राम</td> <td>Rama</td> <td>अयनम्</td> <td>Journey</td> <td>रामायणम्</td> <td>Rama's journey</td> </tr>
+         <tr> <td>हिम</td> <td>Snow</td> <td>आलय:</td> <td>Abode</td> <td>हिमालय:</td> <td>Abode of snow</td> </tr>
+         <tr> <td>विद्या</td> <td>Knowledge</td> <td>अर्थी</td> <td>Seeker</td> <td>विद्यार्थी</td> <td>Student (lit. knowledge seeker)</td> </tr>
+         <tr> <td>दया</td> <td>Compassion</td> <td>आत्मा</td> <td>Soul</td> <td>दयात्मा</td> <td>Compassionate soul</td> </tr>
+         <tr> <td>परि</td> <td>Around</td> <td>ईक्षा</td> <td>Viewing</td> <td>परीक्षा</td> <td>Examination</td> </tr>
+         <tr> <td>कपि</td> <td>Monkey</td> <td>ईश्वरः</td> <td>Lord</td> <td>कपीश्वरः</td> <td>Lord of monkeys (attr. Hanuman)</td></tr>    
+         <tr> <td>महती</td> <td>Great</td> <td>इच्छा</td> <td>Desire</td> <td>महतीच्छा</td> <td>A great desire</td> </tr>
+         <tr> <td>लक्ष्मी</td> <td>Lakshmi</td> <td>ईशः</td> <td>Lord</td> <td>लक्ष्मीशः</td> <td>Lord of Lakshmi -- Vishnu</td> </tr>
+         <tr> <td>गुरु</td> <td>Teacher</td> <td>उपदेशः</td> <td>Teaching</td> <td>गुरूपदेशः</td><td>Teacher's teaching</td> </tr>
+         <tr> <td>वधू</td> <td>Bride</td> <td>उत्सवः</td> <td>Celebration</td> <td>वधूत्सवः</td> <td>Wedding (lit. a celebration of the bride) (</td> </tr>
+         <tr> <td>सिन्धु</td> <td>Sea/Ocean </td> <td>ऊर्मिः</td> <td>Wave</td> <td>सिन्धूर्मिः</td> <td>Sea/Ocean wave</td> </tr>
+         <tr> <td>भू</td> <td>Earth</td> <td>ऊर्ध्वम्</td> <td>Above</td> <td>भूर्ध्वम्</td> <td>Above the earth</td> </tr>
+         <tr> <td>पितृ</td> <td>Father</td> <td>ऋणम्</td> <td>Debt</td> <td>पितॄणम्</td> <td>Paternal debt</td> </tr>
+ </tbody>
+ </table>
+</div>
 
-    <div class="task-box">
-        <h2>Part 3: Exercises</h2>
-        <p>Identify the लकार and सन्धिः throughout in Part 2</p>
-    </div>
+<div class="task-box">
+ <h2>Part 3: Exercises</h2>
+  <p>Identify the लकार and सन्धिः throughout in Part 2</p>
 
-    <section class="lesson-part">
-        <h2>Solutions</h2>
-        <p><strong>(A) क्रियापद-लकार-निर्धारणम् (Analysis of the Verb)</strong></p>
-        <p>The verbs belong to <strong>लोट्-लकारः</strong> (Imperative Mood):</p>
-        <ul>
-            <li>तिष्ठतु: प्रथम-पुरुषः, एकवचनम्</li>
-            <li>तिष्ठन्तु: प्रथम-पुरुषः, बहुवचनम्</li>
-            <li>तिष्ठेताम्: प्रथम-पुरुषः, द्विवचनम्</li>
-        </ul>
+  <hr>
 
-        <br>
-        <p><strong>(B) पद-विश्लेषण-सारणी (Table of Analysis)</strong></p>
-        <table>
-            <thead>
-                <tr>
-                    <th>वाक्यम् (Sentence)</th>
-                    <th>सन्धि-विच्छेदः (Split)</th>
-                    <th>सन्धि-प्रकारः (Sandhi Type)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td>पादयोर्विष्णुस्तिष्ठतु</td><td>१. पादयोः + विष्णुः<br>२. विष्णुः + तिष्ठतु</td><td>१. विसर्ग-रेफ<br>२. विसर्ग-सत्त्व</td></tr>
+ <h2>Solutions</h2>
+  <p><strong>(A) क्रियापद-लकार-निर्धारणम् (Analysis of the Verb)</strong></p>
+  <p>The verbs belong to <strong>लोट्-लकारः</strong> (Imperative Mood):</p>
+  <ul>
+   <li>तिष्ठतु: प्रथम-पुरुषः, एकवचनम्</li>
+   <li>तिष्ठन्तु: प्रथम-पुरुषः, बहुवचनम्</li>
+   <li>तिष्ठेताम्: प्रथम-पुरुषः, द्विवचनम्</li>
+  </ul>
+  <br>
+  <p><strong>(B) पद-विश्लेषण-सारणी (Table of Analysis)</strong></p>
+  <table>
+   <thead>
+    <tr> <th>वाक्यम् (Sentence)</th> <th>सन्धि-विच्छेदः (Split)</th> <th>सन्धि-प्रकारः (Sandhi Type)</th> </tr> 
+   </thead>
+   <tbody>
+    <tr> <td>पादयोर्विष्णुस्तिष्ठतु</td> <td>१. पादयोः + विष्णुः<br>२. विष्णुः + तिष्ठतु</td> <td>१. विसर्ग-रेफ<br>२. विसर्ग-सत्त्व</td> </tr>
                 <tr><td>हस्तयोर्हरस्तिष्ठतु</td><td>१. हस्तयोः + हरः<br>२. हरः + तिष्ठतु</td><td>१. विसर्ग-रेफ<br>२. विसर्ग-सत्त्व</td></tr>
                 <tr><td>बाह्वोरिन्द्रस्तिष्ठतु</td><td>१. बाह्वोः + इन्द्रः<br>२. इन्द्रः + तिष्ठतु</td><td>१. विसर्ग-रेफ<br>२. विसर्ग-सत्त्व</td></tr>
                 <tr><td>जठरेऽग्निस्तिष्ठतु</td><td>१. जठरे + अग्निः<br>२. अग्निः + तिष्ठतु</td><td>१. पूर्वरूप सन्धि<br>२. विसर्ग-सत्त्व</td></tr>
