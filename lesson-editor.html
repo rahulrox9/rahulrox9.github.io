@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&family=Tiro+Sanskrit:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--border:#e8dfd0;--card:#fff;--bg:#f5efe4}
+html,body{margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink)}
+.topbar{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between}
+.topbar .title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700}
+.wrap{display:grid;grid-template-columns:380px 1fr;gap:16px;padding:16px;max-width:1600px;margin:0 auto}
+.panel,.preview-panel{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.section{padding:14px;border-bottom:1px solid var(--border)}
+.section:last-child{border-bottom:none}
+.section-title{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+button,select,input,textarea{font:inherit}
+button{cursor:pointer}
+.btn{border:1px solid var(--border);background:#fff;padding:9px 12px;border-radius:10px}
+.btn:hover{background:#fbf8f2}
+.btn.warm{background:var(--warm);border-color:var(--warm);color:#fff}
+.btn.small{padding:6px 8px;font-size:.9rem}
+label{display:block;font-size:.82rem;margin-bottom:6px;color:#5f4d3c}
+input[type="text"],input[type="number"],textarea,select{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:10px;background:#fff}
+textarea{min-height:80px;resize:vertical}
+.blocks{display:flex;flex-direction:column;gap:12px}
+.block{border:1px solid var(--border);border-radius:14px;background:#fff;overflow:hidden}
+.block-head{display:flex;justify-content:space-between;align-items:center;background:#fcfaf7;border-bottom:1px solid var(--border);padding:10px 12px}
+.block-title{font-weight:600;font-size:.92rem}
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+.block-body{padding:12px;display:flex;flex-direction:column;gap:10px}
+.toolbar{display:flex;flex-wrap:wrap;gap:6px;border:1px solid var(--border);border-bottom:none;padding:8px;background:#fbfaf8;border-radius:12px 12px 0 0}
+.editor{border:1px solid var(--border);border-radius:0 0 12px 12px;padding:12px;min-height:78px;background:#fff;outline:none}
+.editor:empty:before{content:attr(data-placeholder);color:#a89784}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 120px 110px;gap:10px;align-items:end}
+.list-item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start}
+.preview-panel{position:sticky;top:70px;height:calc(100vh - 86px);display:grid;grid-template-rows:1fr 260px}
+.preview-frame{width:100%;height:100%;border:0;background:#fff}
+.codebox{border-top:1px solid var(--border);padding:10px}
+.codebox textarea{min-height:220px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+.meta{font-size:.82rem;color:var(--muted)}
+.helper{font-size:.82rem;color:var(--muted)}
+.warn{color:#a65b00}
+.ok{color:#1f7a1f}
+.hidden{display:none}
+@media (max-width: 1100px){
+  .wrap{grid-template-columns:1fr}
+  .preview-panel{position:static;height:auto;grid-template-rows:500px 260px}
+}
+.sanskrit-text{font-family:'Tiro Sanskrit',serif;font-size:1rem;color:#000;display:block;margin-bottom:0.5rem}
+.translation{color:var(--muted);font-style:italic;font-size:0.95rem;margin-bottom:1.2rem;display:block}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="title">Lesson Editor</div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <button class="btn" id="saveJsonBtn">Save JSON</button>
+    <button class="btn" id="loadJsonBtn">Load JSON</button>
+    <button class="btn warm" id="exportHtmlBtn">Export HTML</button>
+    <input type="file" id="jsonFileInput" accept="application/json" class="hidden">
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="panel">
+    <div class="section">
+      <div class="section-title">Document</div>
+      <label>Document Title</label>
+      <input id="docTitle" type="text" value="My Lesson">
+    </div>
+
+    <div class="section">
+      <div class="section-title">Add Block</div>
+      <div class="grid">
+        <button class="btn" data-add="heading">Heading</button>
+        <button class="btn" data-add="paragraph">Paragraph</button>
+        <button class="btn" data-add="break">Break</button>
+        <button class="btn" data-add="sanskrit">Sanskrit Text</button>
+        <button class="btn" data-add="translation">Translation</button>
+        <button class="btn" data-add="bulletList">Bullet List</button>
+        <button class="btn" data-add="numberedList">Numbered List</button>
+        <button class="btn" data-add="grammarRule">Grammar Rule</button>
+        <button class="btn" data-add="patternLine">Pattern Line</button>
+        <button class="btn" data-add="table">Table</button>
+        <button class="btn" data-add="vocabulary">Vocabulary</button>
+        <button class="btn" data-add="exercise">Exercise</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Blocks</div>
+      <div id="blocks" class="blocks"></div>
+    </div>
+  </div>
+
+  <div class="preview-panel">
+    <iframe id="preview" class="preview-frame"></iframe>
+    <div class="codebox">
+      <div class="section-title">Exported HTML</div>
+      <textarea id="htmlOutput" readonly></textarea>
+    </div>
+  </div>
+</div>
+
+<script>
+const ADMIN_HASH = "2e3aecbefb8c5dffa223b24e7a1e6f301344abbed22ec7e3a53c770a7e47e8a0";
+
+if (window.opener == null && sessionStorage.getItem("admin_auth_sha256") !== ADMIN_HASH) {
+  document.body.innerHTML = '<div style="max-width:720px;margin:60px auto;padding:24px;font-family:DM Sans,sans-serif;"><h1 style="font-family:Playfair Display,serif;">Access denied</h1><p>This editor is protected. Open it from your admin panel after logging in.</p><p><a href="admin.html">Go to admin</a></p></div>';
+  throw new Error("Unauthorized");
+}
+
+function uid(){ return Math.random().toString(36).slice(2,10); }
+
+const defaultCss = `*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--border:#e8dfd0}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);line-height:1.6;padding:2rem}
+.container{max-width:800px;margin:0 auto;background:#fff;padding:3rem;border:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,0.05)}
+h1,h2,h3{font-family:'Playfair Display',serif;margin-bottom:1.5rem}
+h1{font-size:2.5rem;border-bottom:2px solid var(--warm);padding-bottom:1rem}
+h2{font-size:1.8rem;color:var(--warm);margin-top:2.5rem;border-bottom:1px solid var(--border)}
+h3{font-size:1.3rem;margin-top:1.5rem}
+.sanskrit-text{font-family:'Tiro Sanskrit',serif;font-size:1rem;color:#000;display:block;margin-bottom:0.5rem}
+.translation{color:var(--muted);font-style:italic;font-size:0.95rem;margin-bottom:1.2rem;display:block}
+table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem;table-layout:fixed}
+th,td{border:1px solid var(--border);padding:0.8rem;text-align:left;vertical-align:top;overflow-wrap:break-word}
+th{background:#fcfaf7;font-family:'Playfair Display',serif;font-weight:700}
+tr:nth-child(even){background:#faf9f7}
+.task-box{background:#fdfcf0;border-left:4px solid var(--warm);padding:1.5rem;margin:2rem 0}
+@media(max-width:600px){.container{padding:1.5rem}}`;
+
+let state = {
+  title: "My Lesson",
+  blocks: [
+    {id: uid(), type: "heading", level: 2, html: "Part 1: Grammar"},
+    {id: uid(), type: "paragraph", html: "Write here..."}
+  ]
+};
+
+function blockTemplate(type){
+  switch(type){
+    case "heading": return {id: uid(), type, level: 2, html: "New Heading"};
+    case "paragraph": return {id: uid(), type, html: "New paragraph"};
+    case "break": return {id: uid(), type};
+    case "sanskrit": return {id: uid(), type, html: "संस्कृत-पाठः"};
+    case "translation": return {id: uid(), type, html: "Translation text"};
+    case "bulletList": return {id: uid(), type, items: ["First item", "Second item"]};
+    case "numberedList": return {id: uid(), type, items: ["First item", "Second item"]};
+    case "grammarRule": return {id: uid(), type, titleHtml: "दीर्घसन्धिः", ruleHtml: "नियमः - अकः सवर्णे दीर्घः", link: "https://ashtadhyayi.com/sutra/6.1.101", linkText: "६.१.१०१", explanationHtml: "Explanation here."};
+    case "patternLine": return {id: uid(), type, html: "<strong>Patterns:</strong> अ + अ → आ"};
+    case "table": return {id: uid(), type, headers: ["Column 1", "Column 2"], widths: [50,50], rows: [["Cell 1","Cell 2"],["Cell 3","Cell 4"]]};
+    case "vocabulary": return {id: uid(), type, titleHtml: "Vocabulary", items: ["रामः = Rama", "गुरुः = teacher"]};
+    case "exercise": return {id: uid(), type, titleHtml: "Exercise", html: "Add exercise instructions here."};
+  }
+}
+
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;");
+}
+
+function editorToolbar(editor){
+  const wrap = (tag) => {
+    editor.focus();
+    const sel = window.getSelection();
+    const text = sel && sel.toString ? sel.toString() : "";
+    document.execCommand("insertHTML", false, `<${tag}>${text}</${tag}>`);
+    editor.dispatchEvent(new Event("input", {bubbles:true}));
+  };
+  const bar = document.createElement("div");
+  bar.className = "toolbar";
+  [
+    ["Strong", () => wrap("strong")],
+    ["Italic", () => wrap("i")],
+    ["Emphasis", () => wrap("em")],
+    ["Break", () => { document.execCommand("insertHTML", false, "<br>"); editor.dispatchEvent(new Event("input", {bubbles:true})); }}
+  ].forEach(([label, fn]) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn small";
+    btn.textContent = label;
+    btn.onclick = fn;
+    bar.appendChild(btn);
+  });
+  return bar;
+}
+
+function makeRichEditor(value, onInput, placeholder="Write here..."){
+  const wrap = document.createElement("div");
+  const editor = document.createElement("div");
+  wrap.appendChild(editorToolbar(editor));
+  editor.className = "editor";
+  editor.contentEditable = "true";
+  editor.dataset.placeholder = placeholder;
+  editor.innerHTML = value || "";
+  editor.addEventListener("input", () => onInput(editor.innerHTML));
+  editor.addEventListener("keydown", (e) => {
+    if(!(e.ctrlKey || e.metaKey)) return;
+    const k = e.key.toLowerCase();
+    if(k === "b"){ e.preventDefault(); document.execCommand("insertHTML", false, `<strong>${window.getSelection().toString()}</strong>`); }
+    if(k === "i"){ e.preventDefault(); document.execCommand("insertHTML", false, `<i>${window.getSelection().toString()}</i>`); }
+    if(k === "e"){ e.preventDefault(); document.execCommand("insertHTML", false, `<em>${window.getSelection().toString()}</em>`); }
+    if(["b","i","e"].includes(k)) editor.dispatchEvent(new Event("input", {bubbles:true}));
+  });
+  wrap.appendChild(editor);
+  return wrap;
+}
+
+function setState(next){
+  state = next;
+  render();
+}
+
+function updateBlock(id, patch){
+  setState({...state, blocks: state.blocks.map(b => b.id === id ? {...b, ...patch} : b)});
+}
+
+function moveBlock(id, dir){
+  const i = state.blocks.findIndex(b => b.id === id);
+  const j = i + dir;
+  if(i < 0 || j < 0 || j >= state.blocks.length) return;
+  const blocks = [...state.blocks];
+  [blocks[i], blocks[j]] = [blocks[j], blocks[i]];
+  setState({...state, blocks});
+}
+
+function duplicateBlock(id){
+  const i = state.blocks.findIndex(b => b.id === id);
+  if(i < 0) return;
+  const clone = structuredClone(state.blocks[i]);
+  clone.id = uid();
+  const blocks = [...state.blocks];
+  blocks.splice(i+1, 0, clone);
+  setState({...state, blocks});
+}
+
+function deleteBlock(id){
+  setState({...state, blocks: state.blocks.filter(b => b.id !== id)});
+}
+
+function normalizeWidths(widths){
+  return widths.map(w => Math.max(1, Number(w) || 0));
+}
+
+function render(){
+  document.getElementById("docTitle").value = state.title;
+  const root = document.getElementById("blocks");
+  root.innerHTML = "";
+
+  state.blocks.forEach((block, index) => {
+    const shell = document.createElement("div");
+    shell.className = "block";
+
+    const head = document.createElement("div");
+    head.className = "block-head";
+    head.innerHTML = `<div class="block-title">${index + 1}. ${block.type}</div>`;
+    const actions = document.createElement("div");
+    actions.className = "actions";
+
+    [["↑", () => moveBlock(block.id,-1)], ["↓", () => moveBlock(block.id,1)], ["Copy", () => duplicateBlock(block.id)], ["Delete", () => deleteBlock(block.id)]].forEach(([txt,fn])=>{
+      const b = document.createElement("button");
+      b.className = "btn small";
+      b.type = "button";
+      b.textContent = txt;
+      b.onclick = fn;
+      actions.appendChild(b);
+    });
+    head.appendChild(actions);
+    shell.appendChild(head);
+
+    const body = document.createElement("div");
+    body.className = "block-body";
+
+    if(block.type === "heading"){
+      const row = document.createElement("div");
+      row.className = "row";
+      const left = document.createElement("div");
+      left.innerHTML = `<label>Heading Level</label>`;
+      const sel = document.createElement("select");
+      [1,2,3].forEach(n => {
+        const opt = document.createElement("option");
+        opt.value = n;
+        opt.textContent = `H${n}`;
+        if(block.level === n) opt.selected = true;
+        sel.appendChild(opt);
+      });
+      sel.onchange = () => updateBlock(block.id, {level: Number(sel.value)});
+      left.appendChild(sel);
+      row.appendChild(left);
+      body.appendChild(row);
+      body.appendChild(makeRichEditor(block.html, html => updateBlock(block.id, {html}), "Heading"));
+    }
+
+    if(["paragraph","sanskrit","translation","patternLine"].includes(block.type)){
+      body.appendChild(makeRichEditor(block.html, html => updateBlock(block.id, {html}), "Write here..."));
+    }
+
+    if(block.type === "break"){
+      const p = document.createElement("div");
+      p.className = "helper";
+      p.textContent = "This block exports as a single <br>.";
+      body.appendChild(p);
+    }
+
+    if(["bulletList","numberedList","vocabulary"].includes(block.type)){
+      if(block.type === "vocabulary"){
+        const t = document.createElement("div");
+        t.innerHTML = `<label>Section Title</label>`;
+        t.appendChild(makeRichEditor(block.titleHtml || "", html => updateBlock(block.id, {titleHtml: html}), "Vocabulary"));
+        body.appendChild(t);
+      }
+      (block.items || []).forEach((item, i) => {
+        const row = document.createElement("div");
+        row.className = "list-item";
+        const ta = document.createElement("textarea");
+        ta.value = item;
+        ta.oninput = () => {
+          const items = [...block.items];
+          items[i] = ta.value;
+          updateBlock(block.id, {items});
+        };
+        const del = document.createElement("button");
+        del.className = "btn small";
+        del.textContent = "Delete";
+        del.onclick = () => {
+          const items = block.items.filter((_,x)=>x!==i);
+          updateBlock(block.id, {items});
+        };
+        row.appendChild(ta);
+        row.appendChild(del);
+        body.appendChild(row);
+      });
+      const add = document.createElement("button");
+      add.className = "btn";
+      add.textContent = "Add Item";
+      add.onclick = () => updateBlock(block.id, {items: [...block.items, "New item"]});
+      body.appendChild(add);
+    }
+
+    if(block.type === "grammarRule"){
+      const parts = [
+        ["Title", "titleHtml"],
+        ["Rule", "ruleHtml"],
+        ["Explanation", "explanationHtml"]
+      ];
+      parts.forEach(([label,key]) => {
+        const div = document.createElement("div");
+        div.innerHTML = `<label>${label}</label>`;
+        div.appendChild(makeRichEditor(block[key] || "", html => updateBlock(block.id, {[key]: html}), label));
+        body.appendChild(div);
+      });
+
+      const row = document.createElement("div");
+      row.className = "row";
+      const a = document.createElement("div");
+      a.innerHTML = `<label>Sutra Link</label>`;
+      const inputA = document.createElement("input");
+      inputA.type = "text";
+      inputA.value = block.link || "";
+      inputA.oninput = () => updateBlock(block.id, {link: inputA.value});
+      a.appendChild(inputA);
+      const b = document.createElement("div");
+      b.innerHTML = `<label>Link Text</label>`;
+      const inputB = document.createElement("input");
+      inputB.type = "text";
+      inputB.value = block.linkText || "";
+      inputB.oninput = () => updateBlock(block.id, {linkText: inputB.value});
+      b.appendChild(inputB);
+      row.appendChild(a); row.appendChild(b);
+      body.appendChild(row);
+    }
+
+    if(block.type === "exercise"){
+      let d1 = document.createElement("div");
+      d1.innerHTML = `<label>Exercise Title</label>`;
+      d1.appendChild(makeRichEditor(block.titleHtml || "", html => updateBlock(block.id, {titleHtml: html}), "Exercise"));
+      body.appendChild(d1);
+
+      let d2 = document.createElement("div");
+      d2.innerHTML = `<label>Exercise Text</label>`;
+      d2.appendChild(makeRichEditor(block.html || "", html => updateBlock(block.id, {html}), "Exercise text"));
+      body.appendChild(d2);
+    }
+
+    if(block.type === "table"){
+      const total = (block.widths || []).reduce((a,b)=>a+(Number(b)||0), 0);
+      const msg = document.createElement("div");
+      msg.className = "helper " + (total === 100 ? "ok" : "warn");
+      msg.textContent = `Column widths total: ${total}%` + (total === 100 ? "" : " — make them add to exactly 100%");
+      body.appendChild(msg);
+
+      (block.headers || []).forEach((header, i) => {
+        const row = document.createElement("div");
+        row.className = "row3";
+
+        const headBox = document.createElement("div");
+        headBox.innerHTML = `<label>Header ${i+1}</label>`;
+        const headIn = document.createElement("input");
+        headIn.type = "text";
+        headIn.value = header;
+        headIn.oninput = () => {
+          const headers = [...block.headers];
+          headers[i] = headIn.value;
+          updateBlock(block.id, {headers});
+        };
+        headBox.appendChild(headIn);
+
+        const widthBox = document.createElement("div");
+        widthBox.innerHTML = `<label>Width %</label>`;
+        const widthIn = document.createElement("input");
+        widthIn.type = "number";
+        widthIn.min = "1";
+        widthIn.max = "100";
+        widthIn.value = block.widths[i];
+        widthIn.oninput = () => {
+          const widths = normalizeWidths([...block.widths]);
+          widths[i] = Number(widthIn.value || 0);
+          updateBlock(block.id, {widths});
+        };
+        widthBox.appendChild(widthIn);
+
+        const del = document.createElement("button");
+        del.className = "btn";
+        del.textContent = "Remove Col";
+        del.onclick = () => {
+          if(block.headers.length <= 1) return;
+          const headers = block.headers.filter((_,x)=>x!==i);
+          const widths = block.widths.filter((_,x)=>x!==i);
+          const rows = block.rows.map(r => r.filter((_,x)=>x!==i));
+          updateBlock(block.id, {headers, widths, rows});
+        };
+
+        row.appendChild(headBox);
+        row.appendChild(widthBox);
+        row.appendChild(del);
+        body.appendChild(row);
+      });
+
+      const controls = document.createElement("div");
+      controls.style.display = "flex";
+      controls.style.gap = "8px";
+      controls.style.flexWrap = "wrap";
+      const addCol = document.createElement("button");
+      addCol.className = "btn";
+      addCol.textContent = "Add Column";
+      addCol.onclick = () => {
+        const headers = [...block.headers, `Column ${block.headers.length + 1}`];
+        const widths = [...block.widths, 0];
+        const rows = block.rows.map(r => [...r, ""]);
+        updateBlock(block.id, {headers, widths, rows});
+      };
+      const addRow = document.createElement("button");
+      addRow.className = "btn";
+      addRow.textContent = "Add Row";
+      addRow.onclick = () => {
+        const rows = [...block.rows, Array.from({length:block.headers.length}, ()=>"")];
+        updateBlock(block.id, {rows});
+      };
+      controls.appendChild(addCol);
+      controls.appendChild(addRow);
+      body.appendChild(controls);
+
+      (block.rows || []).forEach((rowData, rIdx) => {
+        const rowWrap = document.createElement("div");
+        rowWrap.style.border = "1px solid var(--border)";
+        rowWrap.style.borderRadius = "10px";
+        rowWrap.style.padding = "10px";
+        rowWrap.style.display = "grid";
+        rowWrap.style.gap = "8px";
+
+        rowData.forEach((cell, cIdx) => {
+          const d = document.createElement("div");
+          d.innerHTML = `<label>Row ${rIdx + 1}, Col ${cIdx + 1}</label>`;
+          const ta = document.createElement("textarea");
+          ta.value = cell;
+          ta.oninput = () => {
+            const rows = block.rows.map(r => [...r]);
+            rows[rIdx][cIdx] = ta.value;
+            updateBlock(block.id, {rows});
+          };
+          d.appendChild(ta);
+          rowWrap.appendChild(d);
+        });
+
+        const delRow = document.createElement("button");
+        delRow.className = "btn small";
+        delRow.textContent = "Delete Row";
+        delRow.onclick = () => {
+          const rows = block.rows.filter((_,x)=>x!==rIdx);
+          updateBlock(block.id, {rows});
+        };
+        rowWrap.appendChild(delRow);
+        body.appendChild(rowWrap);
+      });
+    }
+
+    shell.appendChild(body);
+    root.appendChild(shell);
+  });
+
+  const html = exportHtmlString();
+  document.getElementById("htmlOutput").value = html;
+  document.getElementById("preview").srcdoc = html;
+}
+
+function exportHtmlString(){
+  const blocksHtml = state.blocks.map(b => {
+    switch(b.type){
+      case "heading": return `<h${b.level}>${b.html || ""}</h${b.level}>`;
+      case "paragraph": return `<p>${b.html || ""}</p>`;
+      case "break": return `<br>`;
+      case "sanskrit": return `<span class="sanskrit-text">${b.html || ""}</span>`;
+      case "translation": return `<span class="translation">${b.html || ""}</span>`;
+      case "bulletList": return `<ul>\n${(b.items || []).map(i => `<li>${i}</li>`).join("\n")}\n</ul>`;
+      case "numberedList": return `<ol>\n${(b.items || []).map(i => `<li>${i}</li>`).join("\n")}\n</ol>`;
+      case "grammarRule":
+        return `<p><strong>${b.titleHtml || ""} | ${b.ruleHtml || ""} ${b.link ? `<a href="${escapeHtml(b.link)}" target="_blank">${b.linkText || "Link"}</a>` : ""}</strong></p>\n<p>${b.explanationHtml || ""}</p>`;
+      case "patternLine": return `<p>${b.html || ""}</p>`;
+      case "table":
+        const colgroup = (b.widths || []).map(w => `<col style="width:${Number(w)||0}%;">`).join("");
+        return `<table><colgroup>${colgroup}</colgroup><thead><tr>${(b.headers||[]).map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>${(b.rows||[]).map(r => `<tr>${r.map(c => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+      case "vocabulary":
+        return `<h3>${b.titleHtml || "Vocabulary"}</h3>\n<ul>\n${(b.items || []).map(i => `<li>${i}</li>`).join("\n")}\n</ul>`;
+      case "exercise":
+        return `<div class="task-box">\n<h2>${b.titleHtml || "Exercise"}</h2>\n<p>${b.html || ""}</p>\n</div>`;
+      default: return "";
+    }
+  }).join("\n\n");
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escapeHtml(state.title)}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&family=Tiro+Sanskrit:ital@0;1&display=swap" rel="stylesheet">
+<style>
+${defaultCss}
+</style>
+</head>
+<body>
+<div class="container">
+${blocksHtml}
+</div>
+</body>
+</html>`;
+}
+
+document.getElementById("docTitle").addEventListener("input", e => {
+  state.title = e.target.value;
+  render();
+});
+
+document.querySelectorAll("[data-add]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    state.blocks.push(blockTemplate(btn.dataset.add));
+    render();
+  });
+});
+
+function download(name, content, type){
+  const blob = new Blob([content], {type});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById("saveJsonBtn").onclick = () => download("lesson.json", JSON.stringify(state, null, 2), "application/json");
+document.getElementById("exportHtmlBtn").onclick = () => download("lesson.html", exportHtmlString(), "text/html;charset=utf-8");
+document.getElementById("loadJsonBtn").onclick = () => document.getElementById("jsonFileInput").click();
+document.getElementById("jsonFileInput").onchange = async (e) => {
+  const f = e.target.files[0];
+  if(!f) return;
+  const text = await f.text();
+  state = JSON.parse(text);
+  render();
+};
+
+render();
+</script>
+</body>
+</html>
