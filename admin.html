@@ -3,61 +3,155 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel</title>
+<title>Admin | Rahul Subbaraman</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@0,300;0,400;0,500&display=swap" rel="stylesheet">
 <style>
-body{font-family:sans-serif;background:#111;color:#eee;display:flex;align-items:center;justify-content:center;height:100vh}
-#dash{display:none}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--red:#c0392b}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--parchment);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+
+/* Lock screen */
+#lock{display:flex;flex-direction:column;align-items:center;gap:1.2rem;width:100%;max-width:360px;text-align:center}
+.lock-icon{font-size:2.5rem;margin-bottom:0.5rem}
+.lock-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--parchment)}
+.lock-sub{font-size:0.8rem;color:rgba(250,246,239,0.4);letter-spacing:0.04em}
+.lock-input{width:100%;padding:0.75rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:2px;color:var(--parchment);font-family:'DM Sans',sans-serif;font-size:0.9rem;text-align:center;letter-spacing:0.08em;outline:none;transition:border 0.2s}
+.lock-input:focus{border-color:var(--warm)}
+.lock-btn{width:100%;padding:0.75rem;background:var(--warm);color:#fff;border:none;border-radius:2px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;cursor:pointer;letter-spacing:0.05em;transition:opacity 0.2s}
+.lock-btn:hover{opacity:0.85}
+.lock-error{font-size:0.78rem;color:#e74c3c;display:none}
+.lock-error.on{display:block}
+
+/* Admin dashboard */
+#dashboard{display:none;width:100%;max-width:800px}
+.dash-header{margin-bottom:2.5rem}
+.dash-eyebrow{font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm);margin-bottom:0.5rem}
+.dash-title{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;line-height:1.1}
+.dash-title em{font-style:italic;color:var(--warm)}
+.dash-sub{font-size:0.8rem;color:rgba(250,246,239,0.4);margin-top:0.5rem}
+
+.dash-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.08);margin-bottom:2rem}
+.dash-card{background:rgba(255,255,255,0.03);padding:1.8rem;text-decoration:none;color:var(--parchment);display:flex;flex-direction:column;gap:0.5rem;transition:background 0.2s;position:relative}
+.dash-card:hover{background:rgba(255,255,255,0.07)}
+.dash-card:hover .dash-arrow{transform:translate(3px,-3px)}
+.dash-icon{font-size:1.6rem}
+.dash-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700}
+.dash-desc{font-size:0.75rem;color:rgba(250,246,239,0.4);line-height:1.5;font-weight:300}
+.dash-arrow{font-size:0.75rem;color:var(--warm);margin-top:0.3rem;transition:transform 0.2s;display:inline-block}
+
+.dash-divider{border:none;border-top:1px solid rgba(255,255,255,0.08);margin:1.5rem 0}
+
+.dash-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06)}
+.dash-tool{background:rgba(255,255,255,0.02);padding:1.2rem 1.4rem;text-decoration:none;color:var(--parchment);display:flex;flex-direction:column;gap:0.3rem;transition:background 0.15s}
+.dash-tool:hover{background:rgba(255,255,255,0.05)}
+.dash-tool-icon{font-size:1.1rem}
+.dash-tool-name{font-size:0.8rem;font-weight:500}
+.dash-tool-desc{font-size:0.68rem;color:rgba(250,246,239,0.35);font-weight:300}
+
+.section-label{font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(250,246,239,0.3);margin-bottom:0.8rem}
+
+.dash-footer{display:flex;align-items:center;justify-content:space-between;margin-top:1.5rem}
+.back-link{font-size:0.75rem;color:rgba(250,246,239,0.3);text-decoration:none;transition:color 0.15s}
+.back-link:hover{color:var(--warm)}
+.logout-btn{background:none;border:1px solid rgba(255,255,255,0.1);padding:0.3rem 0.8rem;font-size:0.72rem;color:rgba(250,246,239,0.3);cursor:pointer;font-family:'DM Sans',sans-serif;border-radius:2px;transition:all 0.15s}
+.logout-btn:hover{border-color:var(--red);color:var(--red)}
+
+@media(max-width:600px){
+  .dash-grid{grid-template-columns:1fr}
+  .dash-tools{grid-template-columns:1fr 1fr}
+}
+nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid rgba(255,255,255,0.08);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:48px}
+.nav-logo{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;text-decoration:none;color:#faf6ef}
+.nav-logo span{color:#c8873a;font-style:italic}
+.nav-links{display:flex;gap:1rem;align-items:center}
+.nav-links a{font-size:0.74rem;color:rgba(250,246,239,0.5);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s;white-space:nowrap}
+.nav-links a:hover{color:#faf6ef}
+.nav-links a.active{color:#faf6ef;font-weight:500}
+.nav-back{font-size:0.72rem;color:rgba(250,246,239,0.5);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;padding:0.22rem 0.6rem;border:1px solid rgba(255,255,255,0.15);border-radius:3px;transition:all 0.15s;white-space:nowrap}
+.nav-back:hover{color:#faf6ef;border-color:rgba(255,255,255,0.4)}
 </style>
 </head>
 <body>
+<nav>
+  <a class="nav-logo" href="admin.html">Admin <span>Panel</span></a>
+  <div class="nav-links"></div>
+  <a class="nav-back" href="index.html">← Site</a>
+</nav>
 
 <div id="lock">
-  <h2>Admin Login</h2>
-  <input id="pw" type="password" placeholder="Password">
-  <button onclick="unlock()">Unlock</button>
-  <p id="err" style="color:red;display:none;">Wrong password</p>
+  <div class="lock-icon">🔐</div>
+  <div class="lock-title">Admin Area</div>
+  <div class="lock-sub">Enter password to continue</div>
+  <input class="lock-input" type="password" id="pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')unlock()">
+  <button class="lock-btn" onclick="unlock()">Unlock</button>
+  <div class="lock-error" id="pw-error">Incorrect password. Try again.</div>
 </div>
 
-<div id="dash">
-  <h2>Dashboard</h2>
-  <a href="lesson-editor.html" target="_blank">Open Lesson Editor</a><br><br>
-  <button onclick="logout()">Logout</button>
+<div id="dashboard">
+  <div class="dash-header">
+    <div class="dash-eyebrow">🔧 Admin Dashboard</div>
+    <h1 class="dash-title">Rahul's <em>Backend</em></h1>
+    <div class="dash-sub">Manage your site content from here.</div>
+  </div>
+
+  <div class="section-label">Content Management</div>
+  <div class="dash-grid">
+    <a class="dash-card" href="watchlist-admin.html">
+      <div class="dash-icon">🎬</div>
+      <div class="dash-name">Watchlist Admin</div>
+      <div class="dash-desc">Add films and series, rate them, track episodes season by season.</div>
+      <span class="dash-arrow">Open ↗</span>
+    </a>
+    <a class="dash-card" href="travel-admin.html">
+      <div class="dash-icon">🗺️</div>
+      <div class="dash-name">Travel Admin</div>
+      <div class="dash-desc">Add and edit pins on the travel map, import KML files, manage locations.</div>
+      <span class="dash-arrow">Open ↗</span>
+    </a>
+  </div>
+
+  <div class="dash-footer">
+    <a class="back-link" href="index.html">← Back to site</a>
+    <button class="logout-btn" onclick="logout()">Lock 🔒</button>
+  </div>
 </div>
 
 <script>
-const ADMIN_HASH = "2e3aecbefb8c5dffa223b24e7a1e6f301344abbed22ec7e3a53c770a7e47e8a0";
-
-async function sha256Hex(text){
-  const data = new TextEncoder().encode(text);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  return [...new Uint8Array(hashBuffer)].map(b=>b.toString(16).padStart(2,"0")).join("");
+function simpleHash(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = Math.imul(31, h) + str.charCodeAt(i) | 0;
+  }
+  return Math.abs(h).toString(16);
 }
 
-async function unlock(){
-  const val = document.getElementById("pw").value;
-  const hash = await sha256Hex(val);
-  if(hash === ADMIN_HASH){
-    localStorage.setItem("auth", hash);
+const CORRECT = simpleHash('Kuttu@99');
+
+function unlock() {
+  const val = document.getElementById('pw').value;
+  if (simpleHash(val) === CORRECT) {
+    sessionStorage.setItem('admin_auth', CORRECT);
     show();
   } else {
-    document.getElementById("err").style.display="block";
+    document.getElementById('pw-error').classList.add('on');
+    document.getElementById('pw').value = '';
+    document.getElementById('pw').focus();
   }
 }
 
-function show(){
-  document.getElementById("lock").style.display="none";
-  document.getElementById("dash").style.display="block";
+function show() {
+  document.getElementById('lock').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
 }
 
-function logout(){
-  localStorage.removeItem("auth");
-  location.reload();
+function logout() {
+  sessionStorage.removeItem('admin_auth');
+  document.getElementById('lock').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('pw').value = '';
 }
 
-if(localStorage.getItem("auth") === ADMIN_HASH){
-  show();
-}
+if (sessionStorage.getItem('admin_auth') === CORRECT) show();
 </script>
-
 </body>
 </html>
