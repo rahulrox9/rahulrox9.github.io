@@ -1,25 +1,36 @@
 <!DOCTYPE html>
-<html>
-<head><title>Admin</title></head>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel</title>
+<style>
+body{font-family:sans-serif;background:#111;color:#eee;display:flex;align-items:center;justify-content:center;height:100vh}
+#dash{display:none}
+</style>
+</head>
 <body>
 
-<h2>Admin Login</h2>
-<input id="pw" type="password" placeholder="Password">
-<button onclick="unlock()">Unlock</button>
+<div id="lock">
+  <h2>Admin Login</h2>
+  <input id="pw" type="password" placeholder="Password">
+  <button onclick="unlock()">Unlock</button>
+  <p id="err" style="color:red;display:none;">Wrong password</p>
+</div>
 
-<div id="dash" style="display:none; margin-top:20px;">
-  <h3>Dashboard</h3>
-  <a href="editor-final.html" target="_blank">Open Lesson Editor</a><br><br>
+<div id="dash">
+  <h2>Dashboard</h2>
+  <a href="lesson-editor.html" target="_blank">Open Lesson Editor</a><br><br>
   <button onclick="logout()">Logout</button>
 </div>
 
 <script>
 const ADMIN_HASH = "2e3aecbefb8c5dffa223b24e7a1e6f301344abbed22ec7e3a53c770a7e47e8a0";
 
-async function sha256Hex(text) {
+async function sha256Hex(text){
   const data = new TextEncoder().encode(text);
   const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  return [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2,"0")).join("");
+  return [...new Uint8Array(hashBuffer)].map(b=>b.toString(16).padStart(2,"0")).join("");
 }
 
 async function unlock(){
@@ -27,19 +38,24 @@ async function unlock(){
   const hash = await sha256Hex(val);
   if(hash === ADMIN_HASH){
     localStorage.setItem("auth", hash);
-    document.getElementById("dash").style.display="block";
+    show();
   } else {
-    alert("Wrong password");
+    document.getElementById("err").style.display="block";
   }
+}
+
+function show(){
+  document.getElementById("lock").style.display="none";
+  document.getElementById("dash").style.display="block";
 }
 
 function logout(){
   localStorage.removeItem("auth");
-  document.getElementById("dash").style.display="none";
+  location.reload();
 }
 
 if(localStorage.getItem("auth") === ADMIN_HASH){
-  document.getElementById("dash").style.display="block";
+  show();
 }
 </script>
 
