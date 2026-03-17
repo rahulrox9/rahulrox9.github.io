@@ -111,7 +111,7 @@ textarea{min-height:80px;resize:vertical}
 <script>
 const ADMIN_HASH = "2e3aecbefb8c5dffa223b24e7a1e6f301344abbed22ec7e3a53c770a7e47e8a0";
 
-if (window.opener == null && sessionStorage.getItem("admin_auth_sha256") !== ADMIN_HASH) {
+if (localStorage.getItem("admin_auth_sha256") !== ADMIN_HASH) {
   document.body.innerHTML = '<div style="max-width:720px;margin:60px auto;padding:24px;font-family:DM Sans,sans-serif;"><h1 style="font-family:Playfair Display,serif;">Access denied</h1><p>This editor is protected. Open it from your admin panel after logging in.</p><p><a href="admin.html">Go to admin</a></p></div>';
   throw new Error("Unauthorized");
 }
