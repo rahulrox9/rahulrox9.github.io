@@ -33,6 +33,9 @@ hr { border: none; border-top: 1.5px solid var(--border); margin: 20px 0; } /* h
 a { [target="_blank" rel="noopener"]; text-decoration: none; color: var(--warm); } /* hyperlink */
 ol { padding-left: 0; list-style-position: inside; } /* Removes the default indentation and ensures numbers stay inside the viewable area */
 
+.glossary::before { content: "शब्दावली (Glossary)"; display: block; font-family: 'Playfair Display', serif; font-size: 1.8rem; 
+    color: var(--warm);margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; font-weight: 700;
+}
 .glossary { margin: 20px 0; padding: 10px; background-color: var(--parchment); border: 1px solid var(--border); border-radius: 4px; overflow-x: auto; }
 .glossary-table th:nth-child(1)::before { content: "Word"; }
 .glossary-table th:nth-child(2)::before { content: "Meaning"; }
@@ -182,121 +185,32 @@ ol { padding-left: 0; list-style-position: inside; } /* Removes the default inde
   <h3>Texts for analysis: Source: लघुन्यास: (laghunyāsaḥ) </h3>
   <table>
    <thead>
-    <tr> <th style="width: 20%;">Sanskrit Text</th> <th style="width: 30%;">Body part</th> <th style="width: 50%;">English Translation</th> </tr>
-    </thead>
-    <tbody>
-     <tr> <td>प्रजनने ब्रह्मा तिष्ठतु ।</td>
-					<td> प्रजननम् = reproductive organs (स. वि. एक. व.) </td>
-                    <td>May Brahmā reside in the reproductive organs.</td>
-                </tr>
-                <tr>
-                    <td>पादयोर्विष्णुस्तिष्ठतु ।</td>
-                    <td>May Viṣṇu reside in the feet.</td>
-                </tr>
-                <tr>
-                    <td>हस्तयोर्हरस्तिष्ठतु ।</td>
-                    <td>May Hara (Śiva) reside in the hands.</td>
-                </tr>
-                <tr>
-                    <td>बाह्वोरिन्द्रस्तिष्ठतु ।</td>
-                    <td>May Indra reside in the arms.</td>
-                </tr>
-                <tr>
-                    <td>जठरेऽग्निस्तिष्ठतु ।</td>
-                    <td>May Agni reside in the stomach.</td>
-                </tr>
-                <tr>
-                    <td>हृदये शिवस्तिष्ठतु ।</td>
-                    <td>May Śiva reside in the heart.</td>
-                </tr>
-                <tr>
-                    <td>कण्ठे वसवस्तिष्ठन्तु ।</td>
-                    <td>May the Vasus reside in the throat.</td>
-                </tr>
-                <tr>
-                    <td>वक्त्रे सरस्वती तिष्ठतु ।</td>
-                    <td>May Sarasvatī reside in the mouth.</td>
-                </tr>
-                <tr>
-                    <td>नासिकयोर्वायुस्तिष्ठतु ।</td>
-                    <td>May Vāyu reside in the nostrils.</td>
-                </tr>
-                <tr>
-                    <td>नयनयोश्चन्द्रादित्यौ तिष्ठेताम् ।</td>
-                    <td>May the Moon and Sun reside in the eyes.</td>
-                </tr>
-                <tr>
-                    <td>कर्णयोरश्विनौ तिष्ठेताम् ।</td>
-                    <td>May the Aśvins reside in the ears.</td>
-                </tr>
-                <tr>
-                    <td>ललाटे रुद्रास्तिष्ठन्तु ।</td>
-                    <td>May the Rudras reside in the forehead.</td>
-                </tr>
-                <tr>
-                    <td>मूर्ध्न्यादित्यास्तिष्ठन्तु ।</td>
-                    <td>May the Ādityas reside in the crown of the head.</td>
-                </tr>
-                <tr>
-                    <td>शिरसि महादेवस्तिष्ठतु ।</td>
-                    <td>May Mahādeva reside in the head.</td>
-                </tr>
-                <tr>
-                    <td>शिखायां वामदेवस्तिष्ठतु ।</td>
-                    <td>May Vāmadeva reside in the tuft of hair.</td>
-                </tr>
-                <tr>
-                    <td>पृष्ठे पिनाकी तिष्ठतु ।</td>
-                    <td>May Pinākī (Śiva) reside in the back.</td>
-                </tr>
-                <tr>
-                    <td>पुरतः शूली तिष्ठतु ।</td>
-                    <td>May the Spear-bearer (Śiva) reside in front.</td>
-                </tr>
-                <tr>
-                    <td>पार्श्वयोः शिवाशङ्करौ तिष्ठेताम् ।</td>
-                    <td>May Śiva and Śaṅkara reside in the sides.</td>
-                </tr>
-                <tr>
-                    <td>सर्वतो वायुस्तिष्ठतु ।</td>
-                    <td>May Vāyu reside in all directions.</td>
-                </tr>
-                <tr>
-                    <td>ततो बहिः सर्वतोऽग्निर्ज्वालामाला परिवृतस्तिष्ठतु ।</td>
-                    <td>Beyond that, on the outside, let there be fire encircled by a garland of flames.</td>
-                </tr>
-                <tr>
-                    <td>सर्वेष्वङ्गेषु सर्वा देवता यथास्थानं तिष्ठन्तु ।</td>
-                    <td>May all deities reside in all parts, each in their respective place.</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <h3>Vocabulary and Grammar Notes</h3>
-        <ul>
-            <li>प्रजननम् = reproductive organs (स. एक. व.)</li>
-            <li>पाद = feet (स. द्वि. व.)</li>
-            <li>हस्त = hands (स. द्वि. व.)</li>
-            <li>बाहु = arms (स. द्वि. व.)</li>
-            <li>जठर = stomach (स. एक. व.)</li>
-            <li>हृदय = heart (स. एक. व.)</li>
-            <li>कण्ठ = throat (स. एक. व.)</li>
-            <li>वक्त्र = mouth (स. एक. व.)</li>
-            <li>नासिका = nostrils (स. द्वि. व.)</li>
-            <li>नयन = eyes (स. द्वि. व.)</li>
-            <li>कर्ण = ears (स. द्वि. व.)</li>
-            <li>ललाट = forehead (स. एक. व.)</li>
-            <li>मूर्धन् = crown of the head (स. एक. व.)</li>
-            <li>शिरस् = head (स. एक. व.)</li>
-            <li>शिखा = tuft of hair (स. एक. व.)</li>
-            <li>पृष्ठ = back (स. एक. व.)</li>
-            <li>पुरस् = front (अव्यय)</li>
-            <li>पार्श्व = sides (स. द्वि. व.)</li>
-            <li>सर्वतः = all directions (अव्यय)</li>
-            <li>बहिः = outside (अव्यय)</li>
-            <li>अङ्ग = parts (स. बहु. व)</li>
-        </ul>
-    </section>
+    <tr> <th style="width: 25%;">Sanskrit Text</th> <th style="width: 30%;">Body part</th> <th style="width: 45%;">English Translation</th> </tr>
+  </thead>
+  <tbody>
+   	<tr> <td>प्रजनने ब्रह्मा तिष्ठतु । </td> <td> <b>प्रजननम्</b> = reproductive organs </td> <td><span class="engtrans" style="font-size: 0.85rem;">May Brahmā reside in the reproductive organs.</span></td> </tr>
+   	<tr> <td>पादयोर्विष्णुस्तिष्ठतु । </td> <td> <b>पाद</b> = feet</td> <td><span class="engtrans" style="font-size: 0.85rem;">May Viṣṇu reside in the feet.</span></td> </tr>
+	<tr><td>हस्तयोर्हरस्तिष्ठतु । </td> <td> <b>हस्त</b> = hands</td> <td><span class="engtrans" style="font-size: 0.85rem;">May Hara (Śiva) reside in the hands.</span></td> </tr>
+	<tr> <td>बाह्वोरिन्द्रस्तिष्ठतु । </td> <td> <b>बाहु</b> = arms </td> <td><span class="engtrans" style="font-size: 0.85rem;">May Indra reside in the arms.</span></td> </tr>
+	<tr> <td>जठरेऽग्निस्तिष्ठतु । </td> <td> <b>जठर</b> = stomach </td> <td><span class="engtrans" style="font-size: 0.85rem;">May Agni reside in the stomach.</span></td> </tr>
+	<tr> <td>हृदये शिवस्तिष्ठतु । </td> <td> <b>हृदय</b> = heart </td> <td><span class="engtrans" style="font-size: 0.85rem;">May Śiva reside in the heart.</span></td> </tr>
+	<tr> <td>कण्ठे वसवस्तिष्ठन्तु । </td> <td> <b>कण्ठ</b> = throat </td> <td><span class="engtrans" style="font-size: 0.85rem;">May the Vasus reside in the throat.</span></td> </tr>
+	<tr> <td>वक्त्रे सरस्वती तिष्ठतु । </td> <td> <b>वक्त्र</b> = mouth </td> <td><span class="engtrans" style="font-size: 0.85rem;">May Sarasvatī reside in the mouth.</span></td> </tr>
+	<tr> <td>नासिकयोर्वायुस्तिष्ठतु । </td> <td> <b>नासिका</b> = nostrils </td> <td><span class="engtrans" style="font-size: 0.85rem;">May Vāyu reside in the nostrils.</span></td> </tr>
+	<tr> <td>नयनयोश्चन्द्रादित्यौ तिष्ठेताम् । </td> <td> <b>नयन</b> = eyes </td> <td><span class="engtrans" style="font-size: 0.85rem;">May the Moon and Sun reside in the eyes.</span></td> </tr>
+	<tr> <td>कर्णयोरश्विनौ तिष्ठेताम् । </td> <td> <b>कर्ण</b> = ears </td> <td><span class="engtrans" style="font-size: 0.85rem;">May the Aśvins reside in the ears.</span></td> </tr>
+	<tr> <td>ललाटे रुद्रास्तिष्ठन्तु । </td> <td> <b>ललाट</b> = forehead </td> <td><span class="engtrans" style="font-size: 0.85rem;">May the Rudras reside in the forehead.</span></td> </tr>
+	<tr> <td>मूर्ध्न्यादित्यास्तिष्ठन्तु । </td> <td> <b>मूर्धन्</b> = crown of the head </td> <td><span class="engtrans" style="font-size: 0.85rem;">May the Ādityas reside in the crown of the head.</span></td> </tr>
+	<tr> <td>शिरसि महादेवस्तिष्ठतु । </td> <td> <b>शिरस्</b> = head </td> <td><span class="engtrans" style="font-size: 0.85rem;">May Mahādeva reside in the head.</span></td> </tr>
+	<tr> <td>शिखायां वामदेवस्तिष्ठतु । </td> <td> <b>शिखा</b> = tuft of hair </td> <td><span class="engtrans" style="font-size: 0.85rem;">May Vāmadeva reside in the tuft of hair.</span></td> </tr>
+	<tr> <td>पृष्ठे पिनाकी तिष्ठतु । </td> <td> <b>पृष्ठ</b> = back </td> <td><span class="engtrans" style="font-size: 0.85rem;">May Pinākī (Śiva) reside in the back.</span></td> </tr>
+	<tr> <td>पुरतः शूली तिष्ठतु । </td> <td> <b>पुरतः</b> = in front* </td> <td><span class="engtrans" style="font-size: 0.85rem;">May the Spear-bearer (Śiva) reside in front.</span></td> </tr>
+	<tr> <td>पार्श्वयोः शिवाशङ्करौ तिष्ठेताम् । </td> <td> <b>पार्श्व</b> = flank </td> <td><span class="engtrans" style="font-size: 0.85rem;">May Śiva and Śaṅkara reside in the flank.</span></td> </tr>
+    <tr> <td>सर्वतो वायुस्तिष्ठतु । </td> <td> <b>सर्वतः</b> = all directions* </td> <td><span class="engtrans" style="font-size: 0.85rem;">May Vāyu reside in all directions.</span></td> </tr>
+    <tr> <td>ततो बहिः सर्वतोऽग्निर्ज्वालामाला परिवृतस्तिष्ठतु । </td> <td> <b>बहिः</b> = outside* </td> <td><span class="engtrans" style="font-size: 0.85rem;">Beyond that, on the outside, let there be Agni encircled by a garland of flames.</span></td> </tr>
+	<tr> <td>सर्वेष्वङ्गेषु सर्वा देवता यथास्थानं तिष्ठन्तु । </td> <td> <b>अङ्ग</b> = parts </td> <td><span class="engtrans" style="font-size: 0.85rem;">May all deities reside in all parts, each in their respective place.</span></td> </tr>
+  </tbody>
+</table>
 
 <div class="glossary">
  <table class="glossary-table">
@@ -340,7 +254,7 @@ ol { padding-left: 0; list-style-position: inside; } /* Removes the default inde
    </thead>
    <tbody>
     <tr> <td>पादयोर्विष्णुस्तिष्ठतु</td> <td>१. पादयोः + विष्णुः<br>२. विष्णुः + तिष्ठतु</td> <td>१. विसर्ग-रेफ<br>२. विसर्ग-सत्त्व</td> </tr>
-                <tr><td>हस्तयोर्हरस्तिष्ठतु</td><td>१. हस्तयोः + हरः<br>२. हरः + तिष्ठतु</td><td>१. विसर्ग-रेफ<br>२. विसर्ग-सत्त्व</td></tr>
+	<tr><td>हस्तयोर्हरस्तिष्ठतु</td><td>१. हस्तयोः + हरः<br>२. हरः + तिष्ठतु</td><td>१. विसर्ग-रेफ<br>२. विसर्ग-सत्त्व</td></tr>
                 <tr><td>बाह्वोरिन्द्रस्तिष्ठतु</td><td>१. बाह्वोः + इन्द्रः<br>२. इन्द्रः + तिष्ठतु</td><td>१. विसर्ग-रेफ<br>२. विसर्ग-सत्त्व</td></tr>
                 <tr><td>जठरेऽग्निस्तिष्ठतु</td><td>१. जठरे + अग्निः<br>२. अग्निः + तिष्ठतु</td><td>१. पूर्वरूप सन्धि<br>२. विसर्ग-सत्त्व</td></tr>
                 <tr><td>नासिकयोर्वायुस्तिष्ठतु</td><td>१. नासिकयोः + वायुः<br>२. वायुः + तिष्ठतु</td><td>१. विसर्ग-रेफ<br>२. विसर्ग-सत्त्व</td></tr>
