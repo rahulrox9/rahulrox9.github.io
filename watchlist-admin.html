@@ -1432,9 +1432,12 @@ async function save() {
 async function load() {
   const msg=document.getElementById('form-msg');
   try {
-    const r=await driveRead('watchlist.json');
-    entries=r.data;
-    if (!Array.isArray(entries)) throw new Error('Data is not an array');
+    const r = await driveRead('watchlist.json');
+    console.log('watchlist response:', r);
+    entries = Array.isArray(r.data) ? r.data : (Array.isArray(r.data?.data) ? r.data.data : []);
+    if (!entries.length && !Array.isArray(r.data)) { 
+    throw new Error('Data is not an array');
+    }
   } catch(e) {
     entries=[];
     if (msg) { msg.className='msg err'; msg.textContent='⚠ Could not load watchlist: '+e.message; }
