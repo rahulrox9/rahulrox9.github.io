@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A guide to amateur cooking. Part 1: Using the knife | Rahul Subbaraman</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Playball+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Playball&display=swap" rel="stylesheet">
     <style>
         :root {
             --ink: #1a1208;
@@ -23,6 +23,7 @@
             margin: 0;
         }
 
+        /* Subtle paper texture overlay */
         body::before {
             content: '';
             position: fixed;
@@ -70,8 +71,8 @@
         }
 
         .fancy-title {
-            font-family: 'Playball Script', cursive;
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-family: 'Playball', cursive;
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
             color: var(--warm);
             line-height: 1.2;
             margin-bottom: 0.5rem;
@@ -89,57 +90,74 @@
 
         .quote-block {
             margin: 3rem 0;
-            padding: 2rem;
+            padding: 2.5rem;
             border-top: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
             text-align: center;
         }
 
         .quote-text {
-            font-family: 'Playball Script', cursive;
-            font-size: 1.5rem;
+            font-family: 'Playball', cursive;
+            font-size: 1.8rem;
             color: var(--ink);
             display: block;
+            margin-bottom: 1rem;
         }
 
         .quote-author {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.8rem;
-            letter-spacing: 0.1em;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             color: var(--warm);
-            margin-top: 1rem;
-            display: block;
-        }
-
-        .post-content {
-            font-size: 1.05rem;
-            font-weight: 300;
+            font-weight: 500;
         }
 
         .post-content h2 {
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
-            margin: 3rem 0 1rem;
+            margin: 3.5rem 0 1.2rem;
             color: var(--warm);
         }
 
         .post-content h3 {
             font-family: 'Playfair Display', serif;
-            font-size: 1.3rem;
-            margin: 2rem 0 1rem;
+            font-size: 1.4rem;
+            margin: 2.5rem 0 1rem;
         }
 
-        .post-content p {
-            margin-bottom: 1.5rem;
+        /* Figure and Image Styling */
+        .post-figure {
+            margin: 2.5rem 0;
         }
 
         .post-image {
             width: 100%;
             height: auto;
-            border-radius: 2px;
-            margin: 1rem 0 2rem;
             border: 1px solid var(--border);
+            display: block;
+        }
+
+        figcaption {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 1.5rem;
+            margin-top: 0.6rem;
+        }
+
+        .caption-text {
+            font-size: 0.85rem;
+            color: var(--ink);
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        .image-credit {
+            font-size: 0.65rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
         }
 
         .note-box {
@@ -147,11 +165,11 @@
             padding: 1.5rem;
             border-left: 3px solid var(--warm);
             font-size: 0.95rem;
-            margin: 2rem 0;
+            margin: 2.5rem 0;
         }
 
         .reference-list {
-            margin-top: 4rem;
+            margin-top: 5rem;
             padding-top: 2rem;
             border-top: 1px solid var(--border);
             font-size: 0.85rem;
@@ -161,7 +179,7 @@
             color: var(--warm);
             text-decoration: none;
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
         }
 
         footer {
@@ -171,6 +189,13 @@
             font-family: 'Playfair Display', serif;
             font-style: italic;
             color: var(--muted);
+        }
+
+        @media (max-width: 600px) {
+            figcaption {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
         }
     </style>
 </head>
@@ -185,7 +210,7 @@
     
     <header class="post-header">
         <h1 class="fancy-title">A guide to amateur cooking. Part 1: Using the knife</h1>
-        <span class="post-metadata">Culinary · 15.12.2020</span>
+        <span class="post-metadata">Culinary · Article · 15.12.2020</span>
     </header>
 
     <div class="quote-block">
@@ -203,60 +228,52 @@
         <p>One of the most fundamental aspects of cooking is the ability to use a knife skillfully. Cutting the ingredients into appropriate shapes and sizes affect how it cooks with the other ingredients and ultimately affects the final result. The basic cuts can be broadly classified into strip cuts (Julienne, Batonnet, etc.) and cube cuts (Brunoise, Dice, etc.).</p>
 
         <h2>Chopping</h2>
-        <img src="path/to/chopping-image.jpg" alt="Chopping Technique" class="post-image">
+        <figure class="post-figure">
+            <img src="https://static.wixstatic.com/media/d1cdb9_7970f1c8b35c4afcac67d4e41703ba64~mv2.jpg" alt="The Claw Grip" class="post-image">
+            <figcaption>
+                <span class="caption-text">Using the 'Claw Grip' to protect fingertips during a rough chop.</span>
+                <span class="image-credit">Source: Wix Media</span>
+            </figcaption>
+        </figure>
         <p>This is a technique that does not care for precision. Here, we go over the same ingredient in a rocking motion until we get roughly equal-sized pieces. This is typical of home-cooking where the ingredient cooks own for a long time in a stew. The roughly chopped vegetable or aromatic is just slightly broken up.</p>
 
         <h2>Slicing</h2>
-        <img src="path/to/slicing-image.jpg" alt="Slicing Technique" class="post-image">
         <p>This is the technique used to cut across fruits, vegetables, bread or cheese into uniform and thin pieces. This is typically used for roast, salads and sandwich.</p>
 
         <h2>Mincing</h2>
-        <img src="path/to/mincing-image.jpg" alt="Mincing Technique" class="post-image">
-        <p>This technique demands a steady hand and a sharp knife. Here the ingredients are cut into pieces of about 1/8" or 1/16", which is the smallest size we can reach without making a purée. Onions, garlic and herbs are generally minced for seasoning or stir-frying. Mincing ensure that the flavour is evenly distributed throughout the stir fry.</p>
+        <p>This technique demands a steady hand and a sharp knife. Here the ingredients are cut into pieces of about 1/8" or 1/16", which is the smallest size we can reach without making a purée. Onions, garlic and herbs are generally minced for seasoning or stir-frying.</p>
 
         <h2>Julienne</h2>
-        <img src="path/to/julienne-image.jpg" alt="Julienne Technique" class="post-image">
-        <p>Also known as matchstick cut, this technique involves cutting the vegetables into thin long strips of 1/8" x 1/8" x 1" to 2". Julienne cut is used only on firm vegetables like bell peppers, carrots, celery, and potatoes for stir-frying, as it ensures that the vegetable is cooked rapidly and evenly and mixes well with other ingredients. It is also the starting point of a 'Brunoise' cut.</p>
-        
-        <p>A variation of this technique is the 'Fine Julienne' cut where the dimensions are 1/16" x 1/16" x 1" to 2" with the julienned veggie being cut twice along the length to form four identical pieces. This is also the starting point of a 'Fine Brunoise' cut.</p>
+        <p>Also known as matchstick cut, this technique involves cutting the vegetables into thin long strips of 1/8" x 1/8" x 1" to 2". Julienne cut is used only on firm vegetables like bell peppers, carrots, celery, and potatoes for stir-frying.</p>
 
         <div class="note-box">
             <strong>NOTE:</strong> Julienne used on a potato is known as Allumette cut.
         </div>
 
         <h2>Brunoise</h2>
-        <img src="path/to/brunoise-image.jpg" alt="Brunoise Technique" class="post-image">
-        <p>To execute this technique, gather julienned vegetables and cut them into small cubes of 1/8". This is the finest cube that we can get, and anything finer would be a mince. This cut is most often used for making sauces or aromatic garnishes and is ideal for onion, celery, bell peppers, tomato, and root vegetables.</p>
-        <p>A variation of this technique is the 'Fine Brunoise' cut where the dimensions of the cubes are 1/16" with the fine julienned veggie as the starting point.</p>
+        <p>To execute this technique, gather julienned vegetables and cut them into small cubes of 1/8". This is the finest cube that we can get, and anything finer would be a mince. This cut is most often used for making sauces or aromatic garnishes.</p>
 
         <h2>Batonnet</h2>
-        <img src="path/to/batonnet-image.jpg" alt="Batonnet Technique" class="post-image">
-        <p>Commonly known as a french fry cut, this technique is used for french fries, vegetable sticks and crudites. It involves cutting the vegetables into squares and then making them into strips of 1/4" x 1/4" x 2" to 2.5". This is also the starting point of a 'Small Dice'.</p>
+        <p>Commonly known as a french fry cut, this technique is used for vegetable sticks and crudites. It involves cutting the vegetables into strips of 1/4" x 1/4" x 2" to 2.5". This is also the starting point of a 'Small Dice'.</p>
 
         <h2>Dice</h2>
-        <img src="path/to/dice-comparison-image.jpg" alt="Comparison of Dicing Sizes" class="post-image">
-        <p>A dice is a cut that creates uniform cubes and is typically used in dishes like soups and fried rice where lots of vegetables are added. There are three cuts depending on the size of the cube - Small Dice, Medium Dice, and Large Dice.</p>
-
-        <h3>Small dice</h3>
-        <p>The small dice is derived from a batonnet, and the final dimension of the cubes is 1/4". Small diced vegetables are used in soups.</p>
-
-        <h3>Medium dice</h3>
-        <p>In this technique, the final dimension of the cubes is 1/2". Medium diced vegetables are used in chowders and fried rice.</p>
-
-        <h3>Large dice</h3>
-        <p>In this technique, the final dimension of the cubes is 3/4". Large diced vegetables are used in pies and stews.</p>
+        <p>A dice is a cut that creates uniform cubes and is typically used in dishes like soups and fried rice. There are three cuts depending on the size of the cube - Small Dice (1/4"), Medium Dice (1/2"), and Large Dice (3/4").</p>
 
         <h2>Chiffonade</h2>
-        <img src="path/to/chiffonade-image.jpg" alt="Chiffonade Technique" class="post-image">
-        <p>This is a technique that's exclusive for herbs and leafy vegetables like basil, kale, and spinach. Here, the leaves are stacked, rolled tightly and cut across into thin strips or ribbons. Thin chiffonades of herbs are for garnishing, while a larger chiffonade can be used for a sauté.</p>
+        <p>This is a technique that's exclusive for herbs and leafy vegetables like basil, kale, and spinach. Here, the leaves are stacked, rolled tightly and cut across into thin strips or ribbons.</p>
 
         <h2>Extras</h2>
         <h3>Shredding vs Grating</h3>
-        <img src="path/to/shred-vs-grate-image.jpg" alt="Shredding vs Grating" class="post-image">
         <p>Many people make the mistake of using it interchangeably, but they are quite different. Grating results in choppy short fragments, almost powder-like while shredding results in long and thin strips.</p>
 
         <h3>Supreming a citrus fruit</h3>
-        <img src="path/to/supreming-image.jpg" alt="Supreming a Citrus Fruit" class="post-image">
+        <figure class="post-figure">
+            <img src="https://www.simplyrecipes.com/thmb/gyeFKNKcwZnWcY5z2RZocb7cJfk=/750x0/filters:no_upscale():max_bytes(150000):strip_icc()/Winter-Citrus-Parfait-LEAD-6-ac200cdee1314527ad5be63a421cfc82.jpg" alt="Supreming a Citrus Fruit" class="post-image">
+            <figcaption>
+                <span class="caption-text">Citrus segments prepared without pith or rind.</span>
+                <span class="image-credit">Credit: Simply Recipes / Sarah Fritsche</span>
+            </figcaption>
+        </figure>
         <p>This technique is used on citrus fruits like grapefruit, lemon, lime, and orange. The membrane is removed and the fruit is served in slices without any pith or rind.</p>
 
         <section class="reference-list">
