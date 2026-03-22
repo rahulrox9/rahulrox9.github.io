@@ -110,6 +110,57 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
     </a>
   </div>
 
+  <hr class="dash-divider">
+
+  <div class="section-label">Utilities &amp; Tools</div>
+  <div class="dash-tools">
+    <a class="dash-tool" href="watchlist-importer.html">
+      <div class="dash-tool-icon">📥</div>
+      <div class="dash-tool-name">Bulk Importer</div>
+      <div class="dash-tool-desc">Import from MustApp CSV via TMDB</div>
+    </a>
+    <a class="dash-tool" href="tmdb-backfill.html">
+      <div class="dash-tool-icon">🎬</div>
+      <div class="dash-tool-name">TMDB Backfill</div>
+      <div class="dash-tool-desc">Fill IMDb links, cast, director, language for existing entries</div>
+    </a>
+    <a class="dash-tool" href="language-backfill.html">
+      <div class="dash-tool-icon">🌐</div>
+      <div class="dash-tool-name">Language Backfill</div>
+      <div class="dash-tool-desc">Fill missing languages on watchlist entries</div>
+    </a>
+    <a class="dash-tool" href="country-backfill.html">
+      <div class="dash-tool-icon">🏳️</div>
+      <div class="dash-tool-name">Country Backfill</div>
+      <div class="dash-tool-desc">Reverse-geocode missing countries on travel pins</div>
+    </a>
+    <a class="dash-tool" href="postcards.html" target="_blank">
+      <div class="dash-tool-icon">🖼️</div>
+      <div class="dash-tool-name">Postcard Gallery</div>
+      <div class="dash-tool-desc">View postcard gallery</div>
+    </a>
+    <a class="dash-tool" href="postcard-scanner.html">
+      <div class="dash-tool-icon">✂️</div>
+      <div class="dash-tool-name">Postcard Scanner</div>
+      <div class="dash-tool-desc">PDF to cropped images with perspective correction</div>
+    </a>
+    <a class="dash-tool" href="tmdb-checker.html">
+      <div class="dash-tool-icon">🔍</div>
+      <div class="dash-tool-name">TMDB Checker</div>
+      <div class="dash-tool-desc">Check which CSV entries exist on TMDB</div>
+    </a>
+    <a class="dash-tool" href="https://drive.google.com/drive/folders/1yhzDHmE_jwjm5dr9IMCpj_yUW3A58esH" target="_blank">
+      <div class="dash-tool-icon">📁</div>
+      <div class="dash-tool-name">Google Drive</div>
+      <div class="dash-tool-desc">View raw JSON data files</div>
+    </a>
+    <a class="dash-tool" href="https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec" target="_blank">
+      <div class="dash-tool-icon">⚙️</div>
+      <div class="dash-tool-name">Apps Script</div>
+      <div class="dash-tool-desc">View/edit the backend script</div>
+    </a>
+  </div>
+
   <div class="dash-footer">
     <a class="back-link" href="index.html">← Back to site</a>
     <button class="logout-btn" onclick="logout()">Lock 🔒</button>
@@ -117,7 +168,10 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
 </div>
 
 <script>
+const HASH = '7a3f2b1e9c4d6f8a0e5b2c7d4f1a9e3b'; // placeholder, replaced below
+
 function simpleHash(str) {
+  // Simple non-crypto hash — good enough for personal site
   let h = 0;
   for (let i = 0; i < str.length; i++) {
     h = Math.imul(31, h) + str.charCodeAt(i) | 0;
@@ -151,6 +205,7 @@ function logout() {
   document.getElementById('pw').value = '';
 }
 
+// Auto-unlock if already authenticated this session
 if (sessionStorage.getItem('admin_auth') === CORRECT) show();
 </script>
 </body>
