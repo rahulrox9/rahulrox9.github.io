@@ -57,7 +57,10 @@ html,body{height:100%;font-family:'DM Mono',monospace;background:var(--bg);color
     <div class="drop-zone" id="drop-area">
       <input type="file" id="file-input" accept=".pdf" multiple>
       <strong>Drop PDF</strong><br><span style="font-size:0.7rem;opacity:0.5">Multi-page support</span>
-      <div id="upload-status"></div>
+      <div id="upload-status" style="display:none">
+        <div id="upload-summary" style="font-size:0.7rem;color:var(--amber);font-weight:500"></div>
+        <div id="upload-files" style="font-size:0.65rem;color:var(--cream);opacity:0.8;margin-top:0.45rem;line-height:1.4"></div>
+      </div>
     </div>
     <div class="settings">
         <div class="row"><label>DPI</label><input type="range" id="dpi" min="1" max="4" step="1" value="2"></div>
@@ -122,12 +125,11 @@ const lctx = lc.getContext('2d');
 
 fileInput.onchange = (e) => {
     if (e.target.files.length) {
-        const count = e.target.files.length;
-        statusText.innerText = `${count} PDF${count > 1 ? 's' : ''} staged`;
-        statusText.style.display = 'block';
+        const files = [...e.target.files];
+        procBtn._files = files;
         dropArea.classList.add('active');
         procBtn.disabled = false;
-        procBtn._files = [...e.target.files];
+        updateUploadStatus(files);
     }
 };
 
@@ -144,12 +146,10 @@ dropArea.addEventListener('drop', (e) => {
     e.preventDefault();
     const files = [...e.dataTransfer.files].filter(f => f.name.toLowerCase().endsWith('.pdf'));
     if (!files.length) return;
-    fileInput.files = e.dataTransfer.files;
     procBtn._files = files;
-    statusText.innerText = `${files.length} PDF${files.length > 1 ? 's' : ''} staged`;
-    statusText.style.display = 'block';
     dropArea.classList.add('active');
     procBtn.disabled = false;
+    updateUploadStatus(files);
 });
 
 function getQuality() {
@@ -483,7 +483,7 @@ function clearAll() {
     updateCount();
     procBtn.disabled = true;
     procBtn._files = [];
-    statusText.style.display = 'none';
+    updateUploadStatus([]);
     dropArea.classList.remove('active');
 }
 
@@ -703,6 +703,41 @@ function downloadAll() {
         a.download = `postcard-${i + 1}.jpg`;
         a.click();
     });
+}
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, ch => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    }[ch]));
+}
+
+function updateUploadStatus(files) {
+    const summary = document.getElementById('upload-summary');
+    const list = document.getElementById('upload-files');
+    const statusWrap = document.getElementById('upload-status');
+
+    if (!files || !files.length) {
+        statusWrap.style.display = 'none';
+        summary.innerText = '';
+        list.innerHTML = '';
+        return;
+    }
+
+    summary.innerText = `${files.length} PDF${files.length > 1 ? 's' : ''} staged`;
+
+    const maxVisible = 4;
+    const visible = files.slice(0, maxVisible);
+    const extra = files.length - visible.length;
+
+    list.innerHTML =
+        visible.map(f => `<div title="${escapeHtml(f.name)}">• ${escapeHtml(f.name)}</div>`).join('') +
+        (extra > 0 ? `<div style="opacity:0.6">+ ${extra} more</div>` : '');
+
+    statusWrap.style.display = 'block';
 }
 
 /* ---------- Perspective crop ---------- */
