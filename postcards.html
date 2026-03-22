@@ -1,8 +1,3 @@
-The reason your cards are not rendering is a syntax error in your `<script>` section. You have a duplicated and orphaned block of code immediately following the `render()` function definition, which contains an extra closing brace `}`. This breaks the JavaScript execution before it can even run.
-
-I have corrected the script below by removing the redundant code and ensuring the logic correctly handles your **YYYY-MM-DD** date format for reverse chronological sorting.
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -293,4 +288,3 @@ render();
 </script>
 </body>
 </html>
-```
