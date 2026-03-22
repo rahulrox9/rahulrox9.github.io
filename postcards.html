@@ -90,7 +90,6 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 </style>
 </head>
 <body>
-
 <nav>
   <a class="nav-logo" href="index.html">Rahul <span>Subbaraman</span></a>
   <div class="nav-links">
@@ -153,20 +152,18 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// ── POSTCARDS DATA ─────────────────────────────────────────
-// To add a postcard:
-// {
-//   id: 1,
-//   place: 'Santorini',
-//   country: 'Greece',
-//   region: 'Europe',
-//   year: 2023,
-//   img: 'postcards/santorini.jpg',  // put photos in a postcards/ folder
-//   notes: 'Got this at the caldera rim — felt appropriate for a volcanologist.'
-// }
+<script>
 const POSTCARDS = [
-  // Add your postcards here!
+  // Example:
+  // {
+  //   id: 1,
+  //   place: 'Santorini',
+  //   country: 'Greece',
+  //   region: 'Europe',
+  //   year: 2023,
+  //   img: 'postcards/santorini.jpg',
+  //   notes: 'Got this at the caldera rim.'
+  // }
 ];
 
 let activeFilter = 'all';
@@ -174,38 +171,58 @@ let lbIndex = 0;
 let filteredItems = [];
 
 function getEmoji(country) {
-  const codes = {'india':'🇮🇳','france':'🇫🇷','germany':'🇩🇪','italy':'🇮🇹','japan':'🇯🇵','greece':'🇬🇷','spain':'🇪🇸','portugal':'🇵🇹','uk':'🇬🇧','united kingdom':'🇬🇧','usa':'🇺🇸','united states':'🇺🇸','netherlands':'🇳🇱','iceland':'🇮🇸','norway':'🇳🇴','switzerland':'🇨🇭','austria':'🇦🇹','czechia':'🇨🇿','hungary':'🇭🇺','croatia':'🇭🇷','turkey':'🇹🇷','thailand':'🇹🇭','indonesia':'🇮🇩','singapore':'🇸🇬','malaysia':'🇲🇾','nepal':'🇳🇵'};
+  const codes = {
+    'india':'🇮🇳','france':'🇫🇷','germany':'🇩🇪','italy':'🇮🇹','japan':'🇯🇵',
+    'greece':'🇬🇷','spain':'🇪🇸','portugal':'🇵🇹','uk':'🇬🇧','united kingdom':'🇬🇧',
+    'usa':'🇺🇸','united states':'🇺🇸','netherlands':'🇳🇱','iceland':'🇮🇸',
+    'norway':'🇳🇴','switzerland':'🇨🇭','austria':'🇦🇹','czechia':'🇨🇿',
+    'hungary':'🇭🇺','croatia':'🇭🇷','turkey':'🇹🇷','thailand':'🇹🇭',
+    'indonesia':'🇮🇩','singapore':'🇸🇬','malaysia':'🇲🇾','nepal':'🇳🇵'
+  };
   return codes[country?.toLowerCase()] || '🌍';
 }
 
 function render() {
-  filteredItems = activeFilter === 'all' ? POSTCARDS : POSTCARDS.filter(m => m.region === activeFilter);
+  filteredItems = activeFilter === 'all'
+    ? [...POSTCARDS]
+    : POSTCARDS.filter(m => m.region === activeFilter);
+
   const grid = document.getElementById('masonry');
-  document.getElementById('total-count').textContent = POSTCARDS.length || '—';
+  document.getElementById('total-count').textContent = POSTCARDS.length || '0';
 
   if (!filteredItems.length) {
-    grid.innerHTML = '<div class="empty"><strong>No postcards yet</strong>Add your first postcard to the POSTCARDS array in the code.</div>';
-    return;
+    grid.innerHTML = `
+      <div class="empty">
+        <strong>${POSTCARDS.length ? 'No postcards in this region yet' : 'No postcards yet'}</strong>
+        ${POSTCARDS.length
+          ? 'Try another filter.'
+          : 'Add your first postcard to the POSTCARDS array in the code.'}
+      </div>
+    `;
+  } else {
+    grid.innerHTML = filteredItems.map((m, i) => `
+      <div class="postcard-card" onclick="openLb(${i})">
+        ${m.img
+          ? `<img class="postcard-img" src="${m.img}" alt="${m.place}" loading="lazy" onerror="this.outerHTML='<div class=&quot;postcard-img-placeholder&quot;>📮</div>'">`
+          : `<div class="postcard-img-placeholder">📮</div>`}
+        <div class="postcard-info">
+          <div class="postcard-place">${m.place}</div>
+          <div class="postcard-country">${getEmoji(m.country)} ${m.country}</div>
+          ${m.year ? `<div class="postcard-year">${m.year}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
   }
 
-  grid.innerHTML = filteredItems.map((m, i) => `
-    <div class="postcard-card" onclick="openLb(${i})">
-      ${m.img
-        ? `<img class="postcard-img" src="${m.img}" alt="${m.place}" loading="lazy">`
-        : `<div class="postcard-img-placeholder">📮</div>`}
-      <div class="postcard-info">
-        <div class="postcard-place">${m.place}</div>
-        <div class="postcard-country">${getEmoji(m.country)} ${m.country}</div>
-        ${m.year ? `<div class="postcard-year">${m.year}</div>` : ''}
-      </div>
-    </div>`).join('');
-
-  // Build region filters
-  const regions = ['all', ...new Set(POSTCARDS.map(m => m.region).filter(Boolean))].sort();
+  const regions = ['all', ...new Set(POSTCARDS.map(m => m.region).filter(Boolean))];
   const bar = document.getElementById('filter-bar');
-  bar.innerHTML = '<span class="filter-label">Region:</span>' + regions.map(r =>
-    `<button class="filter-btn${r===activeFilter?' on':''}" onclick="setFilter('${r}',this)">${r==='all'?'All':r}</button>`
-  ).join('');
+  bar.innerHTML =
+    '<span class="filter-label">Region:</span>' +
+    regions.map(r =>
+      `<button class="filter-btn${r === activeFilter ? ' on' : ''}" onclick="setFilter('${r}', this)">
+        ${r === 'all' ? 'All' : r}
+      </button>`
+    ).join('');
 }
 
 function setFilter(f, btn) {
@@ -223,18 +240,25 @@ function openLb(i) {
 function showLb() {
   const m = filteredItems[lbIndex];
   if (!m) return;
+
   document.getElementById('lb-img-wrap').innerHTML = m.img
-    ? `<img class="lb-img" src="${m.img}" alt="${m.place}">`
+    ? `<img class="lb-img" src="${m.img}" alt="${m.place}" onerror="this.outerHTML='<div class=&quot;lb-img-placeholder&quot;>📮</div>'">`
     : `<div class="lb-img-placeholder">📮</div>`;
+
   document.getElementById('lb-place').textContent = m.place;
-  document.getElementById('lb-meta').textContent  = [getEmoji(m.country) + ' ' + m.country, m.year].filter(Boolean).join(' · ');
-  document.getElementById('lb-notes').textContent = m.notes || '';
-  document.getElementById('lb-notes').style.display = m.notes ? 'block' : 'none';
+  document.getElementById('lb-meta').textContent =
+    [getEmoji(m.country) + ' ' + m.country, m.year].filter(Boolean).join(' · ');
+
+  const notes = document.getElementById('lb-notes');
+  notes.textContent = m.notes || '';
+  notes.style.display = m.notes ? 'block' : 'none';
+
   document.getElementById('lightbox').classList.add('on');
   document.body.style.overflow = 'hidden';
 }
 
 function lbNav(dir) {
+  if (!filteredItems.length) return;
   lbIndex = (lbIndex + dir + filteredItems.length) % filteredItems.length;
   showLb();
 }
@@ -246,5 +270,15 @@ function closeLb(e) {
 }
 
 document.addEventListener('keydown', e => {
-  if (!document.getElementById('lightbox').classList.contains('on')) return;
-  if
+  const lightboxOpen = document.getElementById('lightbox').classList.contains('on');
+  if (!lightboxOpen) return;
+
+  if (e.key === 'Escape') closeLb();
+  if (e.key === 'ArrowLeft') lbNav(-1);
+  if (e.key === 'ArrowRight') lbNav(1);
+});
+
+render();
+</script>
+</body>
+</html>
