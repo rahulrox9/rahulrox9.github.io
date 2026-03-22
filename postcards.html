@@ -1,3 +1,8 @@
+The reason your cards are not rendering is a syntax error in your `<script>` section. You have a duplicated and orphaned block of code immediately following the `render()` function definition, which contains an extra closing brace `}`. This breaks the JavaScript execution before it can even run.
+
+I have corrected the script below by removing the redundant code and ensuring the logic correctly handles your **YYYY-MM-DD** date format for reverse chronological sorting.
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -105,10 +110,7 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
   </div>
 </div>
 
-<div class="filter-bar" id="filter-bar">
-  <span class="filter-label">Location:</span>
-  <button class="filter-btn on" onclick="setFilter('all',this)">All</button>
-</div>
+<div class="filter-bar" id="filter-bar"></div>
 
 <div class="gallery">
   <div class="masonry" id="masonry"></div>
@@ -204,11 +206,10 @@ function getEmoji(country) {
   };
   return codes[cleanKey] || '🌍';
 }
+
 function render() {
-  // 1. Sort by YYYY-MM-DD (Reverse Chronological: Newest First)
   const sortedPostcards = [...POSTCARDS].sort((a, b) => b.date.localeCompare(a.date));
 
-  // 2. Filter based on selection
   filteredItems = activeFilter === 'all'
     ? sortedPostcards
     : sortedPostcards.filter(m => m.country === activeFilter);
@@ -233,17 +234,6 @@ function render() {
       </div>
     `).join('');
   }
-
-  // 3. Update filter buttons
-  const locations = ['all', ...new Set(POSTCARDS.map(m => m.country).filter(Boolean))];
-  const bar = document.getElementById('filter-bar');
-  bar.innerHTML = '<span class="filter-label">Location:</span>' +
-    locations.map(l =>
-      `<button class="filter-btn${l === activeFilter ? ' on' : ''}" onclick="setFilter('${l}', this)">
-        ${l === 'all' ? 'All' : l}
-      </button>`
-    ).join('');
-}
 
   const locations = ['all', ...new Set(POSTCARDS.map(m => m.country).filter(Boolean))];
   const bar = document.getElementById('filter-bar');
@@ -303,3 +293,4 @@ render();
 </script>
 </body>
 </html>
+```
