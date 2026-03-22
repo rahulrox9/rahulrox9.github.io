@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A guide to amateur cooking. Part 1: French classical knife skills | Rahul Subbaraman</title>
+<title>A guide to amateur cooking. Part 1: French Classical Knife Skills | Rahul Subbaraman</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Playball&display=swap" rel="stylesheet">
 <style>
-:root {--ink: #1a1208; --parchment: #faf6ef; --warm: #c8873a; --muted: #8a7560; --border: #e8dfd0; --card: #fff9f2;  }
-body { font-family: 'DM Sans', sans-serif; background: var(--parchment); color: var(--ink); line-height: 1.8; margin: 0; }
-body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none;  z-index: 9999;  opacity: 0.35;}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--border:#e8dfd0;--card:#fff9f2}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);line-height:1.8;margin:0}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35}
 nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:52px}
 .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;text-decoration:none;color:var(--ink)}
 .nav-logo span{color:var(--warm);font-style:italic}
@@ -19,276 +18,138 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 .nav-links a.active{color:var(--ink);font-weight:500}
 .nav-admin{font-size:0.72rem;color:var(--muted);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;padding:0.25rem 0.65rem;border:1px solid var(--border);border-radius:3px;transition:all 0.15s}
 .nav-admin:hover{color:var(--warm);border-color:var(--warm)}
-        .post-container {
-            max-width: 750px;
-            margin: 4rem auto 8rem;
-            padding: 0 1.5rem;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-bottom: 2.5rem;
-            text-decoration: none;
-            color: var(--muted);
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
-        }
-
-        .fancy-title {
-            font-family: 'Playball', cursive;
-            font-size: clamp(2.2rem, 5vw, 3.8rem);
-            color: var(--warm);
-            line-height: 1.2;
-            margin-bottom: 0.5rem;
-            font-weight: 400;
-        }
-
-        .post-metadata {
-            font-size: 0.65rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--muted);
-            display: block;
-            margin-top: 1rem;
-        }
-
-        .quote-block {
-            margin: 3rem 0;
-            padding: 2.5rem;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            text-align: center;
-        }
-
-        .quote-text {
-            font-family: 'Playball', cursive;
-            font-size: 1.8rem;
-            color: var(--ink);
-            display: block;
-            margin-bottom: 1rem;
-        }
-
-        .quote-author {
-            font-size: 0.75rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--warm);
-            font-weight: 500;
-        }
-
-        .post-content h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            margin: 3.5rem 0 1.2rem;
-            color: var(--warm);
-        }
-
-        .post-content h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            margin: 2.5rem 0 1rem;
-        }
-
-        .post-figure {
-            margin: 2.5rem 0;
-        }
-
-        .post-image {
-            width: 100%;
-            height: auto;
-            border: 1px solid var(--border);
-            display: block;
-        }
-
-        figcaption {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            gap: 1.5rem;
-            margin-top: 0.6rem;
-        }
-
-        .caption-text {
-            font-size: 0.85rem;
-            color: var(--ink);
-            font-style: italic;
-            font-weight: 300;
-        }
-
-        .image-credit {
-            font-size: 0.65rem;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            white-space: nowrap;
-        }
-
-        .cheat-sheet-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 2rem 0;
-            font-size: 0.9rem;
-            background: var(--card);
-        }
-
-        .cheat-sheet-table th, .cheat-sheet-table td {
-            border: 1px solid var(--border);
-            padding: 1rem;
-            text-align: left;
-        }
-
-        .cheat-sheet-table th {
-            color: var(--warm);
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
-        }
-
-        footer {
-            padding: 4rem;
-            border-top: 1px solid var(--border);
-            text-align: center;
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            color: var(--muted);
-        }
-
-        @media (max-width: 600px) {
-            figcaption {
-                flex-direction: column;
-                gap: 0.3rem;
-            }
-        }
-    </style>
+.post-container{max-width:750px;margin:4rem auto 8rem;padding:0 1.5rem}
+.back-link{display:inline-block;margin-bottom:2.5rem;text-decoration:none;color:var(--muted);font-size:0.75rem;letter-spacing:0.05em}
+.fancy-title{font-family:'Playball',cursive;font-size:clamp(2.2rem,5vw,3.8rem);color:var(--warm);line-height:1.2;margin-bottom:0.5rem;font-weight:400}
+.post-metadata{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);display:block;margin-top:1rem}
+.quote-block{margin:3rem 0;padding:2.5rem;border-top:1px solid var(--border);border-bottom:1px solid var(--border);text-align:center}
+.quote-text{font-family:'Playball',cursive;font-size:1.8rem;color:var(--ink);display:block;margin-bottom:1rem}
+.quote-author{font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--warm);font-weight:500}
+.post-content{text-align:justify;text-justify:inter-word;hyphens:auto;-webkit-hyphens:auto;-ms-hyphens:auto}
+.post-content h2{font-family:'Playfair Display',serif;font-size:1.8rem;margin:3.5rem 0 1.2rem;color:var(--warm);text-align:left}
+.post-content h3{font-family:'Playfair Display',serif;font-size:1.4rem;margin:2.5rem 0 1rem;text-align:left}
+.post-figure{margin:2.5rem 0}
+.post-image{width:100%;height:auto;border:1px solid var(--border);display:block}
+figcaption{display:flex;justify-content:space-between;align-items:baseline;gap:1.5rem;margin-top:0.6rem;text-align:left}
+.caption-text{font-size:0.85rem;color:var(--ink);font-style:italic;font-weight:300}
+.image-credit{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap}
+.cheat-sheet-table{width:100%;border-collapse:collapse;margin:2rem 0;font-size:0.9rem;background:var(--card)}
+.cheat-sheet-table th,.cheat-sheet-table td{border:1px solid var(--border);padding:1rem;text-align:left}
+.cheat-sheet-table th{color:var(--warm);text-transform:uppercase;font-size:0.75rem;letter-spacing:0.05em}
+footer{padding:4rem;border-top:1px solid var(--border);text-align:center;font-family:'Playfair Display',serif;font-style:italic;color:var(--muted)}
+@media (max-width:600px){figcaption{flex-direction:column;gap:0.3rem}}
+</style>
 </head>
 <body>
 
 <nav>
-    <a class="nav-logo" href="../index.html">Rahul <span>Subbaraman</span></a>
+<a class="nav-logo" href="../index.html">Rahul <span>Subbaraman</span></a>
+<div class="nav-links">
+<a href="../blog.html" class="active">Writing</a>
+<a class="nav-admin" href="../admin.html">Admin</a>
+</div>
 </nav>
 
 <article class="post-container">
-    <a href="../blog.html" class="back-link">← WRITING</a>
-    
-    <header class="post-header">
-        <h1 class="fancy-title">A guide to amateur cooking. Part 1: French classical knife skills</h1>
-        <span class="post-metadata">Culinary · Article · 15.12.2020</span>
-    </header>
+<a href="../blog.html" class="back-link">← WRITING</a>
 
-    <div class="quote-block">
-        <span class="quote-text">"Anyone can cook, but only the fearless can be great."</span>
-        <span class="quote-author">— Chef Auguste Gusteau</span>
-    </div>
+<header class="post-header">
+<h1 class="fancy-title">A guide to amateur cooking. Part 1: French Classical Knife Skills</h1>
+<span class="post-metadata">Culinary · Article · 15.12.2020</span>
+</header>
 
-    <section class="post-content">
-    <p>If there is one silver lining to the period of isolation during the pandemic, it is the renaissance of the home kitchen. Like many others in 2020, I found myself captivated by the high-pressure culinary world of <strong>MasterChef Australia</strong>. Watching contestants execute flawless plates under the clock inspired me to move beyond basic survival cooking and towards actual technique.</p>
-    <p>It is important to note that the skills I am detailing here are rooted in the <strong>French Classical system</strong>—the global standard for professional Western kitchens and the very techniques championed on the show. While these methods differ significantly from traditional Indian tools like the <em>boti</em> or <em>aruvamana</em>, they provide a mathematical precision that is essential for modern gastronomy.</p>
+<div class="quote-block">
+<span class="quote-text">"Anyone can cook, but only the fearless can be great."</span>
+<span class="quote-author">— Chef Auguste Gusteau</span>
+</div>
 
-    <h2>1. The Foundation: The French Classical Standard</h2>
-    <p>Before the blade meets the board, three pillars of safety must be established. In this tradition, a dull knife is considered more dangerous than a sharp one, as it requires excessive force and is prone to "skating" off the surface of ingredients.</p>
-    <ul>
-        <li><strong>A Sharp Blade:</strong> A sharp edge bites into the produce, ensuring the blade travels exactly where intended.</li>
-        <li><strong>A Stable Surface:</strong> A sliding cutting board is a primary cause of accidents. One must "anchor" the board by placing a damp paper towel or a thin cloth underneath.</li>
-        <li><strong>The French Claw:</strong> Unlike the "floating" cuts often used in Indian home cooking, this method requires the fingers to be curled inward. The vertical section of the knuckles acts as a physical buffer and guide for the side of the blade.</li>
-    </ul>
+<section class="post-content">
+<p>If there is one silver lining to the period of isolation during the pandemic, it is the renaissance of the home kitchen. Like many others in 2020, I found myself captivated by the high-pressure culinary world of <strong>MasterChef Australia</strong>. Watching contestants execute flawless plates under the clock inspired me to move beyond basic survival cooking and towards actual technique.</p>
 
-    <figure class="post-figure">
-        <img src="https://static.wixstatic.com/media/d1cdb9_7970f1c8b35c4afcac67d4e41703ba64~mv2.jpg" alt="The French Claw Grip" class="post-image">
-        <figcaption>
-            <span class="caption-text">The classic French 'Claw Grip' used to protect the guide hand.</span>
-            <span class="image-credit">Source: Wix Media</span>
-        </figcaption>
-    </figure>
-    
-    </section>
+<p>It is important to note that the skills I am detailing here are rooted in the <strong>French Classical system</strong>—the global standard for professional Western kitchens. While these methods differ significantly from traditional Indian tools like the <em>boti</em> or <em>aruvamana</em>, they provide a mathematical precision that is essential for modern gastronomy.</p>
 
-        <h2>2. The Mechanics of the Cut</h2>
+<h2>1. The Foundation: Safety and Stability</h2>
+<p>Before the blade meets the board, three pillars of safety must be established. In this tradition, a dull knife is considered more dangerous than a sharp one, as it requires excessive force and is prone to "skating" off the surface of ingredients.</p>
 
-        <h3>Chopping & Mincing</h3>
-        <p><strong>Chopping</strong> is the workhorse of the home kitchen—a rhythmic, rocking motion where utility takes precedence over mathematical precision. It is ideal for aromatics that will be cooked down for hours in a stew or ragu.</p>
-        <p><strong>Mincing</strong> is the pursuit of the smallest possible particle. By mincing garlic or shallots, you maximise surface area, allowing essential oils to release and infuse into fats almost instantaneously.</p>
+<ul>
+<li><strong>A Sharp Blade:</strong> A sharp edge bites into the produce, ensuring the blade travels exactly where intended.</li>
+<li><strong>A Stable Surface:</strong> A sliding cutting board is a primary cause of accidents. One must "anchor" the board by placing a damp paper towel or a thin cloth underneath to ensure a stationary surface.</li>
+<li><strong>The French Claw:</strong> To protect the guide hand, the fingers must be curled inward. The vertical section of the knuckles acts as a physical buffer and guide for the side of the blade, preventing the edge from meeting the fingertips.</li>
+</ul>
 
-        <h3>Linear Cuts: Julienne & Batonnet</h3>
-        <p>These cuts transform irregular vegetables into uniform sticks. This uniformity ensures that every piece in a stir-fry or salad reaches the same level of crispness at the same time.</p>
-        <ul>
-            <li><strong>Julienne:</strong> 1/8" x 1/8" x 2". Often referred to as "matchsticks."</li>
-            <li><strong>Batonnet:</strong> 1/4" x 1/4" x 2.5". The standard foundation for french fries.</li>
-        </ul>
+<figure class="post-figure">
+<img src="https://static.wixstatic.com/media/d1cdb9_7970f1c8b35c4afcac67d4e41703ba64~mv2.jpg" alt="French Claw Grip" class="post-image">
+<figcaption>
+<span class="caption-text">The classic French 'Claw Grip' used to protect the guide hand.</span>
+<span class="image-credit">Source: Wix Media</span>
+</figcaption>
+</figure>
 
-        <h3>Cube Cuts: Brunoise & Dice</h3>
-        <p>Cubes are derived from their linear counterparts. Mastering these allows for professional presentation and even heat distribution in soups and sautés.</p>
-        <ul>
-            <li><strong>Brunoise:</strong> 1/8" cubes (derived from Julienne). Reserved for refined sauces and garnishes.</li>
-            <li><strong>Small Dice:</strong> 1/4" cubes (derived from Batonnet). The standard for a classic mirepoix.</li>
-            <li><strong>Large Dice:</strong> 3/4" cubes. Used for hearty slow-cooked stews where ingredients must withstand hours of heat without disintegrating.</li>
-        </ul>
+<h2>2. The Mechanics of the Cut</h2>
+<h3>Chopping & Mincing</h3>
+<p><strong>Chopping</strong> is the workhorse of the home kitchen—a rhythmic, rocking motion where utility takes precedence over mathematical precision. It is ideal for aromatics that will be cooked down for hours in a stew or ragu.</p>
+<p><strong>Mincing</strong> is the pursuit of the smallest possible particle. By mincing garlic or shallots, you maximise surface area, allowing essential oils to release and infuse into fats almost instantaneously.</p>
 
-        <h2>3. Specialty Techniques</h2>
+<h3>Linear Cuts: Julienne & Batonnet</h3>
+<p>These cuts transform irregular vegetables into uniform sticks. This uniformity ensures that every piece in a stir-fry or salad reaches the same level of crispness at the same time.</p>
+<ul>
+<li><strong>Julienne:</strong> 1/8" x 1/8" x 2". Often referred to as "matchsticks."</li>
+<li><strong>Batonnet:</strong> 1/4" x 1/4" x 2.5". The standard foundation for french fries.</li>
+</ul>
 
-        <h3>Chiffonade</h3>
-        <p>Reserved for leafy greens and delicate herbs like basil. By stacking, rolling, and slicing, you create ribbons that preserve the herb's integrity rather than bruising the leaves with a heavy chop.</p>
+<h3>Cube Cuts: Brunoise & Dice</h3>
+<p>Cubes are derived from their linear counterparts. Mastering these allows for professional presentation and even heat distribution in soups and sautés.</p>
+<ul>
+<li><strong>Brunoise:</strong> 1/8" cubes (derived from Julienne). Reserved for refined sauces and garnishes.</li>
+<li><strong>Small Dice:</strong> 1/4" cubes (derived from Batonnet). The standard for a classic mirepoix.</li>
+<li><strong>Large Dice:</strong> 3/4" cubes. Used for hearty slow-cooked stews where ingredients must withstand hours of heat without disintegrating.</li>
+</ul>
 
-        <h3>Supreming</h3>
-        <figure class="post-figure">
-            <img src="https://www.simplyrecipes.com/thmb/gyeFKNKcwZnWcY5z2RZocb7cJfk=/750x0/filters:no_upscale():max_bytes(150000):strip_icc()/Winter-Citrus-Parfait-LEAD-6-ac200cdee1314527ad5be63a421cfc82.jpg" alt="Supreming Technique" class="post-image">
-            <figcaption>
-                <span class="caption-text">Citrus segments prepared by removing all pith and membrane.</span>
-                <span class="image-credit">Credit: Simply Recipes / Sarah Fritsche</span>
-            </figcaption>
-        </figure>
-        <p>A refined method for citrus. By removing the bitter membranes and pith, you are left with pure fruit "supremes," essential for professional salads and desserts where texture is paramount.</p>
+<h2>3. Specialty Techniques</h2>
+<h3>Chiffonade</h3>
+<p>Reserved for leafy greens and delicate herbs like basil. By stacking, rolling, and slicing, you create ribbons that preserve the herb's integrity rather than bruising the leaves with a heavy chop.</p>
 
-        <div class="reference-list">
-            <h2>The Culinary Cheat Sheet</h2>
-            <table class="cheat-sheet-table">
-                <thead>
-                    <tr>
-                        <th>Technique</th>
-                        <th>Dimensions</th>
-                        <th>Primary Use</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Fine Brunoise</td>
-                        <td>1/16" Cube</td>
-                        <td>Garnishes</td>
-                    </tr>
-                    <tr>
-                        <td>Julienne</td>
-                        <td>1/8" x 1/8" x 2"</td>
-                        <td>Salads & Stir-fry</td>
-                    </tr>
-                    <tr>
-                        <td>Small Dice</td>
-                        <td>1/4" Cube</td>
-                        <td>Soups & Sautéing</td>
-                    </tr>
-                    <tr>
-                        <td>Batonnet</td>
-                        <td>1/4" x 1/4" x 2.5"</td>
-                        <td>Roasting & Fries</td>
-                    </tr>
-                    <tr>
-                        <td>Large Dice</td>
-                        <td>3/4" Cube</td>
-                        <td>Slow-cooked Stews</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+<h3>Supreming</h3>
+<figure class="post-figure">
+<img src="https://www.simplyrecipes.com/thmb/gyeFKNKcwZnWcY5z2RZocb7cJfk=/750x0/filters:no_upscale():max_bytes(150000):strip_icc()/Winter-Citrus-Parfait-LEAD-6-ac200cdee1314527ad5be63a421cfc82.jpg" alt="Supreming Citrus" class="post-image">
+<figcaption>
+<span class="caption-text">Citrus segments prepared by removing all pith and membrane.</span>
+<span class="image-credit">Credit: Simply Recipes / Sarah Fritsche</span>
+</figcaption>
+</figure>
+<p>A refined method for citrus. By removing the bitter membranes and pith, you are left with pure fruit "supremes," essential for professional salads and desserts where texture is paramount.</p>
 
-        <section class="reference-list">
-            <strong>REFERENCES:</strong>
-            <a href="https://allaboutkitchenknives.com/how-to-cut-vegetables-like-a-pro/" target="_blank">All About Kitchen Knives</a>
-            <a href="https://guide.michelin.com/en/article/dining-in/kitchen-language-what-are-the-different-knife-cuts" target="_blank">Michelin Guide</a>
-            <a href="https://whatsfordinner.com/kitchen-tips/culinary-cutting-terms-images/" target="_blank">What's For Dinner</a>
-        </section>
-    </section>
+<div class="reference-list">
+<h2>The Culinary Cheat Sheet</h2>
+<table class="cheat-sheet-table">
+<thead>
+<tr>
+<th>Technique</th>
+<th>Dimensions</th>
+<th>Primary Use</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Fine Brunoise</td><td>1/16" Cube</td><td>Garnishes</td></tr>
+<tr><td>Julienne</td><td>1/8" x 1/8" x 2"</td><td>Salads & Stir-fry</td></tr>
+<tr><td>Small Dice</td><td>1/4" Cube</td><td>Soups & Sautéing</td></tr>
+<tr><td>Batonnet</td><td>1/4" x 1/4" x 2.5"</td><td>Roasting & Fries</td></tr>
+<tr><td>Large Dice</td><td>3/4" Cube</td><td>Slow-cooked Stews</td></tr>
+</tbody>
+</table>
+</div>
+
+<section class="reference-list" style="margin-top:4rem; padding-top:2rem; border-top:1px solid var(--border); font-size:0.85rem">
+<strong>REFERENCES:</strong><br>
+<a href="https://allaboutkitchenknives.com/how-to-cut-vegetables-like-a-pro/" target="_blank" style="color:var(--warm); text-decoration:none; display:block; margin-top:0.5rem">All About Kitchen Knives</a>
+<a href="https://guide.michelin.com/en/article/dining-in/kitchen-language-what-are-the-different-knife-cuts" target="_blank" style="color:var(--warm); text-decoration:none; display:block; margin-top:0.5rem">Michelin Guide</a>
+<a href="https://whatsfordinner.com/kitchen-tips/culinary-cutting-terms-images/" target="_blank" style="color:var(--warm); text-decoration:none; display:block; margin-top:0.5rem">What's For Dinner</a>
+</section>
+</section>
 </article>
 
 <footer>
-    Rahul Subbaraman
+Rahul Subbaraman
 </footer>
 
 </body>
