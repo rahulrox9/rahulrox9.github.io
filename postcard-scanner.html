@@ -62,10 +62,6 @@ html,body{height:100%;font-family:'DM Mono',monospace;background:var(--bg);color
         <div id="upload-files" style="font-size:0.65rem;color:var(--cream);opacity:0.8;margin-top:0.45rem;line-height:1.4"></div>
       </div>
     </div>
-    <div class="settings">
-        <div class="row"><label>DPI</label><input type="range" id="dpi" min="1" max="4" step="1" value="2"></div>
-        <div class="row"><label>Quality</label><input type="range" id="quality" min="60" max="100" value="90"></div>
-    </div>
     <div id="progress-wrap"><div class="p-bar"><div id="p-fill"></div></div><div id="p-txt" style="font-size:0.6rem;margin-top:4px"></div></div>
     <div style="padding:1rem"><button class="btn primary" id="proc-btn" style="width:100%" disabled onclick="processPDF()">Process PDF</button></div>
   </div>
@@ -113,6 +109,9 @@ let dragStart = null;
 let dragEdgeStartCorners = null;
 let modalScale = 1;
 let rawCanvas = null;
+const RENDER_SCALE = 4;
+const EXPORT_TYPE = 'image/png'; // lossless
+const EXPORT_QUALITY = 1;
 
 const fileInput = document.getElementById('file-input');
 const dropArea = document.getElementById('drop-area');
@@ -152,10 +151,6 @@ dropArea.addEventListener('drop', (e) => {
     updateUploadStatus(files);
 });
 
-function getQuality() {
-    return parseInt(document.getElementById('quality').value, 10) / 100;
-}
-
 function updateProgress(done, total, label = '') {
     const pct = total ? Math.round((done / total) * 100) : 0;
     document.getElementById('p-fill').style.width = pct + '%';
@@ -166,7 +161,7 @@ async function processPDF() {
     const files = procBtn._files || [];
     if (!files.length) return;
 
-    const scale = parseFloat(document.getElementById('dpi').value);
+    const scale = RENDER_SCALE;
     document.getElementById('progress-wrap').style.display = 'block';
 
     let totalPages = 0;
@@ -189,7 +184,7 @@ async function processPDF() {
             await page.render({ canvasContext: canv.getContext('2d'), viewport: vp }).promise;
 
             const detected = detectPostcard(canv);
-            const thumb = renderOutput(canv, detected, 0, getQuality());
+            const thumb = renderOutput(canv, detected, 0);
 
             const id = 'pg-' + Math.random().toString(36).slice(2, 11);
             const obj = {
@@ -691,16 +686,17 @@ function applyCrop() {
     if (!pg) return;
     pg.corners = normalizeCorners(corners.map(c => ({ ...c })));
     pg.rotation = rotation;
-    pg.thumb = renderOutput(rawCanvas, pg.corners, rotation, getQuality());
+    pg.thumb = renderOutput(rawCanvas, pg.corners, rotation);
     document.getElementById(pg.id).querySelector('img').src = pg.thumb;
     closeModal();
 }
 
 function downloadAll() {
+    const ext = EXPORT_TYPE === 'image/png' ? 'png' : 'jpg';
     pages.forEach((p, i) => {
         const a = document.createElement('a');
         a.href = p.thumb;
-        a.download = `postcard-${i + 1}.jpg`;
+        a.download = `postcard-${i + 1}.${ext}`;
         a.click();
     });
 }
@@ -884,21 +880,20 @@ function rotateCanvas(src, deg) {
     return out;
 }
 
-function renderOutput(src, c, rot, quality) {
+function renderOutput(src, c, rot) {
     c = normalizeCorners(c);
-
     const top = dist(c[0], c[1]);
     const right = dist(c[1], c[2]);
     const bottom = dist(c[2], c[3]);
     const left = dist(c[3], c[0]);
-
     const outW = Math.max(top, bottom);
     const outH = Math.max(left, right);
-
     let warped = warpPerspective(src, c, outW, outH);
     warped = rotateCanvas(warped, rot);
-
-    return warped.toDataURL('image/jpeg', quality);
+    if (EXPORT_TYPE === 'image/png') {
+        return warped.toDataURL(EXPORT_TYPE);
+    }
+    return warped.toDataURL(EXPORT_TYPE, EXPORT_QUALITY);
 }
 </script>
 </body>
