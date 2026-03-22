@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Title | Rahul Subbaraman</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <style>
+        /* Shared variables and base styles */
+        :root {
+            --ink: #1a1208;
+            --parchment: #faf6ef;
+            --warm: #c8873a;
+            --muted: #8a7560;
+            --card: #fff9f2;
+            --border: #e8dfd0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--parchment);
+            color: var(--ink);
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        /* Texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.35;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(250, 246, 239, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 52px;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--ink);
+        }
+
+        .post-container {
+            max-width: 700px;
+            margin: 4rem auto 8rem;
+            padding: 0 1.5rem;
+        }
+
+        .post-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .post-metadata {
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--warm);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .post-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .post-content {
+            font-size: 1.05rem;
+            font-weight: 300;
+        }
+
+        .post-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .post-content h2 {
+            font-family: 'Playfair Display', serif;
+            margin: 2.5rem 0 1rem;
+            color: var(--ink);
+        }
+
+        footer {
+            padding: 2.5rem 4rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 0.8rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--warm);
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a class="nav-logo" href="../index.html">Rahul <span>Subbaraman</span></a>
+</nav>
+
+<article class="post-container">
+    <a href="../blog.html" class="back-link">← Back to Writing</a>
+    
+    <header class="post-header">
+        <span class="post-metadata">Sanskrit · Poetry · Apr 2014</span>
+        <h1 class="post-title">मम माता (My Mother)</h1>
+    </header>
+
+    <section class="post-content">
+        <p>
+            [Insert your text content here. Use &lt;p&gt; tags for paragraphs.]
+        </p>
+        
+        <h2>Subheading Example</h2>
+        <p>
+            [Further text or analytical content goes here.]
+        </p>
+    </section>
+</article>
+
+<footer>
+    Rahul Subbaraman
+</footer>
+
+</body>
+</html>
