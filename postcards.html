@@ -44,7 +44,6 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 .postcard-card{position:relative;break-inside:avoid;margin-bottom:1rem;background:var(--card);border:1px solid var(--border);border-radius:2px;overflow:hidden;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s}
 .postcard-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(26,18,8,0.1)}
 .postcard-img{width:100%;display:block;aspect-ratio:1;object-fit:cover;background:var(--border)}
-.postcard-img-placeholder{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:2.5rem;background:linear-gradient(135deg,var(--border),#d4c9b8)}
 
 .postcard-info{position:absolute;bottom:0;left:0;right:0;background:rgba(26,18,8,0.95);color:#fff;padding:1rem;transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);z-index:10}
 .postcard-card:hover .postcard-info{transform:translateY(0)}
@@ -52,15 +51,11 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 .postcard-country,.postcard-date{font-size:0.7rem;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:0.3rem}
 .postcard-notes{margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid rgba(255,255,255,0.2);font-size:0.75rem;font-style:italic;line-height:1.4}
 
-.empty{text-align:center;padding:5rem 2rem;color:var(--muted);font-style:italic}
-.empty strong{display:block;font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:0.5rem;color:var(--ink)}
-
 .lightbox{display:none;position:fixed;inset:0;background:rgba(26,18,8,0.85);z-index:300;align-items:center;justify-content:center;padding:2rem}
 .lightbox.on{display:flex}
 .lb-inner{background:var(--card);max-width:600px;width:100%;border-radius:2px;overflow:hidden;position:relative;animation:pop 0.2s ease}
 @keyframes pop{from{transform:scale(0.95);opacity:0}to{transform:scale(1);opacity:1}}
 .lb-img{width:100%;display:block;max-height:65vh;object-fit:contain;background:var(--ink)}
-.lb-img-placeholder{width:100%;height:320px;display:flex;align-items:center;justify-content:center;font-size:4rem;background:var(--ink)}
 .lb-info{padding:1.2rem 1.5rem}
 .lb-place{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:0.3rem}
 .lb-meta{font-size:0.78rem;color:var(--muted);margin-bottom:0.5rem}
@@ -69,13 +64,11 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 .lb-close:hover{color:#fff}
 .lb-nav{display:flex;gap:0.5rem;margin-top:0.8rem}
 .lb-nav button{background:none;border:1px solid var(--border);padding:0.3rem 0.8rem;font-size:0.75rem;cursor:pointer;border-radius:2px;color:var(--muted);font-family:'DM Sans',sans-serif}
-.lb-nav button:hover{border-color:var(--warm);color:var(--warm)}
 
 footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .footer-left{font-family:'Playfair Display',serif;font-size:0.9rem;font-style:italic;color:var(--muted)}
 .footer-right{display:flex;gap:1.8rem}
 .footer-right a{font-size:0.75rem;color:var(--muted);text-decoration:none;transition:color 0.15s}
-.footer-right a:hover{color:var(--warm)}
 
 @media(max-width:900px){
   nav{padding:0 1.5rem}
@@ -150,53 +143,53 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 
 <script>
 const POSTCARDS = [
-  { id: 1, place: 'Aira Force', country: 'England (UK)', date: '22/03/2026', img: 'ENG-AiraForce.png', notes: 'Insert caption here.' },
-  { id: 2, place: 'Roman Baths', country: 'England (UK)', date: '22/03/2026', img: 'ENG-Bath_RomanBaths.png', notes: 'Insert caption here.' },
-  { id: 3, place: 'Buxton', country: 'England (UK)', date: '22/03/2026', img: 'ENG-Buxton.png', notes: 'Insert caption here.' },
-  { id: 4, place: 'Poole\'s Cavern', country: 'England (UK)', date: '22/03/2026', img: 'ENG-Buxton_PoolesCavern.png', notes: 'Insert caption here.' },
-  { id: 5, place: 'Cambridge', country: 'England (UK)', date: '22/03/2026', img: 'ENG-Cambridge.png', notes: 'Insert caption here.' },
-  { id: 6, place: 'Lake District', country: 'England (UK)', date: '22/03/2026', img: 'ENG-LakeDistrict.png', notes: 'Insert caption here.' },
-  { id: 7, place: 'Royal Armouries II', country: 'England (UK)', date: '22/03/2026', img: 'ENG-Leeds_RoyalArmouries_2.png', notes: 'Insert caption here.' },
-  { id: 8, place: 'Royal Armouries', country: 'England (UK)', date: '22/03/2026', img: 'ENG-Leeds_RoyalArmouries.png', notes: 'Insert caption here.' },
-  { id: 9, place: 'London I', country: 'England (UK)', date: '22/03/2026', img: 'ENG-London_1.png', notes: 'Insert caption here.' },
-  { id: 10, place: 'London II', country: 'England (UK)', date: '22/03/2026', img: 'ENG-London_2.png', notes: 'Insert caption here.' },
-  { id: 11, place: 'Sherlock Holmes Museum', country: 'England (UK)', date: '22/03/2026', img: 'ENG-London_SherlockHolmes.png', notes: 'Insert caption here.' },
-  { id: 12, place: 'Portsmouth', country: 'England (UK)', date: '22/03/2026', img: 'ENG-Portsmouth.png', notes: 'Insert caption here.' },
-  { id: 13, place: 'Southampton', country: 'England (UK)', date: '22/03/2026', img: 'ENG-Southampton.png', notes: 'Insert caption here.' },
-  { id: 14, place: 'Stonehenge', country: 'England (UK)', date: '22/03/2026', img: 'ENG-Stonehenge.png', notes: 'Insert caption here.' },
-  { id: 15, place: 'Ullswater', country: 'England (UK)', date: '22/03/2026', img: 'ENG-Ullswater.png', notes: 'Insert caption here.' },
-  { id: 16, place: 'Whitby Abbey', country: 'England (UK)', date: '22/03/2026', img: 'ENG-Whitby_Abbey.png', notes: 'Insert caption here.' },
-  { id: 17, place: 'York', country: 'England (UK)', date: '22/03/2026', img: 'ENG-York.png', notes: 'Insert caption here.' },
-  { id: 18, place: 'York Minster', country: 'England (UK)', date: '22/03/2026', img: 'ENG-York_YorkMinster.png', notes: 'Insert caption here.' },
-  { id: 19, place: 'Manchester Cathedral', country: 'England (UK)', date: '22/03/2026', img: 'ENG_MCR_Cathedral.png', notes: 'Insert caption here.' },
-  { id: 20, place: 'Cobh', country: 'Ireland', date: '22/03/2026', img: 'IRL-Cobh.png', notes: 'Insert caption here.' },
-  { id: 21, place: 'Geysir', country: 'Iceland', date: '22/03/2026', img: 'ISL-Geysir.png', notes: 'Insert caption here.' },
-  { id: 22, place: 'Gullfoss', country: 'Iceland', date: '22/03/2026', img: 'ISL-Gullfoss.png', notes: 'Insert caption here.' },
-  { id: 23, place: 'Reykjavik', country: 'Iceland', date: '22/03/2026', img: 'ISL-Reykjavik.png', notes: 'Insert caption here.' },
-  { id: 24, place: 'Thingvellir', country: 'Iceland', date: '22/03/2026', img: 'ISL-Thingvellir.png', notes: 'Insert caption here.' },
-  { id: 25, place: 'Amsterdam', country: 'Netherlands', date: '22/03/2026', img: 'NL-Amsterdam.png', notes: 'Insert caption here.' },
-  { id: 26, place: 'Keukenhof', country: 'Netherlands', date: '22/03/2026', img: 'NL-Keukenhof.png', notes: 'Insert caption here.' },
-  { id: 27, place: 'Zaanse Schans I', country: 'Netherlands', date: '22/03/2026', img: 'NL-ZaanseSchans_1.png', notes: 'Insert caption here.' },
-  { id: 28, place: 'Zaanse Schans II', country: 'Netherlands', date: '22/03/2026', img: 'NL-ZaanseSchans_2.png', notes: 'Insert caption here.' },
-  { id: 29, place: 'Loch Ness', country: 'Scotland (UK)', date: '22/03/2026', img: 'SCO-LochNess.png', notes: 'Insert caption here.' },
-  { id: 30, place: 'Isle of Wight', country: 'England (UK)', date: '22/03/2026', img: 'UK-IsleOfWight.png', notes: 'Insert caption here.' },
-  { id: 31, place: 'Carisbrooke', country: 'England (UK)', date: '22/03/2026', img: 'UK-IsleOfWight_Carisbrooke.png', notes: 'Insert caption here.' },
-  { id: 32, place: 'Monkey Haven', country: 'England (UK)', date: '22/03/2026', img: 'UK-IsleOfWight_MonkeyHaven.png', notes: 'Insert caption here.' },
-  { id: 33, place: 'Northern Ireland (UK)', country: 'Northern Ireland (UK)', date: '22/03/2026', img: 'UK-NorthernIreland.png', notes: 'Insert caption here.' },
-  { id: 34, place: 'Beaumaris', country: 'Wales (UK)', date: '22/03/2026', img: 'WLS-Anglesey_Beaumaris.png', notes: 'Insert caption here.' },
-  { id: 35, place: 'South Stack', country: 'Wales (UK)', date: '22/03/2026', img: 'WLS-Anglesey_SouthStack.png', notes: 'Insert caption here.' },
-  { id: 36, place: 'Bala Lake', country: 'Wales (UK)', date: '22/03/2026', img: 'WLS-BalaLake.png', notes: 'Insert caption here.' },
-  { id: 37, place: 'Chirk Castle', country: 'Wales (UK)', date: '22/03/2026', img: 'WLS-ChirkCastle.png', notes: 'Insert caption here.' },
-  { id: 38, place: 'Conwy Castle', country: 'Wales (UK)', date: '22/03/2026', img: 'WLS-Conwy_Castle.png', notes: 'Insert caption here.' },
-  { id: 39, place: 'Smallest House in Great Britain', country: 'Wales (UK)', date: '22/03/2026', img: 'WLS-Conwy_SmallHouse.png', notes: 'Insert caption here.' },
-  { id: 40, place: 'Great Orme Mine', country: 'Wales (UK)', date: '22/03/2026', img: 'WLS-Llandudno_GreatOrmeMine.png', notes: 'Insert caption here.' },
-  { id: 41, place: 'Great Orme Tramway', country: 'Wales (UK)', date: '22/03/2026', img: 'WLS-Llandudno_GreatOrmeTram.png', notes: 'Insert caption here.' },
-  { id: 42, place: 'Llandudno Pier', country: 'Wales (UK)', date: '22/03/2026', img: 'WLS-Llandudno_pier.png', notes: 'Insert caption here.' },
-  { id: 43, place: 'Llanfair', country: 'Wales (UK)', date: '22/03/2026', img: 'WLS-Llanfair.png', notes: 'Insert caption here.' },
-  { id: 44, place: 'Pontcysyllte Aqueduct', country: 'Wales (UK)', date: '22/03/2026', img: 'WLS-Pontcysyllte.png', notes: 'Insert caption here.' },
-  { id: 45, place: 'Snowdon Mountain Railway', country: 'Wales (UK)', date: '22/03/2026', img: 'WLS-Snowdon_Railway.png', notes: 'Insert caption here.' },
-  { id: 46, place: 'Snowdon Summit', country: 'Wales (UK)', date: '22/03/2026', img: 'WLS-Snowdon_Summit.png', notes: 'Insert caption here.' },
-  { id: 47, place: 'Swallow Falls', country: 'Wales (UK)', date: '22/03/2026', img: 'WLS-SwallowFalls.png', notes: 'Insert caption here.' }
+  { id: 1, place: 'Aira Force', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-AiraForce.png', notes: 'Insert caption here.' },
+  { id: 2, place: 'Roman Baths', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-Bath_RomanBaths.png', notes: 'Insert caption here.' },
+  { id: 3, place: 'Buxton', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-Buxton.png', notes: 'Insert caption here.' },
+  { id: 4, place: 'Poole\'s Cavern', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-Buxton_PoolesCavern.png', notes: 'Insert caption here.' },
+  { id: 5, place: 'Cambridge', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-Cambridge.png', notes: 'Insert caption here.' },
+  { id: 6, place: 'Lake District', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-LakeDistrict.png', notes: 'Insert caption here.' },
+  { id: 7, place: 'Royal Armouries II', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-Leeds_RoyalArmouries_2.png', notes: 'Insert caption here.' },
+  { id: 8, place: 'Royal Armouries', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-Leeds_RoyalArmouries.png', notes: 'Insert caption here.' },
+  { id: 9, place: 'London I', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-London_1.png', notes: 'Insert caption here.' },
+  { id: 10, place: 'London II', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-London_2.png', notes: 'Insert caption here.' },
+  { id: 11, place: 'Sherlock Holmes Museum', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-London_SherlockHolmes.png', notes: 'Insert caption here.' },
+  { id: 12, place: 'Portsmouth', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-Portsmouth.png', notes: 'Insert caption here.' },
+  { id: 13, place: 'Southampton', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-Southampton.png', notes: 'Insert caption here.' },
+  { id: 14, place: 'Stonehenge', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-Stonehenge.png', notes: 'Insert caption here.' },
+  { id: 15, place: 'Ullswater', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-Ullswater.png', notes: 'Insert caption here.' },
+  { id: 16, place: 'Whitby Abbey', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-Whitby_Abbey.png', notes: 'Insert caption here.' },
+  { id: 17, place: 'York', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-York.png', notes: 'Insert caption here.' },
+  { id: 18, place: 'York Minster', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG-York_YorkMinster.png', notes: 'Insert caption here.' },
+  { id: 19, place: 'Manchester Cathedral', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/ENG_MCR_Cathedral.png', notes: 'Insert caption here.' },
+  { id: 20, place: 'Cobh', country: 'Ireland', date: '22/03/2026', img: 'Postcards/IRL-Cobh.png', notes: 'Insert caption here.' },
+  { id: 21, place: 'Geysir', country: 'Iceland', date: '22/03/2026', img: 'Postcards/ISL-Geysir.png', notes: 'Insert caption here.' },
+  { id: 22, place: 'Gullfoss', country: 'Iceland', date: '22/03/2026', img: 'Postcards/ISL-Gullfoss.png', notes: 'Insert caption here.' },
+  { id: 23, place: 'Reykjavik', country: 'Iceland', date: '22/03/2026', img: 'Postcards/ISL-Reykjavik.png', notes: 'Insert caption here.' },
+  { id: 24, place: 'Thingvellir', country: 'Iceland', date: '22/03/2026', img: 'Postcards/ISL-Thingvellir.png', notes: 'Insert caption here.' },
+  { id: 25, place: 'Amsterdam', country: 'Netherlands', date: '22/03/2026', img: 'Postcards/NL-Amsterdam.png', notes: 'Insert caption here.' },
+  { id: 26, place: 'Keukenhof', country: 'Netherlands', date: '22/03/2026', img: 'Postcards/NL-Keukenhof.png', notes: 'Insert caption here.' },
+  { id: 27, place: 'Zaanse Schans I', country: 'Netherlands', date: '22/03/2026', img: 'Postcards/NL-ZaanseSchans_1.png', notes: 'Insert caption here.' },
+  { id: 28, place: 'Zaanse Schans II', country: 'Netherlands', date: '22/03/2026', img: 'Postcards/NL-ZaanseSchans_2.png', notes: 'Insert caption here.' },
+  { id: 29, place: 'Loch Ness', country: 'Scotland (UK)', date: '22/03/2026', img: 'Postcards/SCO-LochNess.png', notes: 'Insert caption here.' },
+  { id: 30, place: 'Isle of Wight', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/UK-IsleOfWight.png', notes: 'Insert caption here.' },
+  { id: 31, place: 'Carisbrooke', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/UK-IsleOfWight_Carisbrooke.png', notes: 'Insert caption here.' },
+  { id: 32, place: 'Monkey Haven', country: 'England (UK)', date: '22/03/2026', img: 'Postcards/UK-IsleOfWight_MonkeyHaven.png', notes: 'Insert caption here.' },
+  { id: 33, place: 'Northern Ireland (UK)', country: 'Northern Ireland (UK)', date: '22/03/2026', img: 'Postcards/UK-NorthernIreland.png', notes: 'Insert caption here.' },
+  { id: 34, place: 'Beaumaris', country: 'Wales (UK)', date: '22/03/2026', img: 'Postcards/WLS-Anglesey_Beaumaris.png', notes: 'Insert caption here.' },
+  { id: 35, place: 'South Stack', country: 'Wales (UK)', date: '22/03/2026', img: 'Postcards/WLS-Anglesey_SouthStack.png', notes: 'Insert caption here.' },
+  { id: 36, place: 'Bala Lake', country: 'Wales (UK)', date: '22/03/2026', img: 'Postcards/WLS-BalaLake.png', notes: 'Insert caption here.' },
+  { id: 37, place: 'Chirk Castle', country: 'Wales (UK)', date: '22/03/2026', img: 'Postcards/WLS-ChirkCastle.png', notes: 'Insert caption here.' },
+  { id: 38, place: 'Conwy Castle', country: 'Wales (UK)', date: '22/03/2026', img: 'Postcards/WLS-Conwy_Castle.png', notes: 'Insert caption here.' },
+  { id: 39, place: 'Smallest House in Great Britain', country: 'Wales (UK)', date: '22/03/2026', img: 'Postcards/WLS-Conwy_SmallHouse.png', notes: 'Insert caption here.' },
+  { id: 40, place: 'Great Orme Mine', country: 'Wales (UK)', date: '22/03/2026', img: 'Postcards/WLS-Llandudno_GreatOrmeMine.png', notes: 'Insert caption here.' },
+  { id: 41, place: 'Great Orme Tramway', country: 'Wales (UK)', date: '22/03/2026', img: 'Postcards/WLS-Llandudno_GreatOrmeTram.png', notes: 'Insert caption here.' },
+  { id: 42, place: 'Llandudno Pier', country: 'Wales (UK)', date: '22/03/2026', img: 'Postcards/WLS-Llandudno_pier.png', notes: 'Insert caption here.' },
+  { id: 43, place: 'Llanfair', country: 'Wales (UK)', date: '22/03/2026', img: 'Postcards/WLS-Llanfair.png', notes: 'Insert caption here.' },
+  { id: 44, place: 'Pontcysyllte Aqueduct', country: 'Wales (UK)', date: '22/03/2026', img: 'Postcards/WLS-Pontcysyllte.png', notes: 'Insert caption here.' },
+  { id: 45, place: 'Snowdon Mountain Railway', country: 'Wales (UK)', date: '22/03/2026', img: 'Postcards/WLS-Snowdon_Railway.png', notes: 'Insert caption here.' },
+  { id: 46, place: 'Snowdon Summit', country: 'Wales (UK)', date: '22/03/2026', img: 'Postcards/WLS-Snowdon_Summit.png', notes: 'Insert caption here.' },
+  { id: 47, place: 'Swallow Falls', country: 'Wales (UK)', date: '22/03/2026', img: 'Postcards/WLS-SwallowFalls.png', notes: 'Insert caption here.' }
 ];
 
 let activeFilter = 'all';
