@@ -283,15 +283,32 @@ function switchTab(tab, btn) {
 
 function sortEntries(arr) {
   const s = document.getElementById('sort-select')?.value || 'release-desc';
-  return [...arr].sort((a,b) => {
+  
+  const parseDate = (str) => {
+    if (!str) return 0;
+    const d = new Date(str);
+    return isNaN(d.getTime()) ? 0 : d.getTime();
+  };
+
+  return [...arr].sort((a, b) => {
+    const dateA = parseDate(a.year);
+    const dateB = parseDate(b.year);
+
     switch(s) {
-      case 'release-desc': return (b.year||'0') > (a.year||'0') ? 1 : -1;
-      case 'release-asc':  return (a.year||'0') > (b.year||'0') ? 1 : -1;
-      case 'added-desc':   return (b.addedAt||0) - (a.addedAt||0);
-      case 'added-asc':    return (a.addedAt||0) - (b.addedAt||0);
-      case 'rating-desc':  return (b.myRating||0) - (a.myRating||0);
-      case 'rating-asc':   return (a.myRating||0) - (b.myRating||0);
-      default: return 0;
+      case 'release-desc': 
+        return dateB - dateA;
+      case 'release-asc': 
+        return dateA - dateB;
+      case 'added-desc':   
+        return (b.addedAt || 0) - (a.addedAt || 0);
+      case 'added-asc':    
+        return (a.addedAt || 0) - (b.addedAt || 0);
+      case 'rating-desc':  
+        return (b.myRating || 0) - (a.myRating || 0);
+      case 'rating-asc':   
+        return (a.myRating || 0) - (b.myRating || 0);
+      default: 
+        return 0;
     }
   });
 }
