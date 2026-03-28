@@ -158,7 +158,7 @@ tr:hover td{background:var(--parchment)}
       <div class="sub-title">Subscribers</div>
       <div class="section-pills" id="section-pills">
         <span class="pill on" onclick="filterSubs('all',this)">All</span>
-        <span class="pill" onclick="filterSubs('Blog',this)">✍️ Blog</span>
+        <span class="pill" onclick="filterSubs('Writing',this)">✍️ Writing</span>
         <span class="pill" onclick="filterSubs('Research',this)">🔬 Research</span>
         <span class="pill" onclick="filterSubs('Travel',this)">🗺️ Travel</span>
         <span class="pill" onclick="filterSubs('General',this)">📬 General</span>
@@ -242,7 +242,7 @@ function renderStats(d) {
     { label:'Total Views',        val: d.totalViews,           sub: `Last ${d.period} days` },
     { label:'Unique Visitors',    val: d.uniqueVisitors,       sub: 'By cookie ID' },
     { label:'Subscribers',        val: d.confirmedSubscribers, sub: `${d.totalSubscribers - d.confirmedSubscribers} pending` },
-    { label:'Blog',               val: d.sectionCounts?.Blog      || 0, sub:'Blog subscribers' },
+    { label:'Writing',               val: d.sectionCounts?.Writing      || 0, sub:'Writing subscribers' },
     { label:'Research',           val: d.sectionCounts?.Research  || 0, sub:'Research subscribers' },
     { label:'Travel',             val: d.sectionCounts?.Travel    || 0, sub:'Travel subscribers' },
   ];
@@ -333,7 +333,7 @@ async function checkNewPosts() {
   const btn = document.getElementById('check-btn');
   btn.disabled = true; btn.textContent = 'Checking…';
 
-  // Collect current posts from blog_posts.json
+  // Collect current posts from Writing_posts.json
   let posts = [];
   try {
     const data = await new Promise((res,rej) => {
@@ -341,7 +341,7 @@ async function checkNewPosts() {
       const s = document.createElement('script');
       window[cb] = d => { delete window[cb]; s.remove(); res(d); };
       s.onerror = () => { delete window[cb]; s.remove(); rej(); };
-      s.src = `${DB_URL}?file=blog_posts.json&callback=${cb}`;
+      s.src = `${DB_URL}?file=Writing_posts.json&callback=${cb}`;
       document.head.appendChild(s);
     });
     posts = Array.isArray(data) ? data : [];
