@@ -242,6 +242,22 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
     <a href="mailto:rahulrox9website@gmail.com">Contact</a>
   </div>
 </footer>
+<script>
+  function trackVisit() {
+    // Check if the "ignore" flag exists in this browser's storage
+    if (localStorage.getItem('admin_ignore') === 'true') {
+      console.log('Admin detected: Skipping analytics.');
+      return; 
+    }
 
+    const DB_URL = 'https://script.google.com/macros/s/AKfycbzpa1fUDZDXfQT5L6SxQRNf1zEFk-tpHV_2Tq9CY2iG4iSqa4W__Rnqs6fshnGJ0pnvRQ/exec';
+    const page = window.location.pathname;
+    
+    fetch(`${DB_URL}?action=visit&page=${encodeURIComponent(page)}`)
+      .catch(err => console.error('Tracking error:', err));
+  }
+
+  trackVisit();
+</script>
 </body>
 </html>
