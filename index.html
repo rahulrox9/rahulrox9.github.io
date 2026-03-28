@@ -24,26 +24,17 @@
     </style>
 </head>
 <body>
+    <body>
     <script>
-        // 1. Get the target page from the URL (?p=pagename.html)
+        // 1. Extract the target page from the URL parameter
         const urlParams = new URLSearchParams(window.location.search);
         const target = urlParams.get('p') || 'home.html';
-
-        // 2. "Clean" the URL immediately so the user only sees the base URL
+        // 2. Wipe the URL bar immediately so the user sees only the base URL
         if (window.location.search) {
             window.history.replaceState({}, document.title, window.location.pathname);
         }
-
-        // 3. Create the iframe pointing to the target
+        // 3. Inject the iframe pointing to the specific page
         document.write(`<iframe src="${target}" name="main_frame" id="main_frame"></iframe>`);
     </script>
-    <script>
-  // Detect admin flag from the main URL
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('admin') === 'true') {
-    localStorage.setItem('admin_ignore', 'true');
-    alert('Admin mode activated for this browser.');
-  }
-</script>
 </body>
 </html>
