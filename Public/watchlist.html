@@ -230,18 +230,9 @@ async function driveWrite(file, data) {
   });
 }
 const LANG_NAMES = {
-  'af':'Afrikaans','ar':'Arabic','bg':'Bulgarian','bn':'Bengali','cs':'Czech',
-  'da':'Danish','de':'German','el':'Greek','en':'English','es':'Spanish',
-  'et':'Estonian','fa':'Persian','fi':'Finnish','fr':'French','gu':'Gujarati',
-  'he':'Hebrew','hi':'Hindi','hr':'Croatian','hu':'Hungarian','id':'Indonesian',
-  'it':'Italian','ja':'Japanese','kn':'Kannada','ko':'Korean','lt':'Lithuanian',
-  'lv':'Latvian','ml':'Malayalam','mr':'Marathi','ms':'Malay','nl':'Dutch',
-  'no':'Norwegian','pa':'Punjabi','pl':'Polish','pt':'Portuguese','ro':'Romanian',
-  'ru':'Russian','sk':'Slovak','sl':'Slovenian','sq':'Albanian','sr':'Serbian',
-  'sv':'Swedish','sw':'Swahili','ta':'Tamil','te':'Telugu','th':'Thai',
-  'tr':'Turkish','uk':'Ukrainian','ur':'Urdu','vi':'Vietnamese','zh':'Chinese',
-  'cn':'Cantonese','tl':'Filipino','zz':'Unknown'
-};
+  'ar':'Arabic','bn':'Bengali','cn':'Cantonese','zh':'Chinese','da':'Danish','nl':'Dutch','en':'English','fr':'French','de':'German','el':'Greek','gu':'Gujarati','hi':'Hindi','id':'Indonesian','ja':'Japanese',
+  'kn':'Kannada','ko':'Korean','ml':'Malayalam','mr':'Marathi','no':'Norwegian','pl':'Polish','pt':'Portuguese','ru':'Russian','es':'Spanish','sv':'Swedish','ta':'Tamil','te':'Telugu','tr':'Turkish',
+  'sk':'Slovak','sl':'Slovenian','uk':'Ukrainian'}
 function langName(code) { return LANG_NAMES[code] || code || ''; }
 
 const TMDB_KEY = '60a9d5e588c206cf1d895394aa72d581';
