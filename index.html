@@ -24,7 +24,19 @@
     </style>
 </head>
 <body>
-    <iframe src="home.html" name="main_frame" id="main_frame"></iframe>
+    <script>
+        // 1. Get the target page from the URL (?p=pagename.html)
+        const urlParams = new URLSearchParams(window.location.search);
+        const target = urlParams.get('p') || 'home.html';
+
+        // 2. "Clean" the URL immediately so the user only sees the base URL
+        if (window.location.search) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // 3. Create the iframe pointing to the target
+        document.write(`<iframe src="${target}" name="main_frame" id="main_frame"></iframe>`);
+    </script>
     <script>
   // Detect admin flag from the main URL
   const params = new URLSearchParams(window.location.search);
