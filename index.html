@@ -25,5 +25,13 @@
 </head>
 <body>
     <iframe src="home.html" name="main_frame" id="main_frame"></iframe>
+    <script>
+  // Detect admin flag from the main URL
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('admin') === 'true') {
+    localStorage.setItem('admin_ignore', 'true');
+    alert('Admin mode activated for this browser.');
+  }
+</script>
 </body>
 </html>
