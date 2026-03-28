@@ -262,7 +262,7 @@ function renderPagesTable(pages) {
     '<thead><tr><th>Page</th><th>Views</th><th>Uniques</th></tr></thead><tbody>' +
     (pages.length ? pages.slice(0,15).map(p => `
       <tr>
-        <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${p.page}">${p.page}</td>
+        <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${p.page}">${p.page.replace('.html', '').replace(/^\//, '')}</td>
         <td>
           <div class="bar-cell">
             <div class="bar" style="width:${Math.round(p.views/max*80)}px"></div>
@@ -415,11 +415,17 @@ async function sendEmails() {
 /*
   <script>
   (function(){
-    const DB = 'YOUR_APPS_SCRIPT_URL';
+    // Only track if viewed inside the index.html frame (?p= mode)
+    if (window.self === window.top) return;
+
+    const DB = 'https://script.google.com/macros/s/AKfycbzpa1fUDZDXfQT5L6SxQRNf1zEFk-tpHV_2Tq9CY2iG4iSqa4W__Rnqs6fshnGJ0pnvRQ/exec';
     let uid = localStorage.getItem('_rsuid');
-    if (!uid) { uid = 'u' + Date.now() + Math.random().toString(36).slice(2,7); localStorage.setItem('_rsuid', uid); }
-    const page = location.pathname;
-    fetch(DB + '?action=visit&page=' + encodeURIComponent(page) + '&uid=' + uid + '&ref=' + encodeURIComponent(document.referrer));
+    if (!uid) { 
+      uid = 'u' + Date.now() + Math.random().toString(36).slice(2,7); 
+      localStorage.setItem('_rsuid', uid); 
+    }
+    const page = window.location.pathname;
+    fetch(`${DB}?action=visit&page=${encodeURIComponent(page)}&uid=${uid}&ref=${encodeURIComponent(document.referrer)}`);
   })();
   </script>
 */
