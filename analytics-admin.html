@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, ial-scale=1.0">
 <title>Analytics · Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -410,27 +410,6 @@ async function sendEmails() {
   btn.disabled = false; btn.textContent = '✉ Send to subscribers';
 }
 
-// ── Visit tracking snippet (injected into all pages) ──────────
-// This is the code to paste into index.html, blog.html etc:
-/*
-  <script>
-  (function(){
-    // Only track if viewed inside the index.html frame (?p= mode)
-    if (window.self === window.top) return;
-
-    const DB = 'https://script.google.com/macros/s/AKfycbzpa1fUDZDXfQT5L6SxQRNf1zEFk-tpHV_2Tq9CY2iG4iSqa4W__Rnqs6fshnGJ0pnvRQ/exec';
-    let uid = localStorage.getItem('_rsuid');
-    if (!uid) { 
-      uid = 'u' + Date.now() + Math.random().toString(36).slice(2,7); 
-      localStorage.setItem('_rsuid', uid); 
-    }
-    const page = window.location.pathname;
-    fetch(`${DB}?action=visit&page=${encodeURIComponent(page)}&uid=${uid}&ref=${encodeURIComponent(document.referrer)}`);
-  })();
-  </script>
-*/
-
-// ── Init ──────────────────────────────────────────────────────
 loadData();
 </script>
 </body>
