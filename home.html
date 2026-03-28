@@ -244,9 +244,15 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 </footer>
 <script>
   function trackVisit() {
-    // Check if the "ignore" flag exists in this browser's storage
+    // 1. Only track if the page is being viewed inside your index.html frame
+    // This prevents counting when you access the file directly.
+    if (window.self === window.top) {
+      console.log('Direct access detected: Skipping analytics.');
+      return;
+    }
+
+    // 2. Your existing Admin bypass (Double safety)
     if (localStorage.getItem('admin_ignore') === 'true') {
-      console.log('Admin detected: Skipping analytics.');
       return; 
     }
 
