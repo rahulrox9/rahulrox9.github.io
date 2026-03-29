@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, ial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Analytics · Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -102,7 +102,7 @@ tr:hover td{background:var(--parchment)}
     <a href="travel-admin.html">Travels</a>
     <a href="analytics-admin.html" class="active">Analytics</a>
   </div>
-  <a class="nav-back" href="../index.html">← Site</a>
+  <a class="nav-back" href="index.html">← Site</a>
 </nav>
 
 <div class="page">
@@ -158,12 +158,10 @@ tr:hover td{background:var(--parchment)}
       <div class="sub-title">Subscribers</div>
       <div class="section-pills" id="section-pills">
         <span class="pill on" onclick="filterSubs('all',this)">All</span>
-        <span class="pill" onclick="filterSubs('Travel Updates',this)">Travel</span>
-        <span class="pill" onclick="filterSubs('Indic Articles',this)">Indic</span>
-        <span class="pill" onclick="filterSubs('ScienceComm Articles',this)">Science</span>
-        <span class="pill" onclick="filterSubs('Movie Reviews',this)">Movies</span>
-        <span class="pill" onclick="filterSubs('Book Reviews',this)">Books</span>
-        <span class="pill" onclick="filterSubs('Sanskrit Lessons',this)">Sanskrit</span>
+        <span class="pill" onclick="filterSubs('Blog',this)">✍️ Blog</span>
+        <span class="pill" onclick="filterSubs('Research',this)">🔬 Research</span>
+        <span class="pill" onclick="filterSubs('Travel',this)">🗺️ Travel</span>
+        <span class="pill" onclick="filterSubs('General',this)">📬 General</span>
       </div>
     </div>
     <div class="sub-filter">
@@ -244,7 +242,7 @@ function renderStats(d) {
     { label:'Total Views',        val: d.totalViews,           sub: `Last ${d.period} days` },
     { label:'Unique Visitors',    val: d.uniqueVisitors,       sub: 'By cookie ID' },
     { label:'Subscribers',        val: d.confirmedSubscribers, sub: `${d.totalSubscribers - d.confirmedSubscribers} pending` },
-    { label:'Writing',               val: d.sectionCounts?.Writing      || 0, sub:'Writing subscribers' },
+    { label:'Blog',               val: d.sectionCounts?.Blog      || 0, sub:'Blog subscribers' },
     { label:'Research',           val: d.sectionCounts?.Research  || 0, sub:'Research subscribers' },
     { label:'Travel',             val: d.sectionCounts?.Travel    || 0, sub:'Travel subscribers' },
   ];
@@ -264,7 +262,7 @@ function renderPagesTable(pages) {
     '<thead><tr><th>Page</th><th>Views</th><th>Uniques</th></tr></thead><tbody>' +
     (pages.length ? pages.slice(0,15).map(p => `
       <tr>
-        <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${p.page}">${p.page.replace('.html', '').replace(/^\//, '')}</td>
+        <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${p.page}">${p.page}</td>
         <td>
           <div class="bar-cell">
             <div class="bar" style="width:${Math.round(p.views/max*80)}px"></div>
@@ -326,7 +324,11 @@ function renderSubTable() {
 async function removeSubscriber(id) {
   if (!confirm('Remove this subscriber?')) return;
   allSubscribers = allSubscribers.filter(s => s.id !== id);
-  await fetch(DB_URL, { method:'POST', body: JSON.stringify({ file:'analytics_subscribers.json', data: allSubscribers }) });
+  // Use no-cors FormData — same pattern as subscribe form
+  const fd = new FormData();
+  fd.append('file', 'analytics_subscribers.json');
+  fd.append('data', JSON.stringify(allSubscribers));
+  await fetch(DB_URL, { method:'POST', mode:'no-cors', body: fd });
   renderSubTable();
 }
 
@@ -335,7 +337,7 @@ async function checkNewPosts() {
   const btn = document.getElementById('check-btn');
   btn.disabled = true; btn.textContent = 'Checking…';
 
-  // Collect current posts from Writing_posts.json
+  // Collect current posts from blog_posts.json
   let posts = [];
   try {
     const data = await new Promise((res,rej) => {
@@ -343,7 +345,7 @@ async function checkNewPosts() {
       const s = document.createElement('script');
       window[cb] = d => { delete window[cb]; s.remove(); res(d); };
       s.onerror = () => { delete window[cb]; s.remove(); rej(); };
-      s.src = `${DB_URL}?file=Writing_posts.json&callback=${cb}`;
+      s.src = `${DB_URL}?file=blog_posts.json&callback=${cb}`;
       document.head.appendChild(s);
     });
     posts = Array.isArray(data) ? data : [];
@@ -412,6 +414,21 @@ async function sendEmails() {
   btn.disabled = false; btn.textContent = '✉ Send to subscribers';
 }
 
+// ── Visit tracking snippet (injected into all pages) ──────────
+// This is the code to paste into index.html, blog.html etc:
+/*
+  <script>
+  (function(){
+    const DB = 'YOUR_APPS_SCRIPT_URL';
+    let uid = localStorage.getItem('_rsuid');
+    if (!uid) { uid = 'u' + Date.now() + Math.random().toString(36).slice(2,7); localStorage.setItem('_rsuid', uid); }
+    const page = location.pathname;
+    fetch(DB + '?action=visit&page=' + encodeURIComponent(page) + '&uid=' + uid + '&ref=' + encodeURIComponent(document.referrer));
+  })();
+  </script>
+*/
+
+// ── Init ──────────────────────────────────────────────────────
 loadData();
 </script>
 </body>
