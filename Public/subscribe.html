@@ -9,27 +9,21 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e;--red:#c0392b}
 html,body{min-height:100%;font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink)}
-
 nav{background:#1a1208;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:52px}
 .nav-logo{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;text-decoration:none;color:#faf6ef}
 .nav-logo span{color:var(--warm);font-style:italic}
 .nav-back{font-size:0.72rem;color:rgba(250,246,239,0.5);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;padding:0.22rem 0.6rem;border:1px solid rgba(255,255,255,0.15);border-radius:3px;transition:all 0.15s}
 .nav-back:hover{color:#faf6ef;border-color:rgba(255,255,255,0.4)}
-
 .hero{max-width:580px;margin:4rem auto 2rem;padding:0 1.5rem;text-align:center}
 .hero h1{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;line-height:1.2;margin-bottom:0.8rem}
 .hero h1 span{color:var(--warm);font-style:italic}
 .hero p{font-size:0.95rem;color:var(--muted);line-height:1.7}
-
 .card{max-width:520px;margin:0 auto 4rem;padding:0 1.5rem}
 .form-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:2rem}
-
 .field{margin-bottom:1.2rem}
 .field label{display:block;font-size:0.72rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem}
 .field input{width:100%;padding:0.6rem 0.8rem;border:1px solid var(--border);border-radius:4px;background:var(--parchment);font-family:'DM Sans',sans-serif;font-size:0.9rem;color:var(--ink);outline:none;transition:border-color 0.2s}
 .field input:focus{border-color:var(--warm)}
-
-/* Section checkboxes */
 .sections-label{font-size:0.72rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-bottom:0.8rem;display:block}
 .sections-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1.4rem}
 .section-opt{position:relative}
@@ -40,50 +34,38 @@ nav{background:#1a1208;padding:0 2rem;display:flex;align-items:center;justify-co
 .section-opt input:checked + label .tick{opacity:1}
 .section-icon{font-size:1.1rem;flex-shrink:0}
 .tick{margin-left:auto;color:var(--warm);opacity:0;font-size:0.8rem;transition:opacity 0.15s}
-
 .hint{font-size:0.75rem;color:var(--muted);margin-bottom:1.4rem;line-height:1.6;padding:0.7rem 0.9rem;background:var(--parchment);border-radius:4px;border:1px solid var(--border)}
-
 .btn-sub{width:100%;padding:0.75rem;background:var(--warm);color:#fff;border:none;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;cursor:pointer;transition:opacity 0.2s;letter-spacing:0.02em}
 .btn-sub:hover{opacity:0.88}
 .btn-sub:disabled{opacity:0.45;cursor:not-allowed}
-
 .msg{margin-top:1rem;padding:0.7rem 0.9rem;border-radius:4px;font-size:0.8rem;display:none;line-height:1.5}
 .msg.ok{background:#ddf0ec;color:var(--green);border:1px solid #b0ddd5;display:block}
 .msg.err{background:#fde8e8;color:var(--red);border:1px solid #f5c0c0;display:block}
-
 .divider{text-align:center;color:var(--border);margin:1.5rem 0;font-size:0.8rem}
-
-.what-you-get{margin-top:1rem}
 .wyg-title{font-size:0.7rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem}
 .wyg-item{display:flex;gap:0.5rem;align-items:flex-start;margin-bottom:0.4rem;font-size:0.8rem;color:var(--muted)}
 .wyg-item::before{content:'✓';color:var(--green);flex-shrink:0;margin-top:0.05rem}
 </style>
 </head>
 <body>
-
 <nav>
   <a class="nav-logo" href="index.html">Rahul <span>Subbaraman</span></a>
   <a class="nav-back" href="index.html">← Back</a>
 </nav>
-
 <div class="hero">
   <h1>Stay in the <span>loop</span></h1>
   <p>Get notified when I publish something new — choose exactly what you want to hear about. No spam, no frequency commitments, unsubscribe any time.</p>
 </div>
-
 <div class="card">
   <div class="form-card">
-
     <div class="field">
       <label>Name <span style="font-weight:300;text-transform:none">(optional)</span></label>
       <input type="text" id="sub-name" placeholder="Your name">
     </div>
-
     <div class="field">
       <label>Email *</label>
       <input type="email" id="sub-email" placeholder="you@example.com">
     </div>
-
     <span class="sections-label">What do you want updates on?</span>
     <div class="sections-grid">
       <div class="section-opt">
@@ -111,88 +93,69 @@ nav{background:#1a1208;padding:0 2rem;display:flex;align-items:center;justify-co
         <label for="sec-sanskrit"><span class="section-icon">🕉️</span> Sanskrit Lessons<span class="tick">✓</span></label>
       </div>
     </div>
-
     <div class="hint">
-      You'll get a confirmation email first; no emails will be sent until you confirm. Each email includes a one-click unsubscribe link.
+      You'll get a confirmation email first — no emails until you confirm. Each email includes a one-click unsubscribe link.
     </div>
-
     <button class="btn-sub" id="sub-btn" onclick="submitSubscribe()">Subscribe →</button>
     <div class="msg" id="sub-msg"></div>
-
     <div class="divider">· · ·</div>
-
-    <div class="what-you-get">
-      <div class="wyg-title">What you're signing up for</div>
-      <div class="wyg-item">One email per new post — never batched spam</div>
-      <div class="wyg-item">Tracked reads so I know what resonates</div>
-      <div class="wyg-item">No third parties — emails sent directly from my server</div>
-      <div class="wyg-item">Unsubscribe instantly from any email</div>
-    </div>
-
+    <div class="wyg-title">What you're signing up for</div>
+    <div class="wyg-item">One email per new post — never batched spam</div>
+    <div class="wyg-item">Tracked reads so I know what resonates</div>
+    <div class="wyg-item">No third parties — emails sent directly from my server</div>
+    <div class="wyg-item">Unsubscribe instantly from any email</div>
   </div>
 </div>
-
 <script>
 const DB_URL = 'https://script.google.com/macros/s/AKfycbzpa1fUDZDXfQT5L6SxQRNf1zEFk-tpHV_2Tq9CY2iG4iSqa4W__Rnqs6fshnGJ0pnvRQ/exec';
-  
+
+// The checkbox IDs match the actual HTML above
+const SECTION_IDS = ['sec-travel','sec-indic','sec-science','sec-movies','sec-books','sec-sanskrit'];
 
 async function submitSubscribe() {
-  const email = document.getElementById('sub-email').value.trim();
-  const name = document.getElementById('sub-name').value.trim();
-  const sections = ['sec-blog','sec-research','sec-travel','sec-general']
+  const email    = document.getElementById('sub-email').value.trim();
+  const name     = document.getElementById('sub-name').value.trim();
+  const sections = SECTION_IDS
     .filter(id => document.getElementById(id).checked)
     .map(id => document.getElementById(id).value);
 
   const msg = document.getElementById('sub-msg');
   const btn = document.getElementById('sub-btn');
+  msg.className = 'msg'; msg.style.display = 'none';
 
   if (!email || !email.includes('@')) {
     msg.textContent = 'Please enter a valid email address.';
-    msg.className = 'msg err'; 
-    return;
+    msg.className = 'msg err'; return;
   }
   if (!sections.length) {
     msg.textContent = 'Please select at least one section.';
-    msg.className = 'msg err'; 
-    return;
+    msg.className = 'msg err'; return;
   }
 
-  btn.disabled = true; 
-  btn.textContent = 'Sending…';
-  msg.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Sending…';
 
+  // Use FormData with no-cors — Apps Script reads e.parameter on POST
   const formData = new FormData();
-  formData.append('action', 'subscribe');
-  formData.append('email', email);
-  formData.append('name', name);
+  formData.append('action',   'subscribe');
+  formData.append('email',    email);
+  formData.append('name',     name);
   formData.append('sections', sections.join(','));
 
   try {
-    // We use 'no-cors' to avoid the preflight OPTIONS request that Google Apps Script fails
-    await fetch(DB_URL, {
-      method: 'POST',
-      mode: 'no-cors', 
-      body: formData
-    });
-
-    // Since we can't read the response in no-cors, we wait 1.5 seconds 
-    // to give the script time to execute before showing the success message
+    await fetch(DB_URL, { method:'POST', mode:'no-cors', body: formData });
+    // no-cors = opaque response, can't read it — show success after short delay
     setTimeout(() => {
       msg.textContent = '✓ Almost there — check your email to confirm your subscription.';
       msg.className = 'msg ok';
       msg.style.display = 'block';
       btn.textContent = 'Done!';
-    }, 1500);
-
+    }, 1200);
   } catch(e) {
     msg.textContent = 'Connection error. Please try again.';
-    msg.className = 'msg err';
-    msg.style.display = 'block';
-    btn.disabled = false; 
-    btn.textContent = 'Subscribe →';
+    msg.className = 'msg err'; msg.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Subscribe →';
   }
 }
-
 </script>
 </body>
 </html>
