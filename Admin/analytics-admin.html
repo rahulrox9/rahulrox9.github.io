@@ -385,7 +385,7 @@ async function checkNewPosts() {
   document.getElementById('send-btn').style.display = 'inline-block';
   list.innerHTML = pendingNewPosts.map((p,i) => `
     <div class="new-post-item">
-      <input type="checkbox" class="new-post-check" id="np-${i}" checked>
+      <input type="checkbox" class="new-post-check" id="np-${i}" checked onchange="updateBlastPreview()">
       <label for="np-${i}" style="flex:1;cursor:pointer;font-size:0.78rem">${p.title}</label>
       <span class="new-post-badge">${p.section||'General'}</span>
     </div>`).join('');
