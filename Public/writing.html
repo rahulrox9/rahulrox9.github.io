@@ -63,6 +63,8 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 .post-footer{display:flex;align-items:center;justify-content:space-between;margin-top:1.2rem}
 .post-date{font-size:0.7rem;color:var(--muted)}
 .post-arrow{font-size:0.8rem;color:var(--warm);transition:transform 0.2s}
+.post-featured { font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: #fff;  background: var(--green);
+  display: inline-block;  padding: 2px 6px;  margin-bottom: 0.5rem;  border-radius: 3px;}
 
 footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .footer-left{font-family:'Playfair Display',serif;font-size:0.9rem;font-style:italic;color:var(--muted)}
@@ -168,6 +170,7 @@ function createPostHTML(p) {
   return `<a class="post-card" href="${p.file}">
       <div>
         <div class="post-tag">${p.tag.join(' · ')}</div>
+        ${p.featured ? '<div class="post-featured">Featured</div>' : ''}
         <div class="post-title">${p.title}</div>
         <div class="post-excerpt">${p.excerpt}</div>
       </div>
@@ -187,12 +190,17 @@ function render() {
     return;
   }
 
-  // Grouping Logic
-  const articles = filtered.filter(p => p.tag.includes('Article'));
-  const poetry = filtered.filter(p => p.tag.includes('Poetry'));
-  const others = filtered.filter(p => !p.tag.includes('Article') && !p.tag.includes('Poetry'));
-
+      // Grouping Logic
+  const featured = filtered.filter(p => p.featured);
+  const articles = filtered.filter(p => p.tag.includes('Article') && !p.featured);
+  const poetry = filtered.filter(p => p.tag.includes('Poetry') && !p.featured);
+  const others = filtered.filter(p => !p.tag.includes('Article') && !p.tag.includes('Poetry') && !p.featured); 
+  
   let finalHTML = '';
+  if (featured.length > 0) {
+  finalHTML += `<div class="section-header"><h2>Featured</h2></div>`;
+  finalHTML += featured.map(p => createPostHTML(p)).join('');
+}
 
   if (articles.length > 0) {
     finalHTML += `<div class="section-header"><h2>Articles</h2></div>`;
