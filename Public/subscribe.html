@@ -62,13 +62,13 @@ nav{background:#1a1208;padding:0 2rem;display:flex;align-items:center;justify-co
 <body>
 
 <nav>
-  <a class="nav-logo" href="../index.html">Rahul <span>Subbaraman</span></a>
-  <a class="nav-back" href="../index.html">← Back</a>
+  <a class="nav-logo" href="index.html">Rahul <span>Subbaraman</span></a>
+  <a class="nav-back" href="index.html">← Back</a>
 </nav>
 
 <div class="hero">
   <h1>Stay in the <span>loop</span></h1>
-  <p>Get notified when I publish something new — choose exactly what you want to hear about. No spam, no commitments, unsubscribe any time.</p>
+  <p>Get notified when I publish something new — choose exactly what you want to hear about. No spam, no frequency commitments, unsubscribe any time.</p>
 </div>
 
 <div class="card">
@@ -88,7 +88,7 @@ nav{background:#1a1208;padding:0 2rem;display:flex;align-items:center;justify-co
     <div class="sections-grid">
       <div class="section-opt">
         <input type="checkbox" id="sec-blog" value="Blog">
-        <label for="sec-blog"><span class="section-icon">✍️</span> Writing <span class="tick">✓</span></label>
+        <label for="sec-blog"><span class="section-icon">✍️</span> Writing & Blog<span class="tick">✓</span></label>
       </div>
       <div class="section-opt">
         <input type="checkbox" id="sec-research" value="Research">
@@ -149,21 +149,24 @@ async function submitSubscribe() {
   const btn = document.getElementById('sub-btn');
   btn.disabled = true; btn.textContent = 'Sending…';
 
+  // Apps Script rejects JSON POST with CORS errors.
+  // Use no-cors with form-encoded body — response will be opaque but request goes through.
   try {
-    const r = await fetch(DB_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action:'subscribe', email, name, sections })
+    const body = new URLSearchParams({
+      action: 'subscribe',
+      email, name,
+      sections: sections.join(',')
     });
-    const d = await r.json();
-    if (d.ok) {
-      msg.textContent = d.updated
-        ? '✓ Preferences updated! Check your email for confirmation.'
-        : '✓ Almost there — check your email to confirm your subscription.';
-      msg.className = 'msg ok';
-      btn.textContent = 'Sent!';
-    } else {
-      throw new Error(d.error || 'Unknown error');
-    }
+    await fetch(DB_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString()
+    });
+    // no-cors = opaque response, can't read it — assume success
+    msg.textContent = '✓ Almost there — check your email to confirm your subscription.';
+    msg.className = 'msg ok';
+    btn.textContent = 'Sent!';
   } catch(e) {
     msg.textContent = 'Something went wrong. Please try again.';
     msg.className = 'msg err';
