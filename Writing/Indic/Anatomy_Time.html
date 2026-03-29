@@ -43,6 +43,15 @@ figcaption{display:flex;justify-content:space-between;align-items:baseline;gap:1
 .cheat-sheet-table th{color:var(--warm);text-transform:uppercase;font-size:0.75rem;letter-spacing:0.05em}
 footer{padding:4rem;border-top:1px solid var(--border);text-align:center;font-family:'Playfair Display',serif;font-style:italic;color:var(--muted)}
 @media (max-width:600px){figcaption{flex-direction:column;gap:0.3rem}}
+
+.subscribe-cta { padding: 3rem 1.5rem; background-color: var(--card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    text-align: center; margin-top: 4rem; }
+.cta-content h3 {font-family: 'Playfair Display', serif;font-size: 1.5rem;color: var(--ink);margin-bottom: 0.5rem;}
+.cta-content p {font-size: 0.9rem;color: var(--muted);margin-bottom: 1.5rem;}
+.btn-subscribe {display: inline-block;padding: 0.8rem 2rem;background-color: var(--warm);color: white; text-decoration: none;
+                font-family: 'DM Sans', sans-serif;  font-size: 0.85rem;font-weight: 500;border-radius: 4px; transition: opacity 0.2s;}
+.btn-subscribe:hover {opacity: 0.9;}
+  
 </style>
 </head>
 <body>
@@ -94,10 +103,16 @@ footer{padding:4rem;border-top:1px solid var(--border);text-align:center;font-fa
 <h3>REFERENCES:</h3>
 <p><sup>1</sup> Viṣṇupurāṇam. (n.d.). (Chapter 2, Topic 1). Hindu Scriptures. <a href="http://hinduscriptures.in/scriptures/puranas-18-puranas-mahapurana/visnu-purana/chapter-02/topic-1" style="color:var(--warm)"> PDF LINK </a></p>
 <p><sup>2</sup> Sūryasiddhānta. (2020). (M. Yano, Trans., & S. Y. S. Marthi, Ed.). Sanskrit Documents. <a href="https://sanskritdocuments.org/~sanskrit/doc_trial/fortransfer/Narayana/sUryasiddhAnta_sa.html" style="color:var(--warm)"> LINK </a></p>
-
-
 </article>
 
+<section class="subscribe-cta">
+    <div class="cta-content">
+        <h3>Stay Updated</h3>
+        <p>Receive notifications for new articles and research notes.</p>
+        <a href="subscribe.html" class="btn-subscribe">Subscribe Now</a>
+    </div>
+</section>
+  
 <footer>
   <div class="footer-left">Rahul Subbaraman</div>
   <div class="footer-right">
