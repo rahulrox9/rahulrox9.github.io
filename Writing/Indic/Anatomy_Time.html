@@ -28,7 +28,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 .verse-source{font-size:0.85rem;color:var(--muted);font-weight:500;display:block;margin-left:1.5rem}
 
 .sanskrit{font-family:'Tiro Sanskrit',serif;font-size:1rem;color: var(--muted);display:block;margin-bottom:0.5rem;font-weight: bold;}
-.engtrans{color:var(--muted); font-style:italic; font-size:0.95rem; margin-bottom:0.5rem; display:block; padding-left: 10px; font-weight: normal; font-style: italic; color: #555;}
+.engtrans{color:var(--muted); font-style:italic; font-size:0.95rem; margin-bottom:0.5rem; display:block; font-weight: normal; font-style: italic; color: #555;}
 
 .post-content{text-align:justify;text-justify:inter-word;hyphens:auto;-webkit-hyphens:auto;-ms-hyphens:auto}
 .post-content h2{font-family:'Playfair Display',serif;font-size:1.8rem;margin:3.5rem 0 1.2rem;color:var(--warm);text-align:left}
@@ -38,9 +38,14 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 figcaption{display:flex;justify-content:space-between;align-items:baseline;gap:1.5rem;margin-top:0.6rem;text-align:left}
 .caption-text{font-size:0.85rem;color:var(--ink);font-style:italic;font-weight:300}
 .image-credit{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap}
-.cheat-sheet-table{width:100%;border-collapse:collapse;margin:2rem 0;font-size:0.9rem;background:var(--card)}
-.cheat-sheet-table th,.cheat-sheet-table td{border:1px solid var(--border);padding:1rem;text-align:left}
-.cheat-sheet-table th{color:var(--warm);text-transform:uppercase;font-size:0.75rem;letter-spacing:0.05em}
+
+table{width:100%;border-collapse:collapse;margin:0.5rem 0;font-size:0.9rem}
+th,td{border:0.25px solid var(--border);padding:0.25rem;text-align:center}
+th{background:#fcfaf7;font-family:'Playfair Display',serif; font-weight:700}
+tr:nth-child(even){background:#faf9f7}
+th { background: #e8dfd0;}
+td, tr:nth-child(even) {background: #fcfaf7;}
+
 footer{padding:4rem;border-top:1px solid var(--border);text-align:center;font-family:'Playfair Display',serif;font-style:italic;color:var(--muted)}
 @media (max-width:600px){figcaption{flex-direction:column;gap:0.3rem}}
 
@@ -68,34 +73,55 @@ footer{padding:4rem;border-top:1px solid var(--border);text-align:center;font-fa
 
 <header class="post-header">
 <h1 class="fancy-title">Kāla-Vidhyā: The Science of Time in Sanātana Dharma <br> Part 1: The Anatomy of Time</h1>
-<span class="post-metadata">Indic · Article · VedicScience · 29.03.2026 </span>
+<span class="post-metadata">Indic · Article · VedicScience · 28.03.2026 (updated)</span>
 </header>
 
 <h2> The Concept of Time </h2>
 <section class="post-content">
-  <p>The modern understanding of time, rooted in Western thought, follows a linear model: time begins at a fixed point (say, the Big Bang), moves in a single direction, and tends toward an inevitable end. Sanātana Dharma offers something altogether different, the कालचक्र or the wheel of time. In this framework, time has no definitive start, no terminal conclusion; every ending is simply the precursor to a new beginning. What the linear view calls a terminus, the cyclical view recognises as a threshold.</p>
+<p>The modern understanding of time, rooted in Western thought, follows a linear model: time begins at a fixed point (say, the Big Bang), moves in a single direction, and tends toward an inevitable end. Sanātana Dharma offers something altogether different, the कालचक्र or the wheel of time. In this framework, time has no definitive start, no terminal conclusion; every ending is simply the precursor to a new beginning. What the linear view calls a terminus, the cyclical view recognises as a threshold.</p>
 
-  <span class="sanskrit">अनादिर्भगवान् कालो नान्तोऽस्य द्विज विद्यते । अव्युच्छिन्नास्ततस्त्वेते सर्गस्थित्यन्तसंयमाः ॥</span> <span class="verse-source">~ विष्णुपुराणम् (१.२.२६) | Viṣṇupurāṇam (1.2.26)
-    <a href="http://hinduscriptures.in/scriptures/puranas-18-puranas-mahapurana/visnu-purana/chapter-02/topic-1"
-       style="color:var(--warm); text-decoration: none"><sup><b>1</b></sup></a>
-  </span>
+<span class="sanskrit">अनादिर्भगवान् कालो नान्तोऽस्य द्विज विद्यते । अव्युच्छिन्नास्ततस्त्वेते सर्गस्थित्यन्तसंयमाः ॥</span> <span class="verse-source">~ विष्णुपुराणम् (१.२.२६) | Viṣṇupurāṇam (1.2.26) <a href="http://hinduscriptures.in/scriptures/puranas-18-puranas-mahapurana/visnu-purana/chapter-02/topic-1" style="color:var(--warm); text-decoration: none"><sup><b>1</b></sup></a> </span>
 
-  <p>This verse from the Viṣṇupurāṇam encapsulates the idea precisely: time (कालः) has neither a beginning (अनादिः) nor an end (नान्तः), and the unbroken (अव्युच्छिन्नाः) succession of creation (सर्ग), maintenance (स्थिति), and dissolution (अन्त) turns without interruption; each cycle giving way seamlessly to the next.</p>
+<p>This verse from the Viṣṇupurāṇam encapsulates the idea precisely: time (कालः) has neither a beginning (अनादिः) nor an end (नान्तः), and the unbroken (अव्युच्छिन्नाः) succession of creation (सर्ग), maintenance (स्थिति), and dissolution (अन्त) turns without interruption; each cycle giving way seamlessly to the next.</p>
 </section>
 
 <h2>The Classification of Time</h2>
-<span class="sanskrit">लोकानामन्तकृत् कालः कालोऽन्यः कलनात्मकः । <br>
-स द्विधा स्थूलसूक्ष्मत्वान् मूर्तश्चामूर्त उच्यते ॥</span>
-<span class="verse-source">~ सूर्यसिद्धान्तः (१.१०) | Sūryasiddhānta (1.10)
-  <a href="https://sanskritdocuments.org/..." style="color:var(--warm); text-decoration: none"><sup><b>2a</b></sup></a>
-</span>
+<span class="sanskrit">लोकानामन्तकृत् कालः कालोऽन्यः कलनात्मकः । स द्विधा स्थूलसूक्ष्मत्वान् मूर्तश्चामूर्त उच्यते ॥</span>
+<span class="verse-source">~ सूर्यसिद्धान्तः (१.१०) | Sūryasiddhānta (1.10) <a href="https://sanskritdocuments.org/..." style="color:var(--warm); text-decoration: none"><sup><b>2a</b></sup></a> </span>
 
 <section class="post-content">
-  <p>This verse from the Sūryasiddhānta classifies time along two axes: its role or function, and its scale or dimension. By function, time is of two kinds. The first is <strong>Lokāntakṛt</strong> (लोकानामन्तकृत्), literally "the finisher of worlds", denoting Cosmic Time: the irreversible, entropic force that drives the universe toward its eventual dissolution, or Pralaya. The second is <strong>Kalanātmaka</strong> (कलनात्मकः), meaning "calculable time" and derived from the root <em>kal</em> (to count). This is time as a measurable quantity, the domain of mathematics and astronomy.</p>
+<p>This verse from the Sūryasiddhānta classifies time along two axes: its role or function, and its scale or dimension. By function, time is of two kinds. The first is <strong>Lokāntakṛt</strong> (लोकानामन्तकृत्), literally "the finisher of worlds", denoting Cosmic Time: the irreversible, entropic force that drives the universe toward its eventual dissolution, or Pralaya. The second is <strong>Kalanātmaka</strong> (कलनात्मकः), meaning "calculable time" and derived from the root <em>kal</em> (to count). This is time as a measurable quantity, the domain of mathematics and astronomy.</p>
 
-  <p>Within Kalanātmaka time, scale introduces a further distinction. <strong>Mūrta</strong> (मूर्त) refers to time units that are <em>perceptible</em>, grounded in physical movement or biological cycles and observable to human senses. <strong>Amūrta</strong> (अमूर्त) denotes <em>infinitesimal</em> or atomic units that fall below the threshold of human perception, representing time at its most fundamental, indivisible level.</p>
+<p>Within Kalanātmaka time, scale introduces a further distinction. <strong>Mūrta</strong> (मूर्त) refers to time units that are <em>perceptible</em>, grounded in physical movement or biological cycles and observable to human senses. <strong>Amūrta</strong> (अमूर्त) denotes <em>infinitesimal</em> or atomic units that fall below the threshold of human perception, representing time at its most fundamental, indivisible level.</p>
 </section>
 
+<h2>The Dimensions of Mūrta Time </h2>
+<span class="sanskrit">प्राणादिः कथितो मूर्तस्त्रुट्याद्योऽमूर्तसंज्ञकः । षड्भिः प्राणैर्विनाडी स्यात् तत्षष्ट्या नाडिका स्मृता ॥</span>
+<span class="engtrans">Prāṇa and the rest are termed mūrta; Truṭi and the rest are termed amūrta. Six Prāṇas (human breath) make a Vināḍī; sixty of those are considered a Nāḍikā.</span>
+
+<span class="sanskrit">नाडीषष्ट्या तु नाक्षत्रमहोरात्रं प्रकीर्तितम् । तत्त्रिंशता भवेन् मासः सावनोऽर्कोदयैस्तथा ॥</span>
+<span class="engtrans">Sixty Nāḍikās are declared to be a sidereal* day-night (nākṣatram-ahorātram). Thirty of such [days] make a Sāvana [civil] month, measured by sunrises (arkodayaiḥ).</span>
+
+<span class="sanskrit">ऐन्दवस्तिथिभिस्तद्वत् सङ्क्रान्त्या सौर उच्यते । मासैर्द्वादशभिर्वर्षं दिव्यं तदह उच्यते ॥</span>
+<span class="engtrans">A lunar [aindava] month is regulated by lunar days [tithi]; a solar [saura] month is determined by the sun's entrance into a zodiac sign [saṅkrānti]. Twelve months make a year; that is called a day of the gods [divyam-ahaḥ].</span>
+
+<span class="verse-source">~ सूर्यसिद्धान्तः (१.११-१.१३) | Sūryasiddhānta (1.11-1.13)
+  <a href="https://sanskritdocuments.org/~sanskrit/doc_trial/fortransfer/Narayana/sUryasiddhAnta_sa.html#:~:text=..." style="color:var(--warm); text-decoration: none"><sup><b>2b</b></sup></a>
+</span>
+<br>
+<table>
+  <thead> <tr> <th>Unit (Sanskrit)</th> <th>Unit (IAST)</th> <th>Meaning</th> <th>Equivalent</th> <th>Modern Value</th> </tr> </thead>
+  <tbody>
+    <tr><td>प्राणः</td><td>1 Prāṇaḥ</td><td>1 breath</td><td>—</td><td>4 seconds</td></tr>
+    <tr><td>विनाडी</td><td>1 Vināḍī</td><td>—</td><td>6 Prāṇa</td><td>24 seconds</td></tr>
+    <tr><td>नाडिका</td><td>1 Nāḍikā</td><td>—</td><td>60 Vināḍī</td><td>24 minutes</td></tr>
+    <tr><td>अहोरात्रम्</td><td>1 Ahorātram</td><td>1 day-night</td><td>60 Nāḍikā</td><td>24 hours</td></tr>
+    <tr><td>मासः</td><td>1 Māsaḥ</td><td>1 month</td><td>30 Ahorātra</td><td>30 days</td></tr>
+    <tr><td>वर्षः</td><td>1 Varṣaḥ</td><td>1 year</td><td>12 Māsa</td><td>1 solar year</td></tr>
+  </tbody>
+</table>
+
+<h2> The Scaling of Cosmic Cycles <\h2>
 <br>
 <hr>
 
