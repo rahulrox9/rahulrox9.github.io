@@ -414,20 +414,6 @@ async function sendEmails() {
   btn.disabled = false; btn.textContent = '✉ Send to subscribers';
 }
 
-// ── Visit tracking snippet (injected into all pages) ──────────
-// This is the code to paste into index.html, blog.html etc:
-/*
-  <script>
-  (function(){
-    const DB = 'YOUR_APPS_SCRIPT_URL';
-    let uid = localStorage.getItem('_rsuid');
-    if (!uid) { uid = 'u' + Date.now() + Math.random().toString(36).slice(2,7); localStorage.setItem('_rsuid', uid); }
-    const page = location.pathname;
-    fetch(DB + '?action=visit&page=' + encodeURIComponent(page) + '&uid=' + uid + '&ref=' + encodeURIComponent(document.referrer));
-  })();
-  </script>
-*/
-
 loadData();
 </script>
 </body>
