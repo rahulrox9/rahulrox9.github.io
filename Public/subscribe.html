@@ -105,7 +105,7 @@ nav{background:#1a1208;padding:0 2rem;display:flex;align-items:center;justify-co
     </div>
 
     <div class="hint">
-      You'll get a confirmation email first — no emails until you confirm. Each email includes a one-click unsubscribe link.
+      You'll get a confirmation email first; no emails until you confirm. Each email includes a one-click unsubscribe link.
     </div>
 
     <button class="btn-sub" id="sub-btn" onclick="submitSubscribe()">Subscribe →</button>
@@ -128,51 +128,62 @@ nav{background:#1a1208;padding:0 2rem;display:flex;align-items:center;justify-co
 const DB_URL = 'https://script.google.com/macros/s/AKfycby_4wXklgbSrz3G0dE0_DmVp9SgXobdjYYWnLu9aa4gVHB974v0rq52DN11Ew1PQDnluw/exec';
 
 async function submitSubscribe() {
-  const email    = document.getElementById('sub-email').value.trim();
-  const name     = document.getElementById('sub-name').value.trim();
+  const email = document.getElementById('sub-email').value.trim();
+  const name = document.getElementById('sub-name').value.trim();
   const sections = ['sec-blog','sec-research','sec-travel','sec-general']
     .filter(id => document.getElementById(id).checked)
     .map(id => document.getElementById(id).value);
 
   const msg = document.getElementById('sub-msg');
-  msg.className = 'msg';
+  const btn = document.getElementById('sub-btn');
 
   if (!email || !email.includes('@')) {
     msg.textContent = 'Please enter a valid email address.';
-    msg.className = 'msg err'; return;
+    msg.className = 'msg err'; 
+    return;
   }
   if (!sections.length) {
     msg.textContent = 'Please select at least one section.';
-    msg.className = 'msg err'; return;
+    msg.className = 'msg err'; 
+    return;
   }
 
-  const btn = document.getElementById('sub-btn');
-  btn.disabled = true; btn.textContent = 'Sending…';
+  btn.disabled = true; 
+  btn.textContent = 'Sending…';
+  msg.style.display = 'none';
 
-  // Apps Script rejects JSON POST with CORS errors.
-  // Use no-cors with form-encoded body — response will be opaque but request goes through.
+  const formData = new FormData();
+  formData.append('action', 'subscribe');
+  formData.append('email', email);
+  formData.append('name', name);
+  formData.append('sections', sections.join(','));
+
   try {
-    const body = new URLSearchParams({
-      action: 'subscribe',
-      email, name,
-      sections: sections.join(',')
-    });
+    // We use 'no-cors' to avoid the preflight OPTIONS request that Google Apps Script fails
     await fetch(DB_URL, {
       method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: body.toString()
+      mode: 'no-cors', 
+      body: formData
     });
-    // no-cors = opaque response, can't read it — assume success
-    msg.textContent = '✓ Almost there — check your email to confirm your subscription.';
-    msg.className = 'msg ok';
-    btn.textContent = 'Sent!';
+
+    // Since we can't read the response in no-cors, we wait 1.5 seconds 
+    // to give the script time to execute before showing the success message
+    setTimeout(() => {
+      msg.textContent = '✓ Almost there — check your email to confirm your subscription.';
+      msg.className = 'msg ok';
+      msg.style.display = 'block';
+      btn.textContent = 'Done!';
+    }, 1500);
+
   } catch(e) {
-    msg.textContent = 'Something went wrong. Please try again.';
+    msg.textContent = 'Connection error. Please try again.';
     msg.className = 'msg err';
-    btn.disabled = false; btn.textContent = 'Subscribe →';
+    msg.style.display = 'block';
+    btn.disabled = false; 
+    btn.textContent = 'Subscribe →';
   }
 }
+
 </script>
 </body>
 </html>
