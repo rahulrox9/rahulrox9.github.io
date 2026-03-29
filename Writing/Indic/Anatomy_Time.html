@@ -10,8 +10,8 @@
 body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);line-height:1.8;margin:0}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35}
 h1,h2,h3{font-family:'Playfair Display',serif;margin-bottom:1rem}
-h1{font-size:2.5rem;border-bottom:2px solid var(--warm);padding-bottom:1rem}
-h2{font-size:1.8rem;color:var(--warm);border-bottom:1px solid var(--border)}
+h1{font-size:2rem;border-bottom:2px solid var(--warm);padding-bottom:1rem}
+h2{font-size:1.5rem;color:var(--warm);border-bottom:1px solid var(--border)}
 nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:52px}
 .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;text-decoration:none;color:var(--ink)}
 .nav-logo span{color:var(--warm);font-style:italic}
@@ -25,11 +25,11 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 .back-link{display:inline-block;margin-bottom:2.5rem;text-decoration:none;color:var(--muted);font-size:0.75rem;letter-spacing:0.05em}
 .fancy-title{font-family: 'Tiro Devanagari Hindi', serif;font-size: clamp(2.2rem, 5vw, 3.8rem);color: var(--warm);line-height: 1.2;margin-bottom: 0.5rem;font-weight: 400;}
 .post-metadata{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);display:block;margin-top:1rem}
-.quote-block{margin:3rem 0;padding:2.5rem;border-top:1px solid var(--border);border-bottom:1px solid var(--border);text-align:center}
-.quote-text{font-family:'Playball',cursive;font-size:1.3rem;color:var(--ink);display:block;margin-bottom:1rem}
-.quote-source{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--warm);font-weight:500}
-.sanskrit{font-family:'Tiro Sanskrit',serif;font-size:1rem;color:#000;display:block;margin-bottom:0.5rem}
+.verse-source{font-size:0.85rem;color:var(--muted);font-weight:500;display:block;margin-left:1.5rem}
+
+.sanskrit{font-family:'Tiro Sanskrit',serif;font-size:1rem;color: var(--muted);display:block;margin-bottom:0.5rem;font-weight: bold;}
 .engtrans{color:var(--muted); font-style:italic; font-size:0.95rem; margin-bottom:0.5rem; display:block; padding-left: 10px; font-weight: normal; font-style: italic; color: #555;}
+
 .post-content{text-align:justify;text-justify:inter-word;hyphens:auto;-webkit-hyphens:auto;-ms-hyphens:auto}
 .post-content h2{font-family:'Playfair Display',serif;font-size:1.8rem;margin:3.5rem 0 1.2rem;color:var(--warm);text-align:left}
 .post-content h3{font-family:'Playfair Display',serif;font-size:1.4rem;margin:2.5rem 0 1rem;text-align:left}
@@ -63,25 +63,39 @@ footer{padding:4rem;border-top:1px solid var(--border);text-align:center;font-fa
 <span class="post-metadata">Indic · Article · VedicScience · 28.03.2026 (updated)</span>
 </header>
 
+<h2> The concept of Time </h2>
+<section class="post-content">
+  <p>The modern understanding of time, rooted in Western thought, follows a linear model: time begins at a fixed point (say, the Big Bang), moves in a single direction, and tends toward an inevitable end. Sanātana Dharma offers something altogether different, the कालचक्र or the wheel of time. In this framework, time has no definitive start, no terminal conclusion; every ending is simply the precursor to a new beginning. What the linear view calls a terminus, the cyclical view recognises as a threshold.</p>
 
-<h2> The definition of Time </h2>
-<span class="quote-text">लोकानामन्तकृत् कालः कालोऽन्यः कलनात्मकः । <br>स द्विधा स्थूलसूक्ष्मत्वान् मूर्तश्चामूर्त उच्यते ॥</span>
-<span class="quote-author"><span class="sanskrit">-सूर्यसिद्धान्तः १.१० (Sūryasiddhānta 1.10)<a href="https://sanskritdocuments.org/~sanskrit/doc_trial/fortransfer/Narayana/sUryasiddhAnta_sa.html#:~:text=%E0%A4%87%E0%A4%A4%E0%A5%8D%E0%A4%A5%E0%A4%82%20%E0%A4%AF%E0%A5%81%E0%A4%97%E0%A4%B8%E0%A4%B9%E0%A4%B8%E0%A5%8D%E0%A4%B0%E0%A5%87%E0%A4%A3%20%E0%A4%AD%E0%A5%82%E0%A4%A4%E0%A4%B8%E0%A4%82%E0%A4%B9%E0%A4%BE%E0%A4%B0%E0%A4%95%E0%A4%BE%E0%A4%B0%E0%A4%95%E0%A4%83%20%E0%A5%A4%20%E0%A4%95%E0%A4%B2%E0%A5%8D%E0%A4%AA%E0%A5%8B%20%E0%A4%AC%E0%A5%8D%E0%A4%B0%E0%A4%BE%E0%A4%B9%E0%A5%8D%E0%A4%AE%E0%A4%AE%E0%A4%B9%E0%A4%83%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A5%8B%E0%A4%95%E0%A5%8D%E0%A4%A4%E0%A4%82%20%E0%A4%B6%E0%A4%B0%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%80%20%E0%A4%A4%E0%A4%B8%E0%A5%8D%E0%A4%AF%20%E0%A4%A4%E0%A4%BE%E0%A4%B5%E0%A4%A4%E0%A5%80%20%E0%A5%A5%20%E0%A5%A7%2E%20%E0%A5%A8%E0%A5%A6%20%E0%A5%A5"><sup> 1</sup> </a></span> </span>
+  <span class="sanskrit">अनादिर्भगवान् कालो नान्तोऽस्य द्विज विद्यते । अव्युच्छिन्नास्ततस्त्वेते सर्गस्थित्यन्तसंयमाः ॥</span> <span class="verse-source">~ विष्णुपुराणम् (१.२.२६) | Viṣṇupurāṇam (1.2.26)
+    <a href="http://hinduscriptures.in/scriptures/puranas-18-puranas-mahapurana/visnu-purana/chapter-02/topic-1"
+       style="color:var(--warm); text-decoration: none"><sup><b>1</b></sup></a>
+  </span>
+
+  <p>This verse from the Viṣṇupurāṇam encapsulates the idea precisely: time (कालः) has neither a beginning (अनादिः) nor an end (नान्तः), and the unbroken (अव्युच्छिन्नाः) succession of creation (सर्ग), maintenance (स्थिति), and dissolution (अन्त) turns without interruption; each cycle giving way seamlessly to the next.</p>
+</section>
+
+<h2>The Classification of Time</h2>
+<span class="sanskrit">लोकानामन्तकृत् कालः कालोऽन्यः कलनात्मकः । <br>
+स द्विधा स्थूलसूक्ष्मत्वान् मूर्तश्चामूर्त उच्यते ॥</span>
+<span class="verse-source">~ सूर्यसिद्धान्तः (१.१०) | Sūryasiddhānta (1.10)
+  <a href="https://sanskritdocuments.org/..." style="color:var(--warm); text-decoration: none"><sup><b>2a</b></sup></a>
+</span>
 
 <section class="post-content">
-<p>The above verse translates to "the lunar day (tithi), the day of the week (vāra), the asterism (nakṣatra), the luni-solar alignment (yoga), and the half-lunar day (karaṇa); these five are renowned as pañcāṅgam, the essential instrument for the comprehension of time.</p>
+  <p>This verse from the Sūryasiddhānta classifies time along two axes: its role or function, and its scale or dimension. By function, time is of two kinds. The first is <strong>Lokāntakṛt</strong> (लोकानामन्तकृत्), literally "the finisher of worlds", denoting Cosmic Time: the irreversible, entropic force that drives the universe toward its eventual dissolution, or Pralaya. The second is <strong>Kalanātmaka</strong> (कलनात्मकः), meaning "calculable time" and derived from the root <em>kal</em> (to count). This is time as a measurable quantity, the domain of mathematics and astronomy.</p>
 
-<p>The pañcāṅgam plays a vital role in everyday affairs in many Indian Hindu households to determine the auspicious and inauspicious timings to carry out important tasks, festivals and poojas successfully without any hindrances. In fact, some households consult the pañcāṅgam every single day! This habit is deeply rooted in the belief that events are controlled by effort as well as destiny.</p>
-
-
-
-<section class="reference-list" style="margin-top:4rem; padding-top:2rem; border-top:1px solid var(--border); font-size:0.85rem">
-<strong>REFERENCES:</strong><br>
-<a href="https://allaboutkitchenknives.com/how-to-cut-vegetables-like-a-pro/" target="_blank" style="color:var(--warm); text-decoration:none; display:block; margin-top:0.5rem">All About Kitchen Knives</a>
-<a href="https://guide.michelin.com/en/article/dining-in/kitchen-language-what-are-the-different-knife-cuts" target="_blank" style="color:var(--warm); text-decoration:none; display:block; margin-top:0.5rem">Michelin Guide</a>
-<a href="https://whatsfordinner.com/kitchen-tips/Indic-cutting-terms-images/" target="_blank" style="color:var(--warm); text-decoration:none; display:block; margin-top:0.5rem">What's For Dinner</a>
+  <p>Within Kalanātmaka time, scale introduces a further distinction. <strong>Mūrta</strong> (मूर्त) refers to time units that are <em>perceptible</em>, grounded in physical movement or biological cycles and observable to human senses. <strong>Amūrta</strong> (अमूर्त) denotes <em>infinitesimal</em> or atomic units that fall below the threshold of human perception, representing time at its most fundamental, indivisible level.</p>
 </section>
-</section>
+
+<br>
+<hr>
+
+<h3>REFERENCES:</h3>
+1 
+2 Sūryasiddhānta. (2020). (M. Yano, Tr. & S. Y. S. Marthi, Ed.). Sanskrit Documents. <a href="https://sanskritdocuments.org/~sanskrit/doc_trial/fortransfer/Narayana/sUryasiddhAnta_sa.html" style="color:var(--warm)"> LINK </a>
+
+
 </article>
 
 <footer>
