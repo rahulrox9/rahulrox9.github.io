@@ -300,7 +300,17 @@ function renderSubTable() {
   const query = document.getElementById('sub-search').value.toLowerCase();
   let subs = allSubscribers;
 
-  if (subFilter !== 'all') subs = subs.filter(s => (s.sections||[]).includes(subFilter));
+  const FILTER_MAP = {
+  Blog: ['Indic Articles', 'Movie Reviews', 'Book Reviews'],
+  Research: ['ScienceComm Articles', 'Sanskrit Lessons'],
+  Travel: ['Travel Updates'],
+  General: []
+};
+
+if (subFilter !== 'all') {
+  const allowed = FILTER_MAP[subFilter] || [];
+  subs = subs.filter(s => (s.sections || []).some(sec => allowed.includes(sec)));
+}
   if (query) subs = subs.filter(s => s.email.includes(query) || (s.name||'').toLowerCase().includes(query));
 
   document.getElementById('sub-showing').textContent = `${subs.length} of ${allSubscribers.length}`;
