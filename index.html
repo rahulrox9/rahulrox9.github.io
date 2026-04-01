@@ -28,7 +28,7 @@
     <script>
         // 1. Extract the target page from the URL parameter
         const urlParams = new URLSearchParams(window.location.search);
-        const target = urlParams.get('p') || 'home.html';
+        const target = urlParams.get('p') || 'Public/home.html';
         // 2. Wipe the URL bar immediately so the user sees only the base URL
         if (window.location.search) {
             window.history.replaceState({}, document.title, window.location.pathname);
