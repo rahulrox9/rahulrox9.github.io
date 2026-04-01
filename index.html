@@ -10,8 +10,8 @@
             padding: 0;
             height: 100%;
             width: 100%;
-            overflow: hidden; /* Prevents double scrollbars */
-            background-color: #faf6ef; /* Matches your --parchment theme */
+            overflow: hidden;
+            background-color: #faf6ef;
         }
         iframe {
             position: absolute;
@@ -24,17 +24,34 @@
     </style>
 </head>
 <body>
-    <body>
-    <script>
-        // 1. Extract the target page from the URL parameter
-        const urlParams = new URLSearchParams(window.location.search);
-        const target = urlParams.get('p') || 'Public/home.html';
-        // 2. Wipe the URL bar immediately so the user sees only the base URL
-        if (window.location.search) {
-            window.history.replaceState({}, document.title, window.location.pathname);
+<script>
+    const DB = 'https://script.google.com/macros/s/AKfycbzpa1fUDZDXfQT5L6SxQRNf1zEFk-tpHV_2Tq9CY2iG4iSqa4W__Rnqs6fshnGJ0pnvRQ/exec';
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const p = urlParams.get('p');
+
+    // ── No ?p= → redirect to ?p=Public/home.html so it gets tracked ──
+    if (!p) {
+        window.location.replace('/?p=Public/home.html');
+    } else {
+        // ── Has ?p= → track the visit ──
+        let uid = localStorage.getItem('_rsuid');
+        if (!uid) {
+            uid = 'u' + Date.now() + Math.random().toString(36).slice(2, 7);
+            localStorage.setItem('_rsuid', uid);
         }
-        // 3. Inject the iframe pointing to the specific page
-        document.write(`<iframe src="${target}" name="main_frame" id="main_frame"></iframe>`);
-    </script>
+
+        const sessionKey = 'counted_' + p;
+        if (!sessionStorage.getItem(sessionKey)) {
+            fetch(DB + '?action=visit&page=' + encodeURIComponent(p) + '&uid=' + encodeURIComponent(uid) + '&ref=' + encodeURIComponent(document.referrer))
+                .then(function() { sessionStorage.setItem(sessionKey, 'true'); })
+                .catch(function() {});
+        }
+
+        // ── Clean URL bar then load page in iframe ──
+        window.history.replaceState({}, document.title, window.location.pathname);
+        document.write('<iframe src="' + p + '" name="main_frame" id="main_frame"></iframe>');
+    }
+</script>
 </body>
 </html>
