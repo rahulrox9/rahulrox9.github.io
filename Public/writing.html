@@ -206,17 +206,17 @@ function render() {
 
   if (sci_comm.length > 0) {
     finalHTML += `<div class="section-header"><h2>Sci-Comm Articles</h2></div>`;
-    finalHTML += articles.map(p => createPostHTML(p)).join('');
+    finalHTML += sci_comms.map(p => createPostHTML(p)).join('');
   }
 
   if (indic.length > 0) {
     finalHTML += `<div class="section-header"><h2>Indic Articles</h2></div>`;
-    finalHTML += articles.map(p => createPostHTML(p)).join('');
+    finalHTML += indic.map(p => createPostHTML(p)).join('');
   }
 
   if (misc.length > 0) {
     finalHTML += `<div class="section-header"><h2>Miscellaneous Articles</h2></div>`;
-    finalHTML += articles.map(p => createPostHTML(p)).join('');
+    finalHTML += misc.map(p => createPostHTML(p)).join('');
   }
 
   if (poetry.length > 0) {
