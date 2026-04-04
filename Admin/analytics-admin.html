@@ -193,373 +193,178 @@ tr:hover td{background:var(--parchment)}
 <script>
 const DB_URL = 'https://script.google.com/macros/s/AKfycbzpa1fUDZDXfQT5L6SxQRNf1zEFk-tpHV_2Tq9CY2iG4iSqa4W__Rnqs6fshnGJ0pnvRQ/exec';
 
-let analyticsData = null;
 let allSubscribers = [];
+let pendingNewPosts = [];
 let activePeriod = 7;
 let subFilter = 'all';
-let pendingNewPosts = [];
 
-const SUBSCRIPTION_CATEGORIES = [
+/* ✅ SINGLE SOURCE OF TRUTH */
+const CATEGORIES = [
   { key:'Travel Updates', label:'Travel', icon:'🗺️' },
   { key:'Indic Articles', label:'Indic', icon:'📜' },
-  { key:'ScienceComm Articles', label:'Science', icon:'🔬' },
+  { key:'Sci-Comm Articles', label:'Science', icon:'🔬' },
   { key:'Movie Reviews', label:'Films', icon:'🎬' },
   { key:'Book Reviews', label:'Books', icon:'📚' },
   { key:'Sanskrit Lessons', label:'Saṃskṛtam', icon:'🕉️' }
 ];
 
-function setPeriod(days, btn) {
-  activePeriod = days;
-  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('on'));
-  btn.classList.add('on');
-  loadData();
-}
-
-function jsonp(url) {
-  return new Promise((resolve, reject) => {
-    const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-    const s = document.createElement('script');
-
-    window[cb] = data => {
-      delete window[cb];
-      s.remove();
-      resolve(data);
-    };
-
-    s.onerror = () => {
-      delete window[cb];
-      s.remove();
-      reject(new Error('JSONP request failed'));
-    };
-
-    s.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cb;
+/* ---------- UTILS ---------- */
+function jsonp(url){
+  return new Promise((res,rej)=>{
+    const cb='cb_'+Date.now();
+    const s=document.createElement('script');
+    window[cb]=d=>{delete window[cb];s.remove();res(d)};
+    s.onerror=()=>{delete window[cb];s.remove();rej()};
+    s.src=url+'&callback='+cb;
     document.head.appendChild(s);
   });
 }
 
-function escapeHTML(str) {
-  return String(str)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
+function escapeHTML(str){
+  return String(str||'')
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'","&#39;");
 }
 
-function formatSections(sections) {
-  if (!sections || !sections.length) return '—';
-  return sections.map(escapeHTML).join(', ');
-}
-
-function normalizeSubscriber(s) {
-  let sections = s.sections || [];
-
-  if (typeof sections === 'string') {
-    sections = sections.split(',').map(x => x.trim()).filter(Boolean);
-  }
-
-  if (!Array.isArray(sections)) sections = [];
-
-  return {
-    ...s,
-    id: s.id || '',
-    email: s.email || '',
-    name: s.name || '',
-    sections,
-    confirmed: !!s.confirmed,
-    signedUpAt: s.signedUpAt || ''
-  };
-}
-
-function inferSubscriptionCategory(post) {
-  const tags = Array.isArray(post.tag) ? post.tag : [];
-  const title = (post.title || '').toLowerCase();
-
-  if (tags.includes('Travel')) return 'Travel Updates';
-  if (tags.includes('Indic') || tags.includes('Vedic Science')) return 'Indic Articles';
-  if (tags.includes('Science') || tags.includes('ScienceComm')) return 'ScienceComm Articles';
-  if (tags.includes('Movie Reviews') || tags.includes('Movies') || tags.includes('Cinema')) return 'Movie Reviews';
-  if (tags.includes('Book Reviews') || tags.includes('Books')) return 'Book Reviews';
-  if (tags.includes('Sanskrit') || title.includes('saṃskṛtam') || title.includes('sanskrit')) return 'Sanskrit Lessons';
-
-  return '';
-}
-
-async function loadData() {
-  document.getElementById('stat-grid').innerHTML = '<div class="loading">Loading…</div>';
-
-  try {
-    const data = await jsonp(`${DB_URL}?action=analytics&days=${activePeriod}`);
-    analyticsData = data || {};
-    renderStats(analyticsData);
-    renderPagesTable(analyticsData.topPages || []);
-    renderReadsTable(analyticsData.postReads || []);
+/* ---------- LOAD ---------- */
+async function loadData(){
+  try{
     await loadSubscribers();
-  } catch (e) {
-    document.getElementById('stat-grid').innerHTML = '<div class="loading" style="color:var(--red)">Failed to load. Check Apps Script deployment.</div>';
-    document.getElementById('pages-table').innerHTML = '<tr><td class="loading" style="color:var(--red)">Failed to load pages</td></tr>';
-    document.getElementById('reads-table').innerHTML = '<tr><td class="loading" style="color:var(--red)">Failed to load reads</td></tr>';
-  }
+  }catch(e){}
 }
 
-async function loadSubscribers() {
-  try {
+async function loadSubscribers(){
+  try{
     const data = await jsonp(`${DB_URL}?file=analytics_subscribers.json`);
-    allSubscribers = Array.isArray(data) ? data.map(normalizeSubscriber) : [];
-  } catch (e) {
-    allSubscribers = [];
+    allSubscribers = Array.isArray(data)?data:[];
+  }catch(e){
+    allSubscribers=[];
   }
-  renderSubTable();
 }
 
-function renderStats(d) {
-  const sectionCounts = d.sectionCounts || {};
-
-  const categoryCards = SUBSCRIPTION_CATEGORIES.map(cat => ({
-    label: `${cat.icon} ${cat.label}`,
-    val: sectionCounts[cat.key] || 0,
-    sub: cat.key
-  }));
-
-  const cards = [
-    { label:'Total Views', val:d.totalViews || 0, sub:`Last ${d.period || activePeriod} days` },
-    { label:'Unique Visitors', val:d.uniqueVisitors || 0, sub:'By cookie ID' },
-    { label:'Subscribers', val:d.confirmedSubscribers || 0, sub:`${(d.totalSubscribers || 0) - (d.confirmedSubscribers || 0)} pending` },
-    ...categoryCards
-  ];
-
-  document.getElementById('stat-grid').innerHTML = cards.map(c => `
-    <div class="stat-card">
-      <div class="stat-label">${c.label}</div>
-      <div class="stat-val">${c.val}</div>
-      <div class="stat-sub">${escapeHTML(c.sub)}</div>
+/* ---------- CATEGORY SELECTOR (AUTO INJECT) ---------- */
+function injectCategoryDropdown(){
+  const container = document.querySelector('.blast-panel');
+  
+  const selectHTML = `
+    <div style="margin:0.8rem 0">
+      <label style="font-size:0.72rem;color:var(--muted)">Send to category:</label>
+      <select id="blast-category" style="padding:0.4rem;border:1px solid var(--border);border-radius:4px;font-size:0.75rem">
+        <option value="all">All Subscribers</option>
+        ${CATEGORIES.map(c=>`<option value="${c.key}">${c.icon} ${c.label}</option>`).join('')}
+      </select>
     </div>
-  `).join('');
+  `;
+  
+  container.insertAdjacentHTML('beforeend', selectHTML);
 }
 
-function renderPagesTable(pages) {
-  const max = pages[0]?.views || 1;
-  document.getElementById('pages-period').textContent = `Last ${activePeriod}d`;
-
-  document.getElementById('pages-table').innerHTML =
-    '<thead><tr><th>Page</th><th>Views</th><th>Uniques</th></tr></thead><tbody>' +
-    (pages.length
-      ? pages.slice(0, 15).map(p => `
-        <tr>
-          <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeHTML(p.page || '')}">${escapeHTML(p.page || '—')}</td>
-          <td>
-            <div class="bar-cell">
-              <div class="bar" style="width:${Math.round((p.views || 0) / max * 80)}px"></div>
-              ${p.views || 0}
-            </div>
-          </td>
-          <td>${p.uniques || 0}</td>
-        </tr>
-      `).join('')
-      : '<tr><td colspan="3" class="loading">No visits in this period</td></tr>') +
-    '</tbody>';
-}
-
-function renderReadsTable(reads) {
-  document.getElementById('reads-table').innerHTML =
-    '<thead><tr><th>Post</th><th>Opens</th><th>Readers</th></tr></thead><tbody>' +
-    (reads.length
-      ? reads.slice(0, 15).map(r => `
-        <tr>
-          <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeHTML(r.postId || '')}">${escapeHTML(r.postId || '—')}</td>
-          <td>${r.reads || 0}</td>
-          <td>${r.uniqueReaders || 0}</td>
-        </tr>
-      `).join('')
-      : '<tr><td colspan="3" class="loading">No tracked reads yet</td></tr>') +
-    '</tbody>';
-}
-
-function filterSubs(section, el) {
-  subFilter = section;
-  document.querySelectorAll('.section-pills .pill').forEach(p => p.classList.remove('on'));
-  el.classList.add('on');
-  renderSubTable();
-}
-
-function renderSubTable() {
-  const query = document.getElementById('sub-search').value.toLowerCase().trim();
-  let subs = [...allSubscribers];
-
-  if (subFilter !== 'all') {
-    subs = subs.filter(s => (s.sections || []).includes(subFilter));
-  }
-
-  if (query) {
-    subs = subs.filter(s =>
-      (s.email || '').toLowerCase().includes(query) ||
-      (s.name || '').toLowerCase().includes(query) ||
-      (s.sections || []).some(sec => sec.toLowerCase().includes(query))
-    );
-  }
-
-  document.getElementById('sub-showing').textContent = `${subs.length} of ${allSubscribers.length}`;
-
-  const tbody = document.getElementById('sub-tbody');
-
-  if (!subs.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="loading">No subscribers match</td></tr>';
-    return;
-  }
-
-  tbody.innerHTML = subs.map(s => `
-    <tr>
-      <td>${escapeHTML(s.email)}</td>
-      <td>${escapeHTML(s.name || '—')}</td>
-      <td>${formatSections(s.sections)}</td>
-      <td><span class="badge ${s.confirmed ? 'confirmed' : 'pending'}">${s.confirmed ? 'Confirmed' : 'Pending'}</span></td>
-      <td>${s.signedUpAt ? new Date(s.signedUpAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '—'}</td>
-      <td><button class="btn" style="padding:0.2rem 0.5rem;font-size:0.65rem;color:var(--red);border-color:var(--red)" onclick="removeSubscriber('${escapeHTML(s.id)}')">Remove</button></td>
-    </tr>
-  `).join('');
-}
-
-async function removeSubscriber(id) {
-  if (!confirm('Remove this subscriber?')) return;
-
-  allSubscribers = allSubscribers.filter(s => s.id !== id);
-
-  const fd = new FormData();
-  fd.append('file', 'analytics_subscribers.json');
-  fd.append('data', JSON.stringify(allSubscribers));
-
-  try {
-    await fetch(DB_URL, { method:'POST', mode:'no-cors', body:fd });
-    renderSubTable();
-  } catch (e) {
-    alert('Failed to save changes.');
-  }
-}
-
-async function checkNewPosts() {
+/* ---------- POST DETECTION ---------- */
+async function checkNewPosts(){
   const btn = document.getElementById('check-btn');
-  const wrap = document.getElementById('new-posts-wrap');
-  const list = document.getElementById('new-posts-list');
-  const sendBtn = document.getElementById('send-btn');
-  const msg = document.getElementById('blast-msg');
+  btn.disabled=true;
+  btn.textContent='Checking…';
 
-  msg.className = 'msg';
-  msg.style.display = 'none';
-
-  btn.disabled = true;
-  btn.textContent = 'Checking…';
-
-  let posts = [];
-
-  try {
+  let posts=[];
+  try{
     const data = await jsonp(`${DB_URL}?file=blog_posts.json`);
-    posts = Array.isArray(data) ? data : [];
-  } catch (e) {
-    posts = [];
-  }
+    posts = Array.isArray(data)?data:[];
+  }catch(e){}
 
-  posts = posts.map(p => ({
-    ...p,
-    section: p.section || inferSubscriptionCategory(p)
-  }));
-
-  try {
-    const r = await fetch(DB_URL, {
+  try{
+    const r = await fetch(DB_URL,{
       method:'POST',
-      headers:{ 'Content-Type':'application/json' },
-      body: JSON.stringify({ action:'checkNewPosts', posts })
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'checkNewPosts',posts})
     });
-
     const d = await r.json();
-    pendingNewPosts = Array.isArray(d.newPosts) ? d.newPosts : [];
-  } catch (e) {
-    pendingNewPosts = [];
-    wrap.style.display = 'block';
-    list.innerHTML = '<div style="font-size:0.78rem;color:var(--red);padding:0.5rem 0">Failed to check new posts.</div>';
-    sendBtn.style.display = 'none';
-    btn.disabled = false;
-    btn.textContent = '⟳ Check for new posts';
+    pendingNewPosts = d.newPosts||[];
+  }catch(e){
+    pendingNewPosts=[];
+  }
+
+  btn.disabled=false;
+  btn.textContent='⟳ Check for new posts';
+
+  const wrap=document.getElementById('new-posts-wrap');
+  const list=document.getElementById('new-posts-list');
+
+  if(!pendingNewPosts.length){
+    wrap.style.display='block';
+    list.innerHTML='<div>No new posts.</div>';
     return;
   }
 
-  btn.disabled = false;
-  btn.textContent = '⟳ Check for new posts';
-
-  if (!pendingNewPosts.length) {
-    wrap.style.display = 'block';
-    list.innerHTML = '<div style="font-size:0.78rem;color:var(--muted);padding:0.5rem 0">No new posts since last send.</div>';
-    sendBtn.style.display = 'none';
-    document.getElementById('blast-preview').textContent = '';
-    return;
-  }
-
-  wrap.style.display = 'block';
-  sendBtn.style.display = 'inline-block';
-
-  list.innerHTML = pendingNewPosts.map((p, i) => `
+  wrap.style.display='block';
+  list.innerHTML = pendingNewPosts.map((p,i)=>`
     <div class="new-post-item">
-      <input type="checkbox" class="new-post-check" id="np-${i}" checked onchange="updateBlastPreview()">
-      <label for="np-${i}" style="flex:1;cursor:pointer;font-size:0.78rem">${escapeHTML(p.title || 'Untitled')}</label>
-      <span class="new-post-badge">${escapeHTML(p.section || 'Uncategorised')}</span>
+      <input type="checkbox" id="np-${i}" checked>
+      <label for="np-${i}" style="flex:1">${escapeHTML(p.title)}</label>
     </div>
   `).join('');
-
-  updateBlastPreview();
 }
 
-function updateBlastPreview() {
-  const selected = pendingNewPosts.filter((_, i) => document.getElementById('np-' + i)?.checked);
-  const confirmed = allSubscribers.filter(s => s.confirmed).length;
+/* ---------- SEND EMAILS (CORE LOGIC) ---------- */
+async function sendEmails(){
+  const selectedPosts = pendingNewPosts.filter((_,i)=>document.getElementById('np-'+i)?.checked);
+  const category = document.getElementById('blast-category').value;
 
-  document.getElementById('blast-preview').textContent =
-    `${selected.length} post${selected.length !== 1 ? 's' : ''} · ~${confirmed} confirmed subscriber${confirmed !== 1 ? 's' : ''}`;
-}
-
-async function sendEmails() {
-  const selected = pendingNewPosts.filter((_, i) => document.getElementById('np-' + i)?.checked);
-
-  if (!selected.length) {
+  if(!selectedPosts.length){
     alert('Select at least one post.');
     return;
   }
 
-  if (!confirm(`Send ${selected.length} email update${selected.length !== 1 ? 's' : ''} to relevant confirmed subscribers?`)) {
+  let targets = allSubscribers.filter(s=>s.confirmed);
+
+  if(category!=='all'){
+    targets = targets.filter(s=>(s.sections||[]).includes(category));
+  }
+
+  if(!targets.length){
+    alert('No subscribers in this category.');
     return;
   }
 
-  const btn = document.getElementById('send-btn');
-  const msg = document.getElementById('blast-msg');
+  if(!confirm(`Send to ${targets.length} subscribers?`)) return;
 
-  btn.disabled = true;
-  btn.textContent = 'Sending…';
-  msg.className = 'msg';
-  msg.style.display = 'none';
+  const btn=document.getElementById('send-btn');
+  const msg=document.getElementById('blast-msg');
 
-  try {
-    const r = await fetch(DB_URL, {
+  btn.disabled=true;
+  btn.textContent='Sending…';
+
+  try{
+    const r = await fetch(DB_URL,{
       method:'POST',
-      headers:{ 'Content-Type':'application/json' },
-      body: JSON.stringify({ action:'sendEmails', posts:selected })
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        action:'sendEmails',
+        posts:selectedPosts,
+        subscribers:targets
+      })
     });
 
     const d = await r.json();
 
-    msg.textContent = `✓ Sent ${d.sent || 0} email${(d.sent || 0) !== 1 ? 's' : ''} successfully.`;
-    msg.className = 'msg ok';
-    msg.style.display = 'block';
+    msg.textContent=`✓ Sent ${d.sent||0} emails`;
+    msg.className='msg ok';
+    msg.style.display='block';
 
-    document.getElementById('new-posts-wrap').style.display = 'none';
-  } catch (e) {
-    msg.textContent = 'Send failed. Check Apps Script response.';
-    msg.className = 'msg err';
-    msg.style.display = 'block';
+  }catch(e){
+    msg.textContent='Send failed';
+    msg.className='msg err';
+    msg.style.display='block';
   }
 
-  btn.disabled = false;
-  btn.textContent = '✉ Send to subscribers';
+  btn.disabled=false;
+  btn.textContent='✉ Send to subscribers';
 }
 
+/* ---------- INIT ---------- */
+injectCategoryDropdown();
 loadData();
-</script>
 </body>
 </html>
