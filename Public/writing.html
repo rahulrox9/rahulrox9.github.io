@@ -159,7 +159,7 @@ const POSTS = [
     title: 'Kālavidyā: The Science of Time in Sanātana Dharma | Part 1: The Anatomy of Time',
     excerpt: "From the 4-second flutter of a human breath (Prāṇa) to the quadrillion-year lifespan of the Creator, the Sūryasiddhānta constructs a seamless anatomy of time. Discover how ancient Vedic astronomy bridges the infinitesimal and the infinite, mapping our exact coordinates in a cosmic cycle.",
     date: '29 Mar 2026',
-    featured: true,
+    featured: false,
     file: '../?p=Writing/Indic/Anatomy_Time.html'
   }
 ];
@@ -193,6 +193,7 @@ function render() {
       // Grouping Logic
   const featured = filtered.filter(p => p.featured);
   const sci_comm = filtered.filter(p => p.tag.includes('Sci-Comm') && !p.featured);
+ const indic = filtered.filter(p => p.tag.includes('Indic') && !p.featured);
   const misc = filtered.filter(p => p.tag.includes('Miscellaneous') && !p.featured);
   const poetry = filtered.filter(p => p.tag.includes('Poetry') && !p.featured);
   const others = filtered.filter(p => !p.tag.includes('Article') && !p.tag.includes('Poetry') && !p.featured); 
