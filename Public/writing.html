@@ -109,58 +109,53 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 <footer>
   <div class="footer-left">Rahul Subbaraman</div>
   <div class="footer-right">
-    <a href="watchlist.html">Watchlist</a>
-    <a href="travel.html">Travels</a>
-    <a href="books.html">Bookshelf</a>
+    <a href="?p=watchlist.html">Watchlist</a>
+    <a href="?p=travel.html">Travels</a>
+    <a href="?p=books.html">Bookshelf</a>
   </div>
 </footer>
 
 <script>
 const POSTS = [
   {
-    id: 1,
+    file: '../?p=Writing/Poems/mama-mata.html',
     tag: ['Sanskrit','Poetry'],
     title: 'मम माता (My Mother)',
     excerpt: "A Sanskrit poem about a mother's boundless love, written in the classical style, with an English rendering alongside.",
     date: 'Oct 2014',
     featured: false,
-    file: '../?p=Writing/Poems/mama-mata.html'
   },
   {
-    id: 2,
+    file: '../?p=Writing/Poems/love.html',
     tag: ['English','Poetry'],
     title: 'Love',
     excerpt: "A poem defining love through its permanence and its ultimate culmination in humanitarian and spiritual devotion.",
     date: 'Feb 2014',
     featured: false,
-    file: '../?p=Writing/Poems/love.html'
   },
   {
-    id: 3,
+    file: '../?p=Writing/Poems/love.html',
     tag: ['English','Poetry'],
     title: 'Satyam Vada Dharmam Cara',
     excerpt: "A poem I wrote based on the ancient Sanskrit maxim from Taittiriya Upanishad, which won me the 2nd prize in an inter-school poetry competition.",
     date: '2014',
     featured: false,
-    file: '../?p=Writing/Poems/love.html'
   },
   {
-    id: 4,
+    file: '../?p=Writing/Articles/Using_the_knife.html',
     tag: ['English', 'Article', 'Miscellaneous', 'Culinary'],
     title: 'A guide to amateur cooking. Part 1: French classical knife skills',
     excerpt: "An introduction to fundamental French classical knife skills, exploring techniques from basic chopping to precise julienne and brunoise cuts.",
     date: '15 Dec 2020',
     featured: false,
-    file: '../?p=Writing/Articles/Using_the_knife.html'
   },
  {
-    id: 5,
+    file: '../?p=Writing/Indic/Anatomy_Time.html',
     tag: ['English', 'Sanskrit', 'Indic', 'Vedic Science'],
     title: 'Kālavidyā: The Science of Time in Sanātana Dharma | Part 1: The Anatomy of Time',
     excerpt: "From the 4-second flutter of a human breath (Prāṇa) to the quadrillion-year lifespan of the Creator, the Sūryasiddhānta constructs a seamless anatomy of time. Discover how ancient Vedic astronomy bridges the infinitesimal and the infinite, mapping our exact coordinates in a cosmic cycle.",
     date: '29 Mar 2026',
     featured: false,
-    file: '../?p=Writing/Indic/Anatomy_Time.html'
   }
 ];
 
@@ -196,7 +191,6 @@ function render() {
  const indic = filtered.filter(p => p.tag.includes('Indic') && !p.featured);
   const misc = filtered.filter(p => p.tag.includes('Miscellaneous') && !p.featured);
   const poetry = filtered.filter(p => p.tag.includes('Poetry') && !p.featured);
-  const others = filtered.filter(p => !p.tag.includes('Article') && !p.tag.includes('Poetry') && !p.featured); 
   
   let finalHTML = '';
   if (featured.length > 0) {
@@ -222,11 +216,6 @@ function render() {
   if (poetry.length > 0) {
     finalHTML += `<div class="section-header"><h2>Poetry</h2></div>`;
     finalHTML += poetry.map(p => createPostHTML(p)).join('');
-  }
-
-  if (others.length > 0) {
-    finalHTML += `<div class="section-header"><h2>Other</h2></div>`;
-    finalHTML += others.map(p => createPostHTML(p)).join('');
   }
 
   grid.innerHTML = finalHTML;
