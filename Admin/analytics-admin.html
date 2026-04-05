@@ -120,7 +120,7 @@ tr:hover td{background:var(--parchment)}
 
   <div class="blast-panel" id="blast-panel">
     <div class="blast-title">📬 Send Update Emails</div>
-    <div class="blast-desc">Refresh the available posts, choose exactly which post(s) to include, then choose which subscriber category should receive the update.</div>
+    <div class="blast-desc">Refresh the available posts from the Writing page, choose exactly which post(s) to include, then choose which subscriber category should receive the update.</div>
 
     <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem">
       <button class="btn" id="refresh-posts-btn" onclick="refreshPosts()">⟳ Refresh post list</button>
@@ -465,6 +465,31 @@ function inferSubscriptionCategory(post){
   return '';
 }
 
+async function loadPostsFromWriting(){
+  return new Promise((resolve, reject) => {
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = '../Public/writing.html';
+
+    iframe.onload = () => {
+      try {
+        const posts = iframe.contentWindow.POSTS || iframe.contentWindow.window.POSTS || [];
+        resolve(Array.isArray(posts) ? posts : []);
+      } catch (e) {
+        reject(e);
+      }
+      iframe.remove();
+    };
+
+    iframe.onerror = (e) => {
+      iframe.remove();
+      reject(e);
+    };
+
+    document.body.appendChild(iframe);
+  });
+}
+
 async function refreshPosts(){
   const btn = document.getElementById('refresh-posts-btn');
   const list = document.getElementById('new-posts-list');
@@ -481,8 +506,7 @@ async function refreshPosts(){
 
   let posts = [];
   try {
-    const data = await jsonp(`${DB_URL}?file=blog_posts.json`);
-    posts = Array.isArray(data) ? data : [];
+    posts = await loadPostsFromWriting();
   } catch(e) {
     posts = [];
   }
