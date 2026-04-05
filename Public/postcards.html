@@ -59,7 +59,12 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
   text-transform:uppercase;
   margin-left:auto;
 }
-.masonry{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2rem 1.5rem;align-items:start}
+.masonry{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:2rem 1.5rem;
+  align-items:start;
+}
 
 .postcard-card{
   position:relative;
@@ -233,9 +238,15 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 @media(max-width:900px){
   nav{padding:0 1.5rem}
   .nav-links a{display:none}
-  .nav-links a.active{display:inline}
+  .nav-links a.active,
+  .nav-links a[href="../Admin/admin.html"]{display:inline}
   .page-header,.filter-bar,.gallery{padding-left:1.5rem;padding-right:1.5rem}
+  .masonry{grid-template-columns:repeat(2,minmax(0,1fr))}
   footer{padding:1.5rem;flex-direction:column;gap:1rem;text-align:center}
+}
+
+@media(max-width:560px){
+  .masonry{grid-template-columns:1fr}
 }
 </style>
 </head>
