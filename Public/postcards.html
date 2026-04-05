@@ -36,6 +36,29 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 .filter-btn:hover:not(.on){border-color:var(--warm);color:var(--warm)}
 
 .gallery{max-width:1100px;margin:0 auto;padding:0 4rem 6rem}
+.country-section{margin-bottom:2.4rem}
+.country-heading{
+  display:flex;
+  align-items:center;
+  gap:0.7rem;
+  margin-bottom:1rem;
+  padding-bottom:0.55rem;
+  border-bottom:1px solid var(--border);
+}
+.country-heading .flag{font-size:1.15rem}
+.country-heading h2{
+  font-family:'Playfair Display',serif;
+  font-size:1.3rem;
+  font-weight:700;
+  color:var(--ink);
+}
+.country-count{
+  font-size:0.72rem;
+  color:var(--muted);
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  margin-left:auto;
+}
 .masonry{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2rem 1.5rem;align-items:start}
 
 .postcard-card{
@@ -193,6 +216,14 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
   font-family:'DM Sans',sans-serif;
 }
 
+.empty{
+  padding:1.5rem;
+  border:1px dashed var(--border);
+  color:var(--muted);
+  font-size:0.82rem;
+  background:var(--card);
+}
+
 footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .footer-left{font-family:'Playfair Display',serif;font-size:0.9rem;font-style:italic;color:var(--muted)}
 .footer-right{display:flex;gap:1.8rem}
@@ -210,7 +241,7 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 </head>
 <body>
 <nav>
-  <a class="nav-logo" href="../index.html">Rahul <span>Subbaraman</span></a>
+  <a class="nav-logo" href="index.html">Rahul <span>Subbaraman</span></a>
   <div class="nav-links">
     <a href="watchlist.html">Watchlist</a>
     <a href="travel.html">Travels</a>
@@ -218,7 +249,7 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
     <a href="magnets.html">Magnets</a>
     <a href="postcards.html" class="active">Postcards</a>
     <a href="blog.html">Writing</a>
-    <a href="../Admin/admin.html">Admin</a>
+    <a href="admin.html">Admin</a>
   </div>
 </nav>
 
@@ -236,9 +267,7 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 
 <div class="filter-bar" id="filter-bar"></div>
 
-<div class="gallery">
-  <div class="masonry" id="masonry"></div>
-</div>
+<div class="gallery" id="gallery"></div>
 
 <div class="lightbox" id="lightbox" onclick="closeLb(event)">
   <div class="lb-inner">
@@ -262,62 +291,62 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
     <a href="watchlist.html">Watchlist</a>
     <a href="travel.html">Travels</a>
     <a href="books.html">Bookshelf</a>
-    <a href="writing.html">Writing</a>
-    <a href="mailto:rahulrox9website@gmail.com">Contact</a>
+    <a href="blog.html">Writing</a>
+    <a href="mailto:contact@example.com">Contact</a>
   </div>
 </footer>
 
 <script>
 const POSTCARDS = [
-  { id: 1, place: 'Aira Force Waterfalls', country: 'England (UK)', date: '2023-03-19', img: '../Postcards/ENG-Aira_Force.png', notes: 'Managed by National Trust. It is popular for year-round walking and picnicking.' },
-  { id: 2, place: 'Roman Baths', country: 'England (UK)', date: '2023-05-27', img: '../Postcards/ENG-Bath_RomanBaths.png', notes: '' },
-  { id: 3, place: 'Buxton', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/ENG-Buxton.png', notes: '' },
-  { id: 4, place: 'Poole\'s Cavern (Buxton)', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/ENG-Buxton_PoolesCavern.png', notes: '' },
-  { id: 5, place: 'Cambridge', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/ENG-Cambridge.png', notes: '' },
-  { id: 6, place: 'Lake District', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/ENG-LakeDistrict.png', notes: '' },
-  { id: 7, place: 'Royal Armouries II', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/ENG-Leeds_RoyalArmouries_2.png', notes: '' },
-  { id: 8, place: 'Royal Armouries', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/ENG-Leeds_RoyalArmouries.png', notes: '' },
-  { id: 9, place: 'London I', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/ENG-London_1.png', notes: '' },
-  { id: 10, place: 'London II', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/ENG-London_2.png', notes: '' },
-  { id: 11, place: 'Sherlock Holmes Museum', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/ENG-London_SherlockHolmes.png', notes: '' },
-  { id: 12, place: 'Portsmouth', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/ENG-Portsmouth.png', notes: '' },
-  { id: 13, place: 'Southampton', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/ENG-Southampton.png', notes: '' },
-  { id: 14, place: 'Stonehenge', country: 'England (UK)', date: '2023-05-28', img: '../Postcards/ENG-Stonehenge.png', notes: '' },
-  { id: 15, place: 'Ullswater', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/ENG-Ullswater.png', notes: '' },
-  { id: 16, place: 'Whitby Abbey', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/ENG-Whitby_Abbey.png', notes: '' },
-  { id: 17, place: 'York', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/ENG-York.png', notes: '' },
-  { id: 18, place: 'York Minster', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/ENG-York_YorkMinster.png', notes: '' },
-  { id: 19, place: 'Manchester Cathedral', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/ENG-MCR_Cathedral.png', notes: '' },
-  { id: 20, place: 'Cobh', country: 'Ireland', date: '2026-03-22', img: '../Postcards/IRL-Cobh.png', notes: '' },
-  { id: 21, place: 'Geysir', country: 'Iceland', date: '2026-03-22', img: '../Postcards/ISL-Geysir.png', notes: '' },
-  { id: 22, place: 'Gullfoss', country: 'Iceland', date: '2026-03-22', img: '../Postcards/ISL-Gullfoss.png', notes: '' },
-  { id: 23, place: 'Reykjavik', country: 'Iceland', date: '2026-03-22', img: '../Postcards/ISL-Reykjavik.png', notes: '' },
-  { id: 24, place: 'Thingvellir', country: 'Iceland', date: '2026-03-22', img: '../Postcards/ISL-Thingvellir.png', notes: '' },
-  { id: 25, place: 'Amsterdam', country: 'Netherlands', date: '2026-03-22', img: '../Postcards/NL-Amsterdam.png', notes: '' },
-  { id: 26, place: 'Keukenhof', country: 'Netherlands', date: '2026-03-22', img: '../Postcards/NL-Keukenhof.png', notes: '' },
-  { id: 27, place: 'Zaanse Schans I', country: 'Netherlands', date: '2026-03-22', img: '../Postcards/NL-ZaanseSchans_1.png', notes: '' },
-  { id: 28, place: 'Zaanse Schans II', country: 'Netherlands', date: '2026-03-22', img: '../Postcards/NL-ZaanseSchans_2.png', notes: '' },
-  { id: 29, place: 'Loch Ness', country: 'Scotland (UK)', date: '2026-03-22', img: '../Postcards/SCO-LochNess.png', notes: '' },
-  { id: 30, place: 'Isle of Wight', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/UK-IsleOfWight.png', notes: '' },
-  { id: 31, place: 'Carisbrooke', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/UK-IsleOfWight_Carisbrooke.png', notes: '' },
-  { id: 32, place: 'Monkey Haven', country: 'England (UK)', date: '2026-03-22', img: '../Postcards/UK-IsleOfWight_MonkeyHaven.png', notes: '' },
-  { id: 33, place: 'Northern Ireland (UK)', country: 'Northern Ireland (UK)', date: '2026-03-22', img: '../Postcards/UK-NorthernIreland.png', notes: '' },
-  { id: 34, place: 'Beaumaris', country: 'Wales (UK)', date: '2026-03-22', img: '../Postcards/WLS-Anglesey_Beaumaris.png', notes: '' },
-  { id: 35, place: 'South Stack', country: 'Wales (UK)', date: '2026-03-22', img: '../Postcards/WLS-Anglesey_SouthStack.png', notes: '' },
-  { id: 36, place: 'Bala Lake', country: 'Wales (UK)', date: '2026-03-22', img: '../Postcards/WLS-BalaLake.png', notes: '' },
-  { id: 37, place: 'Chirk Castle', country: 'Wales (UK)', date: '2026-03-22', img: '../Postcards/WLS-ChirkCastle.png', notes: '' },
-  { id: 38, place: 'Conwy Castle', country: 'Wales (UK)', date: '2026-03-22', img: '../Postcards/WLS-Conwy_Castle.png', notes: '' },
-  { id: 39, place: 'Smallest House in Great Britain', country: 'Wales (UK)', date: '2026-03-22', img: '../Postcards/WLS-Conwy_SmallHouse.png', notes: '' },
-  { id: 40, place: 'Great Orme Mine', country: 'Wales (UK)', date: '2026-03-22', img: '../Postcards/WLS-Llandudno_GreatOrmeMine.png', notes: '' },
-  { id: 41, place: 'Great Orme Tramway', country: 'Wales (UK)', date: '2026-03-22', img: '../Postcards/WLS-Llandudno_GreatOrmeTram.png', notes: '' },
-  { id: 42, place: 'Llandudno Pier', country: 'Wales (UK)', date: '2026-03-22', img: '../Postcards/WLS-Llandudno_pier.png', notes: '' },
-  { id: 43, place: 'Llanfair', country: 'Wales (UK)', date: '2026-03-22', img: '../Postcards/WLS-Llanfair.png', notes: '' },
-  { id: 44, place: 'Pontcysyllte Aqueduct', country: 'Wales (UK)', date: '2026-03-22', img: '../Postcards/WLS-Pontcysyllte.png', notes: '' },
-  { id: 45, place: 'Snowdon Mountain Railway', country: 'Wales (UK)', date: '2026-03-22', img: '../Postcards/WLS-Snowdon_Railway.png', notes: '' },
-  { id: 46, place: 'Snowdon Summit', country: 'Wales (UK)', date: '2026-03-22', img: '../Postcards/WLS-Snowdon_Summit.png', notes: '' },
-  { id: 47, place: 'Swallow Falls', country: 'Wales (UK)', date: '2026-03-22', img: '../Postcards/WLS-SwallowFalls.png', notes: '' },
-  { id: 48, place: 'Wales', country: 'Wales (UK)', date: '2026-03-22', img: '../Postcards/WLS-FullMap.png', notes:'' },
-  { id: 49, place: 'The Marauder\'s Map', country: 'Wizarding World', date: '2026-03-22', img: '../Postcards/Miscellaneous_1.png', notes:'' }
+  { id: 1, place: 'Aira Force Waterfalls', country: 'England (UK)', date: '2023-03-19', img: 'Postcards/ENG-Aira_Force.png', notes: 'Managed by National Trust. It is popular for year-round walking and picnicking.' },
+  { id: 2, place: 'Roman Baths', country: 'England (UK)', date: '2023-05-27', img: 'Postcards/ENG-Bath_RomanBaths.png', notes: '' },
+  { id: 3, place: 'Buxton', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/ENG-Buxton.png', notes: '' },
+  { id: 4, place: 'Poole\'s Cavern (Buxton)', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/ENG-Buxton_PoolesCavern.png', notes: '' },
+  { id: 5, place: 'Cambridge', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/ENG-Cambridge.png', notes: '' },
+  { id: 6, place: 'Lake District', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/ENG-LakeDistrict.png', notes: '' },
+  { id: 7, place: 'Royal Armouries II', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/ENG-Leeds_RoyalArmouries_2.png', notes: '' },
+  { id: 8, place: 'Royal Armouries', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/ENG-Leeds_RoyalArmouries.png', notes: '' },
+  { id: 9, place: 'London I', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/ENG-London_1.png', notes: '' },
+  { id: 10, place: 'London II', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/ENG-London_2.png', notes: '' },
+  { id: 11, place: 'Sherlock Holmes Museum', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/ENG-London_SherlockHolmes.png', notes: '' },
+  { id: 12, place: 'Portsmouth', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/ENG-Portsmouth.png', notes: '' },
+  { id: 13, place: 'Southampton', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/ENG-Southampton.png', notes: '' },
+  { id: 14, place: 'Stonehenge', country: 'England (UK)', date: '2023-05-28', img: 'Postcards/ENG-Stonehenge.png', notes: '' },
+  { id: 15, place: 'Ullswater', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/ENG-Ullswater.png', notes: '' },
+  { id: 16, place: 'Whitby Abbey', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/ENG-Whitby_Abbey.png', notes: '' },
+  { id: 17, place: 'York', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/ENG-York.png', notes: '' },
+  { id: 18, place: 'York Minster', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/ENG-York_YorkMinster.png', notes: '' },
+  { id: 19, place: 'Manchester Cathedral', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/ENG_MCR_Cathedral.png', notes: '' },
+  { id: 20, place: 'Cobh', country: 'Ireland', date: '2026-03-22', img: 'Postcards/IRL-Cobh.png', notes: '' },
+  { id: 21, place: 'Geysir', country: 'Iceland', date: '2026-03-22', img: 'Postcards/ISL-Geysir.png', notes: '' },
+  { id: 22, place: 'Gullfoss', country: 'Iceland', date: '2026-03-22', img: 'Postcards/ISL-Gullfoss.png', notes: '' },
+  { id: 23, place: 'Reykjavik', country: 'Iceland', date: '2026-03-22', img: 'Postcards/ISL-Reykjavik.png', notes: '' },
+  { id: 24, place: 'Thingvellir', country: 'Iceland', date: '2026-03-22', img: 'Postcards/ISL-Thingvellir.png', notes: '' },
+  { id: 25, place: 'Amsterdam', country: 'Netherlands', date: '2026-03-22', img: 'Postcards/NL-Amsterdam.png', notes: '' },
+  { id: 26, place: 'Keukenhof', country: 'Netherlands', date: '2026-03-22', img: 'Postcards/NL-Keukenhof.png', notes: '' },
+  { id: 27, place: 'Zaanse Schans I', country: 'Netherlands', date: '2026-03-22', img: 'Postcards/NL-ZaanseSchans_1.png', notes: '' },
+  { id: 28, place: 'Zaanse Schans II', country: 'Netherlands', date: '2026-03-22', img: 'Postcards/NL-ZaanseSchans_2.png', notes: '' },
+  { id: 29, place: 'Loch Ness', country: 'Scotland (UK)', date: '2026-03-22', img: 'Postcards/SCO-LochNess.png', notes: '' },
+  { id: 30, place: 'Isle of Wight', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/UK-IsleOfWight.png', notes: '' },
+  { id: 31, place: 'Carisbrooke', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/UK-IsleOfWight_Carisbrooke.png', notes: '' },
+  { id: 32, place: 'Monkey Haven', country: 'England (UK)', date: '2026-03-22', img: 'Postcards/UK-IsleOfWight_MonkeyHaven.png', notes: '' },
+  { id: 33, place: 'Northern Ireland (UK)', country: 'Northern Ireland (UK)', date: '2026-03-22', img: 'Postcards/UK-NorthernIreland.png', notes: '' },
+  { id: 34, place: 'Beaumaris', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-Anglesey_Beaumaris.png', notes: '' },
+  { id: 35, place: 'South Stack', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-Anglesey_SouthStack.png', notes: '' },
+  { id: 36, place: 'Bala Lake', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-BalaLake.png', notes: '' },
+  { id: 37, place: 'Chirk Castle', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-ChirkCastle.png', notes: '' },
+  { id: 38, place: 'Conwy Castle', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-Conwy_Castle.png', notes: '' },
+  { id: 39, place: 'Smallest House in Great Britain', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-Conwy_SmallHouse.png', notes: '' },
+  { id: 40, place: 'Great Orme Mine', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-Llandudno_GreatOrmeMine.png', notes: '' },
+  { id: 41, place: 'Great Orme Tramway', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-Llandudno_GreatOrmeTram.png', notes: '' },
+  { id: 42, place: 'Llandudno Pier', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-Llandudno_pier.png', notes: '' },
+  { id: 43, place: 'Llanfair', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-Llanfair.png', notes: '' },
+  { id: 44, place: 'Pontcysyllte Aqueduct', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-Pontcysyllte.png', notes: '' },
+  { id: 45, place: 'Snowdon Mountain Railway', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-Snowdon_Railway.png', notes: '' },
+  { id: 46, place: 'Snowdon Summit', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-Snowdon_Summit.png', notes: '' },
+  { id: 47, place: 'Swallow Falls', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-SwallowFalls.png', notes: '' },
+  { id: 48, place: 'Wales', country: 'Wales (UK)', date: '2026-03-22', img: 'WLS-FullMap.png', notes:'' },
+  { id: 49, place: 'The Marauder\'s Map', country: 'Wizarding World', date: '2026-03-22', img: '', notes:'' }
 ];
 
 let activeFilter = 'all';
@@ -333,39 +362,77 @@ function getEmoji(country) {
   return codes[cleanKey] || '🌍';
 }
 
+function escapeAttr(str) {
+  return String(str).replaceAll("'", "\\'");
+}
+
+function renderCountrySection(country, items, offset) {
+  return `
+    <section class="country-section">
+      <div class="country-heading">
+        <span class="flag">${getEmoji(country)}</span>
+        <h2>${country}</h2>
+        <span class="country-count">${items.length} card${items.length !== 1 ? 's' : ''}</span>
+      </div>
+      <div class="masonry">
+        ${items.map((m, i) => `
+          <div class="postcard-card" onclick="openLb(${offset + i})">
+            ${m.img
+              ? `<img class="postcard-img" src="${m.img}" alt="${m.place}" loading="lazy" onerror="this.outerHTML='<div class=&quot;postcard-img-placeholder&quot;>📮</div>'">`
+              : `<div class="postcard-img-placeholder">📮</div>`}
+            <div class="postcard-info">
+              <div class="postcard-place">${m.place}</div>
+              <div class="postcard-country">${getEmoji(m.country)} ${m.country}</div>
+              <div class="postcard-date">${m.date}</div>
+              ${m.notes ? `<div class="postcard-notes">${m.notes}</div>` : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </section>
+  `;
+}
+
 function render() {
-  const sortedPostcards = [...POSTCARDS].sort((a, b) => b.date.localeCompare(a.date));
+  const sortedPostcards = [...POSTCARDS].sort((a, b) => {
+    const countryCompare = a.country.localeCompare(b.country);
+    if (countryCompare !== 0) return countryCompare;
+    const placeCompare = a.place.localeCompare(b.place);
+    if (placeCompare !== 0) return placeCompare;
+    return b.date.localeCompare(a.date);
+  });
 
   filteredItems = activeFilter === 'all'
     ? sortedPostcards
     : sortedPostcards.filter(m => m.country === activeFilter);
 
-  const grid = document.getElementById('masonry');
+  const gallery = document.getElementById('gallery');
   document.getElementById('total-count').textContent = POSTCARDS.length || '0';
 
   if (!filteredItems.length) {
-    grid.innerHTML = `<div class="empty"><strong>No postcards yet</strong> Try another filter.</div>`;
+    gallery.innerHTML = `<div class="empty"><strong>No postcards yet</strong> Try another filter.</div>`;
   } else {
-    grid.innerHTML = filteredItems.map((m, i) => `
-      <div class="postcard-card" onclick="openLb(${i})">
-        ${m.img
-          ? `<img class="postcard-img" src="${m.img}" alt="${m.place}" loading="lazy" onerror="this.outerHTML='<div class=&quot;postcard-img-placeholder&quot;>📮</div>'">`
-          : `<div class="postcard-img-placeholder">📮</div>`}
-        <div class="postcard-info">
-          <div class="postcard-place">${m.place}</div>
-          <div class="postcard-country">${getEmoji(m.country)} ${m.country}</div>
-          <div class="postcard-date">${m.date}</div>
-          ${m.notes ? `<div class="postcard-notes">${m.notes}</div>` : ''}
-        </div>
-      </div>
-    `).join('');
+    const grouped = {};
+    filteredItems.forEach(item => {
+      if (!grouped[item.country]) grouped[item.country] = [];
+      grouped[item.country].push(item);
+    });
+
+    const countries = Object.keys(grouped).sort((a, b) => a.localeCompare(b));
+
+    let offset = 0;
+    gallery.innerHTML = countries.map(country => {
+      const sectionHTML = renderCountrySection(country, grouped[country], offset);
+      offset += grouped[country].length;
+      return sectionHTML;
+    }).join('');
   }
 
-  const locations = ['all', ...new Set(POSTCARDS.map(m => m.country).filter(Boolean))];
+  const locations = ['all', ...new Set(POSTCARDS.map(m => m.country).filter(Boolean).sort((a, b) => a.localeCompare(b)))];
   const bar = document.getElementById('filter-bar');
   bar.innerHTML = '<span class="filter-label">Location:</span>' +
     locations.map(l =>
-      `<button class="filter-btn${l === activeFilter ? ' on' : ''}" onclick="setFilter('${l.replaceAll("'", "\\'")}', this)">
+      `<button class="filter-btn${l === activeFilter ? ' on' : ''}" onclick="setFilter('${escapeAttr(l)}')">
         ${l === 'all' ? 'All' : l}
       </button>`
     ).join('');
