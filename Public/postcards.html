@@ -36,44 +36,173 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 .filter-btn:hover:not(.on){border-color:var(--warm);color:var(--warm)}
 
 .gallery{max-width:1100px;margin:0 auto;padding:0 4rem 6rem}
-.masonry{columns:4;column-gap:1rem}
-@media(max-width:1000px){.masonry{columns:3}}
-@media(max-width:700px){.masonry{columns:2}}
-@media(max-width:420px){.masonry{columns:1}}
+.masonry{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2rem 1.5rem;align-items:start}
 
-.postcard-card{position:relative;break-inside:avoid;margin-bottom:1rem;background:var(--card);border:1px solid var(--border);border-radius:2px;overflow:hidden;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s}
-.postcard-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(26,18,8,0.1)}
-.postcard-img{width:100%;display:block;aspect-ratio:1;object-fit:cover;background:var(--border)}
+.postcard-card{
+  position:relative;
+  background:#fdfaf3;
+  border:1px solid #e7dccb;
+  border-radius:2px;
+  padding:0.9rem 0.9rem 1.1rem;
+  box-shadow:0 2px 8px rgba(26,18,8,0.06),0 12px 24px rgba(26,18,8,0.08);
+  cursor:pointer;
+  transition:transform 0.22s ease,box-shadow 0.22s ease;
+  transform:rotate(var(--tilt,-1.2deg));
+}
+.postcard-card:nth-child(3n){--tilt:1.4deg}
+.postcard-card:nth-child(4n){--tilt:-0.8deg}
+.postcard-card:nth-child(5n){--tilt:0.6deg}
+.postcard-card:hover{
+  transform:rotate(0deg) translateY(-6px) scale(1.015);
+  box-shadow:0 8px 18px rgba(26,18,8,0.08),0 20px 34px rgba(26,18,8,0.14);
+  z-index:5;
+}
+.postcard-card::before,.postcard-card::after{
+  content:'';
+  position:absolute;
+  width:74px;
+  height:22px;
+  background:linear-gradient(to bottom,rgba(250,246,239,0.88),rgba(232,223,208,0.72));
+  border:1px solid rgba(180,160,130,0.18);
+  box-shadow:0 1px 2px rgba(26,18,8,0.05);
+  opacity:0.95;
+  z-index:3;
+  pointer-events:none;
+}
+.postcard-card::before{top:-10px;left:14px;transform:rotate(-7deg)}
+.postcard-card::after{top:-8px;right:14px;transform:rotate(9deg)}
 
-.postcard-info{position:absolute;bottom:0;left:0;right:0;background:rgba(26,18,8,0.95);color:#fff;padding:1rem;transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);z-index:10}
-.postcard-card:hover .postcard-info{transform:translateY(0)}
-.postcard-place{font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:600;line-height:1.2;margin-bottom:0.15rem;color:var(--warm)}
-.postcard-country,.postcard-date{font-size:0.7rem;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:0.3rem}
-.postcard-notes{margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid rgba(255,255,255,0.2);font-size:0.75rem;font-style:italic;line-height:1.4}
+.postcard-img,.postcard-img-placeholder{
+  width:100%;
+  display:block;
+  aspect-ratio:1;
+  object-fit:cover;
+  background:#e8dfd0;
+  border:1px solid #eadfce;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.55);
+}
+.postcard-img-placeholder,.lb-img-placeholder{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:2rem;
+  color:var(--muted);
+  background:linear-gradient(135deg,#f8f2e7,#efe4d2);
+}
 
-.lightbox{display:none;position:fixed;inset:0;background:rgba(26,18,8,0.85);z-index:300;align-items:center;justify-content:center;padding:2rem}
+.postcard-info{
+  position:static;
+  transform:none;
+  background:none;
+  color:var(--ink);
+  padding:0.85rem 0 0;
+  z-index:1;
+}
+.postcard-place{
+  font-family:'Playfair Display',serif;
+  font-size:0.98rem;
+  font-weight:600;
+  line-height:1.25;
+  margin-bottom:0.2rem;
+  color:var(--ink);
+}
+.postcard-country,.postcard-date{
+  font-size:0.72rem;
+  color:var(--muted);
+  display:flex;
+  align-items:center;
+  gap:0.35rem;
+}
+.postcard-notes{
+  margin-top:0.55rem;
+  padding-top:0.55rem;
+  border-top:1px dashed var(--border);
+  font-size:0.76rem;
+  font-style:italic;
+  line-height:1.45;
+  color:var(--muted);
+}
+
+.lightbox{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(26,18,8,0.82);
+  z-index:300;
+  align-items:center;
+  justify-content:center;
+  padding:2rem;
+}
 .lightbox.on{display:flex}
-.lb-inner{background:var(--card);max-width:600px;width:100%;border-radius:2px;overflow:hidden;position:relative;animation:pop 0.2s ease}
-@keyframes pop{from{transform:scale(0.95);opacity:0}to{transform:scale(1);opacity:1}}
-.lb-img{width:100%;display:block;max-height:65vh;object-fit:contain;background:var(--ink)}
-.lb-info{padding:1.2rem 1.5rem}
+.lb-inner{
+  background:#fbf7ef;
+  max-width:700px;
+  width:100%;
+  border-radius:2px;
+  overflow:hidden;
+  position:relative;
+  animation:pop 0.2s ease;
+  box-shadow:0 20px 50px rgba(0,0,0,0.25);
+}
+@keyframes pop{from{transform:scale(0.96);opacity:0}to{transform:scale(1);opacity:1}}
+.lb-inner::before,.lb-inner::after{
+  content:'';
+  position:absolute;
+  width:88px;
+  height:26px;
+  background:linear-gradient(to bottom,rgba(250,246,239,0.9),rgba(232,223,208,0.75));
+  border:1px solid rgba(180,160,130,0.18);
+  z-index:4;
+  top:14px;
+  pointer-events:none;
+}
+.lb-inner::before{left:22px;transform:rotate(-8deg)}
+.lb-inner::after{right:22px;transform:rotate(10deg)}
+.lb-img,.lb-img-placeholder{
+  width:100%;
+  display:block;
+  max-height:65vh;
+  object-fit:contain;
+  background:#efe6d8;
+}
+.lb-info{padding:1.3rem 1.5rem 1.4rem}
 .lb-place{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:0.3rem}
-.lb-meta{font-size:0.78rem;color:var(--muted);margin-bottom:0.5rem}
-.lb-notes{font-size:0.82rem;color:var(--muted);font-style:italic;line-height:1.6;font-weight:300}
-.lb-close{position:absolute;top:0.8rem;right:1rem;background:none;border:none;font-size:1.4rem;cursor:pointer;color:rgba(255,255,255,0.6);z-index:1}
+.lb-meta{font-size:0.78rem;color:var(--muted);margin-bottom:0.6rem}
+.lb-notes{font-size:0.83rem;color:var(--muted);font-style:italic;line-height:1.6;font-weight:300}
+.lb-close{
+  position:absolute;
+  top:0.9rem;
+  right:1rem;
+  background:none;
+  border:none;
+  font-size:1.4rem;
+  cursor:pointer;
+  color:rgba(255,255,255,0.7);
+  z-index:10;
+}
 .lb-close:hover{color:#fff}
-.lb-nav{display:flex;gap:0.5rem;margin-top:0.8rem}
-.lb-nav button{background:none;border:1px solid var(--border);padding:0.3rem 0.8rem;font-size:0.75rem;cursor:pointer;border-radius:2px;color:var(--muted);font-family:'DM Sans',sans-serif}
+.lb-nav{display:flex;gap:0.5rem;margin-top:0.9rem}
+.lb-nav button{
+  background:none;
+  border:1px solid var(--border);
+  padding:0.35rem 0.85rem;
+  font-size:0.75rem;
+  cursor:pointer;
+  border-radius:2px;
+  color:var(--muted);
+  font-family:'DM Sans',sans-serif;
+}
 
 footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .footer-left{font-family:'Playfair Display',serif;font-size:0.9rem;font-style:italic;color:var(--muted)}
 .footer-right{display:flex;gap:1.8rem}
 .footer-right a{font-size:0.75rem;color:var(--muted);text-decoration:none;transition:color 0.15s}
+.footer-right a:hover{color:var(--warm)}
 
 @media(max-width:900px){
   nav{padding:0 1.5rem}
-  .nav-links a:not(.active):not(.nav-admin){display:none}
-  .nav-admin{display:flex!important}
+  .nav-links a{display:none}
+  .nav-links a.active{display:inline}
   .page-header,.filter-bar,.gallery{padding-left:1.5rem;padding-right:1.5rem}
   footer{padding:1.5rem;flex-direction:column;gap:1rem;text-align:center}
 }
@@ -89,7 +218,7 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
     <a href="magnets.html">Magnets</a>
     <a href="postcards.html" class="active">Postcards</a>
     <a href="blog.html">Writing</a>
-    <a class="nav-admin" href="admin.html">Admin</a>
+    <a href="admin.html">Admin</a>
   </div>
 </nav>
 
@@ -113,7 +242,7 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 
 <div class="lightbox" id="lightbox" onclick="closeLb(event)">
   <div class="lb-inner">
-    <button class="lb-close" onclick="closeLb()">✕</button>
+    <button class="lb-close" onclick="closeLb(event)">✕</button>
     <div id="lb-img-wrap"></div>
     <div class="lb-info">
       <div class="lb-place" id="lb-place"></div>
@@ -187,10 +316,10 @@ const POSTCARDS = [
   { id: 45, place: 'Snowdon Mountain Railway', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-Snowdon_Railway.png', notes: '' },
   { id: 46, place: 'Snowdon Summit', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-Snowdon_Summit.png', notes: '' },
   { id: 47, place: 'Swallow Falls', country: 'Wales (UK)', date: '2026-03-22', img: 'Postcards/WLS-SwallowFalls.png', notes: '' },
-  { id: 48, place: 'Wales', country: 'Wales (UK)', date: '2026-03-22', img: 'WLS-FullMap.png', notes:""},
-  { id: 49, place: 'The Marauder\'s Map', country: 'Wizarding World', date: '2026-03-22', img: 'Miscellaneous_1', notes:""},
+  { id: 48, place: 'Wales', country: 'Wales (UK)', date: '2026-03-22', img: 'WLS-FullMap.png', notes:'' },
+  { id: 49, place: 'The Marauder\'s Map', country: 'Wizarding World', date: '2026-03-22', img: '', notes:'' }
 ];
-  
+
 let activeFilter = 'all';
 let lbIndex = 0;
 let filteredItems = [];
@@ -199,7 +328,7 @@ function getEmoji(country) {
   const cleanKey = country.split(' ')[0].toLowerCase();
   const codes = {
     'england':'🇬🇧','wales':'🇬🇧','scotland':'🇬🇧','northern':'🇬🇧',
-    'ireland':'🇮🇪','iceland':'🇮🇸','netherlands':'🇳🇱'
+    'ireland':'🇮🇪','iceland':'🇮🇸','netherlands':'🇳🇱','wizarding':'🪄'
   };
   return codes[cleanKey] || '🌍';
 }
@@ -215,7 +344,7 @@ function render() {
   document.getElementById('total-count').textContent = POSTCARDS.length || '0';
 
   if (!filteredItems.length) {
-    grid.innerHTML = `<div class="empty"><strong>No postcards yet</strong>Try another filter.</div>`;
+    grid.innerHTML = `<div class="empty"><strong>No postcards yet</strong> Try another filter.</div>`;
   } else {
     grid.innerHTML = filteredItems.map((m, i) => `
       <div class="postcard-card" onclick="openLb(${i})">
@@ -226,7 +355,7 @@ function render() {
           <div class="postcard-place">${m.place}</div>
           <div class="postcard-country">${getEmoji(m.country)} ${m.country}</div>
           <div class="postcard-date">${m.date}</div>
-          <div class="postcard-notes">${m.notes}</div>
+          ${m.notes ? `<div class="postcard-notes">${m.notes}</div>` : ''}
         </div>
       </div>
     `).join('');
@@ -236,13 +365,13 @@ function render() {
   const bar = document.getElementById('filter-bar');
   bar.innerHTML = '<span class="filter-label">Location:</span>' +
     locations.map(l =>
-      `<button class="filter-btn${l === activeFilter ? ' on' : ''}" onclick="setFilter('${l}', this)">
+      `<button class="filter-btn${l === activeFilter ? ' on' : ''}" onclick="setFilter('${l.replaceAll("'", "\\'")}', this)">
         ${l === 'all' ? 'All' : l}
       </button>`
     ).join('');
 }
 
-function setFilter(f, btn) {
+function setFilter(f) {
   activeFilter = f;
   render();
 }
@@ -274,7 +403,7 @@ function lbNav(dir) {
 }
 
 function closeLb(e) {
-  if (e && e.target !== document.getElementById('lightbox') && e.target.className !== 'lb-close') return;
+  if (e && e.target !== document.getElementById('lightbox') && !e.target.classList.contains('lb-close')) return;
   document.getElementById('lightbox').classList.remove('on');
   document.body.style.overflow = '';
 }
