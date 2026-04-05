@@ -120,13 +120,17 @@ tr:hover td{background:var(--parchment)}
 
   <div class="blast-panel" id="blast-panel">
     <div class="blast-title">📬 Send Update Emails</div>
-    <div class="blast-desc">Check for new posts that haven't been emailed yet. Select which ones to notify subscribers about, then send.</div>
-    <button class="btn" id="check-btn" onclick="checkNewPosts()">⟳ Check for new posts</button>
+    <div class="blast-desc">Refresh the available posts, choose exactly which post(s) to include, then choose which subscriber category should receive the update.</div>
+
+    <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem">
+      <button class="btn" id="refresh-posts-btn" onclick="refreshPosts()">⟳ Refresh post list</button>
+      <span id="posts-status" class="small-note">No posts loaded yet</span>
+    </div>
 
     <div class="send-controls">
       <label for="blast-category" class="small-note">Send to:</label>
-      <select id="blast-category" class="send-select">
-        <option value="all">All confirmed subscribers</option>
+      <select id="blast-category" class="send-select" onchange="updateBlastPreview()">
+        <option value="">Choose category…</option>
         <option value="Travel Updates">🗺️ Travel Updates</option>
         <option value="Indic Articles">📜 Indic Articles</option>
         <option value="Sci-Comm Articles">🔬 Sci-Comm Articles</option>
@@ -136,12 +140,16 @@ tr:hover td{background:var(--parchment)}
       </select>
     </div>
 
-    <div id="new-posts-wrap" style="display:none;margin-top:1rem">
-      <div class="new-posts-list" id="new-posts-list"></div>
+    <div id="new-posts-wrap" style="display:block;margin-top:1rem">
+      <div class="new-posts-list" id="new-posts-list">
+        <div class="loading" style="padding:1rem 0">Refresh the post list to begin.</div>
+      </div>
+
       <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap">
-        <button class="btn green" id="send-btn" onclick="sendEmails()">✉ Send to subscribers</button>
+        <button class="btn green" id="send-btn" onclick="sendEmails()">✉ Send selected update</button>
         <span id="blast-preview" style="font-size:0.72rem;color:var(--muted)"></span>
       </div>
+
       <div class="msg" id="blast-msg"></div>
     </div>
   </div>
@@ -267,6 +275,11 @@ function normalizeSubscriber(s){
   };
 }
 
+function toNumber(v){
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 0;
+}
+
 function setPeriod(days, btn){
   activePeriod = days;
   document.querySelectorAll('.ptab').forEach(t => t.classList.remove('on'));
@@ -282,8 +295,8 @@ async function loadData(){
     const data = await jsonp(`${DB_URL}?action=analytics&days=${activePeriod}`);
     analyticsData = data || {};
     renderStats(analyticsData);
-    renderPagesTable(analyticsData.topPages || []);
-    renderReadsTable(analyticsData.postReads || []);
+    renderPagesTable(Array.isArray(analyticsData.topPages) ? analyticsData.topPages : []);
+    renderReadsTable(Array.isArray(analyticsData.postReads) ? analyticsData.postReads : []);
   } catch(e){
     document.getElementById('stat-grid').innerHTML = '<div class="loading" style="color:var(--red)">Failed to load analytics.</div>';
     document.getElementById('pages-table').innerHTML = '<tr><td class="loading" style="color:var(--red)">Failed to load pages</td></tr>';
@@ -306,12 +319,24 @@ async function loadSubscribers(){
 function renderStats(d){
   const sectionCounts = d.sectionCounts || {};
   const cards = [
-    { label:'Total Views', val:d.totalViews || 0, sub:`Last ${d.period || activePeriod} days` },
-    { label:'Unique Visitors', val:d.uniqueVisitors || 0, sub:'By cookie ID' },
-    { label:'Subscribers', val:d.confirmedSubscribers || 0, sub:`${(d.totalSubscribers || 0) - (d.confirmedSubscribers || 0)} pending` },
+    {
+      label:'Total Views',
+      val:toNumber(d.totalViews),
+      sub:`Last ${toNumber(d.period) || activePeriod} days`
+    },
+    {
+      label:'Unique Visitors',
+      val:toNumber(d.uniqueVisitors),
+      sub:'By cookie ID'
+    },
+    {
+      label:'Subscribers',
+      val:toNumber(d.confirmedSubscribers),
+      sub:`${Math.max(0, toNumber(d.totalSubscribers) - toNumber(d.confirmedSubscribers))} pending`
+    },
     ...CATEGORIES.map(cat => ({
       label: `${cat.icon} ${cat.label}`,
-      val: sectionCounts[cat.key] || 0,
+      val: toNumber(sectionCounts[cat.key]),
       sub: cat.key
     }))
   ];
@@ -326,7 +351,7 @@ function renderStats(d){
 }
 
 function renderPagesTable(pages){
-  const max = pages[0]?.views || 1;
+  const max = toNumber(pages[0]?.views) || 1;
   document.getElementById('pages-table').innerHTML =
     '<thead><tr><th>Page</th><th>Views</th><th>Uniques</th></tr></thead><tbody>' +
     (pages.length
@@ -335,11 +360,11 @@ function renderPagesTable(pages){
           <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeHTML(p.page || '')}">${escapeHTML(p.page || '—')}</td>
           <td>
             <div class="bar-cell">
-              <div class="bar" style="width:${Math.max(2, Math.round(((p.views || 0) / max) * 80))}px"></div>
-              ${p.views || 0}
+              <div class="bar" style="width:${Math.max(2, Math.round((toNumber(p.views) / max) * 80))}px"></div>
+              ${toNumber(p.views)}
             </div>
           </td>
-          <td>${p.uniques || 0}</td>
+          <td>${toNumber(p.uniques)}</td>
         </tr>
       `).join('')
       : '<tr><td colspan="3" class="loading">No visits in this period</td></tr>') +
@@ -353,8 +378,8 @@ function renderReadsTable(reads){
       ? reads.slice(0,15).map(r => `
         <tr>
           <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeHTML(r.postId || '')}">${escapeHTML(r.postId || '—')}</td>
-          <td>${r.reads || 0}</td>
-          <td>${r.uniqueReaders || 0}</td>
+          <td>${toNumber(r.reads)}</td>
+          <td>${toNumber(r.uniqueReaders)}</td>
         </tr>
       `).join('')
       : '<tr><td colspan="3" class="loading">No tracked reads yet</td></tr>') +
@@ -409,12 +434,17 @@ async function removeSubscriber(id){
 
   allSubscribers = allSubscribers.filter(s => s.id !== id);
 
-  const fd = new FormData();
-  fd.append('file', 'analytics_subscribers.json');
-  fd.append('data', JSON.stringify(allSubscribers));
-
   try{
-    await fetch(DB_URL, { method:'POST', mode:'no-cors', body:fd });
+    const r = await fetch(DB_URL, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({
+        file: 'analytics_subscribers.json',
+        data: allSubscribers
+      })
+    });
+
+    if (!r.ok) throw new Error('Save failed');
     renderSubTable();
   } catch(e){
     alert('Failed to save changes.');
@@ -435,69 +465,54 @@ function inferSubscriptionCategory(post){
   return '';
 }
 
-async function checkNewPosts(){
-  const btn = document.getElementById('check-btn');
-  const wrap = document.getElementById('new-posts-wrap');
+async function refreshPosts(){
+  const btn = document.getElementById('refresh-posts-btn');
   const list = document.getElementById('new-posts-list');
-  const sendBtn = document.getElementById('send-btn');
+  const status = document.getElementById('posts-status');
   const msg = document.getElementById('blast-msg');
 
   msg.className = 'msg';
   msg.style.display = 'none';
 
   btn.disabled = true;
-  btn.textContent = 'Checking…';
+  btn.textContent = 'Refreshing…';
+  status.textContent = 'Loading posts…';
+  list.innerHTML = '<div class="loading" style="padding:1rem 0">Loading posts…</div>';
 
   let posts = [];
-  try{
+  try {
     const data = await jsonp(`${DB_URL}?file=blog_posts.json`);
     posts = Array.isArray(data) ? data : [];
-  } catch(e){
+  } catch(e) {
     posts = [];
   }
 
   posts = posts.map(p => ({
     ...p,
-    section: p.section || inferSubscriptionCategory(p)
+    section: p.section || inferSubscriptionCategory(p),
+    url: p.url || p.file || ''
   }));
 
-  try{
-    const r = await fetch(DB_URL, {
-      method:'POST',
-      headers:{ 'Content-Type':'application/json' },
-      body: JSON.stringify({ action:'checkNewPosts', posts })
-    });
-    const d = await r.json();
-    pendingNewPosts = Array.isArray(d.newPosts) ? d.newPosts : [];
-  } catch(e){
-    pendingNewPosts = [];
-    wrap.style.display = 'block';
-    list.innerHTML = '<div style="font-size:0.78rem;color:var(--red);padding:0.5rem 0">Failed to check new posts.</div>';
-    sendBtn.style.display = 'none';
-    btn.disabled = false;
-    btn.textContent = '⟳ Check for new posts';
-    updateBlastPreview();
-    return;
-  }
+  pendingNewPosts = posts;
 
   btn.disabled = false;
-  btn.textContent = '⟳ Check for new posts';
+  btn.textContent = '⟳ Refresh post list';
 
   if (!pendingNewPosts.length) {
-    wrap.style.display = 'block';
-    list.innerHTML = '<div style="font-size:0.78rem;color:var(--muted);padding:0.5rem 0">No new posts since last send.</div>';
-    sendBtn.style.display = 'none';
+    status.textContent = 'No posts found';
+    list.innerHTML = '<div class="loading" style="padding:1rem 0">No posts available.</div>';
     updateBlastPreview();
     return;
   }
 
-  wrap.style.display = 'block';
-  sendBtn.style.display = 'inline-block';
+  status.textContent = `${pendingNewPosts.length} post${pendingNewPosts.length !== 1 ? 's' : ''} loaded`;
 
   list.innerHTML = pendingNewPosts.map((p, i) => `
     <div class="new-post-item">
-      <input type="checkbox" class="new-post-check" id="np-${i}" checked onchange="updateBlastPreview()">
-      <label for="np-${i}" style="flex:1;cursor:pointer;font-size:0.78rem">${escapeHTML(p.title || 'Untitled')}</label>
+      <input type="checkbox" class="new-post-check" id="np-${i}" onchange="updateBlastPreview()">
+      <label for="np-${i}" style="flex:1;cursor:pointer;font-size:0.78rem">
+        ${escapeHTML(p.title || 'Untitled')}
+      </label>
       <span class="new-post-badge">${escapeHTML(p.section || 'Uncategorised')}</span>
     </div>
   `).join('');
@@ -509,37 +524,49 @@ function updateBlastPreview(){
   const selectedPosts = pendingNewPosts.filter((_, i) => document.getElementById('np-' + i)?.checked);
   const category = document.getElementById('blast-category').value;
 
-  let targets = allSubscribers.filter(s => s.confirmed);
-  if (category !== 'all') {
-    targets = targets.filter(s => (s.sections || []).includes(category));
+  if (!category && !selectedPosts.length) {
+    document.getElementById('blast-preview').textContent = 'Select a category and one or more posts.';
+    return;
   }
 
-  document.getElementById('blast-preview').textContent =
-    `${selectedPosts.length} post${selectedPosts.length !== 1 ? 's' : ''} · ${targets.length} recipient${targets.length !== 1 ? 's' : ''}`;
-}
+  if (!category) {
+    document.getElementById('blast-preview').textContent =
+      `${selectedPosts.length} post${selectedPosts.length !== 1 ? 's' : ''} selected · choose category`;
+    return;
+  }
 
-document.getElementById('blast-category').addEventListener('change', updateBlastPreview);
+  const targets = allSubscribers.filter(
+    s => s.confirmed && (s.sections || []).includes(category)
+  );
+
+  document.getElementById('blast-preview').textContent =
+    `${selectedPosts.length} post${selectedPosts.length !== 1 ? 's' : ''} selected · ${targets.length} confirmed subscriber${targets.length !== 1 ? 's' : ''} in ${category}`;
+}
 
 async function sendEmails(){
   const selectedPosts = pendingNewPosts.filter((_, i) => document.getElementById('np-' + i)?.checked);
   const category = document.getElementById('blast-category').value;
+
+  if (!category) {
+    alert('Choose a category first.');
+    return;
+  }
 
   if (!selectedPosts.length) {
     alert('Select at least one post.');
     return;
   }
 
-  let targets = allSubscribers.filter(s => s.confirmed);
-  if (category !== 'all') {
-    targets = targets.filter(s => (s.sections || []).includes(category));
-  }
+  const targets = allSubscribers.filter(
+    s => s.confirmed && (s.sections || []).includes(category)
+  );
 
   if (!targets.length) {
-    alert('No subscribers in this category.');
+    alert('No confirmed subscribers in this category.');
     return;
   }
 
-  if (!confirm(`Send ${selectedPosts.length} update${selectedPosts.length !== 1 ? 's' : ''} to ${targets.length} subscribers?`)) {
+  if (!confirm(`Send ${selectedPosts.length} selected post update${selectedPosts.length !== 1 ? 's' : ''} to ${targets.length} subscriber${targets.length !== 1 ? 's' : ''} in ${category}?`)) {
     return;
   }
 
@@ -551,30 +578,30 @@ async function sendEmails(){
   msg.className = 'msg';
   msg.style.display = 'none';
 
-  try{
+  try {
     const r = await fetch(DB_URL, {
       method:'POST',
       headers:{ 'Content-Type':'application/json' },
       body: JSON.stringify({
         action:'sendEmails',
-        posts:selectedPosts,
-        subscribers:targets
+        posts: selectedPosts.map(p => ({ ...p, section: category })),
+        subscribers: targets
       })
     });
 
     const d = await r.json();
 
-    msg.textContent = `✓ Sent ${d.sent || 0} emails`;
+    msg.textContent = `✓ Sent ${toNumber(d.sent)} emails`;
     msg.className = 'msg ok';
     msg.style.display = 'block';
-  } catch(e){
+  } catch(e) {
     msg.textContent = 'Send failed. Check Apps Script response.';
     msg.className = 'msg err';
     msg.style.display = 'block';
   }
 
   btn.disabled = false;
-  btn.textContent = '✉ Send to subscribers';
+  btn.textContent = '✉ Send selected update';
 }
 
 loadData();
