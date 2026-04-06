@@ -285,7 +285,7 @@ async function load() {
 
     buildCountryPanel();
   } catch(e) {
-    document.getElementById('header-stats').textContent = 'Could not load pins';
+    console.error('Could not load pins');
   }
 }
 load();
