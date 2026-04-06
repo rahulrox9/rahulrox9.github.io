@@ -4,552 +4,164 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Learn संस्कृतम् with राहुल् । Basic Lesson 01</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@0,300;0,400;0,500&family=Tiro+Sanskrit:ital@0;1&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&family=Tiro+Sanskrit&display=swap" rel="stylesheet">
 
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--border:#e8dfd0;--card:#fff9f2}
-body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);line-height:1.6;padding:2rem}
-.container{max-width:900px;margin:0 auto;background:#fff;padding:3rem;border:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,0.05)}
+body{font-family:'DM Sans',sans-serif;background:#faf6ef;color:#1a1208;padding:2rem}
+.container{max-width:900px;margin:auto;background:#fff;padding:3rem;border:1px solid #e8dfd0}
 
-h1,h2,h3{font-family:'Playfair Display',serif;margin-bottom:1rem}
-h1{font-size:2.5rem;border-bottom:2px solid var(--warm);padding-bottom:1rem}
-h2{font-size:1.8rem;color:var(--warm);margin-top:2.5rem;border-bottom:1px solid var(--border)}
-h3{font-size:1.2rem;margin-top:1.5rem}
+h1,h2,h3{font-family:'Playfair Display',serif}
+h1{border-bottom:2px solid #c8873a;padding-bottom:1rem}
+h2{color:#c8873a;margin-top:2rem}
 
-.lesson-part{margin-bottom:3rem}
-.sanskrit{font-family:'Tiro Sanskrit',serif;font-size:1.1rem;color:#000;display:block;margin-bottom:0.5rem}
-.engtrans{color:var(--muted);font-style:italic;font-size:0.95rem;margin-bottom:0.5rem;display:block;padding-left:10px;color:#555}
-.post-metadata{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);display:block;margin-top:1rem}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th,td{border:1px solid #e8dfd0;padding:0.5rem;text-align:center}
+th{background:#e8dfd0}
 
-table{width:100%;border-collapse:collapse;margin:0.75rem 0;font-size:0.92rem}
-th,td{border:0.25px solid var(--border);padding:0.45rem;text-align:center;vertical-align:middle}
-th{background:#e8dfd0;font-family:'Playfair Display',serif;font-weight:700}
-td, tr:nth-child(even){background:#fcfaf7}
+.group-row th{background:#c8873a;color:#fff}
+.group-data td{background:#fff4e8}
+.letter-head th{background:#e8dfd0}
 
-.highlight{color:var(--warm);font-weight:700}
-.task-box{background:var(--parchment);padding:0 1.5rem 1.5rem 1.5rem;margin:0 0 0.5rem 0}
-.note-box{background:#fcfaf7;border:1px solid var(--border);padding:1rem 1.25rem;margin:1rem 0}
-.coming-soon{background:#fff9f2;border:1px solid var(--warm);padding:1rem 1.25rem;margin-top:1rem}
-.badge{display:inline-block;font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;color:#fff;background:var(--warm);padding:0.25rem 0.55rem;border-radius:3px;margin-bottom:0.6rem}
+.audio-btn{padding:0.3rem 0.6rem;cursor:pointer}
+audio{display:none}
 
-hr{border:none;border-top:1.5px solid var(--border);margin:20px 0}
-a{text-decoration:none;color:var(--warm)}
-ol,ul{padding-left:1.25rem}
-li{margin-bottom:0.5rem}
-
-.grid-two{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-
-.audio-btn{
-  font-size:0.95rem;
-  padding:0.3rem 0.65rem;
-  border:1px solid var(--border);
-  background:var(--card);
-  color:var(--ink);
-  cursor:pointer;
-  border-radius:4px;
-  min-width:44px;
-  transition:all 0.15s ease;
-}
-.audio-btn:hover{
-  border-color:var(--warm);
-  color:var(--warm);
-}
-audio.hidden-audio{
-  display:none;
-}
-
-@media(max-width:700px){
-  .container{padding:1.5rem}
-  .grid-two{grid-template-columns:1fr}
-}
-
-.group-row th{
-  background:#c8873a;
-  color:#fff;
-  font-family:'Playfair Display', serif;
-  font-weight:700;
-}
-.group-data td{
-  background:#fff4e8;
-  font-weight:500;
-}
-.letter-head th{
-  background:#e8dfd0;
-}
-.sanskrit-cell{
-  font-family:'Tiro Sanskrit', serif;
-  font-size:1.05rem;
-  letter-spacing:0.04em;
-}
+.note-box{background:#fcfaf7;border:1px solid #e8dfd0;padding:1rem;margin:1rem 0}
 </style>
 </head>
-<body>
 
+<body>
 <div class="container">
-<h1>Basic Lesson 01: <br>Sounds, Vowels, and Consonants</h1>
-  <span class="post-metadata">Basic Sanskrit · 06.04.2026 </span>
+
+<h1>Basic Lesson 01:<br>Sounds, Vowels, and Consonants</h1>
 
 <div class="note-box">
-  <p><strong>Note on spelling:</strong><br>
-  In this lesson, Sanskrit words are shown in three ways:
-  <br><br>
-  • Simple pronunciation (for easy reading)<br>
-  • IAST (a precise system using Latin letters)<br>
-  • Devanāgarī (the original script)
-  <br><br>
-  For example:<br>
-  <strong>krishna → kṛṣṇa → कृष्ण</strong>
-  <br><br>
-  You do not need to memorise IAST yet. It is used to show exact sounds.
-  </p>
+<p><strong>How to read this lesson:</strong><br><br>
+Each word appears in three forms:
+<br><br>
+• Simple pronunciation<br>
+• IAST (precise transliteration)<br>
+• Sanskrit script<br><br>
+
+Example:<br>
+<strong>krishna → kṛṣṇa → कृष्ण</strong>
+</p>
 </div>
 
-<section class="lesson-part">
-  <h2>Part 1: Introduction</h2>
+---
 
-  <p>Sanskrit is a highly precise and phonetic language. Each letter represents a distinct sound, and these sounds are organised systematically.</p>
-  <br>
+<h2>Part 1: Introduction</h2>
 
-  <p>In Sanskrit, letters or sound-units are called <strong>varnaaha</strong> (IAST: <strong>varṇāḥ</strong>; Sanskrit: <strong>वर्णाः</strong>).</p>
-  <br>
+<p>Sanskrit is a precise and phonetic language. Every letter represents a distinct sound.</p>
 
-  <p>Vowels are called <strong>svaraaha</strong> (IAST: <strong>svarāḥ</strong>; Sanskrit: <strong>स्वराः</strong>), and consonants are called <strong>vyanjanaani</strong> (IAST: <strong>vyañjanāni</strong>; Sanskrit: <strong>व्यञ्जनानि</strong>).</p>
-  <br>
+<p>Letters are called <strong>varnaaha</strong> (IAST: varṇāḥ; Sanskrit: वर्णाः).</p>
+<p>Vowels are <strong>svaraaha</strong> (svarāḥ; स्वराः).</p>
+<p>Consonants are <strong>vyanjanaani</strong> (vyañjanāni; व्यञ्जनानि).</p>
 
-  <p>This lesson introduces the basic sound system of Sanskrit. At this stage, the goal is first recognition and familiarity and then memorisation.</p>
-</section>
+---
 
-<hr>
-  <div class="coming-soon">
-    <div class="badge">Coming Soon</div>
-    <p><strong>Pronunciation practice:</strong> Individual vowel and consonant pronuncitaion audio will be added soon.</p>
-  </div>
+<h2>Part 2: Vowels</h2>
 
-<section class="lesson-part">
-  <h2>Part 2: The Sanskrit Alphabet</h2>
-
-  <p>The Sanskrit alphabet is called <strong>varnamaalaa</strong> (IAST: <strong>varṇamālā</strong>; Sanskrit: <strong>वर्णमाला</strong>), literally a “garland of letters.”</p>
-
-  <div class="note-box">
-    <p><strong>Key idea:</strong> Sanskrit letters are organised by how and where sounds are produced in the mouth.</p>
-  </div>
-
-
-</section>
-
-  <h3>Vowels</h3>
-
-  <p>Vowels are sounds that can be pronounced independently. In Sanskrit they are called <strong>svaraaha</strong> (IAST: <strong>svarāḥ</strong>; Sanskrit: <strong>स्वराः</strong>).</p>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Devanāgarī</th>
-        <th>Sound (Pronunciation)</th>
-        <th>IAST</th>
-        <th>Audio</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>अ</td>
-        <td>uh (as in fun)</td>
-        <td>a</td>
-        <td>
-          <button class="audio-btn" onclick="toggleAudio(this)">▶</button>
-          <audio class="hidden-audio" src="audio/अ.mp3"></audio>
-        </td>
-      </tr>
-      <tr>
-        <td>आ</td>
-        <td>aa (as in farm)</td>
-        <td>ā</td>
-        <td>
-          <button class="audio-btn" onclick="toggleAudio(this)">▶</button>
-          <audio class="hidden-audio" src="audio/आ.mp3"></audio>
-        </td>
-      </tr>
-      <tr>
-        <td>इ</td>
-        <td>i (as in fig)</td>
-        <td>i</td>
-        <td>
-          <button class="audio-btn" onclick="toggleAudio(this)">▶</button>
-          <audio class="hidden-audio" src="audio/इ.mp3"></audio>
-        </td>
-      </tr>
-      <tr>
-        <td>ई</td>
-        <td>ee (as in feet)</td>
-        <td>ī</td>
-        <td>
-          <button class="audio-btn" onclick="toggleAudio(this)">▶</button>
-          <audio class="hidden-audio" src="audio/ई.mp3"></audio>
-        </td>
-      </tr>
-      <tr>
-        <td>उ</td>
-        <td>oo (as in book)</td>
-        <td>u</td>
-        <td>
-          <button class="audio-btn" onclick="toggleAudio(this)">▶</button>
-          <audio class="hidden-audio" src="audio/उ.mp3"></audio>
-        </td>
-      </tr>
-      <tr>
-        <td>ऊ</td>
-        <td>oo (as in fool)</td>
-        <td>ū</td>
-        <td>
-          <button class="audio-btn" onclick="toggleAudio(this)">▶</button>
-          <audio class="hidden-audio" src="audio/ऊ.mp3"></audio>
-        </td>
-      </tr>
-      <tr>
-        <td>ऋ</td>
-        <td>syllabic “r” (as in rhythm)</td>
-        <td>ṛ</td>
-        <td>
-          <button class="audio-btn" onclick="toggleAudio(this)">▶</button>
-          <audio class="hidden-audio" src="audio/ऋ.mp3"></audio>
-        </td>
-      </tr>
-      <tr>
-        <td>ॠ</td>
-        <td>long syllabic “r”</td>
-        <td>ṝ</td>
-        <td>
-          <button class="audio-btn" onclick="toggleAudio(this)">▶</button>
-          <audio class="hidden-audio" src="audio/ॠ.mp3"></audio>
-        </td>
-      </tr>
-      <tr>
-        <td>ऌ</td>
-        <td>rare syllabic “l”</td>
-        <td>ḷ</td>
-        <td>
-          <button class="audio-btn" onclick="toggleAudio(this)">▶</button>
-          <audio class="hidden-audio" src="audio/ऌ.mp3"></audio>
-        </td>
-      </tr>
-      <tr>
-        <td>ए</td>
-        <td>ay (as in way)</td>
-        <td>e</td>
-        <td>
-          <button class="audio-btn" onclick="toggleAudio(this)">▶</button>
-          <audio class="hidden-audio" src="audio/ए.mp3"></audio>
-        </td>
-      </tr>
-      <tr>
-        <td>ऐ</td>
-        <td>eye</td>
-        <td>ai</td>
-        <td>
-          <button class="audio-btn" onclick="toggleAudio(this)">▶</button>
-          <audio class="hidden-audio" src="audio/ऐ.mp3"></audio>
-        </td>
-      </tr>
-      <tr>
-        <td>ओ</td>
-        <td>oh</td>
-        <td>o</td>
-        <td>
-          <button class="audio-btn" onclick="toggleAudio(this)">▶</button>
-          <audio class="hidden-audio" src="audio/ओ.mp3"></audio>
-        </td>
-      </tr>
-      <tr>
-        <td>औ</td>
-        <td>ow (as in cow)</td>
-        <td>au</td>
-        <td>
-          <button class="audio-btn" onclick="toggleAudio(this)">▶</button>
-          <audio class="hidden-audio" src="audio/औ.mp3"></audio>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <p>Vowel length is important. For example, <em>a</em> and <em>ā</em> are different sounds.</p>
-
-  <h3>Consonants</h3>
-
-  <p>Consonants are called <strong>vyanjanaani</strong> (IAST: <strong>vyañjanāni</strong>; Sanskrit: <strong>व्यञ्जनानि</strong>).</p>
-
- <table>
-  <tbody>
-
-    <!-- ka-varga -->
-    <tr class="group-row">
-      <th>Varga</th>
-      <th>Place of articulation</th>
-      <th colspan="2">Letters</th>
-    </tr>
-    <tr class="group-data">
-      <td>ka-varga</td>
-      <td>throat</td>
-      <td colspan="2" class="sanskrit-cell">क ख ग घ ङ</td>
-    </tr>
-
-    <tr class="letter-head">
-      <th>Letter</th>
-      <th>Pronunciation</th>
-      <th>IAST</th>
-      <th>Audio</th>
-    </tr>
-    <tr><td>क</td><td>ka</td><td>ka</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/क.mp3"></audio></td></tr>
-    <tr><td>ख</td><td>kha</td><td>kha</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ख.mp3"></audio></td></tr>
-    <tr><td>ग</td><td>ga</td><td>ga</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ग.mp3"></audio></td></tr>
-    <tr><td>घ</td><td>gha</td><td>gha</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/घ.mp3"></audio></td></tr>
-    <tr><td>ङ</td><td>ṅa (nasal “ng” as in sing, without adding a “g”)</td><td>ṅa</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ङ.mp3"></audio></td></tr>
-
-    <!-- cha-varga -->
-    <tr class="group-row">
-      <th>Varga</th>
-      <th>Place of articulation</th>
-      <th colspan="2">Letters</th>
-    </tr>
-    <tr class="group-data">
-      <td>cha-varga</td>
-      <td>palate</td>
-      <td colspan="2" class="sanskrit-cell">च छ ज झ ञ</td>
-    </tr>
-
-    <tr class="letter-head">
-      <th>Letter</th>
-      <th>Pronunciation</th>
-      <th>IAST</th>
-      <th>Audio</th>
-    </tr>
-    <tr><td>च</td><td>cha</td><td>ca</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/च.mp3"></audio></td></tr>
-    <tr><td>छ</td><td>chha</td><td>cha</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/छ.mp3"></audio></td></tr>
-    <tr><td>ज</td><td>ja</td><td>ja</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ज.mp3"></audio></td></tr>
-    <tr><td>झ</td><td>jha</td><td>jha</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/झ.mp3"></audio></td></tr>
-    <tr><td>ञ</td><td>ña (ny as in canyon)</td><td>ña</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ञ.mp3"></audio></td></tr>
-
-    <!-- ṭa-varga -->
-    <tr class="group-row">
-      <th>Varga</th>
-      <th>Place of articulation</th>
-      <th colspan="2">Letters</th>
-    </tr>
-    <tr class="group-data">
-      <td>ṭa-varga (retroflex)</td>
-      <td>roof of mouth</td>
-      <td colspan="2" class="sanskrit-cell">ट ठ ड ढ ण</td>
-    </tr>
-
-    <tr class="letter-head">
-      <th>Letter</th>
-      <th>Pronunciation</th>
-      <th>IAST</th>
-      <th>Audio</th>
-    </tr>
-    <tr><td>ट</td><td>ṭa (tongue curled back)</td><td>ṭa</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ट.mp3"></audio></td></tr>
-    <tr><td>ठ</td><td>ṭha</td><td>ṭha</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ठ.mp3"></audio></td></tr>
-    <tr><td>ड</td><td>ḍa</td><td>ḍa</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ड.mp3"></audio></td></tr>
-    <tr><td>ढ</td><td>ḍha</td><td>ḍha</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ढ.mp3"></audio></td></tr>
-    <tr><td>ण</td><td>ṇa (n with tongue curled back)</td><td>ṇa</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ण.mp3"></audio></td></tr>
-
-    <!-- ta-varga -->
-    <tr class="group-row">
-      <th>Varga</th>
-      <th>Place of articulation</th>
-      <th colspan="2">Letters</th>
-    </tr>
-    <tr class="group-data">
-      <td>ta-varga (dental)</td>
-      <td>teeth</td>
-      <td colspan="2" class="sanskrit-cell">त थ द ध न</td>
-    </tr>
-
-    <tr class="letter-head">
-      <th>Letter</th>
-      <th>Pronunciation</th>
-      <th>IAST</th>
-      <th>Audio</th>
-    </tr>
-    <tr><td>त</td><td>ta</td><td>ta</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/त.mp3"></audio></td></tr>
-    <tr><td>थ</td><td>tha</td><td>tha</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/थ.mp3"></audio></td></tr>
-    <tr><td>द</td><td>da</td><td>da</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/द.mp3"></audio></td></tr>
-    <tr><td>ध</td><td>dha</td><td>dha</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ध.mp3"></audio></td></tr>
-    <tr><td>न</td><td>na (normal n)</td><td>na</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/न.mp3"></audio></td></tr>
-
-    <!-- pa-varga -->
-    <tr class="group-row">
-      <th>Varga</th>
-      <th>Place of articulation</th>
-      <th colspan="2">Letters</th>
-    </tr>
-    <tr class="group-data">
-      <td>pa-varga</td>
-      <td>lips</td>
-      <td colspan="2" class="sanskrit-cell">प फ ब भ म</td>
-    </tr>
-
-    <tr class="letter-head">
-      <th>Letter</th>
-      <th>Pronunciation</th>
-      <th>IAST</th>
-      <th>Audio</th>
-    </tr>
-    <tr><td>प</td><td>pa</td><td>pa</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/प.mp3"></audio></td></tr>
-    <tr><td>फ</td><td>pha</td><td>pha</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/फ.mp3"></audio></td></tr>
-    <tr><td>ब</td><td>ba</td><td>ba</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ब.mp3"></audio></td></tr>
-    <tr><td>भ</td><td>bha</td><td>bha</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/भ.mp3"></audio></td></tr>
-    <tr><td>म</td><td>ma</td><td>ma</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/म.mp3"></audio></td></tr>
-
-  </tbody>
+<table>
+<thead>
+<tr>
+<th>Letter</th>
+<th>Sound</th>
+<th>IAST</th>
+<th>Audio</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>अ</td><td>uh (fun)</td><td>a</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/अ.mp3"></audio></td></tr>
+<tr><td>आ</td><td>aa (farm)</td><td>ā</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/आ.mp3"></audio></td></tr>
+<tr><td>इ</td><td>i (fig)</td><td>i</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/इ.mp3"></audio></td></tr>
+<tr><td>ई</td><td>ee (feet)</td><td>ī</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ई.mp3"></audio></td></tr>
+<tr><td>उ</td><td>oo (book)</td><td>u</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/उ.mp3"></audio></td></tr>
+<tr><td>ऊ</td><td>oo (fool)</td><td>ū</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ऊ.mp3"></audio></td></tr>
+<tr><td>ऋ</td><td>r (rhythm)</td><td>ṛ</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ऋ.mp3"></audio></td></tr>
+<tr><td>ॠ</td><td>long r</td><td>ṝ</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ॠ.mp3"></audio></td></tr>
+<tr><td>ऌ</td><td>l (rare)</td><td>ḷ</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ऌ.mp3"></audio></td></tr>
+<tr><td>ए</td><td>ay (way)</td><td>e</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ए.mp3"></audio></td></tr>
+<tr><td>ऐ</td><td>eye</td><td>ai</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ऐ.mp3"></audio></td></tr>
+<tr><td>ओ</td><td>oh</td><td>o</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ओ.mp3"></audio></td></tr>
+<tr><td>औ</td><td>ow (cow)</td><td>au</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/औ.mp3"></audio></td></tr>
+</tbody>
 </table>
 
-  <p>Each group follows a fixed order: unvoiced, aspirated, voiced, aspirated voiced, and nasal.</p>
+---
 
-<hr>
+<h2>Part 3: Consonants</h2>
 
-<section class="lesson-part">
-  <h2>Part 3: Additional Sounds</h2>
+<div class="note-box">
+<p><strong>Aspirated vs Unaspirated vs Nasal</strong></p>
 
-  <!-- Semi-vowels -->
-  <table>
-    <tbody>
-      <tr class="group-row">
-        <th>Category</th>
-        <th>Term</th>
-        <th colspan="2">Letters</th>
-      </tr>
-      <tr class="group-data">
-        <td>Semi-vowels</td>
-        <td>antastha (IAST: antasthāḥ; Sanskrit: अन्तस्थाः)</td>
-        <td colspan="2" class="sanskrit-cell">य र ल व</td>
-      </tr>
+<p>Some sounds release a small burst of air. These are <strong>aspirated</strong>.</p>
+<p>Some do not. These are <strong>unaspirated</strong>.</p>
 
-      <tr class="letter-head">
-        <th>Letter</th>
-        <th>Pronunciation</th>
-        <th>IAST</th>
-        <th>Audio</th>
-      </tr>
-      <tr>
-        <td>य</td>
-        <td>ya</td>
-        <td>ya</td>
-        <td><button onclick="toggleAudio(this)">▶</button><audio src="audio/य.mp3"></audio></td>
-      </tr>
-      <tr>
-        <td>र</td>
-        <td>ra</td>
-        <td>ra</td>
-        <td><button onclick="toggleAudio(this)">▶</button><audio src="audio/र.mp3"></audio></td>
-      </tr>
-      <tr>
-        <td>ल</td>
-        <td>la</td>
-        <td>la</td>
-        <td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ल.mp3"></audio></td>
-      </tr>
-      <tr>
-        <td>व</td>
-        <td>va (between v and w)</td>
-        <td>va</td>
-        <td><button onclick="toggleAudio(this)">▶</button><audio src="audio/व.mp3"></audio></td>
-      </tr>
-    </tbody>
-  </table>
+<p>Some sounds go through the nose. These are <strong>nasal</strong>.<br>
+Try this: pinch your nose and say “m” — it becomes difficult.</p>
 
-  <br>
+<p>Each consonant group follows this pattern:</p>
+<p>unaspirated → aspirated → voiced → aspirated → nasal</p>
+</div>
 
-  <!-- Sibilants -->
-  <table>
-    <tbody>
-      <tr class="group-row">
-        <th>Category</th>
-        <th>Term</th>
-        <th colspan="2">Letters</th>
-      </tr>
-      <tr class="group-data">
-        <td>Sibilants and aspirate</td>
-        <td>ushmanaha (IAST: ūṣmāṇaḥ; Sanskrit: ऊष्माणः)</td>
-        <td colspan="2" class="sanskrit-cell">श ष स ह</td>
-      </tr>
+<div class="note-box">
+<p><strong>Important:</strong><br>
+Consonants are not complete sounds by themselves. They are half-sounds.</p>
 
-      <tr class="letter-head">
-        <th>Letter</th>
-        <th>Pronunciation</th>
-        <th>IAST</th>
-        <th>Audio</th>
-      </tr>
-      <tr>
-        <td>श</td>
-        <td>sha (palatal)</td>
-        <td>śa</td>
-        <td><button onclick="toggleAudio(this)">▶</button><audio src="audio/श.mp3"></audio></td>
-      </tr>
-      <tr>
-        <td>ष</td>
-        <td>sha (retroflex)</td>
-        <td>ṣa</td>
-        <td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ष.mp3"></audio></td>
-      </tr>
-      <tr>
-        <td>स</td>
-        <td>sa</td>
-        <td>sa</td>
-        <td><button onclick="toggleAudio(this)">▶</button><audio src="audio/स.mp3"></audio></td>
-      </tr>
-      <tr>
-        <td>ह</td>
-        <td>ha (breathy h)</td>
-        <td>ha</td>
-        <td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ह.mp3"></audio></td>
-      </tr>
-    </tbody>
-  </table>
+<p>In practice, we pronounce them with an “a” added:
+ka, kha, ga, etc.</p>
+</div>
 
-  <br>
+<table>
 
-  <!-- Auxiliary signs -->
-  <table>
-    <tbody>
-      <tr class="group-row">
-        <th>Category</th>
-        <th>Term</th>
-        <th colspan="2">Signs</th>
-      </tr>
-      <tr class="group-data">
-        <td>Auxiliary signs</td>
-        <td>ayogavaha (IAST: ayogavāhāḥ; Sanskrit: अयोगवाहाः)</td>
-        <td colspan="2" class="sanskrit-cell">ं ः ँ</td>
-      </tr>
+<!-- ka-varga -->
+<tr class="group-row">
+<th>Varga</th><th>Place</th><th colspan="2">Letters</th>
+</tr>
+<tr class="group-data">
+<td>ka-varga</td><td>throat</td><td colspan="2">क ख ग घ ङ</td>
+</tr>
 
-      <tr class="letter-head">
-        <th>Sign</th>
-        <th>Description</th>
-        <th>IAST</th>
-        <th>Audio</th>
-      </tr>
-      <tr>
-        <td>ं</td>
-        <td>nasal resonance</td>
-        <td>ṃ</td>
-        <td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ं.mp3"></audio></td>
-      </tr>
-      <tr>
-        <td>ः</td>
-        <td>breath after vowel</td>
-        <td>ḥ</td>
-        <td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ः.mp3"></audio></td>
-      </tr>
-      <tr>
-        <td>ँ</td>
-        <td>nasalisation</td>
-        <td>̃</td>
-        <td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ँ.mp3"></audio></td>
-      </tr>
-    </tbody>
-  </table>
-</section>
+<tr class="letter-head">
+<th>Letter</th><th>Sound</th><th>IAST</th><th>Audio</th>
+</tr>
+
+<tr><td>क</td><td>ka</td><td>ka</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/क.mp3"></audio></td></tr>
+<tr><td>ख</td><td>kha (with air)</td><td>kha</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ख.mp3"></audio></td></tr>
+<tr><td>ग</td><td>ga</td><td>ga</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ग.mp3"></audio></td></tr>
+<tr><td>घ</td><td>gha (with air)</td><td>gha</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/घ.mp3"></audio></td></tr>
+<tr><td>ङ</td><td>ṅa (ng sound)</td><td>ṅa</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ङ.mp3"></audio></td></tr>
+
+</table>
+
+---
+
+<h2>Part 4: Additional Sounds</h2>
+
+<table>
+
+<tr class="group-row">
+<th>Category</th><th>Term</th><th colspan="2">Letters</th>
+</tr>
+<tr class="group-data">
+<td>Semi-vowels</td>
+<td>antastha (antasthāḥ; अन्तस्थाः)</td>
+<td colspan="2">य र ल व</td>
+</tr>
+
+<tr class="letter-head">
+<th>Letter</th><th>Sound</th><th>IAST</th><th>Audio</th>
+</tr>
+
+<tr><td>य</td><td>ya</td><td>ya</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/य.mp3"></audio></td></tr>
+<tr><td>र</td><td>ra</td><td>ra</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/र.mp3"></audio></td></tr>
+<tr><td>ल</td><td>la</td><td>la</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/ल.mp3"></audio></td></tr>
+<tr><td>व</td><td>va</td><td>va</td><td><button onclick="toggleAudio(this)">▶</button><audio src="audio/व.mp3"></audio></td></tr>
+
+</table>
+
+---
 
 <script>
 function toggleAudio(button){
@@ -557,8 +169,6 @@ function toggleAudio(button){
 
   if(audio.paused){
     document.querySelectorAll('audio').forEach(a => a.pause());
-    document.querySelectorAll('.audio-btn').forEach(b => b.textContent = '▶');
-
     audio.play();
     button.textContent = '⏸';
   } else {
@@ -568,5 +178,6 @@ function toggleAudio(button){
 }
 </script>
 
+</div>
 </body>
 </html>
