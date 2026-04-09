@@ -43,6 +43,14 @@ h1{font-size:2rem;border-bottom:2px solid var(--warm);padding-bottom:1rem}
 h2{font-size:1.5rem;color:var(--warm);border-bottom:1px solid var(--border)}
 footer{padding:4rem;border-top:1px solid var(--border);text-align:center;font-family:'Playfair Display',serif;font-style:italic;color:var(--muted)}
 @media (max-width:600px){figcaption{flex-direction:column;gap:0.3rem}}
+
+.subscribe-box{margin:4rem 0 0;padding:1.5rem;border:1px solid var(--border);background:var(--card)}
+.subscribe-box h3{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:0.4rem;color:var(--warm)}
+.subscribe-box p{font-size:0.9rem;color:var(--muted);margin-bottom:1rem}
+.subscribe-form{display:flex;gap:0.75rem;flex-wrap:wrap}
+.subscribe-form input{flex:1;min-width:220px;padding:0.75rem 0.9rem;border:1px solid var(--border);background:var(--parchment);font-family:'DM Sans',sans-serif;font-size:0.9rem;color:var(--ink)}
+.subscribe-form button{padding:0.75rem 1rem;border:none;background:var(--warm);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.8rem;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer}
+.subscribe-msg{margin-top:0.8rem;font-size:0.8rem;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -253,6 +261,17 @@ footer{padding:4rem;border-top:1px solid var(--border);text-align:center;font-fa
 </section>
 </article>
 
+<section class="subscribe-box">
+  <h3>Enjoyed this piece?</h3>
+  <p>Subscribe for future science writing and related essays.</p>
+  <div class="subscribe-form">
+    <input type="text" id="sub-name" placeholder="Your name (optional)">
+    <input type="email" id="sub-email" placeholder="you@example.com">
+    <button onclick="submitSubscribe()">Subscribe</button>
+  </div>
+  <div class="subscribe-msg" id="sub-msg"></div>
+</section>
+ 
 <footer>
   <div class="footer-left">Rahul Subbaraman</div>
   <div class="footer-right">
@@ -294,6 +313,25 @@ footer{padding:4rem;border-top:1px solid var(--border);text-align:center;font-fa
     })
     .catch(err => console.error('Tracking failed', err));
 })();
+</script>
+ <script>
+async function submitSubscribe(){
+  const email=document.getElementById('sub-email').value.trim();
+  const name=document.getElementById('sub-name').value.trim();
+  const msg=document.getElementById('sub-msg');
+  if(!email||!email.includes('@')){msg.textContent='Please enter a valid email address.';return;}
+  const formData=new FormData();
+  formData.append('action','subscribe');
+  formData.append('email',email);
+  formData.append('name',name);
+  formData.append('sections','Sci-Comm Articles');
+  try{
+    await fetch('https://script.google.com/macros/s/AKfycbzpa1fUDZDXfQT5L6SxQRNf1zEFk-tpHV_2Tq9CY2iG4iSqa4W__Rnqs6fshnGJ0pnvRQ/exec',{method:'POST',mode:'no-cors',body:formData});
+    msg.textContent='Almost there — check your email to confirm your subscription.';
+  }catch(e){
+    msg.textContent='Connection error. Please try again.';
+  }
+}
 </script>
 </body>
 </html>
