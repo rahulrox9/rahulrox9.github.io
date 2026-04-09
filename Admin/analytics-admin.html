@@ -549,53 +549,59 @@ async function sendEmails(){
   const selectedPosts = pendingNewPosts.filter((_, i) => document.getElementById('np-' + i)?.checked);
   const category = document.getElementById('blast-category').value;
 
-  if (!category) {
-    alert('Choose a category first.');
-    return;
-  }
-
-  if (!selectedPosts.length) {
-    alert('Select at least one post.');
-    return;
-  }
+  if (!category) { alert('Choose a category first.'); return; }
+  if (!selectedPosts.length) { alert('Select at least one post.'); return; }
 
   const targets = allSubscribers.filter(
     s => s.confirmed && (s.sections || []).includes(category)
   );
 
-  if (!targets.length) {
-    alert('No confirmed subscribers in this category.');
-    return;
-  }
+  if (!targets.length) { alert('No confirmed subscribers in this category.'); return; }
 
-  if (!confirm(`Send ${selectedPosts.length} selected post update${selectedPosts.length !== 1 ? 's' : ''} to ${targets.length} subscriber${targets.length !== 1 ? 's' : ''} in ${category}?`)) {
-    return;
-  }
+  if (!confirm(`Send ${selectedPosts.length} post(s) to ${targets.length} subscribers?`)) return;
 
   const btn = document.getElementById('send-btn');
   const msg = document.getElementById('blast-msg');
 
   btn.disabled = true;
   btn.textContent = 'Sending…';
-  msg.className = 'msg';
-  msg.style.display = 'none';
 
-  try{
-    const fd = new FormData();
-    fd.append('action', 'sendEmails');
-    fd.append('posts', JSON.stringify(selectedPosts));
-    fd.append('subscribers', JSON.stringify(targets));
-
-    await fetch(DB_URL, { method:'POST', mode:'no-cors', body: fd });
-
-    msg.textContent = '✓ Send request submitted';
-    msg.className = 'msg ok';
-    msg.style.display = 'block';
-  } catch(e){
-    msg.textContent = 'Send failed. Check Apps Script response.';
-    msg.className = 'msg err';
-    msg.style.display = 'block';
+  // Create hidden iframe (target)
+  let iframe = document.getElementById('hidden_iframe');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.name = 'hidden_iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
   }
+
+  // Create form
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = DB_URL;
+  form.target = 'hidden_iframe';
+
+  const fields = {
+    action: 'sendEmails',
+    posts: JSON.stringify(selectedPosts),
+    subscribers: JSON.stringify(targets)
+  };
+
+  Object.entries(fields).forEach(([key, value]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = value;
+    form.appendChild(input);
+  });
+
+  document.body.appendChild(form);
+  form.submit();
+  form.remove();
+
+  msg.textContent = '✓ Send request submitted';
+  msg.className = 'msg ok';
+  msg.style.display = 'block';
 
   btn.disabled = false;
   btn.textContent = '✉ Send selected update';
