@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rahul's Short Stories</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Crimson+Text:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f7f2ea;--paper:#fffaf3;--ink:#2c1f12;--muted:#8a7560;--accent:#b87a3a;--border:#e6dccb}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Crimson Text',serif;line-height:1.9}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:.45}
+nav{position:sticky;top:0;z-index:100;padding:1rem 2rem;border-bottom:1px solid var(--border);background:rgba(255,250,243,.85);backdrop-filter:blur(10px);display:flex;justify-content:space-between;align-items:center}
+.nav-logo{text-decoration:none;color:var(--ink);font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700}
+.nav-logo span{color:var(--accent);font-style:italic}
+.nav-links{display:flex;gap:1.2rem;align-items:center}
+.nav-links a{text-decoration:none;color:var(--muted);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+.nav-links a:hover,.nav-links a.active{color:var(--ink)}
+.hero{max-width:900px;margin:0 auto;padding:4rem 1.5rem 2rem}
+.eyebrow{font-size:.72rem;color:var(--accent);letter-spacing:.18em;text-transform:uppercase;margin-bottom:.9rem}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,5vw,4.5rem);line-height:1.02;margin-bottom:1rem;font-weight:700}
+.hero h1 em{color:var(--accent);font-style:italic;font-weight:500}
+.hero p{max-width:108ch;color:var(--muted);font-size:1rem;line-height:1.8}
+.stories{max-width:900px;margin:0 auto;padding:0 1.5rem 4rem}
+.story-card{background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:2rem;margin-bottom:2rem;box-shadow:0 8px 24px rgba(44,31,18,.04)}
+.story-title{font-family:'Playfair Display',serif;font-size:2rem;line-height:1.08;margin-bottom:.5rem;font-weight:700}
+.story-setting{font-size:1rem;color:#5f4b39;margin-bottom:1rem}
+.story-pubmeta{font-family:'Inter',sans-serif;font-size:.72rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem}
+.story-blurb{font-size:1.08rem;color:#4d3c2d;margin-bottom:1.4rem}
+.story-actions{display:flex;align-items:center;gap:.8rem}
+.read-btn{display:inline-block;text-decoration:none;font-family:'Inter',sans-serif;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--accent);padding:.7rem 1rem;border-radius:6px;transition:opacity .15s ease}
+.read-btn:hover{opacity:.85}
+.story-note{font-size:.8rem;color:var(--muted)}
+footer{max-width:900px;margin:0 auto;padding:0 1.5rem 2.5rem;color:var(--muted)}
+.footer-line{border-top:1px solid var(--border);padding-top:1rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.footer-line a{color:var(--muted);text-decoration:none}
+.footer-line a:hover{color:var(--ink)}
+@media(max-width:720px){nav{padding:1rem 1rem}.nav-links a:not(.active){display:none}.story-card{padding:1.35rem}.story-title{font-size:1.6rem}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../index.html">Rahul <span>Subbaraman</span></a>
+  <div class="nav-links">
+    <a href="../Public/writing.html">Writing</a>
+    <a href="#" class="active">Stories</a>
+    <a href="../index.html">Home</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow">Short Stories</div>
+  <h1>Quick reads,<br><em>lingering feelings</em></h1>
+  <p> Brief stories drawn from memory, mood, and moments that stayed longer than they should have. Some are told in prose. <br>
+      Some are interrupted by the shape of modern life – messages, pauses, replies, and all the things left unsaid. </p>
+</section>
+
+<section class="stories">
+
+  <article class="story-card">
+    <h2 class="story-title">Typing…</h2>
+    <div class="story-setting">15 July 2017 | Nanganallur, Chennai</div>
+    <div class="story-pubmeta">Conceptualised in July 2020 · Posted on 09.04.2026</div>
+    <div class="story-blurb">A late-night conversation drifts from casual texting into something electric. A boy waits through the unbearable pause after asking a question that could change everything, while elsewhere, the reply lands with a kind of quiet magic.</div>
+    <div class="story-actions">
+      <a class="read-btn" href="../Writing/ShortStories/Typing....html">Read story</a>
+    </div>
+  </article>
+
+</section>
+
+<footer>
+  <div class="footer-line">
+    <div>Rahul Subbaraman</div>
+    <div><a href="../Public/writing.html">Writing</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
