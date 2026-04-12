@@ -5,161 +5,482 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rahul's Short Stories</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Crimson+Text:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
-:root{ --bg:#f7f2ea; --paper:#fffaf3; --ink:#2c1f12; --muted:#8a7560; --accent:#b87a3a; --border:#e6dccb; --chat-bg:#ece5dd; --chat-top:#d9d0c2; --chat-left:#ffffff; --chat-right:#d9fdd3;}
-html{ scroll-behavior:smooth}
-body{ background:var(--bg); color:var(--ink); font-family:'Crimson Text',serif; line-height:1.9; }
-body::before{ content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events:none; z-index:999; opacity:.45;}
-/* Nav */
-nav{ position:sticky; top:0; z-index:100; padding:1rem 2rem; border-bottom:1px solid var(--border); background:rgba(255,250,243,.85); backdrop-filter:blur(10px); display:flex; justify-content:space-between; align-items:center; }
-.nav-logo{ text-decoration:none; color:var(--ink); font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; }
-.nav-logo span{ color:var(--accent); font-style:italic; }
-.nav-links{ display:flex; gap:1.2rem; align-items:center; }
-.nav-links a{ text-decoration:none; color:var(--muted); font-size:.78rem; letter-spacing:.06em; text-transform:uppercase;}
-.nav-links a:hover,
-.nav-links a.active{ color:var(--ink); }
-
-/* Hero */
-.hero{ max-width:900px; margin:0 auto; padding:4rem 1.5rem 2rem;}
-.eyebrow{font-size:.72rem; color:var(--accent); letter-spacing:.18em; text-transform:uppercase; margin-bottom:.9rem;}
-.hero h1{font-family:'Playfair Display',serif; font-size:clamp(2.8rem,5vw,4.5rem); line-height:1.02; margin-bottom:1rem; font-weight:700;}
-.hero h1 em{ color:var(--accent);font-style:italic; font-weight:500;}
-.hero p{max-width:56ch; color:var(--muted); font-size:1rem; line-height:1.8;}
-
-/* Story list */
-.stories{ max-width:900px; margin:0 auto; padding:0 1.5rem 4rem;}
-.story{ background:var(--paper); border:1px solid var(--border); border-radius:8px; padding:2rem; margin-bottom:2rem; box-shadow:0 8px 24px rgba(44,31,18,.04);}
-.story-meta{ font-size:1rem; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:1rem;}
-.story-title{ font-family:'Playfair Display',serif; font-size:2rem; line-height:1.08; margin-bottom:1rem; font-weight:700;}
-.story p{ font-size:1.08rem; margin-bottom:1rem;}
+:root{--bg:#f7f2ea;--paper:#fffaf3;--ink:#2c1f12;--muted:#8a7560;--accent:#b87a3a;--border:#e6dccb;--chat-bg:#ece5dd;--chat-top:#d9d0c2;--chat-left:#ffffff;--chat-right:#d9fdd3}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Crimson Text',serif;line-height:1.9}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:.45}
+nav{position:sticky;top:0;z-index:100;padding:1rem 2rem;border-bottom:1px solid var(--border);background:rgba(255,250,243,.85);backdrop-filter:blur(10px);display:flex;justify-content:space-between;align-items:center}
+.nav-logo{text-decoration:none;color:var(--ink);font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700}
+.nav-logo span{color:var(--accent);font-style:italic}
+.nav-links{display:flex;gap:1.2rem;align-items:center}
+.nav-links a{text-decoration:none;color:var(--muted);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+.nav-links a:hover,.nav-links a.active{color:var(--ink)}
+.hero{max-width:900px;margin:0 auto;padding:4rem 1.5rem 2rem}
+.eyebrow{font-size:.72rem;color:var(--accent);letter-spacing:.18em;text-transform:uppercase;margin-bottom:.9rem}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,4.5rem);line-height:1.02;margin-bottom:1rem;font-weight:700}
+.hero h1 em{color:var(--accent);font-style:italic;font-weight:500}
+.hero p{max-width:56ch;color:var(--muted);font-size:1rem;line-height:1.8}
+.stories{max-width:900px;margin:0 auto;padding:0 1.5rem 4rem}
+.story{background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:2rem;margin-bottom:2rem;box-shadow:0 8px 24px rgba(44,31,18,.04)}
+.story-meta{font-size:1rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem}
+.story-title{font-family:'Playfair Display',serif;font-size:2rem;line-height:1.08;margin-bottom:1rem;font-weight:700}
+.story p{font-size:1.08rem;margin-bottom:1rem}
 .story p:last-child{margin-bottom:0}
-.dialogue{ margin:1.2rem 0; padding-left:1rem; border-left:2px solid var(--accent); font-style:italic; color:#4d3c2d;}
-.section-break{ margin:1.8rem 0 1rem; padding-top:1rem; border-top:1px dashed var(--border); font-size:.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:.08em;}
+.dialogue{margin:1.2rem 0;padding-left:1rem;border-left:2px solid var(--accent);font-style:italic;color:#4d3c2d}
+.section-break{margin:1.8rem 0 1rem;padding-top:1rem;border-top:1px dashed var(--border);font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+hr { border: none; border-top: 2.5px solid var(--border); margin: 20px 0; }
 
-/* WhatsApp illustration panel */
-.chat-panel{margin:1.5rem 0; border:1px solid #ddd2c0; border-radius:14px; overflow:hidden; background:var(--chat-bg); font-family:'Inter',sans-serif; box-shadow:0 10px 22px rgba(44,31,18,.08);}
-.chat-topbar{background:var(--chat-top); padding:.7rem .9rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(0,0,0,.05);}
-.chat-contact{display:flex;align-items:center; gap:.65rem;}
-.chat-avatar{width:32px;height:32px;border-radius:50%;background:#c6b8a5;display:flex;align-items:center;justify-content:center;font-size:.82rem;color:#fff;font-weight:600;}
-.chat-name{font-size:.84rem;font-weight:600;color:#2d2d2d;}
-.chat-status{font-size:.68rem;color:#6f6f6f;margin-top:.05rem;}
-.chat-icons{font-size:.85rem;color:#6b6258;letter-spacing:.2em;}
-.chat-body{padding:1rem;display:flex;flex-direction:column;gap:.45rem;background-image:linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,.08)),radial-gradient(circle at 1px 1px, rgba(0,0,0,.025) 1px, transparent 0);background-size:auto, 18px 18px;}
-.chat-date{align-self:center;font-size:.68rem;color:#7b7064;background:rgba(255,250,243,.75);padding:.22rem .55rem;border-radius:8px;margin-bottom:.25rem;}
-.msg{max-width:78%;padding:.55rem .7rem .45rem;border-radius:8px;font-size:.84rem;line-height:1.45;position:relative;word-break:break-word;}
-.msg.left{background:var(--chat-left);align-self:flex-start;border-top-left-radius:3px;}
-.msg.right{background:var(--chat-right);align-self:flex-end;border-top-right-radius:3px;}
-.msg-time{display:block;text-align:right;font-size:.6rem;color:#7b7b7b;margin-top:.18rem;}
-.typing{align-self:flex-start;background:#fff;color:#8a8074;padding:.45rem .7rem;border-radius:8px;border-top-left-radius:3px;font-size:.75rem;letter-spacing:.04em;}
-.chat-note{padding:.65rem .9rem;border-top:1px solid rgba(0,0,0,.05);background:rgba(255,250,243,.7);color:var(--muted);font-size:.72rem;text-align:center;}
+/* Chat panel */
+.chat-panel{margin:1.5rem 0;border:1px solid #ddd2c0;border-radius:14px;overflow:hidden;background:var(--chat-bg);font-family:'Inter',sans-serif;box-shadow:0 10px 22px rgba(44,31,18,.08)}
 
-/* Footer */
-footer{max-width:900px;margin:0 auto;padding:0 1.5rem 2.5rem;color:var(--muted);}
-.footer-line{border-top:1px solid var(--border);padding-top:1rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
-.footer-line a{color:var(--muted);text-decoration:none;}
+.icon{width:18px;height:18px;fill:none;stroke:#6b6258;stroke-width:1.6;cursor:pointer;opacity:.85}
+.icon circle{fill:#6b6258;stroke:none}
+.icon:hover{opacity:1}
+
+/* FIXED TOPBAR */
+.chat-topbar{background:var(--chat-top);padding:.7rem .9rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,.05)}
+.chat-left{display:flex;align-items:center;gap:.6rem}
+.back-arrow{font-size:1rem;color:#6b6258;cursor:pointer}
+.chat-avatar{width:32px;height:32px;border-radius:50%;background:#c6b8a5;display:flex;align-items:center;justify-content:center;font-size:.82rem;color:#fff;font-weight:600}
+.chat-info{display:flex;flex-direction:column;line-height:1.1}
+.chat-name{font-size:.84rem;font-weight:600;color:#2d2d2d}
+.chat-status{font-size:.68rem;color:#6f6f6f}
+.chat-actions{display:flex;align-items:center;gap:.9rem;font-size:.9rem;color:#6b6258}
+
+/* Chat body */
+.chat-body{padding:1rem;display:flex;flex-direction:column;gap:.45rem;background-image:linear-gradient(rgba(255,255,255,.08),rgba(255,255,255,.08)),radial-gradient(circle at 1px 1px,rgba(0,0,0,.025) 1px,transparent 0);background-size:auto,18px 18px;min-height:200px}
+.chat-date{align-self:center;font-size:.68rem;color:#7b7064;background:rgba(255,250,243,.75);padding:.22rem .55rem;border-radius:8px;margin-bottom:.25rem}
+.msg{max-width:78%;padding:.55rem .7rem .45rem;border-radius:8px;font-size:.84rem;line-height:1.45;position:relative;word-break:break-word}
+.msg.left{background:var(--chat-left);align-self:flex-start;border-top-left-radius:3px}
+.msg.right{background:var(--chat-right);align-self:flex-end;border-top-right-radius:3px}
+.msg-time{display:block;text-align:right;font-size:.6rem;color:#7b7b7b;margin-top:.18rem}
+
+/* Typing bubble */
+.typing{align-self:flex-start;background:#fff;color:#8a8074;padding:.45rem .7rem;border-radius:8px;border-top-left-radius:3px;font-size:.75rem;letter-spacing:.04em;display:inline-flex;align-items:center;gap:.35rem;width:fit-content}
+.dots{display:inline-flex;gap:.18rem}
+.dots span{width:.28rem;height:.28rem;border-radius:50%;background:#a59a8d;animation:pulse 1.2s infinite ease-in-out}
+.dots span:nth-child(2){animation-delay:.15s}
+.dots span:nth-child(3){animation-delay:.3s}
+@keyframes pulse{0%,80%,100%{opacity:.35;transform:translateY(0)}40%{opacity:1;transform:translateY(-2px)}}
+
+/* Ticks */
+.tick{
+  font-size:.65rem;
+  margin-left:3px;
+  letter-spacing:-1px;
+}
+
+.tick.read{
+  color:#4fc3f7; /* WhatsApp blue */
+}
+
+.tick.sent{
+  color:#9e9e9e; /* grey if you want single tick */
+}
+
+.hidden{display:none!important}
+
+/* Composer */
+.composer{border-top:1px solid rgba(0,0,0,.05);background:rgba(255,250,243,.9);padding:.6rem}
+.input-box{background:#fff;border:1px solid #e3d8c8;border-radius:20px;padding:.5rem .8rem;font-size:.8rem;color:#6f6255}
+.cursor{display:inline-block;width:1px;height:1em;background:#6f6255;margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+.chat-note{padding:.65rem .9rem;border-top:1px solid rgba(0,0,0,.05);background:rgba(255,250,243,.7);color:var(--muted);font-size:.72rem;text-align:center}
+
+/* Added layout helpers */
+.chat-sync-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+.footer-line{border-top:1px solid var(--border);padding-top:1rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.footer-line a{color:var(--muted);text-decoration:none}
 .footer-line a:hover{color:var(--ink)}
 
-@media(max-width:720px){nav{padding:1rem 1rem}
-.nav-links a:not(.active){display:none}
-.story{padding:1.35rem}
-.story-title{font-size:1.6rem}
-.msg{max-width:88%}
-}
+/* Footer */
+footer{max-width:900px;margin:0 auto;padding:0 1.5rem 2.5rem;color:var(--muted)}
+
+@media(max-width:720px){nav{padding:1rem 1rem}.nav-links a:not(.active){display:none}.story{padding:1.35rem}.story-title{font-size:1.6rem}.msg{max-width:88%}.chat-sync-grid{grid-template-columns:1fr}}
 </style>
+<script>
+function initChat(chatId, inputId, messages){
+const chat = document.getElementById(chatId);
+const input = document.getElementById(inputId);
+
+function createMsg(side, text, time){
+  const msg = document.createElement('div');
+  msg.className = 'msg ' + (side === 'send' ? 'right' : 'left');
+  msg.innerHTML = text.replace(/\n/g,'<br>') + `<span class="msg-time">${time}</span>`;
+  return msg;
+}
+
+function createTyping(){
+  const t = document.createElement('div');
+  t.className = 'typing';
+  t.innerHTML = 'typing<span class="dots"><span></span><span></span><span></span></span>';
+  return t;
+}
+
+let i = 0;
+function typeAndSend(text, time){
+  let j = 0;
+  input.textContent = '';
+  function typeChar(){
+    if(j < text.length){
+      input.innerHTML = text.substring(0, j + 1).replace(/\n/g, '<br>');
+      j++;
+      setTimeout(typeChar, 40);
+    } else {
+      setTimeout(()=>{
+        chat.appendChild(createMsg('send', text, time));
+        input.textContent = '';
+        i++;
+        setTimeout(play, 700);
+      }, 300);
+    }
+  }
+  typeChar();
+}
+
+function play(){
+  if(i >= messages.length){
+    setTimeout(reset, 2500);
+    return;
+  }
+  const m = messages[i];
+  if(m.type === 'send'){
+    typeAndSend(m.text, m.time);
+  }
+  else{
+    const typing = createTyping();
+    chat.appendChild(typing);
+    setTimeout(()=>{
+      typing.remove();
+      chat.appendChild(createMsg('reply', m.text, m.time));
+      i++;
+      setTimeout(play, 900);
+    }, 1400);
+  }
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function reset(){
+  chat.innerHTML = '<div class="chat-date">7 July 2017</div>';
+  i = 0;
+  setTimeout(play, 800);
+}
+
+play();
+}
+</script>
+
 </head>
 <body>
 
-<nav>
-  <a class="nav-logo" href="#">Rahul <span>Subbaraman</span></a>
-  <div class="nav-links">
-    <a href="#" class="active">Stories</a>
-    <a href="#">Writing</a>
-    <a href="#">Home</a>
-  </div>
-</nav>
+<nav> <a class="nav-logo" href="#">Rahul <span>Subbaraman</span></a> <div class="nav-links"> <a href="#" class="active">Stories</a> <a href="#">Writing</a> <a href="#">Home</a> </div> </nav>
 
-<section class="hero">
-  <div class="eyebrow">Short Stories</div>
-  <h1> Quick reads,<br> <em>lingering feelings</em></h1>
-  <p> Brief stories drawn from memory, mood, and moments that stayed longer than they should have. Some are told in prose. Some are interrupted by the shape of modern life — messages, pauses, replies, and all the things left unsaid. </p>
-</section>
+<section class="hero"> <div class="eyebrow">Short Stories</div> <h1> Quick reads, <em>lingering feelings</em></h1> </section>
 
 <section class="stories">
 
-  <article class="story">
-    <h2 class="story-title">Typing…</h2>
-      <div class="story-meta">July 15, 2017 | Nanganallur, Chennai</div>
+<article class="story">
+<h1 class="story-title">Typing…</h1>
 
-    <p>It was a calm night in Nanganallur, a southern neighbourhood in Chennai. It was so silent that one could hear the insects playing their melodies. There had been a moderate downpour throughout the day, which added to the beauty of the night.
+<div class="story-meta">July 15, 2017 | Chennai</div>
 
-While people had opened their doors and windows to enjoy the breeze, one room had them tightly shut, with the air-conditioner running.
+<div class="section-break">Nanganallur</div>
 
-A boy of 18 had plugged his earphones into his brand-new ASUS Zenfone and began listening to one of his favourite tracks. In any other situation, one could have heard him sing along. Yet, this wasn’t an ordinary night.
+<p>It was a calm night in Nanganallur, a southern neighbourhood in Chennai. The rain had stopped hours ago, but the cool dampness still lingered in the air outside. Most homes had their windows open to let the breeze in. One room had everything shut, with the air-conditioner running.</p>
 
-He was having one of the best conversations he had ever had with a girl — that too, with the one he had a crush on.
+<p>An eighteen-year-old boy lay on his bed with earphones plugged into his phone. One of his favourite songs had been playing on loop, but he had barely heard it. His attention was fixed on the ongoing conversation open in front of him.</p>
 
-The situation was no different on the other side. Both of them had their eyes glued to their phone screens. His phone was in silent mode, and he had muted all the WhatsApp groups.
+<p>He had already typed the message.</p>
 
-WhatsApp had indeed become an integral part of the lives of several teens like him.
+<p class="dialogue">Btw…</p>
 
-It had been only a few days since he dared to send the first ‘Hi’ on WhatsApp. He had received her contact from a friend who was her classmate in college..</p>
+<p>The reply came almost immediately.</p>
 
-    <p>Integer faucibus ligula in est pretium, sit amet luctus sapien congue. Suspendisse vitae tempus arcu. Morbi at ante eu turpis pretium volutpat. In vel risus sed erat interdum faucibus.</p>
+<p class="dialogue">Yeah?</p>
 
-    <div class="dialogue">“So, would you like to meet me sometime next week?”</div>
+<p>He had already typed the message.</p>
 
-    <p>Aliquam erat volutpat. Integer non sem ut libero ultrices malesuada. Cras vitae mauris vitae tortor mollis aliquam. Pellentesque sit amet ipsum et urna lacinia vulputate. Sed eu risus at magna tempor posuere.</p>
+<p class="dialogue">So, would you like to meet me for dinner sometime next week?</p>
 
-    <div class="chat-panel">
-      <div class="chat-topbar">
-        <div class="chat-contact">
-          <div class="chat-avatar">S</div>
-          <div>
-            <div class="chat-name">Sunaina</div>
-            <div class="chat-status">last seen recently</div>
-          </div>
-        </div>
-        <div class="chat-icons">⌕ ⋮</div>
-      </div>
+<p>He read it once.</p>
 
-      <div class="chat-body">
-        <div class="chat-date">15 July 2017</div>
+<p>Then again.</p>
 
-        <div class="msg right">
-          So, would you like to meet me for dinner sometime next week?
-          <span class="msg-time">11:43 PM</span>
-        </div>
+<p>His thumb hovered above the send button for a second longer than it should have.</p>
 
-        <div class="typing">typing…</div>
+<p>Then he sent it.</p>
 
-        <div class="msg left">
-          Yes ;)
-          <span class="msg-time">11:45 PM</span>
-        </div>
-      </div>
-
-      <div class="chat-note">Illustrative message panel</div>
+<div class="chat-panel">
+<div class="chat-topbar">
+  <div class="chat-left">
+    <span class="back-arrow">←</span>
+    <div class="chat-avatar">S</div>
+    <div class="chat-info">
+      <div class="chat-name">Sunaina</div>
+      <div class="chat-status">online</div>
     </div>
+  </div>
+  <div class="chat-actions">
+  <svg class="icon" viewBox="0 0 24 24">
+    <path d="M17 10.5V6c0-1.1-.9-2-2-2H5C3.9 4 3 4.9 3 6v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4.5l4 4v-11l-4 4z"/>
+  </svg>
+  <svg class="icon" viewBox="0 0 24 24">
+    <path d="M6.6 10.8c1.5 3 3.6 5.1 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1.3.4 2.7.6 4.1.6.7 0 1.3.6 1.3 1.3V21c0 .7-.6 1.3-1.3 1.3C10.1 22.3 1.7 13.9 1.7 3.3 1.7 2.6 2.3 2 3 2h3.6c.7 0 1.3.6 1.3 1.3 0 1.4.2 2.8.6 4.1.1.4 0 .9-.3 1.2l-2.2 2.2z"/>
+  </svg>
+  <svg class="icon" viewBox="0 0 24 24">
+    <circle cx="12" cy="5" r="2"/>
+    <circle cx="12" cy="12" r="2"/>
+    <circle cx="12" cy="19" r="2"/>
+  </svg>
+</div>
+</div>
+  <div class="chat-body" id="chatJune16">
+  <div class="chat-date">16 June 2017</div>
+  </div>
+  <div class="composer">
+    <div class="input-box">
+      <span id="inputTextJune16"></span><span class="cursor"></span>
+    </div>
+  </div>
+  <div class="chat-note">How it all started...</div>
+</div>
 
-    <p>Donec sed magna eu neque tincidunt volutpat. Aenean finibus, justo vel mattis cursus, orci sapien placerat lectus, et ullamcorper mauris neque ut lacus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+<script>
+initChat("chatJune16", "inputTextJune16", [
+  {type:'send', text:"Hi Sunaina, this is Rahul. Deepti’s school friend. We met earlier at her party.", time:"10:08 PM"},
+  {type:'reply', text:"Hey", time:"10:09 PM"},
+  {type:'reply', text:"Ohh yeah", time:"10:09 PM"},
+  {type:'send', text:"Hope it’s okay I got your number from her.", time:"10:09 PM"},
+  {type:'reply', text:"Yeah that’s fine ", time:"10:10 PM"},
+  {type:'send', text:"Cool", time:"10:10 PM"},
+  {type:'send', text:"You got home safe?", time:"10:10 PM"},
+  {type:'reply', text:"Yeah, just got back a while ago", time:"10:11 PM"},
+  {type:'send', text:"Same\nThat place was way too crowded 😅", time:"10:11 PM"},
+  {type:'reply', text:"I swear\nCouldn’t hear anything properly", time:"10:12 PM"},
+  {type:'send', text:"Exactly", time:"10:12 PM"},
+  {type:'send', text:"Anyway… just thought I’d say hi", time:"10:13 PM"},
+  {type:'reply', text:"Haha it’s alright", time:"10:13 PM"},
+  {type:'reply', text:"Was bored anyway", time:"10:13 PM"},
+  {type:'send', text:"So... what's up?", time:"10:13 PM"},
+  {type:'reply', text:"Nothing much\nJust scrolling aimlessly", time:"10:14 PM"},
+  {type:'send', text:"Same! That’s basically how most nights go nowadays 😂", time:"10:14 PM"},
+  {type:'reply', text:"Haha. You stole my dialogue 😂", time:"10:14 PM"},
+  {type:'send', text:"Okay I should probably go sleep.", time:"10:15 PM"},
+  {type:'send', text:"Have an early start tomorrow", time:"10:15 PM"},
+  {type:'reply', text:"Hmm okay", time:"10:15 PM"},
+  {type:'reply', text:"Good night :)", time:"10:16 PM"},
+  {type:'send', text:"Good night", time:"10:14 PM"},
+]);
+</script>
 
-    <div class="section-break">Later that night</div>
+<p>The message sat there now.</p>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus luctus, mi sed ullamcorper feugiat, tortor risus pharetra neque, ac luctus enim neque sit amet justo. Phasellus ut eros sit amet lectus luctus fermentum.</p>
+<p>The first reply did not.</p>
 
-    <div class="dialogue">“Oh my God! You won’t believe what just happened!”</div>
+<p>Instead, the only thing that appeared on the screen was <i>typing…</i></p>
 
-    <p>Morbi suscipit, sapien at aliquam tincidunt, nulla justo fermentum purus, vitae finibus lectus mauris sed mi. Sed ut nisl ut nulla vulputate placerat.</p>
-  </article>
+<p>It stayed.</p>
 
-  <article class="story">
-    <div class="story-meta">Placeholder Story</div>
-    <h2 class="story-title">Another Quick Read</h2>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin dictum, nibh at molestie feugiat, mi augue convallis arcu, eget feugiat lectus nibh sed mauris. Suspendisse potenti. Sed sed metus in neque feugiat condimentum.</p>
-    <p>Curabitur id risus nec mauris hendrerit feugiat. Praesent consequat, libero vel efficitur convallis, lorem odio porta elit, a viverra enim lectus at nisl.</p>
-  </article>
+<p>Then disappeared.</p>
+
+<p>Then came back again.</p>
+
+<p>He stared at it without blinking, trying and failing to guess what she could possibly be writing.</p>
+
+<hr>
+
+<div class="section-break">Pazhavanthangal</div>
+
+<p>Across the city, in Pazhavanthangal, another room held a very different kind of silence.</p>
+
+<p>She had been lying on her bed for a while, half-scrolling, half-staring at nothing in particular. One of those dull, heavy moods had settled over the evening. Even her phone had stopped being interesting after a point.</p>
+
+<p>Then his message came.</p>
+
+<p class="dialogue">So, would you like to meet me for dinner sometime next week?</p>
+
+<p>She read it once.</p>
+
+<p>Then again.</p>
+
+<p>Her fingers moved before her thoughts fully caught up.</p>
+
+<div class="chat-panel">
+<div class="chat-topbar">
+  <div class="chat-left">
+    <span class="back-arrow">←</span>
+    <div class="chat-avatar">S</div>
+    <div class="chat-info">
+      <div class="chat-name">Rahul</div>
+      <div class="chat-status">online</div>
+    </div>
+  </div>
+  <div class="chat-actions">
+  <svg class="icon" viewBox="0 0 24 24">
+    <path d="M17 10.5V6c0-1.1-.9-2-2-2H5C3.9 4 3 4.9 3 6v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4.5l4 4v-11l-4 4z"/>
+  </svg>
+  <svg class="icon" viewBox="0 0 24 24">
+    <path d="M6.6 10.8c1.5 3 3.6 5.1 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1.3.4 2.7.6 4.1.6.7 0 1.3.6 1.3 1.3V21c0 .7-.6 1.3-1.3 1.3C10.1 22.3 1.7 13.9 1.7 3.3 1.7 2.6 2.3 2 3 2h3.6c.7 0 1.3.6 1.3 1.3 0 1.4.2 2.8.6 4.1.1.4 0 .9-.3 1.2l-2.2 2.2z"/>
+  </svg>
+  <svg class="icon" viewBox="0 0 24 24">
+    <circle cx="12" cy="5" r="2"/>
+    <circle cx="12" cy="12" r="2"/>
+    <circle cx="12" cy="19" r="2"/>
+  </svg>
+</div>
+</div>
+  <div class="chat-body" id="chatJuly9">
+  <div class="chat-date">9 July 2017</div>
+  </div>
+  <div class="composer">
+    <div class="input-box">
+      <span id="inputTextJuly9"></span><span class="cursor"></span>
+    </div>
+  </div>
+ <div class="chat-note">How it's going...</div>
+</div>
+<script>
+
+initChat("chatJuly9", "inputTextJune16", [
+  {type:'reply', text:"I think I spend more time choosing what to watch than actually watching.", time:"11:57 PM"},
+  {type:'send', text:"Same", time:"11:58 PM"},
+  {type:'send', text:"Half my life gone in scrolling Netflix", time:"11:58 PM"},
+  {type:'reply', text:"And then rewatching something you’ve already seen 😏", time:"11:58 PM"},
+  {type:'send', text:"Exactly 🤣", time:"11:59 PM"},
+  {type:'send', text:"Comfort over effort! 😎", time:"11:59 PM"},
+  {type:'reply', text:"That’s a dangerous mindset.", time:"11:59 PM"},
+  {type:'send', text:"Works for me. Haha", time:"11:59 PM"},
+  {type:'reply', text:"Well, good for you!", time:"11:59 PM"},
+  {type:'send', text:"How are you not ", time:"11:59 PM"},
+
+
+]);
+</script>
+
+<p>The first thing she typed was too sharp.</p>
+
+<p>She deleted it.</p>
+
+<p>The second thing she typed was too long.</p>
+
+<p>She deleted that too.</p>
+
+<p>Now the phone was in her hand, but the answer still wasn’t in her head.</p>
+
+<p>That was when her sister stepped into the room.</p>
+
+<p>“What happened?” she asked, immediately sensing something was different.</p>
+
+<p>“Nothing,” she said too quickly.</p>
+
+<p>Her sister stood there for another second, unconvinced, before moving further inside.</p>
+
+<div class="section-break">Back to Nanganallur</div>
+
+<p>By then he had stopped sitting still.</p>
+
+<p>He switched his phone to vibrate mode.</p>
+
+<p>Lay down.</p>
+
+<p>Placed the phone on his chest.</p>
+
+<p>Closed his eyes.</p>
+
+<p>The phone vibrated.</p>
+
+<p>He sat up instantly, unlocked it, and saw an Instagram notification instead.</p>
+
+<p>The disappointment was immediate.</p>
+
+<p>So was the anticipation that followed it.</p>
+
+<div class="chat-sync-grid">
+  <div class="chat-panel">
+    <div class="chat-topbar">
+      <div class="chat-left">
+        <span class="back-arrow">←</span>
+        <div class="chat-avatar">S</div>
+        <div class="chat-info">
+          <div class="chat-name">Sunaina Deepti Friend</div>
+          <div class="chat-status">typing…</div>
+        </div>
+      </div>
+      <div class="chat-actions">
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M17 10.5V6c0-1.1-.9-2-2-2H5C3.9 4 3 4.9 3 6v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4.5l4 4v-11l-4 4z"/>
+        </svg>
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M6.6 10.8c1.5 3 3.6 5.1 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1.3.4 2.7.6 4.1.6.7 0 1.3.6 1.3 1.3V21c0 .7-.6 1.3-1.3 1.3C10.1 22.3 1.7 13.9 1.7 3.3 1.7 2.6 2.3 2 3 2h3.6c.7 0 1.3.6 1.3 1.3 0 1.4.2 2.8.6 4.1.1.4 0 .9-.3 1.2l-2.2 2.2z"/>
+        </svg>
+        <svg class="icon" viewBox="0 0 24 24">
+          <circle cx="12" cy="5" r="2"/>
+          <circle cx="12" cy="12" r="2"/>
+          <circle cx="12" cy="19" r="2"/>
+        </svg>
+      </div>
+    </div>
+    <div class="chat-body">
+      <div class="chat-date">15 July 2017</div>
+      <div class="msg right">Btw…<span class="msg-time">11:41 PM</span></div>
+      <div class="msg left">Yeah?<span class="msg-time">11:41 PM</span></div>
+      <div class="msg right">So, would you like to meet me for dinner sometime next week?<span class="msg-time">11:43 PM</span></div>
+      <div class="typing">typing<span class="dots"><span></span><span></span><span></span></span></div>
+      <div class="msg left">Yes, that would be nice ;)<span class="msg-time">11:45 PM</span></div>
+    </div>
+    <div class="chat-note">Rahul’s POV</div>
+  </div>
+
+  <div class="chat-panel">
+    <div class="chat-topbar">
+      <div class="chat-left">
+        <span class="back-arrow">←</span>
+        <div class="chat-avatar">R</div>
+        <div class="chat-info">
+          <div class="chat-name">Rahul</div>
+          <div class="chat-status">online</div>
+        </div>
+      </div>
+      <div class="chat-actions">
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M17 10.5V6c0-1.1-.9-2-2-2H5C3.9 4 3 4.9 3 6v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4.5l4 4v-11l-4 4z"/>
+        </svg>
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M6.6 10.8c1.5 3 3.6 5.1 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1.3.4 2.7.6 4.1.6.7 0 1.3.6 1.3 1.3V21c0 .7-.6 1.3-1.3 1.3C10.1 22.3 1.7 13.9 1.7 3.3 1.7 2.6 2.3 2 3 2h3.6c.7 0 1.3.6 1.3 1.3 0 1.4.2 2.8.6 4.1.1.4 0 .9-.3 1.2l-2.2 2.2z"/>
+        </svg>
+        <svg class="icon" viewBox="0 0 24 24">
+          <circle cx="12" cy="5" r="2"/>
+          <circle cx="12" cy="12" r="2"/>
+          <circle cx="12" cy="19" r="2"/>
+        </svg>
+      </div>
+    </div>
+    <div class="chat-body">
+      <div class="chat-date">15 July 2017</div>
+      <div class="msg left">Btw…<span class="msg-time">11:41 PM</span></div>
+      <div class="msg right">Yeah?<span class="msg-time">11:41 PM</span></div>
+      <div class="msg left">So, would you like to meet me for dinner sometime next week?<span class="msg-time">11:43 PM</span></div>
+      <div class="msg right">Yes, that would be nice ;)<span class="msg-time">11:45 PM</span></div>
+    </div>
+    <div class="chat-note">Sunaina’s POV</div>
+  </div>
+</div>
+
+<p>He stared at the screen for a second, as if the words might rearrange themselves if he looked long enough.</p>
+
+<p>They didn’t.</p>
+
+<p>They stayed exactly where they were.</p>
+
+<p>A grin spread across his face before he could stop it.</p>
+
+<p>Across the city, she put her phone down with a quiet smile of her own.</p>
+
+</article>
 
 </section>
 
@@ -172,134 +493,3 @@ It had been only a few days since he dared to send the first ‘Hi’ on WhatsAp
 
 </body>
 </html>
-
-
-
-July 15th 2017 - Nanganallur
-
-It was a calm night in Nanganallur, a southern neighbourhood in Chennai. It was so silent that one could hear the insects playing their melodies. There had been a moderate downpour throughout the day, which added to the beauty of the night.
-
-While people had opened their doors and windows to enjoy the breeze, one room had them tightly shut, with the air-conditioner running.
-
-A boy of 18 had plugged his earphones into his brand-new ASUS Zenfone and began listening to one of his favourite tracks. In any other situation, one could have heard him sing along. Yet, this wasn’t an ordinary night.
-
-He was having one of the best conversations he had ever had with a girl — that too, with the one he had a crush on.
-
-The situation was no different on the other side. Both of them had their eyes glued to their phone screens. His phone was in silent mode, and he had muted all the WhatsApp groups.
-
-WhatsApp had indeed become an integral part of the lives of several teens like him.
-
-It had been only a few days since he dared to send the first ‘Hi’ on WhatsApp. He had received her contact from a friend who was her classmate in college.
-
-‘So, would you like to meet me for dinner sometime next week?’ he sent.
-
-The world around him froze.
-
-It was the moment of truth.
-
-The “typing…” appeared.
-
-He stared at it.
-
-It disappeared.
-
-Then appeared again.
-
-He didn’t move. Didn’t even blink.
-
-Every time it vanished, his heart sank a little. Every time it came back, hope followed.
-
-He could do nothing except wait.
-
-He switched his phone to vibrate mode, lay down, placed it on his chest, and closed his eyes. That was when he paid attention to the song. He began to sing along.
-
-The phone vibrated.
-
-He immediately got up, placed his finger on the fingerprint sensor, and unlocked it. He opened her chat to find a monosyllabic reply with an emoji:
-
-‘Yes ;)’
-
-She had gone offline as soon as she replied. Her last seen was visible.
-
-He couldn’t contain his excitement.
-
-That was the first time he had asked a girl out.
-
-He kept hopping, jumping, and grinning, and reached the living room where his father and sister were watching TV.
-
-“What on earth are you doing? What has gotten into you?” yelled his father. “There are people living downstairs.”
-
-“Rahul has lost his mind. He’s cuckoo bananas!” chanted his sister.
-
-As her dad rolled his eyes and glared at her, she went quiet.
-
-Meanwhile, Rahul hopped back to the bedroom. He read the conversation once again and checked if she was online. Her last seen hadn’t changed.
-
-He set the AC timer to 30 minutes and went to sleep.
-
-July 15th 2017 – Pazhavanthangal
-
-On a calm and beautiful night in Pazhavanthangal, there was one teenager who felt quite sad and lonely.
-
-None of her favourite movies, books, or music seemed to help her feel better.
-
-“What is bothering you, Sunaina?” asked her elder sister. “You’ve been gloomy all evening. You didn’t speak a word at the dinner table either.”
-
-“It’s nothing, Akka. I’m just feeling a little low,” replied Sunaina.
-
-She unlocked her phone to check for messages.
-
-There were none.
-
-“Jannu, Appa is calling you,” shouted their mother from the next room.
-
-Ananya turned to her sister. “This conversation isn’t over. We’ll continue once I’m back.”
-
-Sunaina just grunted in reply as her sister left the room.
-
-She lay down on her bed, hoping that a good night’s sleep would help, and placed her phone under the pillow.
-
-After five minutes, her phone vibrated.
-
-There was a message from a guy.
-
-‘Hi’
-
-She texted back, with little interest:
-
-‘Hi. What’s up?’
-
-‘Nothing much. Just felt like texting you. So what’s up with you?’
-
-‘Oh! Text me huh? Why? Is something wrong?’ she replied. ‘Pretty much nothing. I was about to sleep actually.’
-
-‘No particular reason. I was bored and felt like texting someone,’ he replied. ‘Your name was on the top, so I thought I’ll text you. If you are about to sleep, I’ll text you later. Sorry for the disturbance.’
-
-‘No no… It’s absolutely alright. No need to be this formal, okay?’
-
-(Grinning Face with Sweat emoji)
-(Rolling on the Floor Laughing emoji)
-
-The chain of texts went on for about an hour, touching various topics like books, movies, food, school inside jokes, and more.
-
-Sunaina was so engrossed in the conversation that she didn’t even notice her sister enter the room.
-
-Ananya looked at her younger sister sitting on the bed, smiling at her phone. She felt relieved that something had lifted her mood. She quietly opened her laptop and started working on her coding assignment.
-
-Out of the blue, Sunaina shrieked, startling her.
-
-“Oh my God! Oh my God! Akka, you won’t believe what just happened!”
-
-She was glowing with excitement.
-
-Ananya burst out laughing. “What is it?”
-
-“A guy has asked me out!” replied Sunaina.
-
-“Wow! That’s great, Soo. Do you like him?”
-
-“He’s such a sweet guy, you know. I thought no one noticed me in class. This has come as a big surprise.”
-
-Ananya smiled and hugged her.
-
-Both the girls then turned off the lights and went to sleep.
