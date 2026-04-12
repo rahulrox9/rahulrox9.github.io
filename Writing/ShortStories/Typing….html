@@ -32,148 +32,186 @@ nav{position:sticky;top:0;z-index:100;padding:1rem 2rem;border-bottom:1px solid 
 .dialogue{margin:1.2rem 0;padding-left:1rem;border-left:2px solid var(--accent);font-style:italic;color:#4d3c2d}
 .section-break{margin:1.8rem 0 1rem;padding-top:1rem;border-top:1px dashed var(--border);font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 hr { border: none; border-top: 2.5px solid var(--border); margin: 20px 0; }
-
-/* Chat panel */
 .chat-panel{margin:1.5rem 0;border:1px solid #ddd2c0;border-radius:14px;overflow:hidden;background:var(--chat-bg);font-family:'Inter',sans-serif;box-shadow:0 10px 22px rgba(44,31,18,.08)}
-
 .icon{width:18px;height:18px;fill:none;stroke:#6b6258;stroke-width:1.6;cursor:pointer;opacity:.85}
 .icon circle{fill:#6b6258;stroke:none}
 .icon:hover{opacity:1}
-
-/* FIXED TOPBAR */
 .chat-topbar{background:var(--chat-top);padding:.7rem .9rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,.05)}
 .chat-left{display:flex;align-items:center;gap:.6rem}
 .back-arrow{font-size:1rem;color:#6b6258;cursor:pointer}
 .chat-avatar{width:32px;height:32px;border-radius:50%;background:#c6b8a5;display:flex;align-items:center;justify-content:center;font-size:.82rem;color:#fff;font-weight:600}
 .chat-info{display:flex;flex-direction:column;line-height:1.1}
 .chat-name{font-size:.84rem;font-weight:600;color:#2d2d2d}
-.chat-status{font-size:.68rem;color:#6f6f6f}
+.chat-status{font-size:.68rem;color:#6f6f6f;height:1.2em}
 .chat-actions{display:flex;align-items:center;gap:.9rem;font-size:.9rem;color:#6b6258}
-
-/* Chat body */
-.chat-body{padding:1rem;display:flex;flex-direction:column;gap:.45rem;background-image:linear-gradient(rgba(255,255,255,.08),rgba(255,255,255,.08)),radial-gradient(circle at 1px 1px,rgba(0,0,0,.025) 1px,transparent 0);background-size:auto,18px 18px;min-height:200px}
+.chat-body{padding:1rem;display:flex;flex-direction:column;gap:.45rem;background-image:linear-gradient(rgba(255,255,255,.08),rgba(255,255,255,.08)),radial-gradient(circle at 1px 1px,rgba(0,0,0,.025) 1px,transparent 0);background-size:auto,18px 18px;min-height:auto;overflow-y:auto}
 .chat-date{align-self:center;font-size:.68rem;color:#7b7064;background:rgba(255,250,243,.75);padding:.22rem .55rem;border-radius:8px;margin-bottom:.25rem}
 .msg{max-width:78%;padding:.55rem .7rem .45rem;border-radius:8px;font-size:.84rem;line-height:1.45;position:relative;word-break:break-word}
 .msg.left{background:var(--chat-left);align-self:flex-start;border-top-left-radius:3px}
 .msg.right{background:var(--chat-right);align-self:flex-end;border-top-right-radius:3px}
 .msg-time{display:block;text-align:right;font-size:.6rem;color:#7b7b7b;margin-top:.18rem}
-
-/* Typing bubble */
-.typing{align-self:flex-start;background:#fff;color:#8a8074;padding:.45rem .7rem;border-radius:8px;border-top-left-radius:3px;font-size:.75rem;letter-spacing:.04em;display:inline-flex;align-items:center;gap:.35rem;width:fit-content}
+.typing-bubble{align-self:flex-start;background:#fff;color:#8a8074;padding:.45rem .7rem;border-radius:8px;border-top-left-radius:3px;font-size:.75rem;display:inline-flex;align-items:center;gap:.35rem;width:fit-content;margin:0 0 4px 0;line-height:1.45;min-height:32px}
 .dots{display:inline-flex;gap:.18rem}
 .dots span{width:.28rem;height:.28rem;border-radius:50%;background:#a59a8d;animation:pulse 1.2s infinite ease-in-out}
 .dots span:nth-child(2){animation-delay:.15s}
 .dots span:nth-child(3){animation-delay:.3s}
 @keyframes pulse{0%,80%,100%{opacity:.35;transform:translateY(0)}40%{opacity:1;transform:translateY(-2px)}}
-
-/* Ticks */
-.tick{
-  font-size:.65rem;
-  margin-left:3px;
-  letter-spacing:-1px;
-}
-
-.tick.read{
-  color:#4fc3f7; /* WhatsApp blue */
-}
-
-.tick.sent{
-  color:#9e9e9e; /* grey if you want single tick */
-}
-
 .hidden{display:none!important}
-
-/* Composer */
 .composer{border-top:1px solid rgba(0,0,0,.05);background:rgba(255,250,243,.9);padding:.6rem}
-.input-box{background:#fff;border:1px solid #e3d8c8;border-radius:20px;padding:.5rem .8rem;font-size:.8rem;color:#6f6255}
+.input-box{background:#fff;border:1px solid #e3d8c8;border-radius:20px;padding:.5rem .8rem;font-size:.8rem;color:#6f6255;min-height:34px;display:flex;align-items:center}
 .cursor{display:inline-block;width:1px;height:1em;background:#6f6255;margin-left:2px;animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
-
 .chat-note{padding:.65rem .9rem;border-top:1px solid rgba(0,0,0,.05);background:rgba(255,250,243,.7);color:var(--muted);font-size:.72rem;text-align:center}
-
-/* Added layout helpers */
-.chat-sync-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+.chat-sync-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0;align-items:start}
 .footer-line{border-top:1px solid var(--border);padding-top:1rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 .footer-line a{color:var(--muted);text-decoration:none}
 .footer-line a:hover{color:var(--ink)}
-
-/* Footer */
 footer{max-width:900px;margin:0 auto;padding:0 1.5rem 2.5rem;color:var(--muted)}
-
 @media(max-width:720px){nav{padding:1rem 1rem}.nav-links a:not(.active){display:none}.story{padding:1.35rem}.story-title{font-size:1.6rem}.msg{max-width:88%}.chat-sync-grid{grid-template-columns:1fr}}
 </style>
+
 <script>
+/**
+ * STANDARD SINGLE CHAT LOGIC
+ */
 function initChat(chatId, inputId, messages){
-const chat = document.getElementById(chatId);
-const input = document.getElementById(inputId);
-
-function createMsg(side, text, time){
-  const msg = document.createElement('div');
-  msg.className = 'msg ' + (side === 'send' ? 'right' : 'left');
-  msg.innerHTML = text.replace(/\n/g,'<br>') + `<span class="msg-time">${time}</span>`;
-  return msg;
-}
-
-function createTyping(){
-  const t = document.createElement('div');
-  t.className = 'typing';
-  t.innerHTML = 'typing<span class="dots"><span></span><span></span><span></span></span>';
-  return t;
-}
-
-let i = 0;
-function typeAndSend(text, time){
-  let j = 0;
-  input.textContent = '';
-  function typeChar(){
-    if(j < text.length){
-      input.innerHTML = text.substring(0, j + 1).replace(/\n/g, '<br>');
-      j++;
-      setTimeout(typeChar, 40);
-    } else {
-      setTimeout(()=>{
-        chat.appendChild(createMsg('send', text, time));
-        input.textContent = '';
-        i++;
-        setTimeout(play, 700);
-      }, 300);
+  const chat = document.getElementById(chatId);
+  const input = document.getElementById(inputId);
+  if (!chat || !input) return;
+  const initialContent = chat.innerHTML;
+  let i = 0;
+  function createMsg(side, text, time){
+    const msg = document.createElement('div');
+    msg.className = 'msg ' + (side === 'send' ? 'right' : 'left');
+    msg.innerHTML = text.replace(/\n/g, '<br>') + `<span class="msg-time">${time}</span>`;
+    return msg;
+  }
+  function createDate(text){
+    const d = document.createElement('div'); d.className = 'chat-date'; d.innerText = text; return d;
+  }
+  function createTyping(){
+    const t = document.createElement('div'); t.className = 'typing-bubble';
+    t.innerHTML = 'typing<span class="dots"><span></span><span></span><span></span></span>';
+    return t;
+  }
+  function typeAndSend(text, time){
+    let j = 0; input.innerHTML = '';
+    function typeChar(){
+      if(j < text.length){
+        input.innerHTML = text.substring(0, j + 1).replace(/\n/g, '<br>'); j++; setTimeout(typeChar, 40);
+      } else {
+        setTimeout(() => {
+          chat.appendChild(createMsg('send', text, time));
+          input.innerHTML = ''; i++; chat.scrollTop = chat.scrollHeight; setTimeout(play, 700);
+        }, 300);
+      }
+    }
+    typeChar();
+  }
+  function play(){
+    if(i >= messages.length){
+      setTimeout(() => { chat.innerHTML = initialContent; i = 0; play(); }, 2500);
+      return;
+    }
+    const m = messages[i];
+    if(m.type === 'date'){
+      chat.appendChild(createDate(m.text)); i++; setTimeout(play, 500);
+    } else if(m.type === 'send'){
+      typeAndSend(m.text, m.time);
+    } else if(m.type === 'reply'){
+      const typing = createTyping(); chat.appendChild(typing); chat.scrollTop = chat.scrollHeight;
+      setTimeout(() => {
+        typing.remove(); chat.appendChild(createMsg('reply', m.text, m.time));
+        i++; chat.scrollTop = chat.scrollHeight; setTimeout(play, 900);
+      }, 1400);
     }
   }
-  typeChar();
+  play();
 }
 
-function play(){
-  if(i >= messages.length){
-    setTimeout(reset, 2500);
-    return;
-  }
-  const m = messages[i];
-  if(m.type === 'send'){
-    typeAndSend(m.text, m.time);
-  }
-  else{
-    const typing = createTyping();
-    chat.appendChild(typing);
-    setTimeout(()=>{
-      typing.remove();
-      chat.appendChild(createMsg('reply', m.text, m.time));
-      i++;
-      setTimeout(play, 900);
-    }, 1400);
-  }
-  chat.scrollTop = chat.scrollHeight;
+/**
+ * SYNC DUAL CHAT LOGIC
+ */
+function getBubble() {
+  const div = document.createElement('div'); div.className = 'typing-bubble';
+  div.innerHTML = 'typing<span class="dots"><span></span><span></span><span></span></span>';
+  return div;
 }
 
-function reset(){
-  chat.innerHTML = '<div class="chat-date">7 July 2017</div>';
-  i = 0;
-  setTimeout(play, 800);
+async function typeSync(pane, text, ctrl) {
+  const input = pane === 'L' ? ctrl.inputL : ctrl.inputR;
+  const cursor = pane === 'L' ? ctrl.cursorL : ctrl.cursorR;
+  const targetBody = pane === 'L' ? ctrl.bodyR : ctrl.bodyL;
+  const targetStatus = pane === 'L' ? ctrl.statusR : ctrl.statusL;
+  cursor.classList.remove('hidden');
+  targetStatus.innerText = 'typing...';
+  const bubble = getBubble(); targetBody.appendChild(bubble);
+  targetBody.scrollTop = targetBody.scrollHeight;
+  for (let i = 0; i <= text.length; i++) {
+    input.innerText = text.substring(0, i);
+    await new Promise(r => setTimeout(r, 45 + Math.random() * 35));
+    targetBody.scrollTop = targetBody.scrollHeight;
+  }
+  await new Promise(r => setTimeout(r, 500));
+  return bubble;
 }
 
-play();
+async function eraseSync(pane, ctrl, activeBubble) {
+  const input = pane === 'L' ? ctrl.inputL : ctrl.inputR;
+  const cursor = pane === 'L' ? ctrl.cursorL : ctrl.cursorR;
+  const targetStatus = pane === 'L' ? ctrl.statusR : ctrl.statusL;
+  let text = input.innerText;
+  while (text.length > 0) {
+    text = text.slice(0, -1); input.innerText = text;
+    await new Promise(r => setTimeout(r, 25));
+  }
+  await new Promise(r => setTimeout(r, 200));
+  if (activeBubble) activeBubble.remove();
+  targetStatus.innerText = 'online'; cursor.classList.add('hidden');
+}
+
+async function sendSync(text, time, sender, ctrl, activeBubble) {
+  if (activeBubble) activeBubble.remove();
+  
+  // Logic to mirror the message positions across both panels
+  const leftSideClass = (sender === 'L') ? 'right' : 'left';
+  const rightSideClass = (sender === 'R') ? 'right' : 'left';
+
+  const htmlL = `<div class="msg ${leftSideClass}">${text}<span class="msg-time">${time}</span></div>`;
+  const htmlR = `<div class="msg ${rightSideClass}">${text}<span class="msg-time">${time}</span></div>`;
+  
+  ctrl.bodyL.innerHTML += htmlL; 
+  ctrl.bodyR.innerHTML += htmlR;
+  
+  ctrl.inputL.innerText = ''; 
+  ctrl.inputR.innerText = '';
+  ctrl.cursorL.classList.add('hidden'); 
+  ctrl.cursorR.classList.add('hidden');
+  ctrl.statusL.innerText = 'online'; 
+  ctrl.statusR.innerText = 'online';
+  
+  ctrl.bodyL.scrollTop = ctrl.bodyL.scrollHeight; 
+  ctrl.bodyR.scrollTop = ctrl.bodyR.scrollHeight;
+}
+async function runSyncLoop(ctrl) {
+  ctrl.bodyL.innerHTML = '<div class="chat-date">15 July 2017</div>';
+  ctrl.bodyR.innerHTML = '<div class="chat-date">15 July 2017</div>';
+  await new Promise(r => setTimeout(r, 1000));
+  let b1 = await typeSync('L', 'Btw..', ctrl); await sendSync('Btw..', '19:41', 'L', ctrl, b1);
+  await new Promise(r => setTimeout(r, 800));
+  let b2 = await typeSync('R', 'Yeah?', ctrl); await sendSync('Yeah?', '19:41', 'R', ctrl, b2);
+  await new Promise(r => setTimeout(r, 1000));
+  let b3 = await typeSync('L', 'So, would you like to meet me for dinner sometime next week?', ctrl);
+  await sendSync('So, would you like to meet me for dinner sometime next week?', '19:42', 'L', ctrl, b3);
+  await new Promise(r => setTimeout(r, 1800));
+  let b4 = await typeSync('R', 'WTF?', ctrl); await new Promise(r => setTimeout(r, 1200)); await eraseSync('R', ctrl, b4);
+  await new Promise(r => setTimeout(r, 1000));
+  let b5 = await typeSync('R', 'Hmm I don’t know, I’ll let you know?', ctrl); await new Promise(r => setTimeout(r, 1500)); await eraseSync('R', ctrl, b5);
+  await new Promise(r => setTimeout(r, 5000)); // Silent Pause
+  let b6 = await typeSync('R', 'Yes, that would be nice 🤗', ctrl); await sendSync('Yes, that would be nice 🤗', '19:46', 'R', ctrl, b6);
+  await new Promise(r => setTimeout(r, 8000)); runSyncLoop(ctrl);
 }
 </script>
-
 </head>
 <body>
 
@@ -187,6 +225,8 @@ play();
 <h1 class="story-title">Typing…</h1>
 
 <div class="story-meta">July 15, 2017 | Chennai</div>
+
+<hr>
 
 <div class="section-break">Nanganallur</div>
 
@@ -225,17 +265,9 @@ play();
     </div>
   </div>
   <div class="chat-actions">
-  <svg class="icon" viewBox="0 0 24 24">
-    <path d="M17 10.5V6c0-1.1-.9-2-2-2H5C3.9 4 3 4.9 3 6v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4.5l4 4v-11l-4 4z"/>
-  </svg>
-  <svg class="icon" viewBox="0 0 24 24">
-    <path d="M6.6 10.8c1.5 3 3.6 5.1 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1.3.4 2.7.6 4.1.6.7 0 1.3.6 1.3 1.3V21c0 .7-.6 1.3-1.3 1.3C10.1 22.3 1.7 13.9 1.7 3.3 1.7 2.6 2.3 2 3 2h3.6c.7 0 1.3.6 1.3 1.3 0 1.4.2 2.8.6 4.1.1.4 0 .9-.3 1.2l-2.2 2.2z"/>
-  </svg>
-  <svg class="icon" viewBox="0 0 24 24">
-    <circle cx="12" cy="5" r="2"/>
-    <circle cx="12" cy="12" r="2"/>
-    <circle cx="12" cy="19" r="2"/>
-  </svg>
+  <svg class="icon" viewBox="0 0 24 24"><path d="M17 10.5V6c0-1.1-.9-2-2-2H5C3.9 4 3 4.9 3 6v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4.5l4 4v-11l-4 4z"/></svg>
+  <svg class="icon" viewBox="0 0 24 24"><path d="M6.6 10.8c1.5 3 3.6 5.1 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1.3.4 2.7.6 4.1.6.7 0 1.3.6 1.3 1.3V21c0 .7-.6 1.3-1.3 1.3C10.1 22.3 1.7 13.9 1.7 3.3 1.7 2.6 2.3 2 3 2h3.6c.7 0 1.3.6 1.3 1.3 0 1.4.2 2.8.6 4.1.1.4 0 .9-.3 1.2l-2.2 2.2z"/></svg>
+  <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
 </div>
 </div>
   <div class="chat-body" id="chatJune16">
@@ -250,64 +282,46 @@ play();
 </div>
 
 <script>
-initChat("chatJune16", "inputTextJune16", [
-  {type:'send', text:"Hi Sunaina, this is Rahul. Deepti’s school friend. We met earlier at her party.", time:"10:08 PM"},
-  {type:'reply', text:"Hey", time:"10:09 PM"},
-  {type:'reply', text:"Ohh yeah", time:"10:09 PM"},
-  {type:'send', text:"Hope it’s okay I got your number from her.", time:"10:09 PM"},
-  {type:'reply', text:"Yeah that’s fine ", time:"10:10 PM"},
-  {type:'send', text:"Cool", time:"10:10 PM"},
-  {type:'send', text:"You got home safe?", time:"10:10 PM"},
-  {type:'reply', text:"Yeah, just got back a while ago", time:"10:11 PM"},
-  {type:'send', text:"Same\nThat place was way too crowded 😅", time:"10:11 PM"},
-  {type:'reply', text:"I swear\nCouldn’t hear anything properly", time:"10:12 PM"},
-  {type:'send', text:"Exactly", time:"10:12 PM"},
-  {type:'send', text:"Anyway… just thought I’d say hi", time:"10:13 PM"},
-  {type:'reply', text:"Haha it’s alright", time:"10:13 PM"},
-  {type:'reply', text:"Was bored anyway", time:"10:13 PM"},
-  {type:'send', text:"So... what's up?", time:"10:13 PM"},
-  {type:'reply', text:"Nothing much\nJust scrolling aimlessly", time:"10:14 PM"},
-  {type:'send', text:"Same! That’s basically how most nights go nowadays 😂", time:"10:14 PM"},
-  {type:'reply', text:"Haha. You stole my dialogue 😂", time:"10:14 PM"},
-  {type:'send', text:"Okay I should probably go sleep.", time:"10:15 PM"},
-  {type:'send', text:"Have an early start tomorrow", time:"10:15 PM"},
-  {type:'reply', text:"Hmm okay", time:"10:15 PM"},
-  {type:'reply', text:"Good night :)", time:"10:16 PM"},
-  {type:'send', text:"Good night", time:"10:14 PM"},
-]);
+document.addEventListener('DOMContentLoaded', () => {
+  initChat("chatJune16", "inputTextJune16", [
+    {type:'send', text:"Hi Sunaina, this is Rahul. Deepti’s school friend. We met earlier at her party.", time:"22:08"},
+    {type:'reply', text:"Hey", time:"22:09"},
+    {type:'reply', text:"Ohh yeah", time:"22:09"},
+    {type:'send', text:"Hope it’s okay I got your number from her.", time:"22:09"},
+    {type:'reply', text:"Yeah that’s fine ", time:"22:10"},
+    {type:'send', text:"Cool", time:"22:10"},
+    {type:'send', text:"You got home safe?", time:"22:10"},
+    {type:'reply', text:"Yeah, just got back a while ago", time:"22:11"},
+    {type:'send', text:"Same\nThat place was way too crowded 😅", time:"22:11"},
+    {type:'reply', text:"I swear\nCouldn’t hear anything properly", time:"22:12"},
+    {type:'send', text:"Exactly", time:"22:12"},
+    {type:'send', text:"Anyway… just thought I’d say hi", time:"22:13"},
+    {type:'reply', text:"Haha it’s alright", time:"22:13"},
+    {type:'reply', text:"Was bored anyway", time:"22:13"},
+    {type:'send', text:"So... what's up?", time:"22:13"},
+    {type:'reply', text:"Nothing much\nJust scrolling aimlessly", time:"22:14"},
+    {type:'send', text:"Same! That’s basically how most nights go nowadays 😂", time:"22:14"},
+    {type:'reply', text:"Haha. You stole my dialogue 😂", time:"22:14"},
+    {type:'send', text:"Okay I should probably go sleep.", time:"22:15"},
+    {type:'send', text:"Have an early start tomorrow", time:"22:15"},
+    {type:'reply', text:"Hmm okay", time:"22:15"},
+    {type:'reply', text:"Good night :)", time:"22:16"},
+    {type:'send', text:"Good night", time:"22:14"}
+  ]);
+});
 </script>
 
 <p>The message sat there now.</p>
-
 <p>The first reply did not.</p>
-
 <p>Instead, the only thing that appeared on the screen was <i>typing…</i></p>
-
-<p>It stayed.</p>
-
-<p>Then disappeared.</p>
-
-<p>Then came back again.</p>
-
+<p>It stayed. Then disappeared. Then came back again.</p>
 <p>He stared at it without blinking, trying and failing to guess what she could possibly be writing.</p>
 
 <hr>
-
 <div class="section-break">Pazhavanthangal</div>
-
 <p>Across the city, in Pazhavanthangal, another room held a very different kind of silence.</p>
-
-<p>She had been lying on her bed for a while, half-scrolling, half-staring at nothing in particular. One of those dull, heavy moods had settled over the evening. Even her phone had stopped being interesting after a point.</p>
-
-<p>Then his message came.</p>
-
+<p>She had been lying on her bed for a while, half-scrolling, half-staring at nothing in particular. Then his message came.</p>
 <p class="dialogue">So, would you like to meet me for dinner sometime next week?</p>
-
-<p>She read it once.</p>
-
-<p>Then again.</p>
-
-<p>Her fingers moved before her thoughts fully caught up.</p>
 
 <div class="chat-panel">
 <div class="chat-topbar">
@@ -320,84 +334,70 @@ initChat("chatJune16", "inputTextJune16", [
     </div>
   </div>
   <div class="chat-actions">
-  <svg class="icon" viewBox="0 0 24 24">
-    <path d="M17 10.5V6c0-1.1-.9-2-2-2H5C3.9 4 3 4.9 3 6v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4.5l4 4v-11l-4 4z"/>
-  </svg>
-  <svg class="icon" viewBox="0 0 24 24">
-    <path d="M6.6 10.8c1.5 3 3.6 5.1 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1.3.4 2.7.6 4.1.6.7 0 1.3.6 1.3 1.3V21c0 .7-.6 1.3-1.3 1.3C10.1 22.3 1.7 13.9 1.7 3.3 1.7 2.6 2.3 2 3 2h3.6c.7 0 1.3.6 1.3 1.3 0 1.4.2 2.8.6 4.1.1.4 0 .9-.3 1.2l-2.2 2.2z"/>
-  </svg>
-  <svg class="icon" viewBox="0 0 24 24">
-    <circle cx="12" cy="5" r="2"/>
-    <circle cx="12" cy="12" r="2"/>
-    <circle cx="12" cy="19" r="2"/>
-  </svg>
+  <svg class="icon" viewBox="0 0 24 24"><path d="M17 10.5V6c0-1.1-.9-2-2-2H5C3.9 4 3 4.9 3 6v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4.5l4 4v-11l-4 4z"/></svg>
+  <svg class="icon" viewBox="0 0 24 24"><path d="M6.6 10.8c1.5 3 3.6 5.1 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1.3.4 2.7.6 4.1.6.7 0 1.3.6 1.3 1.3V21c0 .7-.6 1.3-1.3 1.3C10.1 22.3 1.7 13.9 1.7 3.3 1.7 2.6 2.3 2 3 2h3.6c.7 0 1.3.6 1.3 1.3 0 1.4.2 2.8.6 4.1.1.4 0 .9-.3 1.2l-2.2 2.2z"/></svg>
+  <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
 </div>
 </div>
   <div class="chat-body" id="chatJuly9">
-  <div class="chat-date">9 July 2017</div>
   </div>
   <div class="composer">
     <div class="input-box">
       <span id="inputTextJuly9"></span><span class="cursor"></span>
     </div>
   </div>
- <div class="chat-note">How it's going...</div>
+ <div class="chat-note">How it was going...</div>
 </div>
+
 <script>
-
-initChat("chatJuly9", "inputTextJuly9", [
-  {type:'reply', text:"I think I spend more time choosing what to watch than actually watching.", time:"11:57 PM"},
-  {type:'send', text:"Same", time:"11:58 PM"},
-  {type:'send', text:"Half my life gone in scrolling Netflix", time:"11:58 PM"},
-  {type:'reply', text:"And then rewatching something you’ve already seen 😏", time:"11:58 PM"},
-  {type:'send', text:"Exactly 🤣", time:"11:59 PM"},
-  {type:'send', text:"Comfort over effort! 😎", time:"11:59 PM"},
-  {type:'reply', text:"That’s a dangerous mindset.", time:"11:59 PM"},
-  {type:'send', text:"Works for me. Haha", time:"11:59 PM"},
-  {type:'reply', text:"Well, good for you!", time:"11:59 PM"},
-  {type:'send', text:"How are you not ", time:"11:59 PM"},
-
-
-]);
+document.addEventListener('DOMContentLoaded', () => {
+  initChat("chatJuly9", "inputTextJuly9", [
+    {type:'date', text:"9 July 2017"},
+    {type:'reply', text:"I think I spend more time choosing what to watch than actually watching.", time:"23:57"},
+    {type:'send', text:"Same", time:"23:57"},
+    {type:'send', text:"Half my life gone in scrolling Netflix", time:"23:57"},
+    {type:'reply', text:"And then rewatching something you’ve already seen 😏", time:"23:57"},
+    {type:'send', text:"Exactly 🤣", time:"23:58"},
+    {type:'send', text:"Comfort over effort! 😎", time:"23:58"},
+    {type:'reply', text:"That’s a dangerous mindset.", time:"23:58"},
+    {type:'send', text:"Works for me. Haha", time:"23:58"},
+    {type:'reply', text:"Well, good for you!", time:"23:58"},
+    {type:'send', text:"How are you not asleep yet?", time:"23:58"},
+    {type:'send', text:"It's way past your bedtime!", time:"23:58"},
+    {type:'reply', text:"Idk. Just not feeling sleepy.", time:"23:58"},
+    {type:'send', text:"Hmm", time:"23:59"},
+    {type:'reply', text:"What?", time:"23:59"},
+    {type:'send', text:"Nothing", time:"23:59"},
+    {type:'reply', text:"🤷‍♂️", time:"23:59"},
+    {type:'date', text:"10 July 2017"},
+    {type:'send', text:"Happy Birthday!🥳🎉🎊", time:"00:00"},
+    {type:'reply', text:"Thank you so much! ❤️", time:"00:00"},
+    {type:'reply', text:"How do you know?", time:"00:00"},
+    {type:'send', text:"I just do 😉", time:"00:00"},
+    {type:'reply', text:"No chance! I didn’t tell you.", time:"00:00"},
+    {type:'send', text:"I know", time:"00:00"},
+    {type:'send', text:"🙂", time:"00:01"},
+    {type:'reply', text:"That’s actually weird...", time:"00:01"},
+    {type:'send', text:"Relax", time:"00:01"},
+    {type:'send', text:"I’m not stalking you", time:"00:01"},
+    {type:'reply', text:"That’s exactly what a stalker would say 😵", time:"00:01"},
+    {type:'send', text:"😂", time:"00:02"},
+    {type:'send', text:"Go sleep birthday boy", time:"00:02"},
+    {type:'reply', text:"Okay that was smooth.", time:"00:02"}
+  ]);
+});
 </script>
 
-<p>The first thing she typed was too sharp.</p>
+<p>The first thing she typed was too sharp. </p>
+<p class="dialogue">WTF?</p>
+<p> She deleted it. </p>
+<p class="dialogue">Hmm I don’t know, I’ll let you know?</p>
+<p>This was too long. She deleted that too.</p>
 
-<p>She deleted it.</p>
-
-<p>The second thing she typed was too long.</p>
-
-<p>She deleted that too.</p>
-
-<p>Now the phone was in her hand, but the answer still wasn’t in her head.</p>
-
-<p>That was when her sister stepped into the room.</p>
-
-<p>“What happened?” she asked, immediately sensing something was different.</p>
-
-<p>“Nothing,” she said too quickly.</p>
-
-<p>Her sister stood there for another second, unconvinced, before moving further inside.</p>
-
-<div class="section-break">Back to Nanganallur</div>
-
-<p>By then he had stopped sitting still.</p>
-
-<p>He switched his phone to vibrate mode.</p>
-
-<p>Lay down.</p>
-
-<p>Placed the phone on his chest.</p>
-
-<p>Closed his eyes.</p>
-
-<p>The phone vibrated.</p>
-
-<p>He sat up instantly, unlocked it, and saw an Instagram notification instead.</p>
-
-<p>The disappointment was immediate.</p>
-
-<p>So was the anticipation that followed it.</p>
+<hr> 
+<div class="section-break">Nanganallur</div>
+<p>By then he had stopped sitting still. He switched his phone to vibrate mode. Lay down. Placed the phone on his chest. Closed his eyes.</p>
+<p>The phone vibrated. He sat up instantly, unlocked it, and saw an Instagram notification instead. The disappointment was immediate. So was the anticipation that followed it.</p>
 
 <div class="chat-sync-grid">
   <div class="chat-panel">
@@ -406,33 +406,20 @@ initChat("chatJuly9", "inputTextJuly9", [
         <span class="back-arrow">←</span>
         <div class="chat-avatar">S</div>
         <div class="chat-info">
-          <div class="chat-name">Sunaina Deepti Friend</div>
-          <div class="chat-status">typing…</div>
+          <div class="chat-name">Sunaina</div>
+          <div id="statusL" class="chat-status">online</div>
         </div>
       </div>
       <div class="chat-actions">
-        <svg class="icon" viewBox="0 0 24 24">
-          <path d="M17 10.5V6c0-1.1-.9-2-2-2H5C3.9 4 3 4.9 3 6v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4.5l4 4v-11l-4 4z"/>
-        </svg>
-        <svg class="icon" viewBox="0 0 24 24">
-          <path d="M6.6 10.8c1.5 3 3.6 5.1 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1.3.4 2.7.6 4.1.6.7 0 1.3.6 1.3 1.3V21c0 .7-.6 1.3-1.3 1.3C10.1 22.3 1.7 13.9 1.7 3.3 1.7 2.6 2.3 2 3 2h3.6c.7 0 1.3.6 1.3 1.3 0 1.4.2 2.8.6 4.1.1.4 0 .9-.3 1.2l-2.2 2.2z"/>
-        </svg>
-        <svg class="icon" viewBox="0 0 24 24">
-          <circle cx="12" cy="5" r="2"/>
-          <circle cx="12" cy="12" r="2"/>
-          <circle cx="12" cy="19" r="2"/>
-        </svg>
+        <svg class="icon" viewBox="0 0 24 24"><path d="M17 10.5V6c0-1.1-.9-2-2-2H5C3.9 4 3 4.9 3 6v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4.5l4 4v-11l-4 4z"/></svg>
+        <svg class="icon" viewBox="0 0 24 24"><path d="M6.6 10.8c1.5 3 3.6 5.1 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1.3.4 2.7.6 4.1.6.7 0 1.3.6 1.3 1.3V21c0 .7-.6 1.3-1.3 1.3C10.1 22.3 1.7 13.9 1.7 3.3 1.7 2.6 2.3 2 3 2h3.6c.7 0 1.3.6 1.3 1.3 0 1.4.2 2.8.6 4.1.1.4 0 .9-.3 1.2l-2.2 2.2z"/></svg>
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
       </div>
     </div>
-    <div class="chat-body">
-      <div class="chat-date">15 July 2017</div>
-      <div class="msg right">Btw…<span class="msg-time">11:41 PM</span></div>
-      <div class="msg left">Yeah?<span class="msg-time">11:41 PM</span></div>
-      <div class="msg right">So, would you like to meet me for dinner sometime next week?<span class="msg-time">11:43 PM</span></div>
-      <div class="typing">typing<span class="dots"><span></span><span></span><span></span></span></div>
-      <div class="msg left">Yes, that would be nice ;)<span class="msg-time">11:45 PM</span></div>
+    <div class="chat-body" id="bodyL"></div>
+    <div class="composer">
+      <div class="input-box"><span id="inputL"></span><span id="cursorL" class="cursor hidden"></span></div>
     </div>
-    <div class="chat-note">Rahul’s POV</div>
   </div>
 
   <div class="chat-panel">
@@ -442,44 +429,26 @@ initChat("chatJuly9", "inputTextJuly9", [
         <div class="chat-avatar">R</div>
         <div class="chat-info">
           <div class="chat-name">Rahul</div>
-          <div class="chat-status">online</div>
+          <div id="statusR" class="chat-status">online</div>
         </div>
       </div>
       <div class="chat-actions">
-        <svg class="icon" viewBox="0 0 24 24">
-          <path d="M17 10.5V6c0-1.1-.9-2-2-2H5C3.9 4 3 4.9 3 6v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4.5l4 4v-11l-4 4z"/>
-        </svg>
-        <svg class="icon" viewBox="0 0 24 24">
-          <path d="M6.6 10.8c1.5 3 3.6 5.1 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1.3.4 2.7.6 4.1.6.7 0 1.3.6 1.3 1.3V21c0 .7-.6 1.3-1.3 1.3C10.1 22.3 1.7 13.9 1.7 3.3 1.7 2.6 2.3 2 3 2h3.6c.7 0 1.3.6 1.3 1.3 0 1.4.2 2.8.6 4.1.1.4 0 .9-.3 1.2l-2.2 2.2z"/>
-        </svg>
-        <svg class="icon" viewBox="0 0 24 24">
-          <circle cx="12" cy="5" r="2"/>
-          <circle cx="12" cy="12" r="2"/>
-          <circle cx="12" cy="19" r="2"/>
-        </svg>
+        <svg class="icon" viewBox="0 0 24 24"><path d="M17 10.5V6c0-1.1-.9-2-2-2H5C3.9 4 3 4.9 3 6v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4.5l4 4v-11l-4 4z"/></svg>
+        <svg class="icon" viewBox="0 0 24 24"><path d="M6.6 10.8c1.5 3 3.6 5.1 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1.3.4 2.7.6 4.1.6.7 0 1.3.6 1.3 1.3V21c0 .7-.6 1.3-1.3 1.3C10.1 22.3 1.7 13.9 1.7 3.3 1.7 2.6 2.3 2 3 2h3.6c.7 0 1.3.6 1.3 1.3 0 1.4.2 2.8.6 4.1.1.4 0 .9-.3 1.2l-2.2 2.2z"/></svg>
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
       </div>
     </div>
-    <div class="chat-body">
-      <div class="chat-date">15 July 2017</div>
-      <div class="msg left">Btw…<span class="msg-time">11:41 PM</span></div>
-      <div class="msg right">Yeah?<span class="msg-time">11:41 PM</span></div>
-      <div class="msg left">So, would you like to meet me for dinner sometime next week?<span class="msg-time">11:43 PM</span></div>
-      <div class="msg right">Yes, that would be nice ;)<span class="msg-time">11:45 PM</span></div>
+    <div class="chat-body" id="bodyR"></div>
+    <div class="composer">
+      <div class="input-box"><span id="inputR"></span><span id="cursorR" class="cursor hidden"></span></div>
     </div>
-    <div class="chat-note">Sunaina’s POV</div>
   </div>
 </div>
-
 <p>He stared at the screen for a second, as if the words might rearrange themselves if he looked long enough.</p>
-
 <p>They didn’t.</p>
-
 <p>They stayed exactly where they were.</p>
-
 <p>A grin spread across his face before he could stop it.</p>
-
-<p>Across the city, she put her phone down with a quiet smile of her own.</p>
-
+<p>In the next neighbourhood, she put her phone down with a quiet smile of her own.</p>
 </article>
 
 </section>
@@ -490,6 +459,18 @@ initChat("chatJuly9", "inputTextJuly9", [
     <div><a href="#">Short Stories</a></div>
   </div>
 </footer>
+
+<script>
+window.addEventListener('load', () => {
+  const syncCtrl = {
+    bodyL: document.getElementById('bodyL'), bodyR: document.getElementById('bodyR'),
+    inputL: document.getElementById('inputL'), inputR: document.getElementById('inputR'),
+    statusL: document.getElementById('statusL'), statusR: document.getElementById('statusR'),
+    cursorL: document.getElementById('cursorL'), cursorR: document.getElementById('cursorR')
+  };
+  if(syncCtrl.bodyL) runSyncLoop(syncCtrl);
+});
+</script>
 
 </body>
 </html>
