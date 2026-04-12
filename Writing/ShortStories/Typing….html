@@ -204,7 +204,7 @@ async function runSyncLoop(ctrl) {
   let b3 = await typeSync('L', 'So, would you like to meet me for dinner sometime next week?', ctrl);
   await sendSync('So, would you like to meet me for dinner sometime next week?', '19:42', 'L', ctrl, b3);
   await new Promise(r => setTimeout(r, 1800));
-  let b4 = await typeSync('R', 'WTF?', ctrl); await new Promise(r => setTimeout(r, 1200)); await eraseSync('R', ctrl, b4);
+  let b4 = await typeSync('R', 'WTF dude?', ctrl); await new Promise(r => setTimeout(r, 1200)); await eraseSync('R', ctrl, b4);
   await new Promise(r => setTimeout(r, 1000));
   let b5 = await typeSync('R', 'Hmm I don’t know, I’ll let you know?', ctrl); await new Promise(r => setTimeout(r, 1500)); await eraseSync('R', ctrl, b5);
   await new Promise(r => setTimeout(r, 5000)); // Silent Pause
@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>That was what made it difficult.</p>
 <p>Her fingers moved before her thoughts fully caught up.</p>
 <p>The first thing she typed was too sharp.</p>
-<p class="dialogue">WTF?</p>
+<p class="dialogue">WTF dude?</p>
 <p>She deleted it.</p>
 <p>The second thing she typed was too long.</p>
 <p class="dialogue">Hmm I don’t know, I’ll let you know?</p>
