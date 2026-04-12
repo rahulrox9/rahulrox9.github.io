@@ -68,6 +68,13 @@ hr { border: none; border-top: 2.5px solid var(--border); margin: 20px 0; }
 .footer-line a:hover{color:var(--ink)}
 footer{max-width:900px;margin:0 auto;padding:0 1.5rem 2.5rem;color:var(--muted)}
 @media(max-width:720px){nav{padding:1rem 1rem}.nav-links a:not(.active){display:none}.story{padding:1.35rem}.story-title{font-size:1.6rem}.msg{max-width:88%}.chat-sync-grid{grid-template-columns:1fr}}
+
+.subscribe-box{margin:4rem 0 0;padding:1.5rem;border:1px solid var(--border);background:var(--card),max-width:520px;text-align:center;}
+.subscribe-box h3{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:0.4rem;color:var(--warm)}
+.subscribe-box p{font-size:0.9rem;color:var(--muted);margin-bottom:1rem}
+.subscribe-actions{display:flex;justify-content:center;}
+.subscribe-btn{display:inline-block;padding:0.75rem 1rem;border:none;background:var(--warm);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.8rem;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;text-decoration:none}
+.subscribe-btn:hover{opacity:0.88}
 </style>
 
 <script>
@@ -215,7 +222,9 @@ async function runSyncLoop(ctrl) {
 </head>
 <body>
 
-<nav> <a class="nav-logo" href="#">Rahul <span>Subbaraman</span></a> <div class="nav-links"> <a href="#" class="active">Stories</a> <a href="#">Writing</a> <a href="#">Home</a> </div> </nav>
+<nav> <a class="nav-logo" href="../../?p=Public/home.html">Rahul <span>Subbaraman</span></a> 
+<div class="nav-links"> <a href="../../?=pPublic/quick-reads.html" class="active">Short Stories</a> 
+<a href="../../?=pPublic/writing.html">Writing</a> <a href="../../?=pPublic/home.html">Home</a> </div> </nav>
 
 <section class="hero"> <div class="eyebrow">Short Stories</div> <h1> Quick reads, <em>lingering feelings</em></h1> </section>
 
@@ -497,6 +506,47 @@ window.addEventListener('load', () => {
   if(syncCtrl.bodyL) runSyncLoop(syncCtrl);
 });
 </script>
+<section class="subscribe-box">
+  <h3>Enjoyed this piece?</h3>
+  <p>Subscribe for future writing, updates, and new posts.</p>
+  <div class="subscribe-actions">
+    <a class="subscribe-btn" href="../../Public/subscribe.html">Go to subscribe form</a>
+  </div>
+</section>
+ 
+<script>
+(function(){
+  // 1. Only track if viewed inside the index.html frame
+  if (window.self === window.top) return;
 
+  const page = window.location.pathname;
+  const sessionKey = 'counted_' + page;
+
+  // 2. Check if this page was already counted in this session
+  if (sessionStorage.getItem(sessionKey)) {
+    console.log('Page already counted in this session. Skipping.');
+    return;
+  }
+
+  // 3. Admin ignore flag (Optional)
+  if (localStorage.getItem('admin_ignore') === 'true') return;
+
+  const DB = 'https://script.google.com/macros/s/AKfycbzpa1fUDZDXfQT5L6SxQRNf1zEFk-tpHV_2Tq9CY2iG4iSqa4W__Rnqs6fshnGJ0pnvRQ/exec';
+  
+  // Unique User ID (for "Unique Visitors" stat)
+  let uid = localStorage.getItem('_rsuid');
+  if (!uid) { 
+    uid = 'u' + Date.now() + Math.random().toString(36).slice(2,7); 
+    localStorage.setItem('_rsuid', uid); 
+  }
+
+  // 4. Send the visit and set the session flag
+  fetch(`${DB}?action=visit&page=${encodeURIComponent(page)}&uid=${uid}`)
+    .then(() => {
+      sessionStorage.setItem(sessionKey, 'true');
+    })
+    .catch(err => console.error('Tracking failed', err));
+})();
+</script>
 </body>
 </html>
