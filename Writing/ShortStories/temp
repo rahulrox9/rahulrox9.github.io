@@ -1,1 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rahul's Short Stories</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Crimson+Text:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
+:root{ --bg:#f7f2ea; --paper:#fffaf3; --ink:#2c1f12; --muted:#8a7560; --accent:#b87a3a; --border:#e6dccb; --chat-bg:#ece5dd; --chat-top:#d9d0c2; --chat-left:#ffffff; --chat-right:#d9fdd3;}
+html{ scroll-behavior:smooth}
+body{ background:var(--bg); color:var(--ink); font-family:'Crimson Text',serif; line-height:1.9; }
+body::before{ content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events:none; z-index:999; opacity:.45;}
+/* Nav */
+nav{ position:sticky; top:0; z-index:100; padding:1rem 2rem; border-bottom:1px solid var(--border); background:rgba(255,250,243,.85); backdrop-filter:blur(10px); display:flex; justify-content:space-between; align-items:center; }
+.nav-logo{ text-decoration:none; color:var(--ink); font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; }
+.nav-logo span{ color:var(--accent); font-style:italic; }
+.nav-links{ display:flex; gap:1.2rem; align-items:center; }
+.nav-links a{ text-decoration:none; color:var(--muted); font-size:.78rem; letter-spacing:.06em; text-transform:uppercase;}
+.nav-links a:hover,
+.nav-links a.active{ color:var(--ink); }
+
+/* Hero */
+.hero{ max-width:900px; margin:0 auto; padding:4rem 1.5rem 2rem;}
+.eyebrow{font-size:.72rem; color:var(--accent); letter-spacing:.18em; text-transform:uppercase; margin-bottom:.9rem;}
+.hero h1{font-family:'Playfair Display',serif; font-size:clamp(2.8rem,5vw,4.5rem); line-height:1.02; margin-bottom:1rem; font-weight:700;}
+.hero h1 em{ color:var(--accent);font-style:italic; font-weight:500;}
+.hero p{max-width:56ch; color:var(--muted); font-size:1rem; line-height:1.8;}
+
+/* Story list */
+.stories{ max-width:900px; margin:0 auto; padding:0 1.5rem 4rem;}
+.story{ background:var(--paper); border:1px solid var(--border); border-radius:8px; padding:2rem; margin-bottom:2rem; box-shadow:0 8px 24px rgba(44,31,18,.04);}
+.story-meta{ font-size:1rem; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:1rem;}
+.story-title{ font-family:'Playfair Display',serif; font-size:2rem; line-height:1.08; margin-bottom:1rem; font-weight:700;}
+.story p{ font-size:1.08rem; margin-bottom:1rem;}
+.story p:last-child{margin-bottom:0}
+.dialogue{ margin:1.2rem 0; padding-left:1rem; border-left:2px solid var(--accent); font-style:italic; color:#4d3c2d;}
+.section-break{ margin:1.8rem 0 1rem; padding-top:1rem; border-top:1px dashed var(--border); font-size:.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:.08em;}
+
+/* WhatsApp illustration panel */
+.chat-panel{margin:1.5rem 0; border:1px solid #ddd2c0; border-radius:14px; overflow:hidden; background:var(--chat-bg); font-family:'Inter',sans-serif; box-shadow:0 10px 22px rgba(44,31,18,.08);}
+.chat-topbar{background:var(--chat-top); padding:.7rem .9rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(0,0,0,.05);}
+.chat-contact{display:flex;align-items:center; gap:.65rem;}
+.chat-avatar{width:32px;height:32px;border-radius:50%;background:#c6b8a5;display:flex;align-items:center;justify-content:center;font-size:.82rem;color:#fff;font-weight:600;}
+.chat-name{font-size:.84rem;font-weight:600;color:#2d2d2d;}
+.chat-status{font-size:.68rem;color:#6f6f6f;margin-top:.05rem;}
+.chat-icons{font-size:.85rem;color:#6b6258;letter-spacing:.2em;}
+.chat-body{padding:1rem;display:flex;flex-direction:column;gap:.45rem;background-image:linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,.08)),radial-gradient(circle at 1px 1px, rgba(0,0,0,.025) 1px, transparent 0);background-size:auto, 18px 18px;}
+.chat-date{align-self:center;font-size:.68rem;color:#7b7064;background:rgba(255,250,243,.75);padding:.22rem .55rem;border-radius:8px;margin-bottom:.25rem;}
+.msg{max-width:78%;padding:.55rem .7rem .45rem;border-radius:8px;font-size:.84rem;line-height:1.45;position:relative;word-break:break-word;}
+.msg.left{background:var(--chat-left);align-self:flex-start;border-top-left-radius:3px;}
+.msg.right{background:var(--chat-right);align-self:flex-end;border-top-right-radius:3px;}
+.msg-time{display:block;text-align:right;font-size:.6rem;color:#7b7b7b;margin-top:.18rem;}
+.typing{align-self:flex-start;background:#fff;color:#8a8074;padding:.45rem .7rem;border-radius:8px;border-top-left-radius:3px;font-size:.75rem;letter-spacing:.04em;}
+.chat-note{padding:.65rem .9rem;border-top:1px solid rgba(0,0,0,.05);background:rgba(255,250,243,.7);color:var(--muted);font-size:.72rem;text-align:center;}
+
+/* Footer */
+footer{max-width:900px;margin:0 auto;padding:0 1.5rem 2.5rem;color:var(--muted);}
+.footer-line{border-top:1px solid var(--border);padding-top:1rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.footer-line a{color:var(--muted);text-decoration:none;}
+.footer-line a:hover{color:var(--ink)}
+
+@media(max-width:720px){nav{padding:1rem 1rem}
+.nav-links a:not(.active){display:none}
+.story{padding:1.35rem}
+.story-title{font-size:1.6rem}
+.msg{max-width:88%}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">Rahul <span>Subbaraman</span></a>
+  <div class="nav-links">
+    <a href="#" class="active">Stories</a>
+    <a href="#">Writing</a>
+    <a href="#">Home</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow">Short Stories</div>
+  <h1> Quick reads,<br> <em>lingering feelings</em></h1>
+  <p> Brief stories drawn from memory, mood, and moments that stayed longer than they should have. Some are told in prose. Some are interrupted by the shape of modern life — messages, pauses, replies, and all the things left unsaid. </p>
+</section>
+
+<section class="stories">
+
+  <article class="story">
+    <h2 class="story-title">Typing…</h2>
+      <div class="story-meta">July 15, 2017 | Nanganallur, Chennai</div>
+
+    <p>It was a calm night in Nanganallur, a southern neighbourhood in Chennai. It was so silent that one could hear the insects playing their melodies. There had been a moderate downpour throughout the day, which added to the beauty of the night.
+
+While people had opened their doors and windows to enjoy the breeze, one room had them tightly shut, with the air-conditioner running.
+
+A boy of 18 had plugged his earphones into his brand-new ASUS Zenfone and began listening to one of his favourite tracks. In any other situation, one could have heard him sing along. Yet, this wasn’t an ordinary night.
+
+He was having one of the best conversations he had ever had with a girl — that too, with the one he had a crush on.
+
+The situation was no different on the other side. Both of them had their eyes glued to their phone screens. His phone was in silent mode, and he had muted all the WhatsApp groups.
+
+WhatsApp had indeed become an integral part of the lives of several teens like him.
+
+It had been only a few days since he dared to send the first ‘Hi’ on WhatsApp. He had received her contact from a friend who was her classmate in college..</p>
+
+    <p>Integer faucibus ligula in est pretium, sit amet luctus sapien congue. Suspendisse vitae tempus arcu. Morbi at ante eu turpis pretium volutpat. In vel risus sed erat interdum faucibus.</p>
+
+    <div class="dialogue">“So, would you like to meet me sometime next week?”</div>
+
+    <p>Aliquam erat volutpat. Integer non sem ut libero ultrices malesuada. Cras vitae mauris vitae tortor mollis aliquam. Pellentesque sit amet ipsum et urna lacinia vulputate. Sed eu risus at magna tempor posuere.</p>
+
+    <div class="chat-panel">
+      <div class="chat-topbar">
+        <div class="chat-contact">
+          <div class="chat-avatar">S</div>
+          <div>
+            <div class="chat-name">Sunaina</div>
+            <div class="chat-status">last seen recently</div>
+          </div>
+        </div>
+        <div class="chat-icons">⌕ ⋮</div>
+      </div>
+
+      <div class="chat-body">
+        <div class="chat-date">15 July 2017</div>
+
+        <div class="msg right">
+          So, would you like to meet me for dinner sometime next week?
+          <span class="msg-time">11:43 PM</span>
+        </div>
+
+        <div class="typing">typing…</div>
+
+        <div class="msg left">
+          Yes ;)
+          <span class="msg-time">11:45 PM</span>
+        </div>
+      </div>
+
+      <div class="chat-note">Illustrative message panel</div>
+    </div>
+
+    <p>Donec sed magna eu neque tincidunt volutpat. Aenean finibus, justo vel mattis cursus, orci sapien placerat lectus, et ullamcorper mauris neque ut lacus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+
+    <div class="section-break">Later that night</div>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus luctus, mi sed ullamcorper feugiat, tortor risus pharetra neque, ac luctus enim neque sit amet justo. Phasellus ut eros sit amet lectus luctus fermentum.</p>
+
+    <div class="dialogue">“Oh my God! You won’t believe what just happened!”</div>
+
+    <p>Morbi suscipit, sapien at aliquam tincidunt, nulla justo fermentum purus, vitae finibus lectus mauris sed mi. Sed ut nisl ut nulla vulputate placerat.</p>
+  </article>
+
+  <article class="story">
+    <div class="story-meta">Placeholder Story</div>
+    <h2 class="story-title">Another Quick Read</h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin dictum, nibh at molestie feugiat, mi augue convallis arcu, eget feugiat lectus nibh sed mauris. Suspendisse potenti. Sed sed metus in neque feugiat condimentum.</p>
+    <p>Curabitur id risus nec mauris hendrerit feugiat. Praesent consequat, libero vel efficitur convallis, lorem odio porta elit, a viverra enim lectus at nisl.</p>
+  </article>
+
+</section>
+
+<footer>
+  <div class="footer-line">
+    <div>Rahul Subbaraman</div>
+    <div><a href="#">Short Stories</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
+
+
+
+July 15th 2017 - Nanganallur
+
+It was a calm night in Nanganallur, a southern neighbourhood in Chennai. It was so silent that one could hear the insects playing their melodies. There had been a moderate downpour throughout the day, which added to the beauty of the night.
+
+While people had opened their doors and windows to enjoy the breeze, one room had them tightly shut, with the air-conditioner running.
+
+A boy of 18 had plugged his earphones into his brand-new ASUS Zenfone and began listening to one of his favourite tracks. In any other situation, one could have heard him sing along. Yet, this wasn’t an ordinary night.
+
+He was having one of the best conversations he had ever had with a girl — that too, with the one he had a crush on.
+
+The situation was no different on the other side. Both of them had their eyes glued to their phone screens. His phone was in silent mode, and he had muted all the WhatsApp groups.
+
+WhatsApp had indeed become an integral part of the lives of several teens like him.
+
+It had been only a few days since he dared to send the first ‘Hi’ on WhatsApp. He had received her contact from a friend who was her classmate in college.
+
+‘So, would you like to meet me for dinner sometime next week?’ he sent.
+
+The world around him froze.
+
+It was the moment of truth.
+
+The “typing…” appeared.
+
+He stared at it.
+
+It disappeared.
+
+Then appeared again.
+
+He didn’t move. Didn’t even blink.
+
+Every time it vanished, his heart sank a little. Every time it came back, hope followed.
+
+He could do nothing except wait.
+
+He switched his phone to vibrate mode, lay down, placed it on his chest, and closed his eyes. That was when he paid attention to the song. He began to sing along.
+
+The phone vibrated.
+
+He immediately got up, placed his finger on the fingerprint sensor, and unlocked it. He opened her chat to find a monosyllabic reply with an emoji:
+
+‘Yes ;)’
+
+She had gone offline as soon as she replied. Her last seen was visible.
+
+He couldn’t contain his excitement.
+
+That was the first time he had asked a girl out.
+
+He kept hopping, jumping, and grinning, and reached the living room where his father and sister were watching TV.
+
+“What on earth are you doing? What has gotten into you?” yelled his father. “There are people living downstairs.”
+
+“Rahul has lost his mind. He’s cuckoo bananas!” chanted his sister.
+
+As her dad rolled his eyes and glared at her, she went quiet.
+
+Meanwhile, Rahul hopped back to the bedroom. He read the conversation once again and checked if she was online. Her last seen hadn’t changed.
+
+He set the AC timer to 30 minutes and went to sleep.
+
+July 15th 2017 – Pazhavanthangal
+
+On a calm and beautiful night in Pazhavanthangal, there was one teenager who felt quite sad and lonely.
+
+None of her favourite movies, books, or music seemed to help her feel better.
+
+“What is bothering you, Sunaina?” asked her elder sister. “You’ve been gloomy all evening. You didn’t speak a word at the dinner table either.”
+
+“It’s nothing, Akka. I’m just feeling a little low,” replied Sunaina.
+
+She unlocked her phone to check for messages.
+
+There were none.
+
+“Jannu, Appa is calling you,” shouted their mother from the next room.
+
+Ananya turned to her sister. “This conversation isn’t over. We’ll continue once I’m back.”
+
+Sunaina just grunted in reply as her sister left the room.
+
+She lay down on her bed, hoping that a good night’s sleep would help, and placed her phone under the pillow.
+
+After five minutes, her phone vibrated.
+
+There was a message from a guy.
+
+‘Hi’
+
+She texted back, with little interest:
+
+‘Hi. What’s up?’
+
+‘Nothing much. Just felt like texting you. So what’s up with you?’
+
+‘Oh! Text me huh? Why? Is something wrong?’ she replied. ‘Pretty much nothing. I was about to sleep actually.’
+
+‘No particular reason. I was bored and felt like texting someone,’ he replied. ‘Your name was on the top, so I thought I’ll text you. If you are about to sleep, I’ll text you later. Sorry for the disturbance.’
+
+‘No no… It’s absolutely alright. No need to be this formal, okay?’
+
+(Grinning Face with Sweat emoji)
+(Rolling on the Floor Laughing emoji)
+
+The chain of texts went on for about an hour, touching various topics like books, movies, food, school inside jokes, and more.
+
+Sunaina was so engrossed in the conversation that she didn’t even notice her sister enter the room.
+
+Ananya looked at her younger sister sitting on the bed, smiling at her phone. She felt relieved that something had lifted her mood. She quietly opened her laptop and started working on her coding assignment.
+
+Out of the blue, Sunaina shrieked, startling her.
+
+“Oh my God! Oh my God! Akka, you won’t believe what just happened!”
+
+She was glowing with excitement.
+
+Ananya burst out laughing. “What is it?”
+
+“A guy has asked me out!” replied Sunaina.
+
+“Wow! That’s great, Soo. Do you like him?”
+
+“He’s such a sweet guy, you know. I thought no one noticed me in class. This has come as a big surprise.”
+
+Ananya smiled and hugged her.
+
+Both the girls then turned off the lights and went to sleep.
