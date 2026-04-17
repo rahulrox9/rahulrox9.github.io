@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rahul's Indic Articles</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:52px}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;text-decoration:none;color:var(--ink)}
+.nav-logo span{color:var(--warm);font-style:italic}
+.nav-links{display:flex;gap:1.4rem;align-items:center}
+.nav-links a{font-size:0.76rem;color:var(--muted);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
+.nav-links a:hover{color:var(--warm)}
+.nav-links a.active{color:var(--ink);font-weight:500}
+.nav-admin{font-size:0.72rem;color:var(--muted);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;padding:0.25rem 0.65rem;border:1px solid var(--border);border-radius:3px;transition:all 0.15s}
+.nav-admin:hover{color:var(--warm);border-color:var(--warm)}
+
+@media(max-width:680px){nav{padding:0 1.2rem}.nav-links a:not(.active):not(.nav-admin){display:none}.nav-admin{display:flex!important}}
+
+.page-header{max-width:1200px;margin:0 auto;padding:4rem 4rem 2rem}
+.eyebrow{font-size:0.68rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.6rem}
+.eyebrow::before{content:'';display:inline-block;width:24px;height:1px;background:var(--warm)}
+.page-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,4.5rem);font-weight:700;line-height:1.05;letter-spacing:-0.02em;margin-bottom:1rem}
+.page-title em{font-style:italic;color:var(--warm)}
+.page-desc{font-size:0.9rem;color:var(--muted);line-height:1.8;max-width:620px;font-weight:300}
+
+.page-wrap{max-width:1200px;margin:0 auto;padding:0 4rem 6rem}
+.posts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+
+.post-card{background:var(--card);padding:2.2rem 1.8rem;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;transition:background 0.2s;position:relative;min-height:240px}
+.post-card:hover{background:var(--parchment)}
+.post-card:hover .post-arrow{transform:translate(3px,-3px)}
+.post-tag{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--warm);margin-bottom:0.6rem;font-weight:500}
+.post-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;line-height:1.3;margin-bottom:0.6rem}
+.post-excerpt{font-size:0.8rem;color:var(--muted);line-height:1.65;flex:1;font-weight:300;text-align:justify}
+.post-footer{display:flex;align-items:center;justify-content:space-between;margin-top:1.5rem}
+.post-date{font-size:0.7rem;color:var(--muted)}
+.post-arrow{font-size:0.8rem;color:var(--warm);transition:transform 0.2s}
+
+footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.footer-left{font-family:'Playfair Display',serif;font-size:0.9rem;font-style:italic;color:var(--muted)}
+.footer-right{display:flex;gap:1.8rem}
+.footer-right a{font-size:0.75rem;color:var(--muted);text-decoration:none;transition:color 0.15s}
+.footer-right a:hover{color:var(--warm)}
+
+@media(max-width:900px){
+    .page-header,.page-wrap{padding-left:1.5rem;padding-right:1.5rem}
+    .posts-grid{grid-template-columns:1fr}
+    footer{padding:1.5rem;flex-direction:column;gap:1rem;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../index.html">Rahul <span>Subbaraman</span></a>
+  <div class="nav-links">
+    <a href="books.html">Bookshelf</a>
+    <a href="magnets.html">Magnets</a>
+    <a href="postcards.html">Postcards</a>
+    <a href="sanskrit.html">Sanskrit</a>
+    <a href="travel.html">Travels</a>
+    <a href="watchlist.html">Watchlist</a>
+    <a href="writing.html" class="active">Writing</a>
+    <a class="nav-admin" href="../Admin/admin.html">Admin</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="eyebrow">Writing</div>
+  <h1 class="page-title">Indic <em>Articles</em></h1>
+  <p class="page-desc">Exploring the intersections of Vedic science, Sanskrit literature, and the philosophical frameworks of Sanātana Dharma.</p>
+</div>
+
+<div class="page-wrap">
+  <div class="posts-grid">
+    <a class="post-card" href="../?p=Writing/Indic/Anatomy_Time.html">
+      <div>
+        <div class="post-tag">English · Sanskrit · Vedic Science</div>
+        <div class="post-title">Kālavidyā: Part 1 — The Anatomy of Time</div>
+        <div class="post-excerpt">From the 4-second flutter of a breath to the quadrillion-year lifespan of the Creator, the Sūryasiddhānta constructs a seamless anatomy of time. Discover how ancient Vedic astronomy bridges the infinitesimal and the infinite.</div>
+      </div>
+      <div class="post-footer">
+        <span class="post-date">29 Mar 2026</span>
+        <span class="post-arrow">↗</span>
+      </div>
+    </a>
+
+    <div style="background:var(--card); display:flex; align-items:center; justify-content:center; border-left:1px solid var(--border)">
+        <span style="font-size:0.65rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase;">More Indic research coming soon</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-left">Rahul Subbaraman</div>
+  <div class="footer-right">
+    <a href="sci-comm.html">Sci-Comm Articles</a>
+    <a href="quick-reads.html">Quick Reads</a>
+    <a href="poetry.html">Poetry</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  if(window.self===window.top)return;
+  const page=window.location.pathname;
+  const sessionKey='counted_'+page;
+  if(sessionStorage.getItem(sessionKey))return;
+  if(localStorage.getItem('admin_ignore')==='true')return;
+  const DB='https://script.google.com/macros/s/AKfycbzpa1fUDZDXfQT5L6SxQRNf1zEFk-tpHV_2Tq9CY2iG4iSqa4W__Rnqs6fshnGJ0pnvRQ/exec';
+  let uid=localStorage.getItem('_rsuid');
+  if(!uid){
+    uid='u'+Date.now()+Math.random().toString(36).slice(2,7);
+    localStorage.setItem('_rsuid',uid)
+  }
+  fetch(`${DB}?action=visit&page=${encodeURIComponent(page)}&uid=${uid}`)
+    .then(()=>{sessionStorage.setItem(sessionKey,'true')})
+    .catch(err=>console.error('Tracking failed',err))
+})();
+</script>
+
+</body>
+</html>
