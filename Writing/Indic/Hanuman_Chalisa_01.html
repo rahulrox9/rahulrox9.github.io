@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Hanumān Chālīsā | Rahul Subbaraman</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Playball&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--border:#e8dfd0;--card:#fff9f2}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);line-height:1.8;margin:0}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35}
+h1,h2,h3{font-family:'Playfair Display',serif;margin-bottom:1rem}
+h1{font-size:2rem;border-bottom:2px solid var(--warm);padding-bottom:1rem}
+h2{font-size:1.5rem;color:var(--warm);border-bottom:1px solid var(--border)}
+nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:52px}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;text-decoration:none;color:var(--ink)}
+.nav-logo span{color:var(--warm);font-style:italic}
+.nav-links{display:flex;gap:1.4rem;align-items:center}
+.nav-links a{font-size:0.76rem;color:var(--muted);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
+.nav-links a:hover{color:var(--warm)}
+.nav-links a.active{color:var(--ink);font-weight:500}
+.nav-admin{font-size:0.72rem;color:var(--muted);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;padding:0.25rem 0.65rem;border:1px solid var(--border);border-radius:3px;transition:all 0.15s}
+.nav-admin:hover{color:var(--warm);border-color:var(--warm)}
+.post-container{max-width:750px;margin:4rem auto 8rem;padding:0 1.5rem}
+.back-link{display:inline-block;margin-bottom:2.5rem;text-decoration:none;color:var(--muted);font-size:0.75rem;letter-spacing:0.05em}
+.fancy-title{font-family: 'Tiro Devanagari Hindi', serif;font-size: clamp(2.2rem, 5vw, 3.8rem);color: var(--warm);line-height: 1.2;margin-bottom: 0.5rem;font-weight: 400;}
+.post-metadata{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);display:block;margin-top:1rem}
+.verse-source{font-size:0.85rem;color:var(--muted);font-weight:500;display:block;margin-left:1.5rem}
+
+.sanskrit{font-family:'Tiro Sanskrit',serif;font-size:1rem;color: var(--muted);display:block;margin-bottom:0.5rem;font-weight: bold;}
+.engtrans{color:var(--muted); font-style:italic; font-size:0.95rem; margin-bottom:0.5rem; display:block; font-weight: normal; font-style: italic; color: #555;}
+
+.indented { margin-left: 1.5rem; margin-right: 1.5rem;}
+
+.post-content{text-align:justify;text-justify:inter-word;hyphens:auto;-webkit-hyphens:auto;-ms-hyphens:auto}
+.post-content h2{font-family:'Playfair Display',serif;font-size:1.8rem;margin:3.5rem 0 1.2rem;color:var(--warm);text-align:left}
+.post-content h3{font-family:'Playfair Display',serif;font-size:1.4rem;margin:2.5rem 0 1rem;text-align:left}
+.post-figure{margin:2.5rem 0}
+.post-image{width:100%;height:auto;border:1px solid var(--border);display:block}
+figcaption{display:flex;justify-content:space-between;align-items:baseline;gap:1.5rem;margin-top:0.6rem;text-align:left}
+.caption-text{font-size:0.85rem;color:var(--ink);font-style:italic;font-weight:300}
+.image-credit{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap}
+
+table{width:100%;border-collapse:collapse;margin:0.5rem 0;font-size:0.9rem}
+th,td{border:0.25px solid var(--border);padding:0.25rem;text-align:center}
+th{background:#fcfaf7;font-family:'Playfair Display',serif; font-weight:700}
+tr:nth-child(even){background:#faf9f7}
+th { background: #e8dfd0;}
+td, tr:nth-child(even) {background: #fcfaf7;}
+
+footer{padding:4rem;border-top:1px solid var(--border);text-align:center;font-family:'Playfair Display',serif;font-style:italic;color:var(--muted)}
+@media (max-width:600px){figcaption{flex-direction:column;gap:0.3rem}}
+
+.subscribe-cta { padding: 1rem 1rem; background-color: var(--card); border-top: 0.25px solid var(--border); border-bottom: 0.25px solid var(--border); text-align: center; margin-top: 0.5rem; }
+.cta-content h3 {font-family: 'Playfair Display', serif;font-size: 1.5rem;color: var(--ink);margin-bottom: 0.5rem;}
+.cta-content p {font-size: 0.9rem;color: var(--muted);margin-bottom: 0.5rem;}
+.btn-subscribe {display: inline-block;padding: 0.8rem 2rem;background-color: var(--warm);color: white; text-decoration: none;
+                font-family: 'DM Sans', sans-serif;  font-size: 0.85rem;font-weight: 500;border-radius: 4px; transition: opacity 0.2s;}
+.btn-subscribe:hover {opacity: 0.9;}
+</style>
+</head>
+<body>
+
+<nav>
+<a class="nav-logo" href="../../index.html">Rahul <span>Subbaraman</span></a>
+<div class="nav-links">
+<a href="../../Public/writing.html" class="active">Writing</a>
+<a class="nav-admin" href="../../Admin/admin.html">Admin</a>
+</div>
+</nav>
+
+<article class="post-container">
+<a href="../../Public/writing.html" class="back-link">← WRITING</a>
+
+<header class="post-header">
+<h1 class="fancy-title">Unlocking the Forty Verses of the Hanumān Chālīsā | Part 1: Context, Origins, and Tradition</h1>
+<span class="post-metadata">English · Article · Indic · 22.04.2026 </span>
+</header>
+
+
+<section class="post-content">
+
+<p> Within the framework of <em>Sanātana Dharma</em> or Hinduism, questioning is not always seen as a departure from faith. When undertaken with sincerity, it can be a way of approaching it more closely. Traditions are not only received; they are reflected upon, revisited, and understood anew across generations. It is in that spirit that this enquiry began on the <em>Caitra Pūrṇimā</em> (the full moon day in March–April), which is traditionally celebrated as Hanumān Jayanti or the birth anniversary of Hanumān in the northern parts of India. <i>Āstika</i>s (devotees) in the southern Indian state of Tamil Nadu, where I hail from, celebrate it in the month of Margazhi (<em>Mārgaśīrṣa</em>), which broadly corresponds to November–December, when <em>Amāvāsyā Tithi</em> (New Moon) coincides with the <em>Mūla Nakṣatram</em>. While different calendar systems lead to variation regarding <i>Jayanthi</i>, the Hanumān Chālīsā is unanimously revered across India for providing strength, protection, and mental peace.</p>
+
+<p> Pinpointing the historical origin of the Hanumān Chālīsā is not straightforward. Its attribution to <i>Gosvāmī Tulasīdās</i> is firmly held within the devotional tradition, but the circumstances of its composition remain uncertain. The record we inherit is uneven, partly textual, partly preserved through oral transmission across generations. Any attempt to trace its beginnings must therefore move between these two worlds: the archive and the living tradition. They do not always agree, but together they shape how the Chalisa has come down to us.</p>
+
+<div class="indented">
+<h3>The Oral Tradition</h3>
+<p>As I received this account, passed down through generations of devotees following the ancient <em>paramparā</em>, it is presented not as a mere literary episode, but as one rooted in spiritual trial and divine grace. According to this widely held tradition, the third Mughal Emperor, Abu'l-Fath Jalal-ud-Din Muhammad Akbar, intrigued by Tulasīdās’s reputation, summoned him to the royal court at Delhi (often associated with Fatehpur Sikri). Tulasīdās, embodying the humility of a <em>bhakta</em>, is said to have refused, stating that he possessed no powers of his own and was only a servant of Śrī Rāma. Angered by what was perceived as defiance, the emperor is believed to have ordered his imprisonment. It is within this setting, the tradition continues, that Tulasīdās turned to Hanumān and composed the forty verses of the Hanumān Chālīsā. Upon its completion, it is said that a vast army of monkeys descended upon the imperial city, disrupting the court and throwing it into disarray. Faced with this, the emperor is believed to have released Tulasīdās and acknowledged the force of his devotion. The episode is remembered within the devotional tradition as a moment in which Hanumān’s grace manifested in defence of his devotee.</p>
+
+<h3>The Written Record</h3>
+<p>The written record develops in layers. Nābhādāsa’s <em>Bhaktamāla</em>, usually dated to around 1600 CE and composed close to Tulasīdās’s own lifetime, contains only a brief verse in praise of him and does not mention Akbar, imprisonment, or the origin of the Hanumān Chālīsā. The fuller court narrative emerges only in later hagiographical tradition, especially in Priyādās’s <em>Bhaktirasbodhinī</em> of 1712 CE, where the life of Tulasīdās is expanded through miracle narratives and received devotional accounts. Tulasīdās died in 1623. Priyādās was writing eighty-nine years later. This distinction matters. It does not prove the later tradition false, but it does show that the famous Akbar episode does not belong to the earliest written layer available to us. It enters the record later, through biographical and commentarial traditions (ṭīkā) that are themselves shaped by oral transmission. The fact that the written record is late does not, for me, diminish the force of the tradition. Within the devotional framework in which the Hanumān Chālīsā is received, the episode carries its own kind of authority, independent of documentary proof.</p>
+
+<h3>The Silence of the Mughal Imperial Records</h3>
+<p>Sceptics often point to a discrepancy here. The detailed court chronicles of the Mughal empire, such as Abu'l-Fazl’s 'Akbarnama' and the 'Ain-i-Akbari', make no mention of Tulasīdās being imprisoned, nor do they record a sudden descent of monkeys overwhelming the imperial city, and bringing it to its knees. At first glance, this silence appears decisive. However, to dismiss the Bhakti tradition on that basis alone is to misunderstand the nature of these texts. Mughal court chronicles were not neutral records of all events within the empire. They were composed within an imperial framework, concerned with articulating order, authority, and kingship, and are therefore selective in what they preserve. They also operate within an intellectual and a theological horizon grounded in 'tawhid', which does not accept, and therefore does not readily accommodate narratives of divine intervention, as understood in many Hindu traditions centred on <em>Brahman</em> and the many <em>rūpas</em> through which it is approached. Seen in this light, the absence of such an episode is less surprising than often assumed. At the same time, that silence does not settle the question. It neither confirms the event nor disproves it. </p>
+</div>
+<p>Ultimately, the Hanumān Chālīsā exists at the intersection of two distinct ways of knowing. One is the archival, which relies on physical evidence and contemporaneous manuscripts to validate an event. The other is the <em>Paramparā</em>, where truth is not a static entry in a ledger, but a living, breathing continuity of experience passed from heart to heart. This enquiry began as an attempt to understand that intersection. Where it has led me is toward the living tradition. The reader, however, is free to arrive at their own understanding. Whatever one makes of the written record, the Hanumān Chālīsā endures in the daily practice of <i>Āstika</i>s, recited with the quiet conviction that Hanumān responds to those who remember him with sincerity.</p>
+
+<h3>REFERENCES:</h3>
+
+<p> Nābhādāsa, <em>Bhaktamāla</em> (c. 1600), often transmitted with Priyādāsa’s <em>Bhaktirasbodhinī</em> (1712) in later printed editions. Archive edition: <a href="https://archive.org/details/in.ernet.dli.2015.341069" target="_blank"> https://archive.org/details/in.ernet.dli.2015.341069 </a> </p>
+
+<p> Hindi biographical discussions of Tulasīdās (e.g., <em>Kavitāvalī</em> biography material, Wikisource): <a href="https://hi.wikisource.org/wiki/कवितावली/तुलसीदास_की_जीवनी" target="_blank"> Wikisource Link </a> </p>
+
+<p> Abu'l-Fazl, <em>Akbarnāma</em> and <em>Ain-i-Akbari</em> (c. 1590s). English translation: Asiatic Society, Calcutta, 1873. 
+Available at: <a href="https://archive.org/details/ain-i-akbari-vol-1" target="_blank"> https://archive.org/details/ain-i-akbari-vol-1 </a> </p> 
+
+</article>
+
+<section class="subscribe-cta">
+    <div class="cta-content">
+        <h3>Stay Updated</h3>
+        <p>Receive notifications for new articles, lessons, travel and research updates.</p>
+        <a href="../../Public/subscribe.html" class="btn-subscribe">Subscribe Now</a>
+    </div>
+</section>
+  
+<footer>
+  <div class="footer-left">Rahul Subbaraman</div>
+  <div class="footer-right">
+    <a href="../../writing.html">Writing</a>
+    <a href=".././watchlist.html">Watchlist</a>
+    <a href="../../travel.html">Travels</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // 1. Only track if viewed inside the index.html frame
+  if (window.self === window.top) return;
+
+  const page = window.location.pathname;
+  const sessionKey = 'counted_' + page;
+
+  // 2. Check if this page was already counted in this session
+  if (sessionStorage.getItem(sessionKey)) {
+    console.log('Page already counted in this session. Skipping.');
+    return;
+  }
+
+  // 3. Admin ignore flag (Optional)
+  if (localStorage.getItem('admin_ignore') === 'true') return;
+
+  const DB = 'https://script.google.com/macros/s/AKfycbzpa1fUDZDXfQT5L6SxQRNf1zEFk-tpHV_2Tq9CY2iG4iSqa4W__Rnqs6fshnGJ0pnvRQ/exec';
+  
+  // Unique User ID (for "Unique Visitors" stat)
+  let uid = localStorage.getItem('_rsuid');
+  if (!uid) { 
+    uid = 'u' + Date.now() + Math.random().toString(36).slice(2,7); 
+    localStorage.setItem('_rsuid', uid); 
+  }
+
+  // 4. Send the visit and set the session flag
+  fetch(`${DB}?action=visit&page=${encodeURIComponent(page)}&uid=${uid}`)
+    .then(() => {
+      sessionStorage.setItem(sessionKey, 'true');
+    })
+    .catch(err => console.error('Tracking failed', err));
+})();
+</script>
+</body>
+</html>
