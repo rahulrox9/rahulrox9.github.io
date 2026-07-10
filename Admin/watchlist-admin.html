@@ -437,6 +437,7 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
       <button class="btn sm" onclick="openCollectionEditor()">＋ Create manual group</button>
     </div>
   </div>
+  <div id="collection-save-status" style="font-size:0.72rem;color:var(--muted);margin:-0.3rem 0 0.8rem"></div>
   <div id="franchise-list"><div class="empty">Loading collection decisions…</div></div>
 </div>
 
@@ -523,7 +524,9 @@ let pendingSeasonReview = null;
 let pendingMoveToWatched = null;
 let discoverLang = '';
 let discoverType = 'movie';
-let collectionRules = { groups: [] };
+const COLLECTIONS_FILE = 'watchlist-collections.json';
+const COLLECTIONS_LOCAL_KEY = 'watchlist-collections-v2';
+let collectionRules = { version:2, updatedAt:0, groups:[] };
 let editingCollectionGroupId = null;
 let pendingCollectionDetails = {};
 let collectionRefreshInProgress = false;
@@ -1497,9 +1500,28 @@ function normaliseCollectionPart(part) {
   };
 }
 
+function parseCollectionPayload(value) {
+  let parsed=value;
+  for (let i=0;i<4;i++) {
+    if (typeof parsed==='string') {
+      const text=parsed.trim();
+      if (!text) return null;
+      try { parsed=JSON.parse(text); continue; } catch(e) { return null; }
+    }
+    if (parsed&&typeof parsed==='object'&&!Array.isArray(parsed)&&!Array.isArray(parsed.groups)) {
+      if ('data' in parsed) { parsed=parsed.data; continue; }
+      if ('content' in parsed) { parsed=parsed.content; continue; }
+      if ('value' in parsed) { parsed=parsed.value; continue; }
+    }
+    break;
+  }
+  return parsed;
+}
+
 function normaliseCollectionRules(data) {
-  const groups=Array.isArray(data?.groups)?data.groups:[];
-  return {groups:groups.map(g=>({
+  const parsed=parseCollectionPayload(data);
+  const groups=Array.isArray(parsed?.groups)?parsed.groups:[];
+  return {version:2,updatedAt:Number(parsed?.updatedAt||0),groups:groups.map(g=>({
     id:String(g.id||('group-'+Date.now()+'-'+Math.random().toString(36).slice(2))),
     name:String(g.name||'Untitled group'),
     type:['franchise','universe','studio','custom'].includes(g.type)?g.type:'custom',
@@ -1511,6 +1533,42 @@ function normaliseCollectionRules(data) {
     tmdbParts:Array.isArray(g.tmdbParts)?g.tmdbParts.map(normaliseCollectionPart):[],
     lastRefreshedAt:Number(g.lastRefreshedAt||0)
   }))};
+}
+
+function setCollectionSaveStatus(message,isError=false) {
+  const el=document.getElementById('collection-save-status');
+  if (!el) return;
+  el.textContent=message||'';
+  el.style.color=isError?'var(--red)':'var(--muted)';
+}
+
+function readLocalCollectionRules() {
+  try {
+    const value=localStorage.getItem(COLLECTIONS_LOCAL_KEY);
+    return value?normaliseCollectionRules(value):null;
+  } catch(e) {
+    console.warn('Collection browser storage unavailable:',e);
+    return null;
+  }
+}
+
+function writeLocalCollectionRules(rules) {
+  try {
+    localStorage.setItem(COLLECTIONS_LOCAL_KEY,JSON.stringify(rules));
+    return true;
+  } catch(e) {
+    console.warn('Collection browser save failed:',e);
+    return false;
+  }
+}
+
+function collectionRuleIds(rules) {
+  return new Set((rules?.groups||[]).map(g=>g.id));
+}
+
+function containsAllCollectionRules(saved,expected) {
+  const ids=collectionRuleIds(saved);
+  return (expected?.groups||[]).every(g=>ids.has(g.id));
 }
 
 function collectionSuggestions() {
@@ -1588,16 +1646,53 @@ async function fetchCollectionDetails(tmdbCollectionId) {
 }
 
 async function saveCollections() {
-  try { await driveWrite('watchlist-collections.json',collectionRules); return true; }
-  catch(e) { console.error('Collection save failed:',e); return false; }
+  collectionRules=normaliseCollectionRules(collectionRules);
+  collectionRules.updatedAt=Date.now();
+  const localSaved=writeLocalCollectionRules(collectionRules);
+  try {
+    await driveWrite(COLLECTIONS_FILE,collectionRules);
+    const verification=await driveRead(COLLECTIONS_FILE);
+    const savedRules=normaliseCollectionRules(verification.data);
+    if (!containsAllCollectionRules(savedRules,collectionRules)) throw new Error('Saved collection data could not be verified');
+    if (savedRules.updatedAt>=collectionRules.updatedAt) collectionRules=savedRules;
+    writeLocalCollectionRules(collectionRules);
+    setCollectionSaveStatus(`Saved permanently · ${collectionRules.groups.length} decision${collectionRules.groups.length===1?'':'s'}`);
+    return true;
+  } catch(e) {
+    console.error('Collection server save failed:',e);
+    if (localSaved) {
+      setCollectionSaveStatus('Server sync failed. Decisions are retained in this browser.',true);
+      return true;
+    }
+    setCollectionSaveStatus('Collection decisions could not be saved.',true);
+    return false;
+  }
 }
 
 async function loadCollections() {
+  const localRules=readLocalCollectionRules();
+  let remoteRules=null;
   try {
-    const r=await driveRead('watchlist-collections.json');
-    collectionRules=normaliseCollectionRules(r.data);
+    const r=await driveRead(COLLECTIONS_FILE);
+    remoteRules=normaliseCollectionRules(r.data);
   } catch(e) {
-    collectionRules={groups:[]};
+    console.warn('Collection server load failed:',e);
+  }
+
+  if (localRules&&remoteRules) {
+    collectionRules=localRules.updatedAt>remoteRules.updatedAt?localRules:remoteRules;
+  } else {
+    collectionRules=localRules||remoteRules||normaliseCollectionRules(null);
+  }
+  writeLocalCollectionRules(collectionRules);
+
+  if (remoteRules&&containsAllCollectionRules(remoteRules,collectionRules)) {
+    setCollectionSaveStatus(`Loaded ${collectionRules.groups.length} saved decision${collectionRules.groups.length===1?'':'s'}`);
+  } else if (localRules) {
+    setCollectionSaveStatus('Loaded decisions from this browser. Server copy is unavailable or stale.',true);
+    try { await driveWrite(COLLECTIONS_FILE,collectionRules); } catch(e) { console.warn('Collection server repair failed:',e); }
+  } else {
+    setCollectionSaveStatus('No saved collection decisions yet.');
   }
 }
 
