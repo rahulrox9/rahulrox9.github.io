@@ -933,15 +933,18 @@ function renderList() {
 
   if (!visible.length) { list.innerHTML='<div class="empty">Nothing here yet</div>'; return; }
 
-  list.innerHTML = visible.map(e => {
+  const approvedNameMap=buildApprovedCollectionNameMap();
+  try {
+    list.innerHTML = visible.map(e => {
     const isToWatch = !!e.toWatch;
     const primaryMeta=!isToWatch&&e.type==='movie'?`Watched: ${displayWatchedDate(e)}`:e.year;
+    const approvedNames=approvedNameMap.get(e.id)||[];
     return `<div class="entry">
       ${e.poster?`<img src="${e.poster}" alt="${e.title}">`:''}
       <div class="entry-info">
         <div class="entry-title">${e.title}
           <span class="badge ${isToWatch?'towatch':e.type}">${isToWatch?'To Watch':e.type==='show'?'Series':'Movie'}</span>
-          ${approvedCollectionNamesForEntry(e).length?`<span class="badge" style="background:#f0e8fd;color:#6b3fa0;margin-left:2px" title="${approvedCollectionNamesForEntry(e).join(', ')}">🎬</span>`:''}
+          ${approvedNames.length?`<span class="badge" style="background:#f0e8fd;color:#6b3fa0;margin-left:2px" title="${escapeHtml(approvedNames.join(', '))}">🎬</span>`:''}
           ${e.type==='show'&&['Ended','Canceled','Cancelled'].includes(e.status)?` <span class="badge" style="background:#f0e0e0;color:var(--red)">${e.status}</span>`:''}
         </div>
         <div class="entry-meta">${primaryMeta}${e.language?' · '+langName(e.language):''}${!isToWatch&&e.myRating?' · '+e.myRating+'/10':''}</div>
@@ -957,7 +960,11 @@ function renderList() {
         <button class="icon-btn del" onclick="removeEntry('${e.id}')" title="Remove">✕</button>
       </div>
     </div>`;
-  }).join('');
+    }).join('');
+  } catch(err) {
+    console.error('Watchlist rendering failed:',err);
+    list.innerHTML='<div class="msg err" style="display:block">The watchlist could not be displayed. Open the browser console for the exact error.</div>';
+  }
 }
 
 // ── Season tracker (unchanged) ───────────────────────────
@@ -1688,6 +1695,35 @@ function collectionMembers(group) {
 
 function approvedCollectionNamesForEntry(entry) {
   return collectionRules.groups.filter(g=>g.status==='approved'&&collectionMembers(g).some(e=>e.id===entry.id)).map(g=>g.name);
+}
+
+function buildApprovedCollectionNameMap() {
+  const result=new Map();
+  try {
+    const entryByKey=new Map(entries.filter(e=>e.tmdbId).map(e=>[collectionEntryKey(e),e]));
+    collectionRules.groups.filter(g=>g.status==='approved').forEach(group=>{
+      const include=new Set((group.includeMembers||[]).map(value=>{
+        const parsed=parseCollectionMemberKey(value);
+        return collectionMemberKey(parsed.type,parsed.tmdbId);
+      }));
+      const exclude=new Set((group.excludeMembers||[]).map(value=>{
+        const parsed=parseCollectionMemberKey(value);
+        return collectionMemberKey(parsed.type,parsed.tmdbId);
+      }));
+      const keys=automaticCollectionMemberKeys(group);
+      include.forEach(key=>keys.add(key));
+      keys.forEach(key=>{
+        if (exclude.has(key)) return;
+        const entry=entryByKey.get(key);
+        if (!entry) return;
+        if (!result.has(entry.id)) result.set(entry.id,[]);
+        result.get(entry.id).push(group.name);
+      });
+    });
+  } catch(err) {
+    console.error('Collection badge lookup failed:',err);
+  }
+  return result;
 }
 
 function entryForCollectionPart(part) {
