@@ -412,6 +412,44 @@ const LANG_NAMES = {
 };
 function langName(code) { return LANG_NAMES[code] || code || ''; }
 
+function localISODate(value=Date.now()) {
+  const d=new Date(value);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function monthYearFromISO(iso) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso||'')) return '';
+  return new Date(iso+'T00:00:00').toLocaleDateString('en-GB',{month:'short',year:'numeric'});
+}
+function displayWatchedDate(e) {
+  const value=e.watchedDate||e.watched||'';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return new Date(value+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  }
+  return value||'Date not recorded';
+}
+function recoverWatchedDates() {
+  let changed=false;
+  entries.forEach(e=>{
+    if (e.type!=='movie'||e.toWatch||e.watchedDate||!e.watched) return;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(e.watched)) {
+      e.watchedDate=e.watched;
+      e.watched=monthYearFromISO(e.watchedDate);
+      changed=true;
+      return;
+    }
+    for (const stamp of [e.addedAt,e.watchedAt]) {
+      if (!stamp) continue;
+      const candidate=localISODate(stamp);
+      if (monthYearFromISO(candidate)===e.watched) {
+        e.watchedDate=candidate;
+        changed=true;
+        break;
+      }
+    }
+  });
+  return changed;
+}
+
 let entries = [];
 let fetched = null;
 let editId  = null;
@@ -600,6 +638,7 @@ async function fetchTmdb(tmdbId, type, imdbIdHint) {
     document.getElementById('movie-fields').style.display = type==='movie'?'block':'none';
     document.getElementById('show-fields').style.display  = type==='show'?'block':'none';
     document.getElementById('submit-btn').style.display   = 'inline-block';
+    if (type==='movie') document.getElementById('m-watched').value=localISODate();
     makeStar('m-stars','m-star-lbl','m');
     makeStar('s-stars','s-star-lbl','s');
     const langFull = langName(language);
@@ -608,7 +647,9 @@ async function fetchTmdb(tmdbId, type, imdbIdHint) {
 
     // Radio: show watched fields only if watched is selected
     document.querySelectorAll('input[name="add-dest"]').forEach(r => r.onchange = () => {
-      document.getElementById('movie-watched-fields').style.display = r.value==='watched'&&r.checked ? 'block' : 'none';
+      const watched=r.value==='watched'&&r.checked;
+      document.getElementById('movie-watched-fields').style.display=watched?'block':'none';
+      if (watched&&!document.getElementById('m-watched').value) document.getElementById('m-watched').value=localISODate();
     });
   } catch(e) { showPreviewMsg('Error: '+e.message, true); }
 }
@@ -626,7 +667,13 @@ async function submitEntry() {
       e.myRating = _stars['m']||0;
       e.review   = document.getElementById('m-review').value.trim();
       const rd   = document.getElementById('m-watched').value;
-      e.watched  = rd ? new Date(rd).toLocaleDateString('en-GB',{month:'short',year:'numeric'}) : '';
+      if (rd) {
+        e.watchedDate=rd;
+        e.watched=monthYearFromISO(rd);
+      } else if (!e.watchedDate&&!e.watched) {
+        e.watchedDate=localISODate();
+        e.watched=monthYearFromISO(e.watchedDate);
+      }
       e.language = document.getElementById('m-language').value.trim();
     } else {
       e.review   = document.getElementById('s-review').value.trim();
@@ -668,8 +715,9 @@ async function submitEntry() {
     if (fetched.type==='movie') {
       entry.myRating = _stars['m']||0;
       entry.review   = document.getElementById('m-review').value.trim();
-      const rd = document.getElementById('m-watched').value;
-      entry.watched = rd ? new Date(rd).toLocaleDateString('en-GB',{month:'short',year:'numeric'}) : '';
+      const rd = document.getElementById('m-watched').value||localISODate();
+      entry.watchedDate=rd;
+      entry.watched=monthYearFromISO(rd);
       entry.language = document.getElementById('m-language').value.trim();
     } else {
       entry.review   = document.getElementById('s-review').value.trim();
@@ -708,7 +756,7 @@ function startEdit(id) {
   makeStar('m-stars','m-star-lbl','m'); setStar('m-stars','m-star-lbl','m',e.myRating||0);
   if (e.type==='movie') {
     document.getElementById('m-review').value   = e.review||'';
-    document.getElementById('m-watched').value  = '';
+    document.getElementById('m-watched').value  = e.watchedDate||(/^\d{4}-\d{2}-\d{2}$/.test(e.watched||'')?e.watched:'');
     document.getElementById('m-language').value = e.language||'';
   } else {
     document.getElementById('s-review').value   = e.review||'';
@@ -747,7 +795,7 @@ function promptMoveToWatched(id) {
   document.getElementById('watched-modal-title').textContent = `Watched: ${e.title}`;
   makeStar('wm-stars','wm-star-lbl','wm');
   document.getElementById('wm-review').value = '';
-  document.getElementById('wm-watched').value = '';
+  document.getElementById('wm-watched').value = localISODate();
   document.getElementById('watched-modal').classList.add('on');
 }
 
@@ -757,8 +805,9 @@ async function confirmMoveToWatched() {
   e.toWatch   = false;
   e.myRating  = _stars['wm']||0;
   e.review    = document.getElementById('wm-review').value.trim();
-  const rd    = document.getElementById('wm-watched').value;
-  e.watched   = rd ? new Date(rd).toLocaleDateString('en-GB',{month:'short',year:'numeric'}) : '';
+  const rd    = document.getElementById('wm-watched').value||localISODate();
+  e.watchedDate=rd;
+  e.watched=monthYearFromISO(rd);
   e.watchedAt = Date.now();
   dismissWatchedModal();
   await save(); renderList();
@@ -812,6 +861,7 @@ function renderList() {
 
   list.innerHTML = visible.map(e => {
     const isToWatch = !!e.toWatch;
+    const primaryMeta=!isToWatch&&e.type==='movie'?`Watched: ${displayWatchedDate(e)}`:e.year;
     return `<div class="entry">
       ${e.poster?`<img src="${e.poster}" alt="${e.title}">`:''}
       <div class="entry-info">
@@ -820,7 +870,7 @@ function renderList() {
           ${e.franchise?`<span class="badge" style="background:#f0e8fd;color:#6b3fa0;margin-left:2px" title="${e.franchise}">🎬</span>`:''}
           ${e.type==='show'&&['Ended','Canceled','Cancelled'].includes(e.status)?` <span class="badge" style="background:#f0e0e0;color:var(--red)">${e.status}</span>`:''}
         </div>
-        <div class="entry-meta">${e.year}${e.language?' · '+langName(e.language):''}${!isToWatch&&e.myRating?' · '+e.myRating+'/10':''}</div>
+        <div class="entry-meta">${primaryMeta}${e.language?' · '+langName(e.language):''}${!isToWatch&&e.myRating?' · '+e.myRating+'/10':''}</div>
         ${!isToWatch&&e.review?`<div class="entry-meta" style="font-style:italic;margin-top:0.15rem">"${e.review.substring(0,70)}${e.review.length>70?'…':''}"</div>`:''}
         ${e.type==='show'&&!isToWatch?renderSeasonTracker(e):''}
       </div>
@@ -1415,6 +1465,8 @@ async function load() {
     console.error('Load error:',e);
   }
   entries.forEach(e=>{ if(!e.id) e.id=Date.now().toString()+Math.random(); });
+  const migrated=recoverWatchedDates();
+  if (migrated) await save();
   renderList();
   renderWhatsNew();
 }
