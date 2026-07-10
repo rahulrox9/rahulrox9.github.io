@@ -167,6 +167,13 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
 .collection-card-actions { display:flex; gap:0.4rem; flex-wrap:wrap; justify-content:flex-end; }
 .collection-type { display:inline-block; font-size:0.6rem; text-transform:uppercase; letter-spacing:0.06em; padding:0.1rem 0.4rem; border-radius:8px; background:#f0e8fd; color:#6b3fa0; margin-left:0.3rem; }
 .collection-titles { font-size:0.74rem; color:var(--muted); margin-top:0.55rem; line-height:1.45; }
+.pending-title-list { margin-top:0.65rem; border:1px solid var(--border); border-radius:4px; overflow:hidden; background:var(--parchment); }
+.pending-title-row { display:flex; align-items:center; gap:0.6rem; padding:0.45rem 0.55rem; border-bottom:1px solid var(--border); }
+.pending-title-row:last-child { border-bottom:none; }
+.pending-title-row img { width:28px; height:42px; object-fit:cover; border-radius:2px; flex-shrink:0; }
+.pending-title-info { flex:1; min-width:0; }
+.pending-title-name { font-size:0.78rem; font-weight:500; color:var(--ink); }
+.pending-title-meta { font-size:0.68rem; color:var(--muted); margin-top:0.08rem; }
 .collection-movie-list { max-height:320px; overflow:auto; border:1px solid var(--border); border-radius:4px; padding:0.4rem; background:var(--parchment); }
 .collection-movie-option { display:flex; align-items:center; gap:0.5rem; padding:0.35rem 0.4rem; font-size:0.78rem; text-transform:none; letter-spacing:0; color:var(--ink); cursor:pointer; border-radius:3px; }
 .collection-movie-option:hover { background:var(--border); }
@@ -1534,10 +1541,26 @@ function renderFranchises() {
   const pending=collectionSuggestions();
   const approved=collectionRules.groups.filter(g=>g.status==='approved').sort((a,b)=>a.name.localeCompare(b.name));
   const rejected=collectionRules.groups.filter(g=>g.status==='rejected').sort((a,b)=>a.name.localeCompare(b.name));
-  const pendingHtml=pending.length?pending.map(s=>`<div class="collection-card"><div class="collection-card-head"><div><div class="collection-card-title">${escapeHtml(s.name)}</div><div class="collection-card-meta">TMDB suggestion · ${s.items.length} matching title${s.items.length===1?'':'s'} in your watchlist</div></div><div class="collection-card-actions"><button class="btn sm green" onclick="approveCollection(${s.tmdbCollectionId})">Approve</button><button class="btn sm danger" onclick="rejectCollection(${s.tmdbCollectionId})">Reject</button></div></div><div class="collection-titles">${s.items.map(e=>escapeHtml(e.title)).join(' · ')}</div></div>`).join(''):'<div class="empty">No pending TMDB suggestions.</div>';
+  const pendingTitleCount=pending.reduce((total,s)=>total+s.items.length,0);
+  const pendingHtml=pending.length?pending.map(s=>`<div class="collection-card">
+    <div class="collection-card-head">
+      <div>
+        <div class="collection-card-title">${escapeHtml(s.name)}</div>
+        <div class="collection-card-meta">TMDB suggestion · ${s.items.length} matching title${s.items.length===1?'':'s'} in your watchlist</div>
+      </div>
+      <div class="collection-card-actions"><button class="btn sm green" onclick="approveCollection(${s.tmdbCollectionId})">Approve</button><button class="btn sm danger" onclick="rejectCollection(${s.tmdbCollectionId})">Reject</button></div>
+    </div>
+    <div class="pending-title-list">${s.items.map(e=>`<div class="pending-title-row">
+      ${e.poster?`<img src="${escapeHtml(e.poster)}" alt="${escapeHtml(e.title)}">`:''}
+      <div class="pending-title-info">
+        <div class="pending-title-name">${escapeHtml(e.title)}</div>
+        <div class="pending-title-meta">${e.year?escapeHtml(e.year):'Year unknown'}${e.language?' · '+escapeHtml(langName(e.language)):''}${e.type==='show'?' · Series':' · Movie'}</div>
+      </div>
+    </div>`).join('')}</div>
+  </div>`).join(''):'<div class="empty">No pending TMDB suggestions.</div>';
   const approvedHtml=approved.length?approved.map(renderCollectionCard).join(''):'<div class="empty">No approved collections yet.</div>';
   const rejectedHtml=rejected.length?rejected.map(g=>`<div class="collection-card"><div class="collection-card-head"><div><div class="collection-card-title">${escapeHtml(g.name)}</div><div class="collection-card-meta">Rejected TMDB suggestion</div></div><div class="collection-card-actions"><button class="btn sm ghost" onclick="restoreCollectionSuggestion('${g.id}')">Restore to pending</button></div></div></div>`).join(''):'<div class="empty">No rejected suggestions.</div>';
-  document.getElementById('franchise-list').innerHTML=`<div class="collection-section"><div class="collection-section-head"><h3>Pending suggestions (${pending.length})</h3></div>${pendingHtml}</div><div class="collection-section"><div class="collection-section-head"><h3>Approved groups (${approved.length})</h3></div>${approvedHtml}</div><div class="collection-section"><div class="collection-section-head"><h3>Rejected suggestions (${rejected.length})</h3></div>${rejectedHtml}</div>`;
+  document.getElementById('franchise-list').innerHTML=`<div class="collection-section"><div class="collection-section-head"><h3>Pending suggestions (${pending.length} groups, ${pendingTitleCount} titles)</h3></div>${pendingHtml}</div><div class="collection-section"><div class="collection-section-head"><h3>Approved groups (${approved.length})</h3></div>${approvedHtml}</div><div class="collection-section"><div class="collection-section-head"><h3>Rejected suggestions (${rejected.length})</h3></div>${rejectedHtml}</div>`;
 }
 
 // ── Storage ──────────────────────────────────────────────
