@@ -152,11 +152,25 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
 .stat-row:hover { color:var(--warm); }
 .stat-count { font-size:0.7rem; color:var(--muted); font-weight:500; background:var(--border); padding:0.1rem 0.4rem; border-radius:8px; }
 
-/* Franchise groups */
+/* Curated collections */
 .franchise-group { margin-bottom:1.2rem; }
-.franchise-header { font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; padding:0.5rem 0; border-bottom:1px solid var(--border); margin-bottom:0.6rem; display:flex; align-items:center; justify-content:space-between; }
+.franchise-header { font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; padding:0.5rem 0; border-bottom:1px solid var(--border); margin-bottom:0.6rem; display:flex; align-items:center; justify-content:space-between; gap:0.8rem; }
 .franchise-name { color:var(--ink); }
 .franchise-count { font-size:0.7rem; color:var(--muted); font-weight:400; font-family:'DM Sans',sans-serif; }
+.collection-section { margin-bottom:1.5rem; }
+.collection-section-head { display:flex; align-items:center; justify-content:space-between; gap:0.8rem; margin-bottom:0.7rem; }
+.collection-section-head h3 { font-family:'Playfair Display',serif; font-size:1rem; }
+.collection-card { background:var(--card); border:1px solid var(--border); border-radius:5px; padding:0.9rem 1rem; margin-bottom:0.6rem; }
+.collection-card-head { display:flex; align-items:flex-start; justify-content:space-between; gap:0.8rem; }
+.collection-card-title { font-family:'Playfair Display',serif; font-size:0.9rem; font-weight:700; }
+.collection-card-meta { font-size:0.7rem; color:var(--muted); margin-top:0.15rem; }
+.collection-card-actions { display:flex; gap:0.4rem; flex-wrap:wrap; justify-content:flex-end; }
+.collection-type { display:inline-block; font-size:0.6rem; text-transform:uppercase; letter-spacing:0.06em; padding:0.1rem 0.4rem; border-radius:8px; background:#f0e8fd; color:#6b3fa0; margin-left:0.3rem; }
+.collection-titles { font-size:0.74rem; color:var(--muted); margin-top:0.55rem; line-height:1.45; }
+.collection-movie-list { max-height:320px; overflow:auto; border:1px solid var(--border); border-radius:4px; padding:0.4rem; background:var(--parchment); }
+.collection-movie-option { display:flex; align-items:center; gap:0.5rem; padding:0.35rem 0.4rem; font-size:0.78rem; text-transform:none; letter-spacing:0; color:var(--ink); cursor:pointer; border-radius:3px; }
+.collection-movie-option:hover { background:var(--border); }
+.collection-movie-option input { width:14px; height:14px; accent-color:var(--warm); }
 
 /* Section panels */
 .section-panel { display:none; }
@@ -281,6 +295,25 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
   </div>
 </div>
 
+<!-- COLLECTION EDITOR MODAL -->
+<div class="overlay" id="collection-modal">
+  <div class="modal">
+    <h3 id="collection-modal-title">Create Collection</h3>
+    <div class="field"><label>Name</label><input type="text" id="collection-name" placeholder="e.g. Dhoom, Yash Raj Films"></div>
+    <div class="field"><label>Type</label><select id="collection-type">
+      <option value="franchise">Franchise</option>
+      <option value="universe">Universe</option>
+      <option value="studio">Studio / Banner</option>
+      <option value="custom">Custom</option>
+    </select></div>
+    <div class="field"><label>Included titles</label><div class="collection-movie-list" id="collection-movie-list"></div></div>
+    <div style="display:flex;gap:0.6rem;margin-top:0.5rem">
+      <button class="btn green" onclick="saveCollectionEditor()">Save Group</button>
+      <button class="btn ghost" onclick="closeCollectionEditor()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- MOVE TO WATCHED MODAL -->
 <div class="overlay" id="watched-modal">
   <div class="modal">
@@ -318,7 +351,7 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
   <button class="tab"     onclick="switchSection('discover',this)">Discover</button>
   <button class="tab"     onclick="switchSection('findmore',this)">Find More</button>
   <button class="tab"     onclick="switchSection('stats',this)">Stats</button>
-  <button class="tab"     onclick="switchSection('franchises',this)">Franchises</button>
+  <button class="tab"     onclick="switchSection('franchises',this)">Collections</button>
   <button id="refresh-all-btn" onclick="refreshAllSeries()" style="margin-left:auto;background:none;border:1px solid var(--warm);border-radius:4px;padding:0.28rem 0.8rem;font-size:0.72rem;color:var(--warm);cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0">↻ Refresh all series</button>
 </div>
 
@@ -372,10 +405,14 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
   <div class="stat-grid" id="stats-grid"></div>
 </div>
 
-<!-- FRANCHISES PANEL -->
+<!-- CURATED COLLECTIONS PANEL -->
 <div class="section-panel" id="panel-franchises">
-  <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem">Entries grouped by franchise/collection. Franchise data is pulled from TMDB when you add entries or run the backfill tool.</p>
-  <div id="franchise-list"><div class="empty">No franchise data yet — run TMDB Backfill to populate.</div></div>
+  <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem">TMDB collection data is treated only as a suggestion. Approve genuine franchises, reject incorrect suggestions or create manual groups such as Dhoom, YRF, Lokesh Cinematic Universe or any custom category.</p>
+  <div class="collection-section-head">
+    <h3>Collection review</h3>
+    <button class="btn sm" onclick="openCollectionEditor()">＋ Create manual group</button>
+  </div>
+  <div id="franchise-list"><div class="empty">Loading collection decisions…</div></div>
 </div>
 
 <script>
@@ -412,44 +449,6 @@ const LANG_NAMES = {
 };
 function langName(code) { return LANG_NAMES[code] || code || ''; }
 
-function localISODate(value=Date.now()) {
-  const d=new Date(value);
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
-function monthYearFromISO(iso) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso||'')) return '';
-  return new Date(iso+'T00:00:00').toLocaleDateString('en-GB',{month:'short',year:'numeric'});
-}
-function displayWatchedDate(e) {
-  const value=e.watchedDate||e.watched||'';
-  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return new Date(value+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-  }
-  return value||'Date not recorded';
-}
-function recoverWatchedDates() {
-  let changed=false;
-  entries.forEach(e=>{
-    if (e.type!=='movie'||e.toWatch||e.watchedDate||!e.watched) return;
-    if (/^\d{4}-\d{2}-\d{2}$/.test(e.watched)) {
-      e.watchedDate=e.watched;
-      e.watched=monthYearFromISO(e.watchedDate);
-      changed=true;
-      return;
-    }
-    for (const stamp of [e.addedAt,e.watchedAt]) {
-      if (!stamp) continue;
-      const candidate=localISODate(stamp);
-      if (monthYearFromISO(candidate)===e.watched) {
-        e.watchedDate=candidate;
-        changed=true;
-        break;
-      }
-    }
-  });
-  return changed;
-}
-
 let entries = [];
 let fetched = null;
 let editId  = null;
@@ -459,6 +458,8 @@ let pendingSeasonReview = null;
 let pendingMoveToWatched = null;
 let discoverLang = '';
 let discoverType = 'movie';
+let collectionRules = { groups: [] };
+let editingCollectionGroupId = null;
 window._stars = {};
 
 // ── Stars ────────────────────────────────────────────────
@@ -638,7 +639,6 @@ async function fetchTmdb(tmdbId, type, imdbIdHint) {
     document.getElementById('movie-fields').style.display = type==='movie'?'block':'none';
     document.getElementById('show-fields').style.display  = type==='show'?'block':'none';
     document.getElementById('submit-btn').style.display   = 'inline-block';
-    if (type==='movie') document.getElementById('m-watched').value=localISODate();
     makeStar('m-stars','m-star-lbl','m');
     makeStar('s-stars','s-star-lbl','s');
     const langFull = langName(language);
@@ -647,9 +647,7 @@ async function fetchTmdb(tmdbId, type, imdbIdHint) {
 
     // Radio: show watched fields only if watched is selected
     document.querySelectorAll('input[name="add-dest"]').forEach(r => r.onchange = () => {
-      const watched=r.value==='watched'&&r.checked;
-      document.getElementById('movie-watched-fields').style.display=watched?'block':'none';
-      if (watched&&!document.getElementById('m-watched').value) document.getElementById('m-watched').value=localISODate();
+      document.getElementById('movie-watched-fields').style.display = r.value==='watched'&&r.checked ? 'block' : 'none';
     });
   } catch(e) { showPreviewMsg('Error: '+e.message, true); }
 }
@@ -667,13 +665,7 @@ async function submitEntry() {
       e.myRating = _stars['m']||0;
       e.review   = document.getElementById('m-review').value.trim();
       const rd   = document.getElementById('m-watched').value;
-      if (rd) {
-        e.watchedDate=rd;
-        e.watched=monthYearFromISO(rd);
-      } else if (!e.watchedDate&&!e.watched) {
-        e.watchedDate=localISODate();
-        e.watched=monthYearFromISO(e.watchedDate);
-      }
+      e.watched  = rd ? new Date(rd).toLocaleDateString('en-GB',{month:'short',year:'numeric'}) : '';
       e.language = document.getElementById('m-language').value.trim();
     } else {
       e.review   = document.getElementById('s-review').value.trim();
@@ -715,9 +707,8 @@ async function submitEntry() {
     if (fetched.type==='movie') {
       entry.myRating = _stars['m']||0;
       entry.review   = document.getElementById('m-review').value.trim();
-      const rd = document.getElementById('m-watched').value||localISODate();
-      entry.watchedDate=rd;
-      entry.watched=monthYearFromISO(rd);
+      const rd = document.getElementById('m-watched').value;
+      entry.watched = rd ? new Date(rd).toLocaleDateString('en-GB',{month:'short',year:'numeric'}) : '';
       entry.language = document.getElementById('m-language').value.trim();
     } else {
       entry.review   = document.getElementById('s-review').value.trim();
@@ -756,7 +747,7 @@ function startEdit(id) {
   makeStar('m-stars','m-star-lbl','m'); setStar('m-stars','m-star-lbl','m',e.myRating||0);
   if (e.type==='movie') {
     document.getElementById('m-review').value   = e.review||'';
-    document.getElementById('m-watched').value  = e.watchedDate||(/^\d{4}-\d{2}-\d{2}$/.test(e.watched||'')?e.watched:'');
+    document.getElementById('m-watched').value  = '';
     document.getElementById('m-language').value = e.language||'';
   } else {
     document.getElementById('s-review').value   = e.review||'';
@@ -795,7 +786,7 @@ function promptMoveToWatched(id) {
   document.getElementById('watched-modal-title').textContent = `Watched: ${e.title}`;
   makeStar('wm-stars','wm-star-lbl','wm');
   document.getElementById('wm-review').value = '';
-  document.getElementById('wm-watched').value = localISODate();
+  document.getElementById('wm-watched').value = '';
   document.getElementById('watched-modal').classList.add('on');
 }
 
@@ -805,9 +796,8 @@ async function confirmMoveToWatched() {
   e.toWatch   = false;
   e.myRating  = _stars['wm']||0;
   e.review    = document.getElementById('wm-review').value.trim();
-  const rd    = document.getElementById('wm-watched').value||localISODate();
-  e.watchedDate=rd;
-  e.watched=monthYearFromISO(rd);
+  const rd    = document.getElementById('wm-watched').value;
+  e.watched   = rd ? new Date(rd).toLocaleDateString('en-GB',{month:'short',year:'numeric'}) : '';
   e.watchedAt = Date.now();
   dismissWatchedModal();
   await save(); renderList();
@@ -861,16 +851,15 @@ function renderList() {
 
   list.innerHTML = visible.map(e => {
     const isToWatch = !!e.toWatch;
-    const primaryMeta=!isToWatch&&e.type==='movie'?`Watched: ${displayWatchedDate(e)}`:e.year;
     return `<div class="entry">
       ${e.poster?`<img src="${e.poster}" alt="${e.title}">`:''}
       <div class="entry-info">
         <div class="entry-title">${e.title}
           <span class="badge ${isToWatch?'towatch':e.type}">${isToWatch?'To Watch':e.type==='show'?'Series':'Movie'}</span>
-          ${e.franchise?`<span class="badge" style="background:#f0e8fd;color:#6b3fa0;margin-left:2px" title="${e.franchise}">🎬</span>`:''}
+          ${approvedCollectionNamesForEntry(e).length?`<span class="badge" style="background:#f0e8fd;color:#6b3fa0;margin-left:2px" title="${approvedCollectionNamesForEntry(e).join(', ')}">🎬</span>`:''}
           ${e.type==='show'&&['Ended','Canceled','Cancelled'].includes(e.status)?` <span class="badge" style="background:#f0e0e0;color:var(--red)">${e.status}</span>`:''}
         </div>
-        <div class="entry-meta">${primaryMeta}${e.language?' · '+langName(e.language):''}${!isToWatch&&e.myRating?' · '+e.myRating+'/10':''}</div>
+        <div class="entry-meta">${e.year}${e.language?' · '+langName(e.language):''}${!isToWatch&&e.myRating?' · '+e.myRating+'/10':''}</div>
         ${!isToWatch&&e.review?`<div class="entry-meta" style="font-style:italic;margin-top:0.15rem">"${e.review.substring(0,70)}${e.review.length>70?'…':''}"</div>`:''}
         ${e.type==='show'&&!isToWatch?renderSeasonTracker(e):''}
       </div>
@@ -1374,7 +1363,10 @@ function renderStats() {
   function topDirs(arr)  { const c={}; arr.forEach(e=>{ if(e.director) e.director.split(',').forEach(d=>{ const n=d.trim(); if(n) c[n]=(c[n]||0)+1; }); }); return Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,10); }
   function topCast(arr)  { const c={}; arr.forEach(e=>{ (e.cast||[]).forEach(x=>{ c[x]=(c[x]||0)+1; }); }); return Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,10); }
   function topLangs(arr) { const c={}; arr.forEach(e=>{ const l=langName(e.language||''); if(l) c[l]=(c[l]||0)+1; }); return Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,10); }
-  function topFrans(arr) { const c={}; arr.forEach(e=>{ if(e.franchise) c[e.franchise]=(c[e.franchise]||0)+1; }); return Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,10); }
+  function topFrans(arr) {
+    const allowedIds=new Set(arr.map(e=>e.id));
+    return collectionRules.groups.filter(g=>g.status==='approved').map(g=>[g.name,collectionMembers(g).filter(e=>allowedIds.has(e.id)).length]).filter(([,count])=>count>0).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  }
 
   const makeBlock = (title, rows, clickFn) => `
     <div class="stat-block">
@@ -1397,8 +1389,8 @@ function renderStats() {
     makeBlock('Top Creators', topDirs(shows), 'findMoreFrom') +
     makeBlock('Top Cast', topCast(shows), 'findMoreFrom') +
     makeBlock('By Language', topLangs(shows), null) +
-    sectionHead('🎭 Franchises (Movies + Series)') +
-    makeBlock('By Franchise', topFrans(all), null);
+    sectionHead('🎭 Approved Collections') +
+    makeBlock('By Collection', topFrans(all), null);
 }
 
 function findMoreFrom(name) {
@@ -1410,41 +1402,142 @@ function findMoreFrom(name) {
   searchFindMore();
 }
 
-// ── Franchises ───────────────────────────────────────────
-function renderFranchises() {
-  const franchiseMap = {};
-  entries.forEach(e=>{
-    if (e.franchise) {
-      if (!franchiseMap[e.franchise]) franchiseMap[e.franchise]=[];
-      franchiseMap[e.franchise].push(e);
-    }
+// ── Curated collections ──────────────────────────────────
+function collectionKey(value) { return String(value ?? ''); }
+function escapeHtml(value) { return String(value ?? '').replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch])); }
+function collectionTypeLabel(type) { return ({franchise:'Franchise',universe:'Universe',studio:'Studio / Banner',custom:'Custom'})[type]||'Custom'; }
+
+function normaliseCollectionRules(data) {
+  const groups=Array.isArray(data?.groups)?data.groups:[];
+  return {groups:groups.map(g=>({
+    id:String(g.id||('group-'+Date.now()+'-'+Math.random().toString(36).slice(2))),
+    name:String(g.name||'Untitled group'),
+    type:['franchise','universe','studio','custom'].includes(g.type)?g.type:'custom',
+    status:g.status==='rejected'?'rejected':'approved',
+    source:g.source==='tmdb'?'tmdb':'manual',
+    tmdbCollectionId:g.tmdbCollectionId==null?null:Number(g.tmdbCollectionId),
+    includeTmdbIds:Array.isArray(g.includeTmdbIds)?g.includeTmdbIds.map(collectionKey):[],
+    excludeTmdbIds:Array.isArray(g.excludeTmdbIds)?g.excludeTmdbIds.map(collectionKey):[]
+  }))};
+}
+
+function collectionSuggestions() {
+  const map=new Map();
+  entries.filter(e=>e.type==='movie'&&e.franchiseId&&e.franchise).forEach(e=>{
+    const key=collectionKey(e.franchiseId);
+    if (!map.has(key)) map.set(key,{tmdbCollectionId:Number(e.franchiseId),name:e.franchise,items:[]});
+    map.get(key).items.push(e);
   });
-  const names = Object.keys(franchiseMap).sort();
-  if (!names.length) {
-    document.getElementById('franchise-list').innerHTML = '<div class="empty">No franchise data yet — run TMDB Backfill to populate.</div>';
-    return;
+  const decided=new Set(collectionRules.groups.filter(g=>g.tmdbCollectionId!=null).map(g=>collectionKey(g.tmdbCollectionId)));
+  return [...map.values()].filter(x=>!decided.has(collectionKey(x.tmdbCollectionId))).sort((a,b)=>a.name.localeCompare(b.name));
+}
+
+function collectionMembers(group) {
+  const include=new Set((group.includeTmdbIds||[]).map(collectionKey));
+  const exclude=new Set((group.excludeTmdbIds||[]).map(collectionKey));
+  const ids=new Set(include);
+  if (group.tmdbCollectionId!=null) entries.filter(e=>collectionKey(e.franchiseId)===collectionKey(group.tmdbCollectionId)).forEach(e=>ids.add(collectionKey(e.tmdbId)));
+  return entries.filter(e=>ids.has(collectionKey(e.tmdbId))&&!exclude.has(collectionKey(e.tmdbId))).sort((a,b)=>parseInt(a.year||0)-parseInt(b.year||0)||a.title.localeCompare(b.title));
+}
+
+function approvedCollectionNamesForEntry(entry) {
+  return collectionRules.groups.filter(g=>g.status==='approved'&&collectionMembers(g).some(e=>e.id===entry.id)).map(g=>g.name);
+}
+
+async function saveCollections() {
+  try { await driveWrite('watchlist-collections.json',collectionRules); return true; }
+  catch(e) { console.error('Collection save failed:',e); return false; }
+}
+
+async function loadCollections() {
+  try {
+    const r=await driveRead('watchlist-collections.json');
+    collectionRules=normaliseCollectionRules(r.data);
+  } catch(e) {
+    collectionRules={groups:[]};
   }
-  document.getElementById('franchise-list').innerHTML = names.map(name=>{
-    const items = franchiseMap[name].sort((a,b)=>parseInt(a.year||0)-parseInt(b.year||0));
-    return `<div class="franchise-group">
-      <div class="franchise-header">
-        <span class="franchise-name">${name}</span>
-        <span class="franchise-count">${items.length} title${items.length>1?'s':''}</span>
-      </div>
-      <div class="entry-list">${items.map(e=>`
-        <div class="entry">
-          ${e.poster?`<img src="${e.poster}" alt="${e.title}">`:''}
-          <div class="entry-info">
-            <div class="entry-title">${e.title} <span class="badge ${e.toWatch?'towatch':e.type}">${e.toWatch?'To Watch':e.type==='show'?'Series':'Movie'}</span></div>
-            <div class="entry-meta">${e.year}${e.myRating?' · '+e.myRating+'/10':''}</div>
-          </div>
-          <div class="entry-actions">
-            <button class="icon-btn" onclick="startEdit('${e.id}')">✏️</button>
-          </div>
-        </div>`).join('')}
-      </div>
-    </div>`;
-  }).join('');
+}
+
+async function approveCollection(tmdbCollectionId) {
+  const suggestion=collectionSuggestions().find(x=>collectionKey(x.tmdbCollectionId)===collectionKey(tmdbCollectionId));
+  if (!suggestion) return;
+  collectionRules.groups.push({id:'tmdb-'+tmdbCollectionId,name:suggestion.name,type:'franchise',status:'approved',source:'tmdb',tmdbCollectionId:Number(tmdbCollectionId),includeTmdbIds:[],excludeTmdbIds:[]});
+  await saveCollections(); renderFranchises(); renderList();
+}
+
+async function rejectCollection(tmdbCollectionId) {
+  const suggestion=collectionSuggestions().find(x=>collectionKey(x.tmdbCollectionId)===collectionKey(tmdbCollectionId));
+  if (!suggestion) return;
+  collectionRules.groups.push({id:'tmdb-'+tmdbCollectionId,name:suggestion.name,type:'franchise',status:'rejected',source:'tmdb',tmdbCollectionId:Number(tmdbCollectionId),includeTmdbIds:[],excludeTmdbIds:[]});
+  await saveCollections(); renderFranchises(); renderList();
+}
+
+async function restoreCollectionSuggestion(groupId) {
+  collectionRules.groups=collectionRules.groups.filter(g=>g.id!==groupId);
+  await saveCollections(); renderFranchises(); renderList();
+}
+
+async function rejectApprovedCollection(groupId) {
+  const group=collectionRules.groups.find(g=>g.id===groupId);
+  if (!group) return;
+  if (group.source==='manual') collectionRules.groups=collectionRules.groups.filter(g=>g.id!==groupId);
+  else group.status='rejected';
+  await saveCollections(); renderFranchises(); renderList();
+}
+
+function openCollectionEditor(groupId=null) {
+  editingCollectionGroupId=groupId;
+  const group=groupId?collectionRules.groups.find(g=>g.id===groupId):null;
+  document.getElementById('collection-modal-title').textContent=group?'Edit Collection':'Create Manual Group';
+  document.getElementById('collection-name').value=group?.name||'';
+  document.getElementById('collection-type').value=group?.type||'franchise';
+  const selected=new Set(group?collectionMembers(group).map(e=>collectionKey(e.tmdbId)):[]);
+  const options=entries.filter(e=>e.tmdbId).slice().sort((a,b)=>a.title.localeCompare(b.title));
+  document.getElementById('collection-movie-list').innerHTML=options.length?options.map(e=>`<label class="collection-movie-option"><input type="checkbox" value="${escapeHtml(e.tmdbId)}" ${selected.has(collectionKey(e.tmdbId))?'checked':''}><span>${escapeHtml(e.title)}${e.year?' ('+escapeHtml(e.year)+')':''} · ${e.type==='show'?'Series':'Movie'}</span></label>`).join(''):'<div class="empty">No TMDB-linked titles available.</div>';
+  document.getElementById('collection-modal').classList.add('on');
+}
+
+function closeCollectionEditor() {
+  document.getElementById('collection-modal').classList.remove('on');
+  editingCollectionGroupId=null;
+}
+
+async function saveCollectionEditor() {
+  const name=document.getElementById('collection-name').value.trim();
+  const type=document.getElementById('collection-type').value;
+  if (!name) { alert('Enter a collection name.'); return; }
+  const selected=new Set([...document.querySelectorAll('#collection-movie-list input:checked')].map(x=>collectionKey(x.value)));
+  let group=editingCollectionGroupId?collectionRules.groups.find(g=>g.id===editingCollectionGroupId):null;
+  if (!group) {
+    group={id:'manual-'+Date.now(),name,type,status:'approved',source:'manual',tmdbCollectionId:null,includeTmdbIds:[],excludeTmdbIds:[]};
+    collectionRules.groups.push(group);
+  }
+  group.name=name; group.type=type; group.status='approved';
+  const baseIds=new Set(group.tmdbCollectionId==null?[]:entries.filter(e=>collectionKey(e.franchiseId)===collectionKey(group.tmdbCollectionId)).map(e=>collectionKey(e.tmdbId)));
+  group.includeTmdbIds=[...selected].filter(id=>!baseIds.has(id));
+  group.excludeTmdbIds=[...baseIds].filter(id=>!selected.has(id));
+  await saveCollections(); closeCollectionEditor(); renderFranchises(); renderList();
+}
+
+function renderCollectionCard(group) {
+  const items=collectionMembers(group);
+  return `<div class="collection-card">
+    <div class="collection-card-head">
+      <div><div class="collection-card-title">${escapeHtml(group.name)}<span class="collection-type">${escapeHtml(collectionTypeLabel(group.type))}</span></div><div class="collection-card-meta">${group.source==='tmdb'?'TMDB suggestion, manually approved':'Manual group'} · ${items.length} title${items.length===1?'':'s'}</div></div>
+      <div class="collection-card-actions"><button class="btn sm ghost" onclick="openCollectionEditor('${group.id}')">Edit</button><button class="btn sm danger" onclick="rejectApprovedCollection('${group.id}')">${group.source==='tmdb'?'Reject':'Delete'}</button></div>
+    </div>
+    <div class="collection-titles">${items.length?items.map(e=>escapeHtml(e.title)).join(' · '):'No titles selected'}</div>
+  </div>`;
+}
+
+function renderFranchises() {
+  const pending=collectionSuggestions();
+  const approved=collectionRules.groups.filter(g=>g.status==='approved').sort((a,b)=>a.name.localeCompare(b.name));
+  const rejected=collectionRules.groups.filter(g=>g.status==='rejected').sort((a,b)=>a.name.localeCompare(b.name));
+  const pendingHtml=pending.length?pending.map(s=>`<div class="collection-card"><div class="collection-card-head"><div><div class="collection-card-title">${escapeHtml(s.name)}</div><div class="collection-card-meta">TMDB suggestion · ${s.items.length} matching title${s.items.length===1?'':'s'} in your watchlist</div></div><div class="collection-card-actions"><button class="btn sm green" onclick="approveCollection(${s.tmdbCollectionId})">Approve</button><button class="btn sm danger" onclick="rejectCollection(${s.tmdbCollectionId})">Reject</button></div></div><div class="collection-titles">${s.items.map(e=>escapeHtml(e.title)).join(' · ')}</div></div>`).join(''):'<div class="empty">No pending TMDB suggestions.</div>';
+  const approvedHtml=approved.length?approved.map(renderCollectionCard).join(''):'<div class="empty">No approved collections yet.</div>';
+  const rejectedHtml=rejected.length?rejected.map(g=>`<div class="collection-card"><div class="collection-card-head"><div><div class="collection-card-title">${escapeHtml(g.name)}</div><div class="collection-card-meta">Rejected TMDB suggestion</div></div><div class="collection-card-actions"><button class="btn sm ghost" onclick="restoreCollectionSuggestion('${g.id}')">Restore to pending</button></div></div></div>`).join(''):'<div class="empty">No rejected suggestions.</div>';
+  document.getElementById('franchise-list').innerHTML=`<div class="collection-section"><div class="collection-section-head"><h3>Pending suggestions (${pending.length})</h3></div>${pendingHtml}</div><div class="collection-section"><div class="collection-section-head"><h3>Approved groups (${approved.length})</h3></div>${approvedHtml}</div><div class="collection-section"><div class="collection-section-head"><h3>Rejected suggestions (${rejected.length})</h3></div>${rejectedHtml}</div>`;
 }
 
 // ── Storage ──────────────────────────────────────────────
@@ -1465,8 +1558,7 @@ async function load() {
     console.error('Load error:',e);
   }
   entries.forEach(e=>{ if(!e.id) e.id=Date.now().toString()+Math.random(); });
-  const migrated=recoverWatchedDates();
-  if (migrated) await save();
+  await loadCollections();
   renderList();
   renderWhatsNew();
 }
