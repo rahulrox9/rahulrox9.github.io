@@ -432,7 +432,7 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
 
 <!-- CURATED COLLECTIONS PANEL -->
 <div class="section-panel" id="panel-franchises">
-  <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem">TMDB movie collections and related series are treated as suggestions. Approve genuine mixed-media franchises, reject incorrect suggestions or create movie-only, series-only or mixed manual groups.</p>
+  <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem">TMDB movie collections are treated as suggestions. Series can be added explicitly through Edit, and manual groups may be movie-only, series-only or mixed. No title-name guessing is used.</p>
   <div class="collection-section-head">
     <h3>Collection review</h3>
     <div class="collection-card-actions">
@@ -1579,14 +1579,16 @@ function legacyCollectionMemberKeys(values) {
 
 function normaliseCollectionRules(data) {
   const parsed=parseCollectionPayload(data);
-  const groups=Array.isArray(parsed?.groups)?parsed.groups:[];
+  const groups=(Array.isArray(parsed?.groups)?parsed.groups:[]).filter(g=>g?.source!=='family'&&!String(g?.suggestionKey||'').startsWith('family:'));
   return {version:3,updatedAt:Number(parsed?.updatedAt||0),groups:groups.map(g=>{
     const tmdbCollectionId=g.tmdbCollectionId==null?null:Number(g.tmdbCollectionId);
-    const source=['tmdb','family','manual'].includes(g.source)?g.source:(tmdbCollectionId!=null?'tmdb':'manual');
-    const suggestionKey=String(g.suggestionKey||(tmdbCollectionId!=null?`tmdb:${tmdbCollectionId}`:(g.familyStem?`family:${g.familyStem}`:'')));
-    const familyStem=String(g.familyStem||((source==='tmdb'||source==='family')?collectionFamilyStem(g.name):''));
+    const source=tmdbCollectionId!=null||g.source==='tmdb'?'tmdb':'manual';
+    const suggestionKey=String(g.suggestionKey||(tmdbCollectionId!=null?`tmdb:${tmdbCollectionId}`:''));
     const includeMembers=legacyCollectionMemberKeys([...(Array.isArray(g.includeMembers)?g.includeMembers:[]),...(Array.isArray(g.includeTmdbIds)?g.includeTmdbIds:[])]);
     const excludeMembers=legacyCollectionMemberKeys([...(Array.isArray(g.excludeMembers)?g.excludeMembers:[]),...(Array.isArray(g.excludeTmdbIds)?g.excludeTmdbIds:[])]);
+    const included=new Set(includeMembers);
+    let tmdbParts=Array.isArray(g.tmdbParts)?g.tmdbParts.map(normaliseCollectionPart):[];
+    if (source==='tmdb') tmdbParts=tmdbParts.filter(part=>part.mediaType==='movie'||included.has(collectionMemberKey(part.mediaType,part.tmdbId)));
     return {
       id:String(g.id||('group-'+Date.now()+'-'+Math.random().toString(36).slice(2))),
       name:String(g.name||'Untitled group'),
@@ -1594,13 +1596,13 @@ function normaliseCollectionRules(data) {
       status:g.status==='rejected'?'rejected':'approved',
       source,
       suggestionKey,
-      familyStem,
+      familyStem:'',
       tmdbCollectionId,
       includeMembers,
       excludeMembers,
       includeTmdbIds:[],
       excludeTmdbIds:[],
-      tmdbParts:Array.isArray(g.tmdbParts)?g.tmdbParts.map(normaliseCollectionPart):[],
+      tmdbParts,
       lastRefreshedAt:Number(g.lastRefreshedAt||0)
     };
   })};
@@ -1643,44 +1645,21 @@ function containsAllCollectionRules(saved,expected) {
 }
 
 function collectionSuggestions() {
-  const officialMap=new Map();
-  entries.filter(e=>e.franchiseId&&e.franchise&&e.tmdbId).forEach(e=>{
+  const map=new Map();
+  entries.filter(e=>e.type==='movie'&&e.franchiseId&&e.franchise&&e.tmdbId).forEach(e=>{
     const id=collectionKey(e.franchiseId);
     const key=`tmdb:${id}`;
-    if (!officialMap.has(key)) officialMap.set(key,{kind:'tmdb',suggestionKey:key,tmdbCollectionId:Number(e.franchiseId),familyStem:collectionFamilyStem(e.franchise),name:e.franchise,items:[]});
-    officialMap.get(key).items.push(e);
+    if (!map.has(key)) map.set(key,{kind:'tmdb',suggestionKey:key,tmdbCollectionId:Number(e.franchiseId),familyStem:'',name:e.franchise,items:[]});
+    map.get(key).items.push(e);
   });
-
-  const reservedStems=new Set([...officialMap.values()].map(s=>s.familyStem).filter(Boolean));
-  collectionRules.groups.forEach(g=>{ if (g.familyStem) reservedStems.add(g.familyStem); });
-  const familyMap=new Map();
-  entries.filter(e=>e.tmdbId).forEach(e=>{
-    const stem=collectionFamilyStem(e.title);
-    if (!stem||stem.length<4||reservedStems.has(stem)) return;
-    if (!familyMap.has(stem)) familyMap.set(stem,[]);
-    familyMap.get(stem).push(e);
-  });
-
-  const familySuggestions=[];
-  familyMap.forEach((items,stem)=>{
-    const distinct=[...new Map(items.map(e=>[collectionEntryKey(e),e])).values()];
-    const hasSeries=distinct.some(e=>e.type==='show');
-    if (distinct.length<2||!hasSeries) return;
-    const key=`family:${stem}`;
-    familySuggestions.push({kind:'family',suggestionKey:key,tmdbCollectionId:null,familyStem:stem,name:collectionFamilyName(distinct[0].title),items:distinct});
-  });
-
   const decided=new Set(collectionRules.groups.map(g=>g.suggestionKey).filter(Boolean));
-  return [...officialMap.values(),...familySuggestions].filter(s=>!decided.has(s.suggestionKey)).sort((a,b)=>a.name.localeCompare(b.name));
+  return [...map.values()].filter(s=>!decided.has(s.suggestionKey)).sort((a,b)=>a.name.localeCompare(b.name));
 }
 
 function automaticCollectionMemberKeys(group) {
   const keys=new Set();
   if (group.tmdbCollectionId!=null) {
-    entries.filter(e=>collectionKey(e.franchiseId)===collectionKey(group.tmdbCollectionId)).forEach(e=>keys.add(collectionEntryKey(e)));
-  }
-  if (group.familyStem) {
-    entries.filter(e=>titleBelongsToFamily(e.title,group.familyStem)&&(group.source==='family'||e.type==='show')).forEach(e=>keys.add(collectionEntryKey(e)));
+    entries.filter(e=>e.type==='movie'&&collectionKey(e.franchiseId)===collectionKey(group.tmdbCollectionId)).forEach(e=>keys.add(collectionEntryKey(e)));
   }
   return keys;
 }
@@ -1761,6 +1740,18 @@ function fallbackPartsForGroup(group) {
   }));
 }
 
+function collectionDisplayParts(group) {
+  const included=new Set((group.includeMembers||[]).map(value=>{
+    const parsed=parseCollectionMemberKey(value);
+    return collectionMemberKey(parsed.type,parsed.tmdbId);
+  }));
+  const cached=(group.tmdbParts||[]).filter(part=>group.source!=='tmdb'||collectionMediaType(part.mediaType)==='movie'||included.has(collectionMemberKey(part.mediaType,part.tmdbId)));
+  const explicit=collectionMembers(group).map(e=>normaliseCollectionPart({
+    tmdbId:e.tmdbId,mediaType:e.type,title:e.title,year:e.year,poster:e.poster,language:e.language
+  }));
+  return sortCollectionParts([...cached,...explicit]);
+}
+
 function sortCollectionParts(parts) {
   const unique=new Map();
   parts.map(normaliseCollectionPart).forEach(part=>unique.set(collectionMemberKey(part.mediaType,part.tmdbId),part));
@@ -1771,40 +1762,17 @@ function sortCollectionParts(parts) {
   });
 }
 
-async function fetchRelatedSeriesForFamily(name,stem=collectionFamilyStem(name)) {
-  if (!stem) return [];
-  const query=collectionFamilyName(name);
-  const response=await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_KEY}&query=${encodeURIComponent(query)}&page=1&include_adult=false&language=en-GB`);
-  if (!response.ok) throw new Error(`TMDB related-title request failed (${response.status})`);
-  const data=await response.json();
-  return (data.results||[]).filter(item=>item.media_type==='tv'&&titleBelongsToFamily(item.name||item.title,stem)).map(item=>normaliseCollectionPart({...item,mediaType:'show'}));
-}
-
-async function fetchFamilyDetails(suggestion) {
-  const query=collectionFamilyName(suggestion.name||suggestion.familyStem);
-  const response=await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_KEY}&query=${encodeURIComponent(query)}&page=1&include_adult=false&language=en-GB`);
-  if (!response.ok) throw new Error(`TMDB family request failed (${response.status})`);
-  const data=await response.json();
-  const searched=(data.results||[]).filter(item=>(item.media_type==='movie'||item.media_type==='tv')&&titleBelongsToFamily(item.title||item.name,suggestion.familyStem)).map(item=>normaliseCollectionPart({...item,mediaType:item.media_type==='tv'?'show':'movie'}));
-  return {name:suggestion.name,parts:sortCollectionParts([...fallbackPartsForSuggestion(suggestion),...searched])};
-}
-
 async function fetchCollectionDetails(tmdbCollectionId,nameHint='') {
   const response=await fetch(`https://api.themoviedb.org/3/collection/${tmdbCollectionId}?api_key=${TMDB_KEY}&language=en-GB`);
   if (!response.ok) throw new Error(`TMDB collection request failed (${response.status})`);
   const data=await response.json();
   const name=String(data.name||nameHint||'Untitled collection');
-  const movieParts=(data.parts||[]).map(part=>normaliseCollectionPart({...part,mediaType:'movie'}));
-  let seriesParts=[];
-  try { seriesParts=await fetchRelatedSeriesForFamily(name,collectionFamilyStem(name)); }
-  catch(e) { console.warn('Related series lookup failed:',e); }
-  return {name,parts:sortCollectionParts([...movieParts,...seriesParts])};
+  const parts=(data.parts||[]).map(part=>normaliseCollectionPart({...part,mediaType:'movie'}));
+  return {name,parts:sortCollectionParts(parts)};
 }
 
 async function fetchSuggestionDetails(suggestion) {
-  return suggestion.kind==='tmdb'
-    ? fetchCollectionDetails(suggestion.tmdbCollectionId,suggestion.name)
-    : fetchFamilyDetails(suggestion);
+  return fetchCollectionDetails(suggestion.tmdbCollectionId,suggestion.name);
 }
 
 async function saveCollections() {
@@ -1867,9 +1835,9 @@ async function approveCollection(value) {
     name:suggestion.name,
     type:'franchise',
     status:'approved',
-    source:suggestion.kind,
+    source:'tmdb',
     suggestionKey:key,
-    familyStem:suggestion.familyStem||collectionFamilyStem(suggestion.name),
+    familyStem:'',
     tmdbCollectionId:suggestion.tmdbCollectionId==null?null:Number(suggestion.tmdbCollectionId),
     includeMembers:[],excludeMembers:[],includeTmdbIds:[],excludeTmdbIds:[],
     tmdbParts:details.parts||[],
@@ -1890,7 +1858,7 @@ async function rejectCollection(value) {
   const key=collectionSuggestionKey(value);
   const suggestion=collectionSuggestions().find(x=>x.suggestionKey===key);
   if (!suggestion) return;
-  const group={id:key.replace(/[^a-z0-9_-]+/gi,'-'),name:suggestion.name,type:'franchise',status:'rejected',source:suggestion.kind,suggestionKey:key,familyStem:suggestion.familyStem||'',tmdbCollectionId:suggestion.tmdbCollectionId==null?null:Number(suggestion.tmdbCollectionId),includeMembers:[],excludeMembers:[],includeTmdbIds:[],excludeTmdbIds:[],tmdbParts:[],lastRefreshedAt:0};
+  const group={id:key.replace(/[^a-z0-9_-]+/gi,'-'),name:suggestion.name,type:'franchise',status:'rejected',source:'tmdb',suggestionKey:key,familyStem:suggestion.familyStem||'',tmdbCollectionId:suggestion.tmdbCollectionId==null?null:Number(suggestion.tmdbCollectionId),includeMembers:[],excludeMembers:[],includeTmdbIds:[],excludeTmdbIds:[],tmdbParts:[],lastRefreshedAt:0};
   collectionRules.groups.push(group);
   const ok=await saveCollections();
   if (!ok) {
@@ -2028,10 +1996,10 @@ function renderCollectionPartRows(parts,{allowAdd=true}={}) {
 }
 
 function renderCollectionCard(group) {
-  const parts=group.tmdbParts?.length?sortCollectionParts(group.tmdbParts):fallbackPartsForGroup(group);
+  const parts=collectionDisplayParts(group);
   const counts=collectionPartCounts(parts);
   const refreshed=group.lastRefreshedAt?new Date(group.lastRefreshedAt).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'Not yet refreshed';
-  const sourceLabel=group.source==='tmdb'?'TMDB collection, manually approved':group.source==='family'?'Mixed-media title family, manually approved':'Manual group';
+  const sourceLabel=group.source==='tmdb'?'TMDB movie collection, manually approved':'Manual group';
   return `<div class="collection-card">
     <div class="collection-card-head">
       <div>
@@ -2039,23 +2007,21 @@ function renderCollectionCard(group) {
         <div class="collection-card-meta">${sourceLabel} · ${parts.length} total · ${counts.movie} movies · ${counts.show} series · ${counts.watched} watched · ${counts.towatch} to watch · ${counts.missing} missing</div>
       </div>
       <div class="collection-card-actions">
-        ${group.source!=='manual'?`<button class="btn sm ghost" onclick="refreshOneCollection('${group.id}')">↻ Refresh</button>`:''}
+        ${group.source==='tmdb'?`<button class="btn sm ghost" onclick="refreshOneCollection('${group.id}')">↻ Refresh</button>`:''}
         <button class="btn sm ghost" onclick="openCollectionEditor('${group.id}')">Edit</button>
         <button class="btn sm danger" onclick="rejectApprovedCollection('${group.id}')">${group.source==='manual'?'Delete':'Reject'}</button>
       </div>
     </div>
     ${renderCollectionPartRows(parts,{allowAdd:true})}
-    ${group.source!=='manual'?`<div class="collection-refresh-note">Last refreshed: ${escapeHtml(refreshed)}. Approval, mixed-media membership and cached titles are saved in watchlist-collections.json.</div>`:''}
+    ${group.source==='tmdb'?`<div class="collection-refresh-note">Last refreshed: ${escapeHtml(refreshed)}. Series shown here were explicitly added through Edit. No automatic title matching is used.</div>`:''}
   </div>`;
 }
 
 async function refreshOneCollection(groupId) {
-  const group=collectionRules.groups.find(g=>g.id===groupId&&g.source!=='manual');
+  const group=collectionRules.groups.find(g=>g.id===groupId&&g.source==='tmdb');
   if (!group) return;
   try {
-    const details=group.source==='tmdb'
-      ? await fetchCollectionDetails(group.tmdbCollectionId,group.name)
-      : await fetchFamilyDetails({name:group.name,familyStem:group.familyStem,items:collectionMembers(group)});
+    const details=await fetchCollectionDetails(group.tmdbCollectionId,group.name);
     group.tmdbParts=details.parts;
     group.lastRefreshedAt=Date.now();
     if (!await saveCollections()) throw new Error('Could not save refreshed collection data');
@@ -2069,7 +2035,7 @@ async function refreshOneCollection(groupId) {
 async function refreshCollectionDetails(force=false) {
   if (collectionRefreshInProgress) return;
   const pending=collectionSuggestions();
-  const approved=collectionRules.groups.filter(g=>g.status==='approved'&&g.source!=='manual');
+  const approved=collectionRules.groups.filter(g=>g.status==='approved'&&g.source==='tmdb');
   const now=Date.now();
   const staleAfter=24*60*60*1000;
   const approvedToRefresh=approved.filter(g=>force||!g.tmdbParts?.length||now-g.lastRefreshedAt>staleAfter);
@@ -2083,9 +2049,7 @@ async function refreshCollectionDetails(force=false) {
 
   for (const group of approvedToRefresh) {
     try {
-      const details=group.source==='tmdb'
-        ? await fetchCollectionDetails(group.tmdbCollectionId,group.name)
-        : await fetchFamilyDetails({name:group.name,familyStem:group.familyStem,items:collectionMembers(group)});
+      const details=await fetchCollectionDetails(group.tmdbCollectionId,group.name);
       group.tmdbParts=details.parts;
       group.lastRefreshedAt=Date.now();
       approvedChanged=true;
@@ -2114,7 +2078,7 @@ function renderFranchises() {
     const details=pendingCollectionDetails[s.suggestionKey];
     const parts=details?.parts?.length?details.parts:fallbackPartsForSuggestion(s);
     const counts=collectionPartCounts(parts);
-    const kindLabel=s.kind==='tmdb'?'TMDB movie collection plus related series':'Series or mixed-media title family';
+    const kindLabel='TMDB movie collection';
     const key=collectionSuggestionDomValue(s.suggestionKey);
     return `<div class="collection-card">
       <div class="collection-card-head">
@@ -2130,7 +2094,7 @@ function renderFranchises() {
   }).join(''):'<div class="empty">No pending collection suggestions.</div>';
 
   const approvedHtml=approved.length?approved.map(renderCollectionCard).join(''):'<div class="empty">No approved collections yet.</div>';
-  const rejectedHtml=rejected.length?rejected.map(g=>`<div class="collection-card"><div class="collection-card-head"><div><div class="collection-card-title">${escapeHtml(g.name)}</div><div class="collection-card-meta">Rejected ${g.source==='family'?'series or mixed-media':'TMDB'} suggestion</div></div><div class="collection-card-actions"><button class="btn sm ghost" onclick="restoreCollectionSuggestion('${g.id}')">Restore to pending</button></div></div></div>`).join(''):'<div class="empty">No rejected suggestions.</div>';
+  const rejectedHtml=rejected.length?rejected.map(g=>`<div class="collection-card"><div class="collection-card-head"><div><div class="collection-card-title">${escapeHtml(g.name)}</div><div class="collection-card-meta">Rejected TMDB suggestion</div></div><div class="collection-card-actions"><button class="btn sm ghost" onclick="restoreCollectionSuggestion('${g.id}')">Restore to pending</button></div></div></div>`).join(''):'<div class="empty">No rejected suggestions.</div>';
 
   document.getElementById('franchise-list').innerHTML=
     `<div class="collection-section"><div class="collection-section-head"><h3>Pending suggestions (${pending.length})</h3></div>${pendingHtml}</div>`+
