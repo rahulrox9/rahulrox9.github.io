@@ -174,6 +174,21 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
 .pending-title-info { flex:1; min-width:0; }
 .pending-title-name { font-size:0.78rem; font-weight:500; color:var(--ink); }
 .pending-title-meta { font-size:0.68rem; color:var(--muted); margin-top:0.08rem; }
+.collection-part-list { margin-top:0.65rem; border:1px solid var(--border); border-radius:4px; overflow:hidden; background:var(--parchment); }
+.collection-part-row { display:flex; align-items:center; gap:0.65rem; padding:0.5rem 0.6rem; border-bottom:1px solid var(--border); }
+.collection-part-row:last-child { border-bottom:none; }
+.collection-part-row.missing { background:#fff2dc; }
+.collection-part-row.towatch { background:#eef4ff; }
+.collection-part-row.watched { background:#eef8f4; }
+.collection-part-row img { width:32px; height:48px; object-fit:cover; border-radius:2px; flex-shrink:0; }
+.collection-part-info { flex:1; min-width:0; }
+.collection-part-title { font-size:0.78rem; font-weight:500; color:var(--ink); }
+.collection-part-meta { font-size:0.68rem; color:var(--muted); margin-top:0.08rem; }
+.collection-status { display:inline-block; font-size:0.59rem; font-weight:500; letter-spacing:0.05em; text-transform:uppercase; padding:0.1rem 0.4rem; border-radius:8px; margin-left:0.25rem; }
+.collection-status.missing { background:#fde4bd; color:#8a4d00; }
+.collection-status.towatch { background:#dce8ff; color:#315ca8; }
+.collection-status.watched { background:#dcefe8; color:var(--green); }
+.collection-refresh-note { font-size:0.68rem; color:var(--muted); margin-top:0.45rem; }
 .collection-movie-list { max-height:320px; overflow:auto; border:1px solid var(--border); border-radius:4px; padding:0.4rem; background:var(--parchment); }
 .collection-movie-option { display:flex; align-items:center; gap:0.5rem; padding:0.35rem 0.4rem; font-size:0.78rem; text-transform:none; letter-spacing:0; color:var(--ink); cursor:pointer; border-radius:3px; }
 .collection-movie-option:hover { background:var(--border); }
@@ -417,7 +432,10 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
   <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem">TMDB collection data is treated only as a suggestion. Approve genuine franchises, reject incorrect suggestions or create manual groups such as Dhoom, YRF, Lokesh Cinematic Universe or any custom category.</p>
   <div class="collection-section-head">
     <h3>Collection review</h3>
-    <button class="btn sm" onclick="openCollectionEditor()">＋ Create manual group</button>
+    <div class="collection-card-actions">
+      <button class="btn sm ghost" id="collection-refresh-btn" onclick="refreshCollectionDetails(true)">↻ Refresh TMDB collections</button>
+      <button class="btn sm" onclick="openCollectionEditor()">＋ Create manual group</button>
+    </div>
   </div>
   <div id="franchise-list"><div class="empty">Loading collection decisions…</div></div>
 </div>
@@ -438,7 +456,9 @@ function jsonp(url, file) {
 }
 async function driveRead(file) { return { data: await jsonp(DB_URL, file) }; }
 async function driveWrite(file, data) {
-  await fetch(DB_URL, { method:'POST', body: JSON.stringify({ file, data }) });
+  const response = await fetch(DB_URL, { method:'POST', body: JSON.stringify({ file, data }) });
+  if (!response.ok) throw new Error(`Save failed (${response.status})`);
+  return response;
 }
 
 const LANG_NAMES = {
@@ -467,6 +487,8 @@ let discoverLang = '';
 let discoverType = 'movie';
 let collectionRules = { groups: [] };
 let editingCollectionGroupId = null;
+let pendingCollectionDetails = {};
+let collectionRefreshInProgress = false;
 window._stars = {};
 
 // ── Stars ────────────────────────────────────────────────
@@ -508,7 +530,7 @@ function switchSection(section, btn) {
   document.getElementById(panelMap[section])?.classList.add('on');
   document.getElementById('search-wrap').style.display = ['watched','shows','towatch'].includes(section) ? 'block' : 'none';
   if (section==='stats') renderStats();
-  if (section==='franchises') renderFranchises();
+  if (section==='franchises') { renderFranchises(); refreshCollectionDetails(false); }
   if (section==='discover') loadDiscover();
   renderList();
 }
@@ -1414,6 +1436,17 @@ function collectionKey(value) { return String(value ?? ''); }
 function escapeHtml(value) { return String(value ?? '').replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch])); }
 function collectionTypeLabel(type) { return ({franchise:'Franchise',universe:'Universe',studio:'Studio / Banner',custom:'Custom'})[type]||'Custom'; }
 
+function normaliseCollectionPart(part) {
+  return {
+    tmdbId:collectionKey(part?.tmdbId ?? part?.id),
+    title:String(part?.title || part?.name || 'Untitled'),
+    year:String(part?.year || part?.releaseDate || part?.release_date || '').substring(0,4),
+    releaseDate:String(part?.releaseDate || part?.release_date || ''),
+    poster:String(part?.poster || (part?.poster_path ? `https://image.tmdb.org/t/p/w185${part.poster_path}` : '')),
+    language:String(part?.language || part?.original_language || '')
+  };
+}
+
 function normaliseCollectionRules(data) {
   const groups=Array.isArray(data?.groups)?data.groups:[];
   return {groups:groups.map(g=>({
@@ -1424,7 +1457,9 @@ function normaliseCollectionRules(data) {
     source:g.source==='tmdb'?'tmdb':'manual',
     tmdbCollectionId:g.tmdbCollectionId==null?null:Number(g.tmdbCollectionId),
     includeTmdbIds:Array.isArray(g.includeTmdbIds)?g.includeTmdbIds.map(collectionKey):[],
-    excludeTmdbIds:Array.isArray(g.excludeTmdbIds)?g.excludeTmdbIds.map(collectionKey):[]
+    excludeTmdbIds:Array.isArray(g.excludeTmdbIds)?g.excludeTmdbIds.map(collectionKey):[],
+    tmdbParts:Array.isArray(g.tmdbParts)?g.tmdbParts.map(normaliseCollectionPart):[],
+    lastRefreshedAt:Number(g.lastRefreshedAt||0)
   }))};
 }
 
@@ -1451,6 +1486,57 @@ function approvedCollectionNamesForEntry(entry) {
   return collectionRules.groups.filter(g=>g.status==='approved'&&collectionMembers(g).some(e=>e.id===entry.id)).map(g=>g.name);
 }
 
+function entryForCollectionPart(part) {
+  return entries.find(e=>collectionKey(e.tmdbId)===collectionKey(part.tmdbId));
+}
+
+function collectionPartStatus(part) {
+  const entry=entryForCollectionPart(part);
+  if (!entry) return 'missing';
+  return entry.toWatch?'towatch':'watched';
+}
+
+function collectionPartStatusLabel(status) {
+  return status==='watched'?'Watched':status==='towatch'?'To Watch':'Missing';
+}
+
+function collectionPartCounts(parts) {
+  return parts.reduce((counts,part)=>{
+    counts[collectionPartStatus(part)]++;
+    return counts;
+  },{watched:0,towatch:0,missing:0});
+}
+
+function fallbackPartsForSuggestion(suggestion) {
+  return suggestion.items.map(e=>normaliseCollectionPart({
+    tmdbId:e.tmdbId,title:e.title,year:e.year,poster:e.poster,language:e.language
+  }));
+}
+
+function fallbackPartsForGroup(group) {
+  return collectionMembers(group).map(e=>normaliseCollectionPart({
+    tmdbId:e.tmdbId,title:e.title,year:e.year,poster:e.poster,language:e.language
+  }));
+}
+
+function sortCollectionParts(parts) {
+  return parts.slice().sort((a,b)=>{
+    const ad=a.releaseDate||`${a.year||'9999'}-12-31`;
+    const bd=b.releaseDate||`${b.year||'9999'}-12-31`;
+    return ad.localeCompare(bd)||a.title.localeCompare(b.title);
+  });
+}
+
+async function fetchCollectionDetails(tmdbCollectionId) {
+  const response=await fetch(`https://api.themoviedb.org/3/collection/${tmdbCollectionId}?api_key=${TMDB_KEY}&language=en-GB`);
+  if (!response.ok) throw new Error(`TMDB collection request failed (${response.status})`);
+  const data=await response.json();
+  return {
+    name:String(data.name||'Untitled collection'),
+    parts:sortCollectionParts((data.parts||[]).map(normaliseCollectionPart))
+  };
+}
+
 async function saveCollections() {
   try { await driveWrite('watchlist-collections.json',collectionRules); return true; }
   catch(e) { console.error('Collection save failed:',e); return false; }
@@ -1468,28 +1554,72 @@ async function loadCollections() {
 async function approveCollection(tmdbCollectionId) {
   const suggestion=collectionSuggestions().find(x=>collectionKey(x.tmdbCollectionId)===collectionKey(tmdbCollectionId));
   if (!suggestion) return;
-  collectionRules.groups.push({id:'tmdb-'+tmdbCollectionId,name:suggestion.name,type:'franchise',status:'approved',source:'tmdb',tmdbCollectionId:Number(tmdbCollectionId),includeTmdbIds:[],excludeTmdbIds:[]});
-  await saveCollections(); renderFranchises(); renderList();
+  let details=pendingCollectionDetails[collectionKey(tmdbCollectionId)];
+  if (!details) {
+    try { details=await fetchCollectionDetails(tmdbCollectionId); }
+    catch(e) { console.error(e); details={name:suggestion.name,parts:fallbackPartsForSuggestion(suggestion)}; }
+  }
+  const group={
+    id:'tmdb-'+tmdbCollectionId,
+    name:suggestion.name,
+    type:'franchise',
+    status:'approved',
+    source:'tmdb',
+    tmdbCollectionId:Number(tmdbCollectionId),
+    includeTmdbIds:[],
+    excludeTmdbIds:[],
+    tmdbParts:details.parts||[],
+    lastRefreshedAt:Date.now()
+  };
+  collectionRules.groups.push(group);
+  const ok=await saveCollections();
+  if (!ok) {
+    collectionRules.groups=collectionRules.groups.filter(g=>g!==group);
+    alert('The approval could not be saved. It has not been applied.');
+    return;
+  }
+  delete pendingCollectionDetails[collectionKey(tmdbCollectionId)];
+  renderFranchises(); renderList();
 }
 
 async function rejectCollection(tmdbCollectionId) {
   const suggestion=collectionSuggestions().find(x=>collectionKey(x.tmdbCollectionId)===collectionKey(tmdbCollectionId));
   if (!suggestion) return;
-  collectionRules.groups.push({id:'tmdb-'+tmdbCollectionId,name:suggestion.name,type:'franchise',status:'rejected',source:'tmdb',tmdbCollectionId:Number(tmdbCollectionId),includeTmdbIds:[],excludeTmdbIds:[]});
-  await saveCollections(); renderFranchises(); renderList();
+  const group={id:'tmdb-'+tmdbCollectionId,name:suggestion.name,type:'franchise',status:'rejected',source:'tmdb',tmdbCollectionId:Number(tmdbCollectionId),includeTmdbIds:[],excludeTmdbIds:[],tmdbParts:[],lastRefreshedAt:0};
+  collectionRules.groups.push(group);
+  const ok=await saveCollections();
+  if (!ok) {
+    collectionRules.groups=collectionRules.groups.filter(g=>g!==group);
+    alert('The rejection could not be saved. It has not been applied.');
+    return;
+  }
+  delete pendingCollectionDetails[collectionKey(tmdbCollectionId)];
+  renderFranchises(); renderList();
 }
 
 async function restoreCollectionSuggestion(groupId) {
+  const oldGroups=collectionRules.groups.slice();
   collectionRules.groups=collectionRules.groups.filter(g=>g.id!==groupId);
-  await saveCollections(); renderFranchises(); renderList();
+  if (!await saveCollections()) {
+    collectionRules.groups=oldGroups;
+    alert('The change could not be saved.');
+    return;
+  }
+  renderFranchises(); renderList(); refreshCollectionDetails(false);
 }
 
 async function rejectApprovedCollection(groupId) {
   const group=collectionRules.groups.find(g=>g.id===groupId);
   if (!group) return;
+  const oldGroups=JSON.parse(JSON.stringify(collectionRules.groups));
   if (group.source==='manual') collectionRules.groups=collectionRules.groups.filter(g=>g.id!==groupId);
   else group.status='rejected';
-  await saveCollections(); renderFranchises(); renderList();
+  if (!await saveCollections()) {
+    collectionRules.groups=normaliseCollectionRules({groups:oldGroups}).groups;
+    alert('The change could not be saved.');
+    return;
+  }
+  renderFranchises(); renderList();
 }
 
 function openCollectionEditor(groupId=null) {
@@ -1514,53 +1644,162 @@ async function saveCollectionEditor() {
   const type=document.getElementById('collection-type').value;
   if (!name) { alert('Enter a collection name.'); return; }
   const selected=new Set([...document.querySelectorAll('#collection-movie-list input:checked')].map(x=>collectionKey(x.value)));
+  const oldGroups=JSON.parse(JSON.stringify(collectionRules.groups));
   let group=editingCollectionGroupId?collectionRules.groups.find(g=>g.id===editingCollectionGroupId):null;
   if (!group) {
-    group={id:'manual-'+Date.now(),name,type,status:'approved',source:'manual',tmdbCollectionId:null,includeTmdbIds:[],excludeTmdbIds:[]};
+    group={id:'manual-'+Date.now(),name,type,status:'approved',source:'manual',tmdbCollectionId:null,includeTmdbIds:[],excludeTmdbIds:[],tmdbParts:[],lastRefreshedAt:0};
     collectionRules.groups.push(group);
   }
   group.name=name; group.type=type; group.status='approved';
   const baseIds=new Set(group.tmdbCollectionId==null?[]:entries.filter(e=>collectionKey(e.franchiseId)===collectionKey(group.tmdbCollectionId)).map(e=>collectionKey(e.tmdbId)));
   group.includeTmdbIds=[...selected].filter(id=>!baseIds.has(id));
   group.excludeTmdbIds=[...baseIds].filter(id=>!selected.has(id));
-  await saveCollections(); closeCollectionEditor(); renderFranchises(); renderList();
+  if (!await saveCollections()) {
+    collectionRules.groups=normaliseCollectionRules({groups:oldGroups}).groups;
+    alert('The collection could not be saved.');
+    return;
+  }
+  closeCollectionEditor(); renderFranchises(); renderList();
+}
+
+async function addCollectionPartToWatch(tmdbId) {
+  if (entries.some(e=>collectionKey(e.tmdbId)===collectionKey(tmdbId))) return;
+  await fetchTmdb(collectionKey(tmdbId),'movie');
+  if (!fetched) {
+    alert('This title could not be loaded from TMDB.');
+    return;
+  }
+  const toWatchRadio=document.querySelector('input[name="add-dest"][value="towatch"]');
+  if (toWatchRadio) toWatchRadio.checked=true;
+  document.getElementById('movie-watched-fields').style.display='none';
+  await submitEntry();
+  renderFranchises();
+}
+
+function renderCollectionPartRows(parts,{allowAdd=true}={}) {
+  if (!parts.length) return '<div class="empty">No titles found for this collection.</div>';
+  return `<div class="collection-part-list">${parts.map(part=>{
+    const status=collectionPartStatus(part);
+    return `<div class="collection-part-row ${status}">
+      ${part.poster?`<img src="${escapeHtml(part.poster)}" alt="${escapeHtml(part.title)}">`:''}
+      <div class="collection-part-info">
+        <div class="collection-part-title">${escapeHtml(part.title)} <span class="collection-status ${status}">${collectionPartStatusLabel(status)}</span></div>
+        <div class="collection-part-meta">${part.year?escapeHtml(part.year):'Year unknown'}${part.language?' · '+escapeHtml(langName(part.language)):''}</div>
+      </div>
+      ${status==='missing'&&allowAdd?`<button class="btn sm green" onclick="addCollectionPartToWatch('${escapeHtml(part.tmdbId)}')">＋ To Watch</button>`:''}
+    </div>`;
+  }).join('')}</div>`;
 }
 
 function renderCollectionCard(group) {
-  const items=collectionMembers(group);
+  const parts=group.source==='tmdb'
+    ? (group.tmdbParts?.length?sortCollectionParts(group.tmdbParts):fallbackPartsForGroup(group))
+    : fallbackPartsForGroup(group);
+  const counts=collectionPartCounts(parts);
+  const refreshed=group.lastRefreshedAt?new Date(group.lastRefreshedAt).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'Not yet refreshed';
   return `<div class="collection-card">
     <div class="collection-card-head">
-      <div><div class="collection-card-title">${escapeHtml(group.name)}<span class="collection-type">${escapeHtml(collectionTypeLabel(group.type))}</span></div><div class="collection-card-meta">${group.source==='tmdb'?'TMDB suggestion, manually approved':'Manual group'} · ${items.length} title${items.length===1?'':'s'}</div></div>
-      <div class="collection-card-actions"><button class="btn sm ghost" onclick="openCollectionEditor('${group.id}')">Edit</button><button class="btn sm danger" onclick="rejectApprovedCollection('${group.id}')">${group.source==='tmdb'?'Reject':'Delete'}</button></div>
+      <div>
+        <div class="collection-card-title">${escapeHtml(group.name)}<span class="collection-type">${escapeHtml(collectionTypeLabel(group.type))}</span></div>
+        <div class="collection-card-meta">${group.source==='tmdb'?'TMDB collection, manually approved':'Manual group'} · ${parts.length} total · ${counts.watched} watched · ${counts.towatch} to watch · ${counts.missing} missing</div>
+      </div>
+      <div class="collection-card-actions">
+        ${group.source==='tmdb'?`<button class="btn sm ghost" onclick="refreshOneCollection('${group.id}')">↻ Refresh</button>`:''}
+        <button class="btn sm ghost" onclick="openCollectionEditor('${group.id}')">Edit</button>
+        <button class="btn sm danger" onclick="rejectApprovedCollection('${group.id}')">${group.source==='tmdb'?'Reject':'Delete'}</button>
+      </div>
     </div>
-    <div class="collection-titles">${items.length?items.map(e=>escapeHtml(e.title)).join(' · '):'No titles selected'}</div>
+    ${renderCollectionPartRows(parts,{allowAdd:group.source==='tmdb'})}
+    ${group.source==='tmdb'?`<div class="collection-refresh-note">Last refreshed: ${escapeHtml(refreshed)}. Approved status and cached titles are saved in watchlist-collections.json.</div>`:''}
   </div>`;
+}
+
+async function refreshOneCollection(groupId) {
+  const group=collectionRules.groups.find(g=>g.id===groupId&&g.tmdbCollectionId!=null);
+  if (!group) return;
+  try {
+    const details=await fetchCollectionDetails(group.tmdbCollectionId);
+    group.tmdbParts=details.parts;
+    group.lastRefreshedAt=Date.now();
+    if (!await saveCollections()) throw new Error('Could not save refreshed collection data');
+    renderFranchises();
+  } catch(e) {
+    console.error(e);
+    alert('This collection could not be refreshed.');
+  }
+}
+
+async function refreshCollectionDetails(force=false) {
+  if (collectionRefreshInProgress) return;
+  const pending=collectionSuggestions();
+  const approved=collectionRules.groups.filter(g=>g.status==='approved'&&g.source==='tmdb'&&g.tmdbCollectionId!=null);
+  const now=Date.now();
+  const staleAfter=24*60*60*1000;
+  const approvedToRefresh=approved.filter(g=>force||!g.tmdbParts?.length||now-g.lastRefreshedAt>staleAfter);
+  const pendingToRefresh=pending.filter(s=>force||!pendingCollectionDetails[collectionKey(s.tmdbCollectionId)]);
+  if (!approvedToRefresh.length&&!pendingToRefresh.length) return;
+
+  collectionRefreshInProgress=true;
+  const btn=document.getElementById('collection-refresh-btn');
+  if (btn) { btn.disabled=true; btn.textContent='↻ Refreshing…'; }
+  let approvedChanged=false;
+
+  for (const group of approvedToRefresh) {
+    try {
+      const details=await fetchCollectionDetails(group.tmdbCollectionId);
+      group.tmdbParts=details.parts;
+      group.lastRefreshedAt=Date.now();
+      approvedChanged=true;
+    } catch(e) {
+      console.error('Collection refresh failed',group.name,e);
+    }
+  }
+
+  for (const suggestion of pendingToRefresh) {
+    try {
+      pendingCollectionDetails[collectionKey(suggestion.tmdbCollectionId)]=await fetchCollectionDetails(suggestion.tmdbCollectionId);
+    } catch(e) {
+      console.error('Pending collection refresh failed',suggestion.name,e);
+    }
+  }
+
+  if (approvedChanged&&!await saveCollections()) {
+    alert('Collection details were refreshed but could not be saved permanently.');
+  }
+  collectionRefreshInProgress=false;
+  if (btn) { btn.disabled=false; btn.textContent='↻ Refresh TMDB collections'; }
+  renderFranchises();
 }
 
 function renderFranchises() {
   const pending=collectionSuggestions();
   const approved=collectionRules.groups.filter(g=>g.status==='approved').sort((a,b)=>a.name.localeCompare(b.name));
   const rejected=collectionRules.groups.filter(g=>g.status==='rejected').sort((a,b)=>a.name.localeCompare(b.name));
-  const pendingTitleCount=pending.reduce((total,s)=>total+s.items.length,0);
-  const pendingHtml=pending.length?pending.map(s=>`<div class="collection-card">
-    <div class="collection-card-head">
-      <div>
-        <div class="collection-card-title">${escapeHtml(s.name)}</div>
-        <div class="collection-card-meta">TMDB suggestion · ${s.items.length} matching title${s.items.length===1?'':'s'} in your watchlist</div>
+
+  const pendingHtml=pending.length?pending.map(s=>{
+    const details=pendingCollectionDetails[collectionKey(s.tmdbCollectionId)];
+    const parts=details?.parts?.length?details.parts:fallbackPartsForSuggestion(s);
+    const counts=collectionPartCounts(parts);
+    return `<div class="collection-card">
+      <div class="collection-card-head">
+        <div>
+          <div class="collection-card-title">${escapeHtml(s.name)}</div>
+          <div class="collection-card-meta">TMDB suggestion · ${parts.length} total · ${counts.watched} watched · ${counts.towatch} to watch · ${counts.missing} missing</div>
+        </div>
+        <div class="collection-card-actions"><button class="btn sm green" onclick="approveCollection(${s.tmdbCollectionId})">Approve</button><button class="btn sm danger" onclick="rejectCollection(${s.tmdbCollectionId})">Reject</button></div>
       </div>
-      <div class="collection-card-actions"><button class="btn sm green" onclick="approveCollection(${s.tmdbCollectionId})">Approve</button><button class="btn sm danger" onclick="rejectCollection(${s.tmdbCollectionId})">Reject</button></div>
-    </div>
-    <div class="pending-title-list">${s.items.map(e=>`<div class="pending-title-row">
-      ${e.poster?`<img src="${escapeHtml(e.poster)}" alt="${escapeHtml(e.title)}">`:''}
-      <div class="pending-title-info">
-        <div class="pending-title-name">${escapeHtml(e.title)}</div>
-        <div class="pending-title-meta">${e.year?escapeHtml(e.year):'Year unknown'}${e.language?' · '+escapeHtml(langName(e.language)):''}${e.type==='show'?' · Series':' · Movie'}</div>
-      </div>
-    </div>`).join('')}</div>
-  </div>`).join(''):'<div class="empty">No pending TMDB suggestions.</div>';
+      ${renderCollectionPartRows(parts,{allowAdd:false})}
+      ${!details?'<div class="collection-refresh-note">Loading the full TMDB collection membership…</div>':''}
+    </div>`;
+  }).join(''):'<div class="empty">No pending TMDB suggestions.</div>';
+
   const approvedHtml=approved.length?approved.map(renderCollectionCard).join(''):'<div class="empty">No approved collections yet.</div>';
   const rejectedHtml=rejected.length?rejected.map(g=>`<div class="collection-card"><div class="collection-card-head"><div><div class="collection-card-title">${escapeHtml(g.name)}</div><div class="collection-card-meta">Rejected TMDB suggestion</div></div><div class="collection-card-actions"><button class="btn sm ghost" onclick="restoreCollectionSuggestion('${g.id}')">Restore to pending</button></div></div></div>`).join(''):'<div class="empty">No rejected suggestions.</div>';
-  document.getElementById('franchise-list').innerHTML=`<div class="collection-section"><div class="collection-section-head"><h3>Pending suggestions (${pending.length} groups, ${pendingTitleCount} titles)</h3></div>${pendingHtml}</div><div class="collection-section"><div class="collection-section-head"><h3>Approved groups (${approved.length})</h3></div>${approvedHtml}</div><div class="collection-section"><div class="collection-section-head"><h3>Rejected suggestions (${rejected.length})</h3></div>${rejectedHtml}</div>`;
+
+  document.getElementById('franchise-list').innerHTML=
+    `<div class="collection-section"><div class="collection-section-head"><h3>Pending suggestions (${pending.length})</h3></div>${pendingHtml}</div>`+
+    `<div class="collection-section"><div class="collection-section-head"><h3>Approved groups (${approved.length})</h3></div>${approvedHtml}</div>`+
+    `<div class="collection-section"><div class="collection-section-head"><h3>Rejected suggestions (${rejected.length})</h3></div>${rejectedHtml}</div>`;
 }
 
 // ── Storage ──────────────────────────────────────────────
