@@ -1712,18 +1712,44 @@ async function saveCollectionEditor() {
   closeCollectionEditor(); renderFranchises(); renderList();
 }
 
-async function addCollectionPartToWatch(tmdbId) {
-  if (entries.some(e=>collectionKey(e.tmdbId)===collectionKey(tmdbId))) return;
-  await fetchTmdb(collectionKey(tmdbId),'movie');
-  if (!fetched) {
-    alert('This title could not be loaded from TMDB.');
-    return;
+async function addCollectionPartToWatch(tmdbId, button=null) {
+  const key=collectionKey(tmdbId);
+  const existing=entries.find(e=>collectionKey(e.tmdbId)===key);
+  if (existing) { renderFranchises(); return; }
+
+  const originalText=button?.textContent||'＋ Add to To Watch';
+  if (button) { button.disabled=true; button.textContent='Adding…'; }
+
+  try {
+    await fetchTmdb(key,'movie');
+    if (!fetched) throw new Error('This title could not be loaded from TMDB.');
+
+    const entry={
+      id:Date.now().toString(),
+      ...fetched,
+      addedAt:Date.now(),
+      myRating:0,
+      review:'',
+      watched:'',
+      watchedDate:'',
+      toWatch:true,
+      language:langName(fetched.language)
+    };
+
+    entries.unshift(entry);
+    if (!await save()) {
+      entries=entries.filter(e=>e.id!==entry.id);
+      throw new Error('The title could not be saved to To Watch.');
+    }
+
+    resetForm();
+    renderList();
+    renderFranchises();
+  } catch(e) {
+    console.error(e);
+    alert(e.message||'This title could not be added to To Watch.');
+    if (button?.isConnected) { button.disabled=false; button.textContent=originalText; }
   }
-  const toWatchRadio=document.querySelector('input[name="add-dest"][value="towatch"]');
-  if (toWatchRadio) toWatchRadio.checked=true;
-  document.getElementById('movie-watched-fields').style.display='none';
-  await submitEntry();
-  renderFranchises();
 }
 
 function renderCollectionPartRows(parts,{allowAdd=true}={}) {
@@ -1736,7 +1762,7 @@ function renderCollectionPartRows(parts,{allowAdd=true}={}) {
         <div class="collection-part-title">${escapeHtml(part.title)} <span class="collection-status ${status}">${collectionPartStatusLabel(status)}</span></div>
         <div class="collection-part-meta">${part.year?escapeHtml(part.year):'Year unknown'}${part.language?' · '+escapeHtml(langName(part.language)):''}</div>
       </div>
-      ${status==='missing'&&allowAdd?`<button class="btn sm green" onclick="addCollectionPartToWatch('${escapeHtml(part.tmdbId)}')">＋ To Watch</button>`:''}
+      ${status==='missing'&&allowAdd?`<button class="btn sm green" onclick="addCollectionPartToWatch('${escapeHtml(part.tmdbId)}',this)">＋ Add to To Watch</button>`:''}
     </div>`;
   }).join('')}</div>`;
 }
@@ -1759,7 +1785,7 @@ function renderCollectionCard(group) {
         <button class="btn sm danger" onclick="rejectApprovedCollection('${group.id}')">${group.source==='tmdb'?'Reject':'Delete'}</button>
       </div>
     </div>
-    ${renderCollectionPartRows(parts,{allowAdd:group.source==='tmdb'})}
+    ${renderCollectionPartRows(parts,{allowAdd:true})}
     ${group.source==='tmdb'?`<div class="collection-refresh-note">Last refreshed: ${escapeHtml(refreshed)}. Approved status and cached titles are saved in watchlist-collections.json.</div>`:''}
   </div>`;
 }
@@ -1838,7 +1864,7 @@ function renderFranchises() {
         </div>
         <div class="collection-card-actions"><button class="btn sm green" onclick="approveCollection(${s.tmdbCollectionId})">Approve</button><button class="btn sm danger" onclick="rejectCollection(${s.tmdbCollectionId})">Reject</button></div>
       </div>
-      ${renderCollectionPartRows(parts,{allowAdd:false})}
+      ${renderCollectionPartRows(parts,{allowAdd:true})}
       ${!details?'<div class="collection-refresh-note">Loading the full TMDB collection membership…</div>':''}
     </div>`;
   }).join(''):'<div class="empty">No pending TMDB suggestions.</div>';
