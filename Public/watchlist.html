@@ -155,10 +155,11 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
     <input type="text" id="search" placeholder="Search title, actor, director, language…" oninput="renderCurrent()">
   </div>
   <select id="sort-select" onchange="renderCurrent()" style="padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:20px;background:var(--card);font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--muted);outline:none;cursor:pointer;flex-shrink:0">
+    <option value="added-desc" selected>Default · Recently added</option>
+    <option value="watched-desc">Recently watched</option>
+    <option value="watched-asc">Oldest watched</option>
     <option value="release-desc">Newest released</option>
     <option value="release-asc">Oldest released</option>
-    <option value="added-desc">Recently added</option>
-    <option value="added-asc">Oldest added</option>
     <option value="rating-desc">Highest rated</option>
     <option value="rating-asc">Lowest rated</option>
   </select>
@@ -273,33 +274,45 @@ function switchTab(tab, btn) {
 }
 
 function sortEntries(arr) {
-  const s = document.getElementById('sort-select')?.value || 'release-desc';
-  
-  const parseDate = (str) => {
-    if (!str) return 0;
-    const d = new Date(str);
-    return isNaN(d.getTime()) ? 0 : d.getTime();
+  const s = document.getElementById('sort-select')?.value || 'added-desc';
+
+  const parseWatched = e => {
+    if (e.watchedDate) {
+      const exact = new Date(e.watchedDate + 'T00:00:00').getTime();
+      if (!isNaN(exact)) return exact;
+    }
+    if (e.watchedAt) return Number(e.watchedAt) || 0;
+    if (e.watched) {
+      const legacy = new Date('1 ' + e.watched).getTime();
+      if (!isNaN(legacy)) return legacy;
+    }
+    return 0;
+  };
+
+  const compareOptional = (a, b, direction) => {
+    if (!a && !b) return 0;
+    if (!a) return 1;
+    if (!b) return -1;
+    return direction === 'asc' ? a - b : b - a;
   };
 
   return [...arr].sort((a, b) => {
-    const dateA = parseDate(a.year);
-    const dateB = parseDate(b.year);
-
     switch(s) {
-      case 'release-desc': 
-        return dateB - dateA;
-      case 'release-asc': 
-        return dateA - dateB;
-      case 'added-desc':   
+      case 'watched-desc':
+        return compareOptional(parseWatched(a), parseWatched(b), 'desc') || (b.addedAt || 0) - (a.addedAt || 0);
+      case 'watched-asc':
+        return compareOptional(parseWatched(a), parseWatched(b), 'asc') || (b.addedAt || 0) - (a.addedAt || 0);
+      case 'release-desc':
+        return compareOptional(Number(a.year) || 0, Number(b.year) || 0, 'desc') || (b.addedAt || 0) - (a.addedAt || 0);
+      case 'release-asc':
+        return compareOptional(Number(a.year) || 0, Number(b.year) || 0, 'asc') || (b.addedAt || 0) - (a.addedAt || 0);
+      case 'rating-desc':
+        return compareOptional(Number(a.myRating) || 0, Number(b.myRating) || 0, 'desc') || (b.addedAt || 0) - (a.addedAt || 0);
+      case 'rating-asc':
+        return compareOptional(Number(a.myRating) || 0, Number(b.myRating) || 0, 'asc') || (b.addedAt || 0) - (a.addedAt || 0);
+      case 'added-desc':
+      default:
         return (b.addedAt || 0) - (a.addedAt || 0);
-      case 'added-asc':    
-        return (a.addedAt || 0) - (b.addedAt || 0);
-      case 'rating-desc':  
-        return (b.myRating || 0) - (a.myRating || 0);
-      case 'rating-asc':   
-        return (a.myRating || 0) - (b.myRating || 0);
-      default: 
-        return 0;
     }
   });
 }
