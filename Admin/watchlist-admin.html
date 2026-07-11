@@ -155,8 +155,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
     <input type="text" id="search" placeholder="Search title, actor, director, language…" oninput="renderCurrent()">
   </div>
   <select id="sort-select" onchange="renderCurrent()" style="padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:20px;background:var(--card);font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--muted);outline:none;cursor:pointer;flex-shrink:0">
-    <option value="added-desc" selected>Default · Recently added</option>
-    <option value="watched-desc">Recently watched</option>
+    <option value="watched-desc" selected>Default · Recently watched</option>
     <option value="watched-asc">Oldest watched</option>
     <option value="release-desc">Newest released</option>
     <option value="release-asc">Oldest released</option>
@@ -274,7 +273,7 @@ function switchTab(tab, btn) {
 }
 
 function sortEntries(arr) {
-  const s = document.getElementById('sort-select')?.value || 'added-desc';
+  const s = document.getElementById('sort-select')?.value || 'watched-desc';
 
   const parseWatched = e => {
     if (e.watchedDate) {
@@ -310,9 +309,8 @@ function sortEntries(arr) {
         return compareOptional(Number(a.myRating) || 0, Number(b.myRating) || 0, 'desc') || (b.addedAt || 0) - (a.addedAt || 0);
       case 'rating-asc':
         return compareOptional(Number(a.myRating) || 0, Number(b.myRating) || 0, 'asc') || (b.addedAt || 0) - (a.addedAt || 0);
-      case 'added-desc':
       default:
-        return (b.addedAt || 0) - (a.addedAt || 0);
+        return compareOptional(parseWatched(a), parseWatched(b), 'desc') || (b.addedAt || 0) - (a.addedAt || 0);
     }
   });
 }
