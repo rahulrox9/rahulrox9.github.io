@@ -154,9 +154,8 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
     <span class="search-icon">🔍</span>
     <input type="text" id="search" placeholder="Search title, actor, director, language…" oninput="renderCurrent()">
   </div>
-  <select id="sort-select" onchange="renderCurrent()" style="padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:20px;background:var(--card);font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--muted);outline:none;cursor:pointer;flex-shrink:0">
-    <option value="added-desc" selected>Default · Recently added</option>
-    <option value="watched-desc">Recently watched</option>
+  <select id="sort-select" autocomplete="off" onchange="renderCurrent()" style="padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:20px;background:var(--card);font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--muted);outline:none;cursor:pointer;flex-shrink:0">
+    <option value="watched-desc" selected>Default · Recently watched</option>
     <option value="watched-asc">Oldest watched</option>
     <option value="release-desc">Newest released</option>
     <option value="release-asc">Oldest released</option>
@@ -236,6 +235,53 @@ const LANG_NAMES = {
   'sk':'Slovak','sl':'Slovenian','uk':'Ukrainian'}
 function langName(code) { return LANG_NAMES[code] || code || ''; }
 
+
+function localISODate(value=Date.now()) {
+  const d=new Date(value);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function monthYearFromISO(iso) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso||'')) return '';
+  return new Date(iso+'T00:00:00').toLocaleDateString('en-GB',{month:'short',year:'numeric'});
+}
+function displayWatchedDate(e) {
+  const value=e.watchedDate||e.watched||'';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return new Date(value+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  }
+  return value||'Date not recorded';
+}
+function recoverWatchedDates() {
+  allEntries.forEach(e=>{
+    if (e.type!=='movie'||e.toWatch||e.watchedDate||!e.watched) return;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(e.watched)) {
+      e.watchedDate=e.watched;
+      e.watched=monthYearFromISO(e.watchedDate);
+      return;
+    }
+    for (const stamp of [e.addedAt,e.watchedAt]) {
+      if (!stamp) continue;
+      const candidate=localISODate(stamp);
+      if (monthYearFromISO(candidate)===e.watched) {
+        e.watchedDate=candidate;
+        break;
+      }
+    }
+  });
+}
+function watchedTimestamp(e) {
+  const value=e.watchedDate||e.watched||'';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    const exact=new Date(value+'T00:00:00').getTime();
+    if (!isNaN(exact)) return exact;
+  }
+  if (value) {
+    const legacy=new Date('1 '+value).getTime();
+    if (!isNaN(legacy)) return legacy;
+  }
+  return 0;
+}
+
 const TMDB_KEY = '60a9d5e588c206cf1d895394aa72d581';
 
 let allEntries = [];
@@ -274,20 +320,9 @@ function switchTab(tab, btn) {
 }
 
 function sortEntries(arr) {
-  const s = document.getElementById('sort-select')?.value || 'added-desc';
+  const s = document.getElementById('sort-select')?.value || 'watched-desc';
 
-  const parseWatched = e => {
-    if (e.watchedDate) {
-      const exact = new Date(e.watchedDate + 'T00:00:00').getTime();
-      if (!isNaN(exact)) return exact;
-    }
-    if (e.watchedAt) return Number(e.watchedAt) || 0;
-    if (e.watched) {
-      const legacy = new Date('1 ' + e.watched).getTime();
-      if (!isNaN(legacy)) return legacy;
-    }
-    return 0;
-  };
+  const parseWatched = e => watchedTimestamp(e);
 
   const compareOptional = (a, b, direction) => {
     if (!a && !b) return 0;
@@ -310,9 +345,8 @@ function sortEntries(arr) {
         return compareOptional(Number(a.myRating) || 0, Number(b.myRating) || 0, 'desc') || (b.addedAt || 0) - (a.addedAt || 0);
       case 'rating-asc':
         return compareOptional(Number(a.myRating) || 0, Number(b.myRating) || 0, 'asc') || (b.addedAt || 0) - (a.addedAt || 0);
-      case 'added-desc':
       default:
-        return (b.addedAt || 0) - (a.addedAt || 0);
+        return compareOptional(parseWatched(a), parseWatched(b), 'desc') || (b.addedAt || 0) - (a.addedAt || 0);
     }
   });
 }
@@ -349,7 +383,7 @@ function renderCurrent() {
           ${e.franchise?`<span class="franchise-tag" onclick="event.stopPropagation();filterByFranchise('${e.franchise.replace(/'/g,"\\'")}')" title="Filter: ${e.franchise}">🎬 ${e.franchise}</span>`:''}
           ${e.myRating?`<div class="my-rating">${e.myRating}<span class="oo">/10</span></div>`:''}
           ${e.review?`<div class="review-snip">${e.review}</div>`:''}
-          ${e.watched?`<div class="meta" style="margin-top:auto">${e.watched}</div>`:''}
+          ${(e.watchedDate||e.watched)?`<div class="meta" style="margin-top:auto">Watched: ${displayWatchedDate(e)}</div>`:''}
         </div>
       </div>`).join('')}</div>`;
   } else {
@@ -406,8 +440,8 @@ async function openModal(id) {
   if (entry.myRating) document.getElementById('m-rating-val').innerHTML = `${entry.myRating}<span style="font-size:0.7rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:300">/10</span>`;
   reviewEl.style.display  = entry.review ? 'block' : 'none';
   if (entry.review) document.getElementById('m-review-val').textContent = entry.review;
-  watchedEl.style.display = entry.watched ? 'block' : 'none';
-  if (entry.watched) document.getElementById('m-watched-val').textContent = entry.watched;
+  watchedEl.style.display = (entry.watchedDate||entry.watched) ? 'block' : 'none';
+  if (entry.watchedDate||entry.watched) document.getElementById('m-watched-val').textContent = displayWatchedDate(entry);
 
   // Seasons
   if (entry.type==='show' && entry.seasonsData?.length) {
@@ -502,12 +536,24 @@ function filterByFranchise(franchise) {
 
 // ── Load ─────────────────────────────────────────────────
 async function load() {
-  try { allEntries = (await driveRead('watchlist.json')).data; }
-  catch(e) { console.error('Load failed',e); }
+  const sortSelect = document.getElementById('sort-select');
+  if (sortSelect) sortSelect.value = 'watched-desc';
+  try {
+    allEntries = (await driveRead('watchlist.json')).data;
+    if (!Array.isArray(allEntries)) throw new Error('Data is not an array');
+    recoverWatchedDates();
+  } catch(e) { console.error('Load failed',e); allEntries=[]; }
   document.getElementById('loading').style.display='none';
   buildLangFilters();
   renderCurrent();
 }
+
+window.addEventListener('pageshow', event => {
+  if (!event.persisted) return;
+  const sortSelect = document.getElementById('sort-select');
+  if (sortSelect) sortSelect.value = 'watched-desc';
+  renderCurrent();
+});
 
 load();
 </script>
