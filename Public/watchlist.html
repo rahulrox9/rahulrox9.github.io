@@ -245,6 +245,7 @@ function monthYearFromISO(iso) {
   return new Date(iso+'T00:00:00').toLocaleDateString('en-GB',{month:'short',year:'numeric'});
 }
 function displayWatchedDate(e) {
+  if (e.watchedDateUnknown) return '';
   const value=e.watchedDate||e.watched||'';
   if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     return new Date(value+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
@@ -253,7 +254,7 @@ function displayWatchedDate(e) {
 }
 function recoverWatchedDates() {
   allEntries.forEach(e=>{
-    if (e.type!=='movie'||e.toWatch||e.watchedDate||!e.watched) return;
+    if (e.type!=='movie'||e.toWatch||e.watchedDateUnknown||e.watchedDate||!e.watched) return;
     if (/^\d{4}-\d{2}-\d{2}$/.test(e.watched)) {
       e.watchedDate=e.watched;
       e.watched=monthYearFromISO(e.watchedDate);
@@ -270,6 +271,7 @@ function recoverWatchedDates() {
   });
 }
 function watchedTimestamp(e) {
+  if (e.watchedDateUnknown) return 0;
   const value=e.watchedDate||e.watched||'';
   if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     const exact=new Date(value+'T00:00:00').getTime();
@@ -334,9 +336,9 @@ function sortEntries(arr) {
   return [...arr].sort((a, b) => {
     switch(s) {
       case 'watched-desc':
-        return compareOptional(parseWatched(a), parseWatched(b), 'desc') || (b.addedAt || 0) - (a.addedAt || 0);
+        return compareOptional(parseWatched(a), parseWatched(b), 'desc') || (Number(b.year)||0) - (Number(a.year)||0);
       case 'watched-asc':
-        return compareOptional(parseWatched(a), parseWatched(b), 'asc') || (b.addedAt || 0) - (a.addedAt || 0);
+        return compareOptional(parseWatched(a), parseWatched(b), 'asc') || (Number(b.year)||0) - (Number(a.year)||0);
       case 'release-desc':
         return compareOptional(Number(a.year) || 0, Number(b.year) || 0, 'desc') || (b.addedAt || 0) - (a.addedAt || 0);
       case 'release-asc':
@@ -346,7 +348,7 @@ function sortEntries(arr) {
       case 'rating-asc':
         return compareOptional(Number(a.myRating) || 0, Number(b.myRating) || 0, 'asc') || (b.addedAt || 0) - (a.addedAt || 0);
       default:
-        return compareOptional(parseWatched(a), parseWatched(b), 'desc') || (b.addedAt || 0) - (a.addedAt || 0);
+        return compareOptional(parseWatched(a), parseWatched(b), 'desc') || (Number(b.year)||0) - (Number(a.year)||0);
     }
   });
 }
@@ -383,7 +385,7 @@ function renderCurrent() {
           ${e.franchise?`<span class="franchise-tag" onclick="event.stopPropagation();filterByFranchise('${e.franchise.replace(/'/g,"\\'")}')" title="Filter: ${e.franchise}">🎬 ${e.franchise}</span>`:''}
           ${e.myRating?`<div class="my-rating">${e.myRating}<span class="oo">/10</span></div>`:''}
           ${e.review?`<div class="review-snip">${e.review}</div>`:''}
-          ${(e.watchedDate||e.watched)?`<div class="meta" style="margin-top:auto">Watched: ${displayWatchedDate(e)}</div>`:''}
+          ${(!e.watchedDateUnknown&&(e.watchedDate||e.watched))?`<div class="meta" style="margin-top:auto">Watched: ${displayWatchedDate(e)}</div>`:''}
         </div>
       </div>`).join('')}</div>`;
   } else {
@@ -440,8 +442,9 @@ async function openModal(id) {
   if (entry.myRating) document.getElementById('m-rating-val').innerHTML = `${entry.myRating}<span style="font-size:0.7rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:300">/10</span>`;
   reviewEl.style.display  = entry.review ? 'block' : 'none';
   if (entry.review) document.getElementById('m-review-val').textContent = entry.review;
-  watchedEl.style.display = (entry.watchedDate||entry.watched) ? 'block' : 'none';
-  if (entry.watchedDate||entry.watched) document.getElementById('m-watched-val').textContent = displayWatchedDate(entry);
+  const hasWatchedDate=!entry.watchedDateUnknown&&(entry.watchedDate||entry.watched);
+  watchedEl.style.display = hasWatchedDate ? 'block' : 'none';
+  if (hasWatchedDate) document.getElementById('m-watched-val').textContent = displayWatchedDate(entry);
 
   // Seasons
   if (entry.type==='show' && entry.seasonsData?.length) {
