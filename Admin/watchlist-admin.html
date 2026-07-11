@@ -278,7 +278,14 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
         <div class="stars-row"><div class="stars-input" id="m-stars"></div><span class="star-lbl" id="m-star-lbl">—</span></div>
       </div>
       <div class="field"><label>My Review <span style="font-weight:300;text-transform:none">(optional)</span></label><textarea id="m-review" placeholder="What did you think?"></textarea></div>
-      <div class="field"><label>Watched <span style="font-weight:300;text-transform:none">(optional)</span></label><input type="date" id="m-watched"></div>
+      <div class="field">
+        <label>Watched Date <span style="font-weight:300;text-transform:none">(optional)</span></label>
+        <input type="date" id="m-watched">
+        <label style="display:flex;align-items:center;gap:0.45rem;margin-top:0.5rem;text-transform:none;letter-spacing:0;font-size:0.8rem;color:var(--muted);cursor:pointer">
+          <input type="checkbox" id="m-watched-unknown" onchange="toggleUnknownWatchedDate('m-watched','m-watched-unknown')" style="width:14px;height:14px;accent-color:var(--warm)">
+          I don’t know when I watched this
+        </label>
+      </div>
     </div>
     <div class="field"><label>Language <span style="font-weight:300;text-transform:none">(auto-filled, editable)</span></label><input type="text" id="m-language" placeholder="e.g. Hindi, Tamil, English"></div>
   </div>
@@ -349,7 +356,14 @@ nav{position:sticky;top:0;z-index:100;background:#1a1208;border-bottom:1px solid
       <div class="stars-row"><div class="stars-input" id="wm-stars"></div><span class="star-lbl" id="wm-star-lbl">—</span></div>
     </div>
     <div class="field"><label>Review <span style="font-weight:300;text-transform:none">(optional)</span></label><textarea id="wm-review" placeholder="What did you think?"></textarea></div>
-    <div class="field"><label>Watched Date <span style="font-weight:300;text-transform:none">(optional)</span></label><input type="date" id="wm-watched"></div>
+    <div class="field">
+      <label>Watched Date <span style="font-weight:300;text-transform:none">(optional)</span></label>
+      <input type="date" id="wm-watched">
+      <label style="display:flex;align-items:center;gap:0.45rem;margin-top:0.5rem;text-transform:none;letter-spacing:0;font-size:0.8rem;color:var(--muted);cursor:pointer">
+        <input type="checkbox" id="wm-watched-unknown" onchange="toggleUnknownWatchedDate('wm-watched','wm-watched-unknown')" style="width:14px;height:14px;accent-color:var(--warm)">
+        I don’t know when I watched this
+      </label>
+    </div>
     <div style="display:flex;gap:0.6rem;margin-top:0.5rem">
       <button class="btn green" onclick="confirmMoveToWatched()">Move to Watched ✓</button>
       <button class="btn ghost" onclick="dismissWatchedModal()">Cancel</button>
@@ -489,16 +503,36 @@ function monthYearFromISO(iso) {
   return new Date(iso+'T00:00:00').toLocaleDateString('en-GB',{month:'short',year:'numeric'});
 }
 function displayWatchedDate(e) {
+  if (e.watchedDateUnknown) return '';
   const value=e.watchedDate||e.watched||'';
   if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     return new Date(value+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
   }
-  return value||'Date not recorded';
+  return value;
+}
+function toggleUnknownWatchedDate(dateId, checkboxId) {
+  const dateInput=document.getElementById(dateId);
+  const checkbox=document.getElementById(checkboxId);
+  if (!dateInput||!checkbox) return;
+  dateInput.disabled=checkbox.checked;
+  if (checkbox.checked) dateInput.value='';
+  else if (!dateInput.value) dateInput.value=localISODate();
+}
+function clearWatchedDate(entry) {
+  entry.watchedDateUnknown=true;
+  entry.watchedDate='';
+  entry.watched='';
+  delete entry.watchedAt;
+}
+function setKnownWatchedDate(entry, iso) {
+  delete entry.watchedDateUnknown;
+  entry.watchedDate=iso;
+  entry.watched=monthYearFromISO(iso);
 }
 function recoverWatchedDates() {
   let changed=false;
   entries.forEach(e=>{
-    if (e.type!=='movie'||e.toWatch||e.watchedDate||!e.watched) return;
+    if (e.type!=='movie'||e.toWatch||e.watchedDateUnknown||e.watchedDate||!e.watched) return;
     if (/^\d{4}-\d{2}-\d{2}$/.test(e.watched)) {
       e.watchedDate=e.watched;
       e.watched=monthYearFromISO(e.watchedDate);
@@ -712,7 +746,11 @@ async function fetchTmdb(tmdbId, type, imdbIdHint) {
     document.getElementById('movie-fields').style.display = type==='movie'?'block':'none';
     document.getElementById('show-fields').style.display  = type==='show'?'block':'none';
     document.getElementById('submit-btn').style.display   = 'inline-block';
-    if (type==='movie') document.getElementById('m-watched').value=localISODate();
+    if (type==='movie') {
+      document.getElementById('m-watched-unknown').checked=false;
+      document.getElementById('m-watched').disabled=false;
+      document.getElementById('m-watched').value=localISODate();
+    }
     makeStar('m-stars','m-star-lbl','m');
     makeStar('s-stars','s-star-lbl','s');
     const langFull = langName(language);
@@ -723,7 +761,8 @@ async function fetchTmdb(tmdbId, type, imdbIdHint) {
     document.querySelectorAll('input[name="add-dest"]').forEach(r => r.onchange = () => {
       const watched=r.value==='watched'&&r.checked;
       document.getElementById('movie-watched-fields').style.display=watched?'block':'none';
-      if (watched&&!document.getElementById('m-watched').value) document.getElementById('m-watched').value=localISODate();
+      const unknown=document.getElementById('m-watched-unknown').checked;
+      if (watched&&!unknown&&!document.getElementById('m-watched').value) document.getElementById('m-watched').value=localISODate();
     });
   } catch(e) { showPreviewMsg('Error: '+e.message, true); }
 }
@@ -740,14 +779,12 @@ async function submitEntry() {
     if (e.type==='movie') {
       e.myRating = _stars['m']||0;
       e.review   = document.getElementById('m-review').value.trim();
-      const rd   = document.getElementById('m-watched').value;
-      if (rd) {
-        e.watchedDate=rd;
-        e.watched=monthYearFromISO(rd);
-      } else if (!e.watchedDate&&!e.watched) {
-        e.watchedDate=localISODate();
-        e.watched=monthYearFromISO(e.watchedDate);
-      }
+      const rd=document.getElementById('m-watched').value;
+      const unknown=document.getElementById('m-watched-unknown').checked;
+      if (unknown) clearWatchedDate(e);
+      else if (rd) setKnownWatchedDate(e,rd);
+      else if (!e.watchedDate&&!e.watched) setKnownWatchedDate(e,localISODate());
+      else delete e.watchedDateUnknown;
       e.language = document.getElementById('m-language').value.trim();
     } else {
       e.review   = document.getElementById('s-review').value.trim();
@@ -789,9 +826,9 @@ async function submitEntry() {
     if (fetched.type==='movie') {
       entry.myRating = _stars['m']||0;
       entry.review   = document.getElementById('m-review').value.trim();
-      const rd = document.getElementById('m-watched').value||localISODate();
-      entry.watchedDate=rd;
-      entry.watched=monthYearFromISO(rd);
+      const unknown=document.getElementById('m-watched-unknown').checked;
+      if (unknown) clearWatchedDate(entry);
+      else setKnownWatchedDate(entry,document.getElementById('m-watched').value||localISODate());
       entry.language = document.getElementById('m-language').value.trim();
     } else {
       entry.review   = document.getElementById('s-review').value.trim();
@@ -829,8 +866,11 @@ function startEdit(id) {
   document.getElementById('cancel-edit-btn').style.display = 'inline-block';
   makeStar('m-stars','m-star-lbl','m'); setStar('m-stars','m-star-lbl','m',e.myRating||0);
   if (e.type==='movie') {
-    document.getElementById('m-review').value   = e.review||'';
-    document.getElementById('m-watched').value  = e.watchedDate||(/^\d{4}-\d{2}-\d{2}$/.test(e.watched||'')?e.watched:'');
+    document.getElementById('m-review').value = e.review||'';
+    const unknown=!!e.watchedDateUnknown;
+    document.getElementById('m-watched-unknown').checked=unknown;
+    document.getElementById('m-watched').disabled=unknown;
+    document.getElementById('m-watched').value=unknown?'':(e.watchedDate||(/^\d{4}-\d{2}-\d{2}$/.test(e.watched||'')?e.watched:''));
     document.getElementById('m-language').value = e.language||'';
   } else {
     document.getElementById('s-review').value   = e.review||'';
@@ -847,6 +887,8 @@ function resetForm() {
   document.getElementById('url-input').value = '';
   document.getElementById('m-review').value = '';
   document.getElementById('m-watched').value = '';
+  document.getElementById('m-watched').disabled = false;
+  document.getElementById('m-watched-unknown').checked = false;
   document.getElementById('m-language').value = '';
   document.getElementById('s-review').value = '';
   document.getElementById('s-language').value = '';
@@ -869,6 +911,8 @@ function promptMoveToWatched(id) {
   document.getElementById('watched-modal-title').textContent = `Watched: ${e.title}`;
   makeStar('wm-stars','wm-star-lbl','wm');
   document.getElementById('wm-review').value = '';
+  document.getElementById('wm-watched-unknown').checked=false;
+  document.getElementById('wm-watched').disabled=false;
   document.getElementById('wm-watched').value = localISODate();
   document.getElementById('watched-modal').classList.add('on');
 }
@@ -879,10 +923,12 @@ async function confirmMoveToWatched() {
   e.toWatch   = false;
   e.myRating  = _stars['wm']||0;
   e.review    = document.getElementById('wm-review').value.trim();
-  const rd    = document.getElementById('wm-watched').value||localISODate();
-  e.watchedDate=rd;
-  e.watched=monthYearFromISO(rd);
-  e.watchedAt = Date.now();
+  const unknown=document.getElementById('wm-watched-unknown').checked;
+  if (unknown) clearWatchedDate(e);
+  else {
+    setKnownWatchedDate(e,document.getElementById('wm-watched').value||localISODate());
+    e.watchedAt=Date.now();
+  }
   dismissWatchedModal();
   await save(); renderList();
 }
@@ -937,7 +983,8 @@ function renderList() {
   try {
     list.innerHTML = visible.map(e => {
     const isToWatch = !!e.toWatch;
-    const primaryMeta=!isToWatch&&e.type==='movie'?`Watched: ${displayWatchedDate(e)}`:e.year;
+    const watchedLabel=displayWatchedDate(e);
+    const primaryMeta=!isToWatch&&e.type==='movie'?(watchedLabel?`Watched: ${watchedLabel}`:(e.year||'')):e.year;
     const approvedNames=approvedNameMap.get(e.id)||[];
     return `<div class="entry">
       ${e.poster?`<img src="${e.poster}" alt="${e.title}">`:''}
