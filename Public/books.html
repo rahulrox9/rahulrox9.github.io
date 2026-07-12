@@ -1,429 +1,69 @@
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rahul's Bookshelf</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0}
-body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;padding:0 0 3rem}
-nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:52px}
-.nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;text-decoration:none;color:var(--ink)}
-.nav-logo span{color:var(--warm);font-style:italic}
-.nav-links{display:flex;gap:1.4rem;align-items:center}
-.nav-links a{font-size:0.76rem;color:var(--muted);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
-.nav-links a:hover{color:var(--warm)}
-.nav-links a.active{color:var(--ink);font-weight:500}
-.nav-admin{font-size:0.72rem;color:var(--muted);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;padding:0.25rem 0.65rem;border:1px solid var(--border);border-radius:3px;transition:all 0.15s}
-.nav-admin:hover{color:var(--warm);border-color:var(--warm)}
-.books-wrap{padding:2rem 1.5rem 0}
-@media(max-width:680px){nav{padding:0 1rem}.nav-links a:not(.active):not(.nav-admin){display:none}.nav-admin{display:flex!important}.books-wrap{padding:1.2rem 1rem 0}}
-
-/* Controls */
-.controls{display:flex;flex-wrap:wrap;gap:0.6rem;align-items:center;margin-bottom:1.5rem;justify-content:center}
-.search-wrap{position:relative;flex:1;min-width:180px;max-width:320px}
-.search-wrap input{width:100%;padding:0.5rem 1rem 0.5rem 2.3rem;border:1px solid var(--border);border-radius:20px;background:var(--card);font-family:'DM Sans',sans-serif;font-size:0.84rem;color:var(--ink);outline:none;transition:border-color 0.2s}
-.search-wrap input:focus{border-color:var(--warm)}
-.search-icon{position:absolute;left:0.8rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.82rem;pointer-events:none}
-.ctrl-select{padding:0.48rem 0.85rem;border:1px solid var(--border);border-radius:20px;background:var(--card);font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--muted);outline:none;cursor:pointer;transition:border-color 0.2s}
-.ctrl-select:focus{border-color:var(--warm)}
-
-/* Genre pills */
-.genre-pills{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.2rem;justify-content:center;min-height:1.6rem}
-.pill{padding:0.25rem 0.75rem;border-radius:99px;font-size:0.73rem;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--muted);transition:all 0.15s;white-space:nowrap}
-.pill.on{background:var(--warm);border-color:var(--warm);color:#fff}
-
-/* Results count */
-.results-lbl{text-align:center;font-size:0.75rem;color:var(--muted);margin-bottom:1rem;letter-spacing:0.04em}
-
-/* Grid */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.4rem}
-.book-card{background:var(--card);border:1px solid var(--border);border-radius:4px;display:flex;gap:1rem;padding:1.2rem;transition:transform 0.2s,box-shadow 0.2s;animation:fadeUp 0.4s ease both;text-decoration:none;color:inherit;cursor:pointer}
-.book-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(26,18,8,0.1)}
-.book-card.hidden{display:none}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-
-.cover-wrap{flex-shrink:0;width:72px}
-.cover-wrap img{width:72px;height:108px;object-fit:cover;border-radius:2px;display:block;background:var(--border)}
-.cover-ph{width:72px;height:108px;background:linear-gradient(135deg,var(--border),#d4c9b8);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1.8rem}
-.book-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:0.28rem}
-.book-title{font-family:'Playfair Display',serif;font-size:0.95rem;line-height:1.3;font-weight:700;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.book-author{font-size:0.78rem;color:var(--muted)}
-.stars{display:flex;gap:2px;margin-top:0.1rem}
-.star{width:11px;height:11px;fill:var(--warm)}
-.star.empty{fill:var(--border)}
-.genre-tag{display:inline-block;font-size:0.62rem;padding:0.1rem 0.45rem;border-radius:8px;background:#fdecd8;color:var(--warm);font-weight:500;letter-spacing:0.04em;width:fit-content}
-.genre-tag.loading{background:var(--border);color:var(--muted)}
-.review-snip{font-size:0.76rem;color:#5a4e3f;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-style:italic}
-.book-date{font-size:0.71rem;color:var(--muted);margin-top:auto;padding-top:0.25rem;font-weight:300;letter-spacing:0.04em}
-.book-year{font-size:0.71rem;color:var(--muted)}
-
-#loading{text-align:center;padding:4rem 0;font-family:'Playfair Display',serif;font-style:italic;color:var(--muted);font-size:1.1rem}
-#error{display:none;text-align:center;padding:2rem;color:#c0392b;font-style:italic}
-.empty-state{text-align:center;padding:3rem;color:var(--muted);font-family:'Playfair Display',serif;font-style:italic}
-
-footer{text-align:center;margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border)}
-footer a{font-size:0.8rem;color:var(--muted);text-decoration:none;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.2s}
-footer a:hover{color:var(--warm)}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;padding-bottom:3rem}
+nav{position:sticky;top:0;z-index:50;background:rgba(250,246,239,.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:52px}.nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;text-decoration:none;color:var(--ink)}.nav-logo span{color:var(--warm);font-style:italic}.nav-links{display:flex;gap:1.35rem;align-items:center}.nav-links a{font-size:.76rem;color:var(--muted);text-decoration:none}.nav-links a.active{color:var(--ink);font-weight:500}.nav-admin{padding:.25rem .65rem;border:1px solid var(--border);border-radius:3px;text-transform:uppercase;font-size:.7rem!important}
+.hero{max-width:1180px;margin:0 auto;padding:3.1rem 1.5rem 1.6rem;text-align:center}.eyebrow{font-size:.68rem;text-transform:uppercase;letter-spacing:.16em;color:var(--warm);margin-bottom:.55rem}.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,3.8rem);line-height:1}.hero h1 span{color:var(--warm);font-style:italic}.hero p{color:var(--muted);font-size:.84rem;margin-top:.8rem}.hero-stats{display:flex;justify-content:center;gap:1.2rem;margin-top:1.15rem;flex-wrap:wrap}.hero-stat{font-size:.72rem;color:var(--muted)}.hero-stat strong{font-family:'Playfair Display',serif;color:var(--ink);font-size:1rem;margin-right:.2rem}
+main{max-width:1180px;margin:0 auto;padding:0 1.5rem}.toolbar{display:flex;gap:.6rem;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}.search-wrap{position:relative;flex:1;max-width:390px;min-width:220px}.search-wrap span{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.8rem}.search-wrap input,.sort{width:100%;border:1px solid var(--border);background:var(--card);border-radius:22px;padding:.56rem .9rem;font:400 .82rem 'DM Sans';color:var(--ink);outline:none}.search-wrap input{padding-left:2.25rem}.sort{width:auto;color:var(--muted);cursor:pointer}.search-wrap input:focus,.sort:focus{border-color:var(--warm)}
+.genre-pills{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.25rem}.pill{border:1px solid var(--border);background:var(--card);color:var(--muted);border-radius:99px;padding:.26rem .72rem;font:400 .71rem 'DM Sans';cursor:pointer}.pill.on{background:var(--warm);border-color:var(--warm);color:#fff}.results{text-align:center;color:var(--muted);font-size:.72rem;margin-bottom:1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:1rem}.book-card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;display:grid;grid-template-columns:108px minmax(0,1fr);min-height:170px;cursor:pointer;transition:transform .18s,box-shadow .18s;animation:fadeUp .35s ease both}.book-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(26,18,8,.1)}.cover{width:108px;height:100%;min-height:170px;object-fit:cover;background:var(--border)}.cover-ph{width:108px;min-height:170px;display:flex;align-items:center;justify-content:center;font-size:2rem;background:linear-gradient(135deg,var(--border),#d5c8b5)}.book-content{padding:.9rem 1rem;display:flex;flex-direction:column;min-width:0}.genre{display:inline-block;width:fit-content;border-radius:9px;background:#fdebd6;color:var(--warm);font-size:.59rem;text-transform:uppercase;letter-spacing:.05em;padding:.12rem .42rem;margin-bottom:.4rem}.title{font-family:'Playfair Display',serif;font-size:1.03rem;font-weight:700;line-height:1.25}.author{font-size:.74rem;color:var(--muted);margin-top:.18rem}.rating-line{display:flex;align-items:center;gap:.55rem;margin-top:.62rem}.rating{font-family:'Playfair Display',serif;color:var(--warm);font-size:1.25rem;font-weight:700}.rating small{font:300 .63rem 'DM Sans';color:var(--muted)}.rating-bar{height:4px;flex:1;background:var(--border);border-radius:99px;overflow:hidden}.rating-fill{height:100%;background:var(--warm)}.review{font-size:.74rem;color:#5a4e3f;font-style:italic;line-height:1.48;margin-top:.55rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.details{font-size:.68rem;color:var(--muted);margin-top:auto;padding-top:.55rem}
+.empty,.loading{text-align:center;padding:4rem;color:var(--muted);font-family:'Playfair Display',serif;font-style:italic;grid-column:1/-1}
+.overlay{display:none;position:fixed;inset:0;background:rgba(26,18,8,.62);z-index:100;align-items:center;justify-content:center;padding:1rem}.overlay.on{display:flex}.modal{background:var(--card);width:min(620px,100%);max-height:90vh;overflow:auto;border-radius:10px;position:relative}.close{position:absolute;right:.8rem;top:.7rem;border:none;background:rgba(255,255,255,.85);border-radius:99px;width:31px;height:31px;cursor:pointer;font-size:1rem;z-index:2}.modal-top{display:grid;grid-template-columns:155px minmax(0,1fr);gap:1.2rem;padding:1.25rem}.modal-cover{width:155px;height:232px;object-fit:cover;border-radius:5px;background:var(--border)}.modal h2{font-family:'Playfair Display',serif;font-size:1.5rem;line-height:1.2;margin-top:.25rem}.modal-author{color:var(--muted);font-size:.82rem;margin-top:.3rem}.modal-rating{font-family:'Playfair Display',serif;color:var(--warm);font-size:1.6rem;font-weight:700;margin-top:.75rem}.modal-rating small{font:300 .7rem 'DM Sans';color:var(--muted)}.modal-meta{font-size:.75rem;color:var(--muted);margin-top:.55rem;line-height:1.55}.modal-body{padding:0 1.25rem 1.3rem}.section-label{font-size:.63rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.3rem}.modal-review{font-family:'Playfair Display',serif;font-style:italic;line-height:1.65;font-size:.92rem;color:#4e4336}.goodreads-link{display:inline-block;margin-top:1rem;color:var(--warm);text-decoration:none;font-size:.78rem}
+footer{text-align:center;margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--muted)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:680px){nav{padding:0 1rem}.nav-links a:not(.active):not(.nav-admin){display:none}.hero{padding:2.2rem 1rem 1.3rem}main{padding:0 .85rem}.grid{grid-template-columns:1fr}.book-card{grid-template-columns:88px minmax(0,1fr);min-height:142px}.cover,.cover-ph{width:88px;min-height:142px}.book-content{padding:.75rem}.modal-top{grid-template-columns:95px minmax(0,1fr);gap:.85rem}.modal-cover{width:95px;height:143px}.modal h2{font-size:1.2rem}.toolbar{align-items:stretch}.sort{width:100%}}
 </style>
 </head>
 <body>
-
 <nav>
   <a class="nav-logo" href="index.html">Rahul <span>Subbaraman</span></a>
   <div class="nav-links">
-    <a href="watchlist.html">Watchlist</a>
-    <a href="travel.html">Travels</a>
-    <a href="books.html" class="active">Bookshelf</a>
-    <a href="magnets.html">Magnets</a>
-    <a href="postcards.html">Postcards</a>
-    <a href="blog.html">Writing</a>
-    <a class="nav-admin" href="admin.html">Admin</a>
+    <a href="watchlist.html">Watchlist</a><a href="travel.html">Travels</a><a class="active" href="books.html">Bookshelf</a><a href="magnets.html">Magnets</a><a href="postcards.html">Postcards</a><a href="blog.html">Writing</a><a class="nav-admin" href="../Admin/admin.html">Admin</a>
   </div>
 </nav>
-<div class="books-wrap">
-<div class="controls">
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="search" placeholder="Search title or author…" oninput="applyFilters()">
+<header class="hero">
+  <div class="eyebrow">Reading archive</div>
+  <h1>Rahul's <span>Bookshelf</span></h1>
+  <p>Books I have read, rated and reviewed.</p>
+  <div class="hero-stats"><span class="hero-stat"><strong id="count">0</strong>books</span><span class="hero-stat"><strong id="average">—</strong>average rating</span><span class="hero-stat"><strong id="updated">—</strong>last updated</span></div>
+</header>
+<main>
+  <div class="toolbar">
+    <div class="search-wrap"><span>🔍</span><input id="search" type="search" placeholder="Search title, author or review…" oninput="render()"></div>
+    <select class="sort" id="sort" onchange="render()"><option value="read-desc">Newest read</option><option value="read-asc">Oldest read</option><option value="rating-desc">Highest rated</option><option value="rating-asc">Lowest rated</option><option value="title-asc">Title A–Z</option><option value="author-asc">Author A–Z</option><option value="published-desc">Publication year</option></select>
   </div>
-  <select class="ctrl-select" id="sort" onchange="applyFilters()">
-    <option value="date-desc">Newest read</option>
-    <option value="date-asc">Oldest read</option>
-    <option value="rating-desc">Highest rated</option>
-    <option value="title-asc">Title A → Z</option>
-    <option value="title-desc">Title Z → A</option>
-    <option value="author-asc">Author A → Z</option>
-    <option value="pub-desc">Pub year newest</option>
-    <option value="pub-asc">Pub year oldest</option>
-  </select>
-</div>
-
-<div class="genre-pills" id="genre-pills"></div>
-<div class="results-lbl" id="results-lbl"></div>
-
-<div id="loading">Opening the shelves…</div>
-<div id="error">Could not load books. <a href="https://www.goodreads.com/user/show/104699560" target="_blank">Visit Goodreads</a></div>
-<div class="grid" id="grid"></div>
-</div><!-- /books-wrap -->
-
-<footer>
-  <a href="https://www.goodreads.com/user/show/104699560" target="_blank">View full shelf on Goodreads →</a>
-</footer>
-
+  <div class="genre-pills" id="genre-pills"></div>
+  <div class="results" id="results"></div>
+  <div class="grid" id="grid"><div class="loading">Opening the shelves…</div></div>
+</main>
+<div class="overlay" id="overlay" onclick="closeModal(event)"><article class="modal"><button class="close" onclick="closeModal()">×</button><div id="modal-content"></div></article></div>
+<footer>Ratings are shown out of 10.</footer>
 <script>
-
-const DB_URL = 'https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
-
-function jsonp(url, file) {
-  return new Promise((res, rej) => {
-    const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-    const s  = document.createElement('script');
-    window[cb] = d => { delete window[cb]; s.remove(); res(d); };
-    s.onerror  = () => { delete window[cb]; s.remove(); rej(); };
-    s.src = url + '?file=' + file + '&callback=' + cb;
-    document.head.appendChild(s);
-  });
-}
-
-async function driveRead(file) {
-  const data = await jsonp(DB_URL, file);
-  return { data: data };
-}
-
-async function driveWrite(file, data) {
-  await fetch(DB_URL, {
-    method: 'POST',
-    body: JSON.stringify({ file: file, data: data })
-  });
-}
-const RSS_URL = 'https://www.goodreads.com/review/list_rss/104699560?shelf=read&sort=date_read&order=d';
-
-let allBooks = [];
-let activeGenre = 'All';
-// Genre cache persisted in sessionStorage so repeat views don't re-fetch
-// Genre cache loaded from Google Drive (see loadDriveGenreCache)
-
-// ── RSS fetch ────────────────────────────────────────────
-async function fetchRSS() {
-  const proxies = [
-    async () => {
-      const r = await fetch('https://api.allorigins.win/get?url='+encodeURIComponent(RSS_URL));
-      const d = await r.json();
-      if (!d.contents) throw new Error('empty');
-      return new DOMParser().parseFromString(d.contents,'text/xml');
-    },
-    async () => {
-      const r = await fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(RSS_URL));
-      const d = await r.json();
-      if (d.status!=='ok') throw new Error('failed');
-      const xml = '<rss>'+d.items.map(it=>`<item>
-        <title>${it.title}</title><link>${it.link}</link>
-        <pubDate>${it.pubDate}</pubDate>
-        <description><![CDATA[${it.description}]]></description>
-      </item>`).join('')+'</rss>';
-      return new DOMParser().parseFromString(xml,'text/xml');
-    }
-  ];
-  for (const p of proxies) { try { return await p(); } catch(e) { continue; } }
-  throw new Error('All proxies failed');
-}
-
-// ── Helpers ──────────────────────────────────────────────
-function upgradeImg(url) {
-  return url ? url.replace(/_SY75_|_SX50_|_SX98_|_SY160_/,'_SY475_') : '';
-}
-function extractImage(item) {
-  const n = item.querySelector('image_large,image_medium,image_small');
-  if (n) return n.textContent.trim();
-  const m = (item.querySelector('description')?.textContent||'').match(/src="([^"]+\.jpg[^"]*)"/);
-  return m ? m[1] : '';
-}
-function extractReview(item) {
-  const desc = item.querySelector('description')?.textContent||'';
-  const m = desc.match(/review: <br\/>([\s\S]*?)$/i);
-  if (m && m[1].trim().length>20) return m[1].replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-  return '';
-}
-function starsHTML(r) {
-  if (!r) return '';
-  let h='<div class="stars">';
-  for (let i=1;i<=5;i++) h+=`<svg class="star${i>r?' empty':''}" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
-  return h+'</div>';
-}
-function fmtDate(str) {
-  if (!str) return '';
-  const d = new Date(str);
-  return isNaN(d) ? '' : d.toLocaleDateString('en-GB',{month:'short',year:'numeric'});
-}
-
-// ── Genre cache (Google Drive) ───────────────────────────
-let driveGenreCache = {}; // loaded from GitHub on init
-let genreSha = null;
-let driveCacheDirty = false;
-
-async function loadDriveGenreCache() {
-  try {
-    const gr = await driveRead('books_genres.json'); driveGenreCache = gr.data;
-  } catch(e) {
-    driveGenreCache = {};
-  }
-}
-
-async function saveDriveGenreCache() {
-  try {
-    await driveWrite('books_genres.json', driveGenreCache);
-    driveCacheDirty = false;
-  } catch(e) { console.warn('Genre cache save failed', e); }
-}
-
-async function fetchGenre(title, author) {
-  const key = title+'|||'+author;
-  if (driveGenreCache[key] !== undefined) return driveGenreCache[key];
-  try {
-    const q = encodeURIComponent(title+' '+author);
-    const r = await fetch('https://openlibrary.org/search.json?q='+q+'&limit=1&fields=subject,first_publish_year');
-    const d = await r.json();
-    const doc = d.docs && d.docs[0];
-    const skip = /^(fiction|nonfiction|non-fiction|accessible book|protected daisy|in library|open library|large type|juvenile|children|internet archive)/i;
-    const subjects = doc && doc.subject ? doc.subject.filter(function(s){return !skip.test(s);}) : [];
-    const genre = subjects[0] || (doc && doc.subject && doc.subject[0]) || '';
-    const pubYear = doc && doc.first_publish_year ? String(doc.first_publish_year) : '';
-    const result = { genre: genre, pubYear: pubYear };
-    driveGenreCache[key] = result;
-    driveCacheDirty = true;
-    return result;
-  } catch(e) {
-    driveGenreCache[key] = { genre:'', pubYear:'' };
-    return driveGenreCache[key];
-  }
-}
-
-function setGenreOverride(title, author, genre) {
-  const key = title+'|||'+author;
-  if (!driveGenreCache[key]) driveGenreCache[key] = { genre:'', pubYear:'' };
-  driveGenreCache[key].genre = genre;
-  driveCacheDirty = true;
-  saveDriveGenreCache();
-}
-
-// ── Filter & sort ────────────────────────────────────────
-function applyFilters() {
-  const q    = document.getElementById('search').value.toLowerCase().trim();
-  const sort = document.getElementById('sort').value;
-
-  let visible = allBooks.filter(b => {
-    const matchQ = !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q);
-    const matchG = activeGenre==='All' || b.genre===activeGenre;
-    return matchQ && matchG;
-  });
-
-  // Sort
-  visible.sort((a,b) => {
-    switch(sort) {
-      case 'date-desc':   return (b.readTs||0)-(a.readTs||0);
-      case 'date-asc':    return (a.readTs||0)-(b.readTs||0);
-      case 'rating-desc': return (b.rating||0)-(a.rating||0);
-      case 'title-asc':   return a.title.localeCompare(b.title);
-      case 'title-desc':  return b.title.localeCompare(a.title);
-      case 'author-asc':  return a.author.localeCompare(b.author);
-      case 'pub-desc':    return (parseInt(b.pubYear)||0)-(parseInt(a.pubYear)||0);
-      case 'pub-asc':     return (parseInt(a.pubYear)||0)-(parseInt(b.pubYear)||0);
-      default: return 0;
-    }
-  });
-
-  // Re-order DOM cards
-  const grid = document.getElementById('grid');
-  const cards = grid.querySelectorAll('.book-card');
-
-  // Hide all
-  cards.forEach(c => c.classList.add('hidden'));
-
-  // Show & reorder visible ones
-  const visibleIds = new Set(visible.map(b=>b.id));
-  visible.forEach(b => {
-    const card = document.getElementById('card-'+b.id);
-    if (card) { card.classList.remove('hidden'); grid.appendChild(card); }
-  });
-
-  // Results count
-  const lbl = document.getElementById('results-lbl');
-  lbl.textContent = visible.length === allBooks.length
-    ? `${allBooks.length} books`
-    : `${visible.length} of ${allBooks.length} books`;
-
-  // Empty state
-  let empty = grid.querySelector('.empty-state');
-  if (!visible.length) {
-    if (!empty) { empty=document.createElement('div'); empty.className='empty-state'; empty.textContent='No books match your filters'; grid.appendChild(empty); }
-  } else {
-    empty?.remove();
-  }
-}
-
-function buildGenrePills() {
-  const genres = ['All', ...new Set(allBooks.map(b=>b.genre).filter(Boolean).sort())];
-  const wrap   = document.getElementById('genre-pills');
-  wrap.innerHTML = genres.map(g =>
-    `<button class="pill ${g===activeGenre?'on':''}" onclick="setGenre('${g.replace(/'/g,"\\'")}')">${g}</button>`
-  ).join('');
-}
-
-function setGenre(g) {
-  activeGenre = g;
-  buildGenrePills();
-  applyFilters();
-}
-
-// ── Main load ────────────────────────────────────────────
-async function loadBooks() {
-  await loadDriveGenreCache();
-  try {
-    const xml   = await fetchRSS();
-    const items = Array.from(xml.querySelectorAll('item'));
-    if (!items.length) throw new Error('No items');
-
-    document.getElementById('loading').style.display = 'none';
-    const grid = document.getElementById('grid');
-
-    // Build book objects first, render cards immediately, fetch genres async
-    items.forEach((item, i) => {
-      const title  = item.querySelector('title')?.textContent?.trim()||'Unknown';
-      const link   = item.querySelector('link')?.textContent?.trim()||'#';
-      const author = item.querySelector('author_name')?.textContent?.trim()
-        || (()=>{ const m=(item.querySelector('description')?.textContent||'').match(/author: ([^\n<]+)/); return m?m[1].trim():''; })();
-      const rating = parseInt(item.querySelector('user_rating')?.textContent?.trim()||'0');
-      const readAt = item.querySelector('user_read_at')?.textContent?.trim()
-        || item.querySelector('pubDate')?.textContent?.trim()||'';
-      const imgSrc = upgradeImg(extractImage(item));
-      const review = extractReview(item);
-      const id     = 'b'+i;
-
-      const book = { id, title, link, author, rating, readAt, readTs: new Date(readAt).getTime()||0, imgSrc, review, genre:'', pubYear:'' };
-      allBooks.push(book);
-
-      const card = document.createElement('a');
-      card.className = 'book-card';
-      card.id = 'card-'+id;
-      card.href = link;
-      card.target = '_blank';
-      card.rel = 'noopener';
-      card.style.animationDelay = `${i*0.04}s`;
-      card.innerHTML = `
-        <div class="cover-wrap">${imgSrc
-          ? `<img src="${imgSrc}" alt="${title}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=cover-ph>📖</div>'">`
-          : '<div class="cover-ph">📖</div>'}</div>
-        <div class="book-info">
-          <div class="book-title">${title}</div>
-          <div class="book-author">${author}</div>
-          ${starsHTML(rating)}
-          <div style="display:flex;align-items:center;gap:0.4rem">
-            <div class="genre-tag loading" id="genre-${id}">fetching genre…</div>
-            <button class="genre-edit-btn" id="genre-edit-${id}" onclick="event.preventDefault();event.stopPropagation();promptGenreEdit('${id}','${title.replace(/'/g,"\\'").replace(/"/g,"&quot;")}','${author.replace(/'/g,"\\'").replace(/"/g,"&quot;")}')" title="Edit genre" style="display:none;background:none;border:none;cursor:pointer;font-size:0.7rem;color:var(--muted);padding:0;line-height:1">✏️</button>
-          </div>
-          ${review?`<div class="review-snip">${review.substring(0,180)}…</div>`:''}
-          <div class="book-date">${fmtDate(readAt)}</div>
-        </div>`;
-      grid.appendChild(card);
-    });
-
-    document.getElementById('results-lbl').textContent = `${allBooks.length} books`;
-    buildGenrePills();
-
-    // Fetch genres async, staggered to avoid rate limiting
-    const BATCH = 5;
-    for (let i = 0; i < allBooks.length; i += BATCH) {
-      const batch = allBooks.slice(i, i+BATCH);
-      await Promise.all(batch.map(async b => {
-        const { genre, pubYear } = await fetchGenre(b.title, b.author);
-        b.genre   = genre;
-        b.pubYear = pubYear;
-        // Update genre tag in card
-        const tag = document.getElementById('genre-'+b.id);
-        const editBtn = document.getElementById('genre-edit-'+b.id);
-        if (tag) {
-          if (genre) { tag.textContent=genre; tag.className='genre-tag'; }
-          else { tag.textContent='no genre'; tag.className='genre-tag'; tag.style.opacity='0.4'; }
-          if (editBtn) editBtn.style.display='inline';
-        }
-      }));
-      // Rebuild pills as genres come in
-      buildGenrePills();
-      await new Promise(r=>setTimeout(r,200));
-    }
-
-    // Save updated genres back to Drive if anything new was fetched
-    if (driveCacheDirty) await saveDriveGenreCache();
-    // Final pill + filter rebuild once all genres loaded
-    buildGenrePills();
-    applyFilters();
-
-  } catch(err) {
-    document.getElementById('loading').style.display='none';
-    document.getElementById('error').style.display='block';
-    console.error(err);
-  }
-}
-
-function promptGenreEdit(id, title, author) {
-  const current = (driveGenreCache[title+'|||'+author] || {}).genre || '';
-  const newGenre = prompt('Edit genre for "' + title + '":', current);
-  if (newGenre === null) return; // cancelled
-  setGenreOverride(title, author, newGenre.trim());
-  const tag = document.getElementById('genre-'+id);
-  if (tag) {
-    if (newGenre.trim()) { tag.textContent=newGenre.trim(); tag.className='genre-tag'; tag.style.opacity='1'; }
-    else { tag.textContent='no genre'; tag.style.opacity='0.4'; }
-  }
-  // Update book object so filter pills update
-  const b = allBooks.find(b=>b.id===id);
-  if (b) { b.genre = newGenre.trim(); buildGenrePills(); applyFilters(); }
-}
-
-loadBooks();
+const DB_URL='https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+const BOOKS_FILE='books.json';
+let database={books:[],updatedAt:0};
+let activeGenre='All';
+function jsonp(url,file){return new Promise((res,rej)=>{const cb='cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);const s=document.createElement('script');window[cb]=d=>{delete window[cb];s.remove();res(d)};s.onerror=()=>{delete window[cb];s.remove();rej(new Error('Read failed'))};s.src=url+'?file='+encodeURIComponent(file)+'&callback='+encodeURIComponent(cb)+'&_='+Date.now();document.head.appendChild(s)})}
+function escapeHtml(v=''){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function normalise(v){if(Array.isArray(v))return {books:v,updatedAt:0};if(v&&Array.isArray(v.books))return v;return {books:[],updatedAt:0}}
+function formatDate(iso){if(!iso)return '';const d=new Date(iso+'T00:00:00');if(Number.isNaN(d.getTime()))return iso;return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}
+function formatUpdated(ts){if(!ts)return '—';const d=new Date(ts);return Number.isNaN(d.getTime())?'—':d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}
+async function load(){try{database=normalise(await jsonp(DB_URL,BOOKS_FILE))}catch(e){try{const r=await fetch('./books.json?ts='+Date.now(),{cache:'no-store'});database=normalise(await r.json())}catch(_){database=normalise(null)}}updateHeader();buildGenres();render()}
+function updateHeader(){const rated=database.books.filter(b=>Number(b.rating10)>0);const avg=rated.length?rated.reduce((s,b)=>s+Number(b.rating10||0),0)/rated.length:0;document.getElementById('count').textContent=database.books.length;document.getElementById('average').textContent=avg?avg.toFixed(1)+'/10':'—';document.getElementById('updated').textContent=formatUpdated(database.updatedAt)}
+function buildGenres(){const genres=['All',...new Set(database.books.map(b=>b.genre).filter(Boolean).sort((a,b)=>a.localeCompare(b)))];document.getElementById('genre-pills').innerHTML=genres.map(g=>`<button class="pill ${g===activeGenre?'on':''}" onclick="setGenre('${escapeHtml(g).replace(/'/g,"\\'")}')">${escapeHtml(g)}</button>`).join('')}
+function setGenre(g){activeGenre=g;buildGenres();render()}
+function sortedBooks(){const q=(document.getElementById('search').value||'').toLowerCase().trim();const sort=document.getElementById('sort').value;const books=database.books.filter(b=>(activeGenre==='All'||b.genre===activeGenre)&&(!q||[b.title,b.author,b.review,b.genre].some(v=>(v||'').toLowerCase().includes(q))));books.sort((a,b)=>{switch(sort){case'read-desc':return(b.readDate||'').localeCompare(a.readDate||'');case'read-asc':return(a.readDate||'').localeCompare(b.readDate||'');case'rating-desc':return(Number(b.rating10)||0)-(Number(a.rating10)||0);case'rating-asc':return(Number(a.rating10)||0)-(Number(b.rating10)||0);case'title-asc':return(a.title||'').localeCompare(b.title||'');case'author-asc':return(a.author||'').localeCompare(b.author||'');case'published-desc':return(Number(b.publishedYear)||0)-(Number(a.publishedYear)||0);default:return 0}});return books}
+function render(){const books=sortedBooks();document.getElementById('results').textContent=books.length===database.books.length?`${database.books.length} books`:`${books.length} of ${database.books.length} books`;const grid=document.getElementById('grid');if(!books.length){grid.innerHTML='<div class="empty">No books match your filters.</div>';return}grid.innerHTML=books.map((b,i)=>`<article class="book-card" style="animation-delay:${Math.min(i*.025,.4)}s" onclick="openModal('${escapeHtml(b.id)}')">${b.cover?`<img class="cover" src="${escapeHtml(b.cover)}" alt="${escapeHtml(b.title)}" loading="lazy">`:'<div class="cover-ph">📖</div>'}<div class="book-content">${b.genre?`<span class="genre">${escapeHtml(b.genre)}</span>`:''}<div class="title">${escapeHtml(b.title)}</div><div class="author">${escapeHtml(b.author)}</div>${Number(b.rating10)>0?`<div class="rating-line"><div class="rating">${Number(b.rating10).toFixed(Number(b.rating10)%1?1:0)}<small>/10</small></div><div class="rating-bar"><div class="rating-fill" style="width:${Math.max(0,Math.min(100,Number(b.rating10)*10))}%"></div></div></div>`:''}${b.review?`<div class="review">“${escapeHtml(b.review)}”</div>`:''}<div class="details">${b.readDate?'Read '+escapeHtml(formatDate(b.readDate)):''}${b.publishedYear?`${b.readDate?' · ':''}Published ${escapeHtml(b.publishedYear)}`:''}</div></div></article>`).join('')}
+function openModal(id){const b=database.books.find(x=>x.id===id);if(!b)return;document.getElementById('modal-content').innerHTML=`<div class="modal-top">${b.cover?`<img class="modal-cover" src="${escapeHtml(b.cover)}" alt="${escapeHtml(b.title)}">`:'<div class="modal-cover"></div>'}<div>${b.genre?`<span class="genre">${escapeHtml(b.genre)}</span>`:''}<h2>${escapeHtml(b.title)}</h2><div class="modal-author">${escapeHtml(b.author)}</div>${Number(b.rating10)>0?`<div class="modal-rating">${Number(b.rating10).toFixed(Number(b.rating10)%1?1:0)}<small>/10</small></div>`:''}<div class="modal-meta">${b.readDate?'Read '+escapeHtml(formatDate(b.readDate))+'<br>':''}${b.publishedYear?'First published '+escapeHtml(b.publishedYear)+'<br>':''}${b.isbn13?'ISBN '+escapeHtml(b.isbn13):''}</div></div></div><div class="modal-body">${b.review?`<div class="section-label">My review</div><div class="modal-review">“${escapeHtml(b.review)}”</div>`:''}${b.link?`<a class="goodreads-link" href="${escapeHtml(b.link)}" target="_blank" rel="noopener">View on Goodreads →</a>`:''}</div>`;document.getElementById('overlay').classList.add('on')}
+function closeModal(e){if(e&&e.target!==document.getElementById('overlay'))return;document.getElementById('overlay').classList.remove('on')}
+load();
 </script>
 </body>
 </html>
