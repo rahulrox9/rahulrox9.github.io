@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bookshelf Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e;--red:#b64335;--blue:#365f9d}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;padding-bottom:4rem}
+nav{position:sticky;top:0;z-index:30;height:52px;padding:0 1.2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(26,18,8,.96);backdrop-filter:blur(12px);color:#fff}
+.nav-logo{font-family:'Playfair Display',serif;font-weight:700;color:#fff;text-decoration:none}.nav-logo span{color:var(--warm);font-style:italic}
+.nav-link{color:rgba(255,255,255,.7);text-decoration:none;font-size:.75rem;border:1px solid rgba(255,255,255,.2);padding:.3rem .65rem;border-radius:4px}
+main{max-width:1050px;margin:0 auto;padding:1.5rem}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;margin-bottom:1.2rem}.hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,4vw,2.5rem)}.hero h1 span{color:var(--warm);font-style:italic}.hero p{font-size:.78rem;color:var(--muted);margin-top:.25rem}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem}
+.actions{display:flex;gap:.55rem;flex-wrap:wrap;align-items:center}.btn{border:none;border-radius:5px;padding:.58rem .9rem;font:500 .8rem 'DM Sans',sans-serif;cursor:pointer;background:var(--warm);color:#fff}.btn:hover{opacity:.88}.btn:disabled{opacity:.45;cursor:not-allowed}.btn.secondary{background:transparent;color:var(--muted);border:1px solid var(--border)}.btn.green{background:var(--green)}.btn.blue{background:var(--blue)}
+.status{font-size:.76rem;color:var(--muted);margin-top:.7rem;line-height:1.5}.status.ok{color:var(--green)}.status.err{color:var(--red)}
+.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.7rem;margin-bottom:1rem}.stat{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:.8rem}.stat strong{display:block;font-family:'Playfair Display',serif;font-size:1.35rem}.stat span{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.controls{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}.search{flex:1;min-width:220px;padding:.55rem .8rem;border:1px solid var(--border);border-radius:20px;background:var(--card);font:400 .83rem 'DM Sans';outline:none}.search:focus{border-color:var(--warm)}
+.book-list{display:flex;flex-direction:column;gap:.65rem}.book-row{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:.75rem;display:grid;grid-template-columns:56px minmax(0,1fr) 105px 165px auto;gap:.8rem;align-items:center}.cover{width:56px;height:84px;object-fit:cover;border-radius:3px;background:var(--border)}.cover-ph{width:56px;height:84px;display:flex;align-items:center;justify-content:center;background:var(--border);border-radius:3px;font-size:1.4rem}.title{font-family:'Playfair Display',serif;font-weight:700;font-size:.94rem}.meta{font-size:.72rem;color:var(--muted);margin-top:.18rem;line-height:1.45}.field label{display:block;font-size:.63rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem}.field input{width:100%;padding:.45rem .5rem;border:1px solid var(--border);border-radius:4px;background:var(--parchment);font:400 .79rem 'DM Sans';color:var(--ink)}.rating-wrap{display:flex;gap:.35rem;align-items:center}.rating-wrap input{width:66px}.small-btn{border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:4px;padding:.35rem .45rem;font-size:.67rem;cursor:pointer;white-space:nowrap}.small-btn:hover{border-color:var(--warm);color:var(--warm)}
+.badge{display:inline-block;border-radius:10px;padding:.1rem .42rem;font-size:.61rem;background:#f5e8d7;color:var(--warm);margin-top:.25rem}.manual{background:#e2eefc;color:var(--blue)}
+.empty{text-align:center;padding:3rem;color:var(--muted);font-family:'Playfair Display',serif;font-style:italic}.note{font-size:.72rem;color:var(--muted);line-height:1.5;margin-top:.65rem}
+@media(max-width:800px){main{padding:1rem}.hero{align-items:flex-start;flex-direction:column}.summary{grid-template-columns:repeat(2,1fr)}.book-row{grid-template-columns:50px minmax(0,1fr);gap:.65rem}.cover,.cover-ph{width:50px;height:75px}.book-row>.field,.book-row>.rating-cell,.book-row>.row-actions{grid-column:2}.rating-cell{display:flex;align-items:flex-end;gap:.5rem}.row-actions{display:flex;gap:.4rem}.actions .btn{flex:1;min-width:140px}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="admin.html">Admin <span>Bookshelf</span></a>
+  <a class="nav-link" href="books.html">View public page</a>
+</nav>
+<main>
+  <div class="hero">
+    <div><h1>Bookshelf <span>Database</span></h1><p>Import Goodreads once, then manage a permanent books.json file.</p></div>
+  </div>
+
+  <section class="panel">
+    <div class="actions">
+      <button class="btn" id="import-btn" onclick="importGoodreads()">Import from Goodreads</button>
+      <button class="btn green" id="save-btn" onclick="saveDatabase()">Save books.json</button>
+      <button class="btn secondary" onclick="downloadDatabase()">Download backup</button>
+      <button class="btn secondary" onclick="reloadDatabase()">Reload saved JSON</button>
+    </div>
+    <div class="status" id="status">Loading books.json…</div>
+    <div class="note">Goodreads ratings are imported out of 5 and initially converted to 10 by multiplying by 2. Once you edit a rating here, future imports preserve your manual value.</div>
+  </section>
+
+  <div class="summary">
+    <div class="stat"><strong id="stat-books">0</strong><span>Books</span></div>
+    <div class="stat"><strong id="stat-rated">0</strong><span>Rated</span></div>
+    <div class="stat"><strong id="stat-manual">0</strong><span>Manual ratings</span></div>
+    <div class="stat"><strong id="stat-average">—</strong><span>Average /10</span></div>
+  </div>
+
+  <section class="panel">
+    <div class="controls">
+      <input class="search" type="search" id="search" placeholder="Search title or author…" oninput="renderBooks()">
+    </div>
+  </section>
+
+  <div class="book-list" id="book-list"><div class="empty">Loading…</div></div>
+</main>
+<script>
+const DB_URL='https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+const RSS_URL='https://www.goodreads.com/review/list_rss/104699560?shelf=read&sort=date_read&order=d';
+const BOOKS_FILE='books.json';
+const GENRES_FILE='books_genres.json';
+let database={version:1,updatedAt:0,source:'Goodreads RSS',books:[]};
+let genreCache={};
+
+function jsonp(url,file){return new Promise((res,rej)=>{const cb='cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);const s=document.createElement('script');window[cb]=d=>{delete window[cb];s.remove();res(d)};s.onerror=()=>{delete window[cb];s.remove();rej(new Error('Read failed'))};s.src=url+'?file='+encodeURIComponent(file)+'&callback='+encodeURIComponent(cb)+'&_='+Date.now();document.head.appendChild(s)})}
+async function driveRead(file){return await jsonp(DB_URL,file)}
+async function driveWrite(file,data){const r=await fetch(DB_URL,{method:'POST',body:JSON.stringify({file,data})});if(!r.ok)throw new Error('Save failed ('+r.status+')');return r}
+function setStatus(text,type=''){const el=document.getElementById('status');el.textContent=text;el.className='status '+type}
+function escapeHtml(v=''){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function stripHtml(v=''){const d=new DOMParser().parseFromString(String(v),'text/html');return (d.body.textContent||'').replace(/\s+/g,' ').trim()}
+function textOf(item,names){for(const name of names){const n=item.querySelector(name);if(n&&n.textContent.trim())return n.textContent.trim()}return ''}
+function dateToISO(raw){if(!raw)return '';const d=new Date(raw);if(Number.isNaN(d.getTime()))return '';return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function betterCover(url=''){return url.replace(/_SY75_|_SX50_|_SX98_|_SY160_|_SX318_/,'_SY475_')}
+function normaliseDatabase(value){if(Array.isArray(value))return {version:1,updatedAt:0,source:'Legacy array',books:value};if(value&&Array.isArray(value.books))return {...value,version:value.version||1};return {version:1,updatedAt:0,source:'Goodreads RSS',books:[]}}
+function bookKey(book){return book.goodreadsId?`gr:${book.goodreadsId}`:`text:${(book.title||'').toLowerCase()}|||${(book.author||'').toLowerCase()}`}
+
+async function fetchRSS(){
+  const attempts=[
+    async()=>{const r=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(RSS_URL));if(!r.ok)throw new Error('AllOrigins failed');return new DOMParser().parseFromString(await r.text(),'text/xml')},
+    async()=>{const r=await fetch('https://api.allorigins.win/get?url='+encodeURIComponent(RSS_URL));const d=await r.json();if(!d.contents)throw new Error('AllOrigins empty');return new DOMParser().parseFromString(d.contents,'text/xml')},
+    async()=>{const r=await fetch('https://corsproxy.io/?'+encodeURIComponent(RSS_URL));if(!r.ok)throw new Error('Proxy failed');return new DOMParser().parseFromString(await r.text(),'text/xml')}
+  ];
+  let lastError;
+  for(const run of attempts){try{const xml=await run();if(xml.querySelector('parsererror'))throw new Error('Invalid RSS');if(!xml.querySelector('item'))throw new Error('No RSS items');return xml}catch(e){lastError=e}}
+  throw lastError||new Error('Could not fetch Goodreads RSS');
+}
+
+function parseGoodreadsItem(item,index){
+  const title=textOf(item,['title'])||'Unknown title';
+  const link=textOf(item,['link']);
+  const description=textOf(item,['description']);
+  const author=textOf(item,['author_name'])||((description.match(/author:\s*([^\n<]+)/i)||[])[1]||'').trim();
+  const goodreadsId=textOf(item,['book_id'])||((link.match(/\/book\/show\/(\d+)/)||[])[1]||'');
+  const rating5=Number.parseFloat(textOf(item,['user_rating']))||0;
+  const readRaw=textOf(item,['user_read_at','pubDate']);
+  const reviewRaw=textOf(item,['user_review'])||((description.match(/review:\s*<br\s*\/?>\s*([\s\S]*)$/i)||[])[1]||'');
+  const cover=betterCover(textOf(item,['book_large_image_url','book_medium_image_url','book_image_url'])||((description.match(/src="([^"]+\.jpg[^"]*)"/i)||[])[1]||''));
+  const published=textOf(item,['book_published','book_published_date']);
+  const genreInfo=genreCache[title+'|||'+author]||{};
+  return {
+    id:goodreadsId?`goodreads-${goodreadsId}`:`goodreads-import-${index}-${Math.abs(hashCode(title+'|'+author))}`,
+    goodreadsId,
+    title,
+    author,
+    link,
+    cover,
+    isbn:textOf(item,['isbn']),
+    isbn13:textOf(item,['isbn13']),
+    publishedYear:String(published||genreInfo.pubYear||'').match(/\d{4}/)?.[0]||'',
+    readDate:dateToISO(readRaw),
+    readDateRaw:readRaw,
+    goodreadsRating:rating5,
+    rating10:rating5?rating5*2:0,
+    ratingManual:false,
+    review:stripHtml(reviewRaw),
+    description:stripHtml(textOf(item,['book_description'])),
+    genre:genreInfo.genre||'',
+    importedAt:Date.now()
+  };
+}
+function hashCode(value){let h=0;for(let i=0;i<value.length;i++)h=((h<<5)-h)+value.charCodeAt(i)|0;return h}
+
+function mergeImported(imported){
+  const existing=new Map(database.books.map(b=>[bookKey(b),b]));
+  const merged=imported.map(incoming=>{
+    const old=existing.get(bookKey(incoming));
+    if(!old)return incoming;
+    return {
+      ...old,
+      ...incoming,
+      id:old.id||incoming.id,
+      genre:old.genre||incoming.genre,
+      rating10:old.ratingManual?old.rating10:incoming.rating10,
+      ratingManual:!!old.ratingManual,
+      importedAt:Date.now()
+    };
+  });
+  const importedKeys=new Set(imported.map(bookKey));
+  database.books.filter(b=>!importedKeys.has(bookKey(b))).forEach(b=>merged.push(b));
+  database={...database,version:1,source:'Goodreads RSS',updatedAt:Date.now(),books:merged};
+}
+
+async function importGoodreads(){
+  const btn=document.getElementById('import-btn');btn.disabled=true;setStatus('Fetching Goodreads RSS…');
+  try{
+    try{genreCache=await driveRead(GENRES_FILE)||{}}catch(e){genreCache={}}
+    const xml=await fetchRSS();
+    const items=Array.from(xml.querySelectorAll('item'));
+    const imported=items.map(parseGoodreadsItem);
+    mergeImported(imported);
+    renderBooks();
+    setStatus(`Imported ${imported.length} books. New Goodreads ratings were converted from /5 to /10. Review any values, then save books.json.`,'ok');
+  }catch(e){console.error(e);setStatus('Import failed: '+e.message,'err')}
+  finally{btn.disabled=false}
+}
+
+async function reloadDatabase(){
+  setStatus('Loading saved books.json…');
+  try{database=normaliseDatabase(await driveRead(BOOKS_FILE));renderBooks();setStatus(`Loaded ${database.books.length} saved books.`,'ok')}
+  catch(e){
+    try{const r=await fetch('./books.json?ts='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error();database=normaliseDatabase(await r.json());renderBooks();setStatus(`Loaded ${database.books.length} books from the local JSON file.`,'ok')}
+    catch(_){database=normaliseDatabase(null);renderBooks();setStatus('No books.json exists yet. Import from Goodreads to create it.','')}
+  }
+}
+
+async function saveDatabase(){
+  const btn=document.getElementById('save-btn');btn.disabled=true;database.updatedAt=Date.now();setStatus('Saving books.json…');
+  try{await driveWrite(BOOKS_FILE,database);setStatus(`Saved ${database.books.length} books to books.json.`,'ok')}
+  catch(e){console.error(e);setStatus('Server save failed. Download the JSON backup so your changes are not lost.','err')}
+  finally{btn.disabled=false}
+}
+function downloadDatabase(){database.updatedAt=Date.now();const blob=new Blob([JSON.stringify(database,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='books.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function updateRating(id,value){const b=database.books.find(x=>x.id===id);if(!b)return;const n=Math.max(0,Math.min(10,Number(value)||0));b.rating10=n;b.ratingManual=true;renderSummary();const badge=document.getElementById('badge-'+CSS.escape(id));if(badge){badge.textContent='Manual';badge.className='badge manual'}}
+function resetRating(id){const b=database.books.find(x=>x.id===id);if(!b)return;b.rating10=(Number(b.goodreadsRating)||0)*2;b.ratingManual=false;renderBooks()}
+function updateGenre(id,value){const b=database.books.find(x=>x.id===id);if(b)b.genre=value.trim()}
+function deleteBook(id){const b=database.books.find(x=>x.id===id);if(!b||!confirm(`Remove "${b.title}" from books.json?`))return;database.books=database.books.filter(x=>x.id!==id);renderBooks()}
+function renderSummary(){const books=database.books;const rated=books.filter(b=>Number(b.rating10)>0);const avg=rated.length?rated.reduce((s,b)=>s+Number(b.rating10||0),0)/rated.length:0;document.getElementById('stat-books').textContent=books.length;document.getElementById('stat-rated').textContent=rated.length;document.getElementById('stat-manual').textContent=books.filter(b=>b.ratingManual).length;document.getElementById('stat-average').textContent=avg?avg.toFixed(1):'—'}
+function renderBooks(){
+  renderSummary();
+  const q=(document.getElementById('search').value||'').toLowerCase().trim();
+  const visible=database.books.filter(b=>!q||(b.title||'').toLowerCase().includes(q)||(b.author||'').toLowerCase().includes(q)).sort((a,b)=>(b.readDate||'').localeCompare(a.readDate||''));
+  const list=document.getElementById('book-list');
+  if(!visible.length){list.innerHTML='<div class="empty">No books match your search.</div>';return}
+  list.innerHTML=visible.map(b=>`
+    <div class="book-row">
+      ${b.cover?`<img class="cover" src="${escapeHtml(b.cover)}" alt="${escapeHtml(b.title)}" loading="lazy">`:'<div class="cover-ph">📖</div>'}
+      <div>
+        <div class="title">${escapeHtml(b.title)}</div>
+        <div class="meta">${escapeHtml(b.author)}${b.readDate?' · Read '+escapeHtml(b.readDate):''}${b.publishedYear?' · Published '+escapeHtml(b.publishedYear):''}</div>
+        <span id="badge-${escapeHtml(b.id)}" class="badge ${b.ratingManual?'manual':''}">${b.ratingManual?'Manual':(b.goodreadsRating?`Goodreads ${b.goodreadsRating}/5`:'Unrated')}</span>
+      </div>
+      <div class="rating-cell field">
+        <label>Rating /10</label>
+        <div class="rating-wrap"><input type="number" min="0" max="10" step="0.5" value="${Number(b.rating10)||0}" onchange="updateRating('${escapeHtml(b.id)}',this.value)"><button class="small-btn" onclick="resetRating('${escapeHtml(b.id)}')">Reset ×2</button></div>
+      </div>
+      <div class="field"><label>Genre</label><input type="text" value="${escapeHtml(b.genre||'')}" onchange="updateGenre('${escapeHtml(b.id)}',this.value)" placeholder="Add genre"></div>
+      <div class="row-actions"><button class="small-btn" onclick="deleteBook('${escapeHtml(b.id)}')">Remove</button></div>
+    </div>`).join('');
+}
+reloadDatabase();
+</script>
+</body>
+</html>
