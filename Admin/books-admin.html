@@ -28,7 +28,7 @@ main{max-width:1050px;margin:0 auto;padding:1.5rem}
 <body>
 <nav>
   <a class="nav-logo" href="admin.html">Admin <span>Bookshelf</span></a>
-  <a class="nav-link" href="books.html">View public page</a>
+  <a class="nav-link" href="../Public/books.html">View public page</a>
 </nav>
 <main>
   <div class="hero">
@@ -165,7 +165,7 @@ async function reloadDatabase(){
   setStatus('Loading saved books.json…');
   try{database=normaliseDatabase(await driveRead(BOOKS_FILE));renderBooks();setStatus(`Loaded ${database.books.length} saved books.`,'ok')}
   catch(e){
-    try{const r=await fetch('./books.json?ts='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error();database=normaliseDatabase(await r.json());renderBooks();setStatus(`Loaded ${database.books.length} books from the local JSON file.`,'ok')}
+    try{const r=await fetch('../Public/books.json?ts='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error();database=normaliseDatabase(await r.json());renderBooks();setStatus(`Loaded ${database.books.length} books from the local JSON file.`,'ok')}
     catch(_){database=normaliseDatabase(null);renderBooks();setStatus('No books.json exists yet. Import from Goodreads to create it.','')}
   }
 }
