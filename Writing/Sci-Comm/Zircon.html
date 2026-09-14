@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zircon: Nature’s Best Clock | Rahul Subbaraman</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Playball&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--border:#e8dfd0;--card:#fff9f2}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);line-height:1.8;margin:0}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35}
+nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:52px}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;text-decoration:none;color:var(--ink)}
+.nav-logo span{color:var(--warm);font-style:italic}
+.nav-links{display:flex;gap:1.4rem;align-items:center}
+.nav-links a{font-size:0.76rem;color:var(--muted);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
+.nav-links a:hover{color:var(--warm)}
+.nav-links a.active{color:var(--ink);font-weight:500}
+.nav-admin{font-size:0.72rem;color:var(--muted);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;padding:0.25rem 0.65rem;border:1px solid var(--border);border-radius:3px;transition:all 0.15s}
+.nav-admin:hover{color:var(--warm);border-color:var(--warm)}
+.post-container{max-width:750px;margin:4rem auto 8rem;padding:0 1.5rem}
+.back-link{display:inline-block;margin-bottom:2.5rem;text-decoration:none;color:var(--muted);font-size:0.75rem;letter-spacing:0.05em}
+.fancy-title{font-family:'Playball',cursive;font-size:clamp(2.2rem,5vw,3.8rem);color:var(--warm);line-height:1.2;margin-bottom:0.5rem;font-weight:400}
+.post-metadata{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);display:block;margin-top:1rem}
+.post-content{text-align:justify;text-justify:inter-word;hyphens:auto;-webkit-hyphens:auto;-ms-hyphens:auto}
+.post-content p {text-align: justify !important; text-justify: inter-word;}
+.post-content h2{font-family:'Playfair Display',serif;font-size:1.8rem;margin:3.5rem 0 1.2rem;color:var(--warm);text-align:left}
+.post-content h3{font-family:'Playfair Display',serif;font-size:1.4rem;margin:2.5rem 0 1rem;text-align:left}
+.post-figure{margin:2.5rem 0}
+.post-image{width:100%;height:auto;border:1px solid var(--border);display:block}
+figcaption{display:flex;justify-content:space-between;align-items:baseline;gap:1.5rem;margin-top:0.6rem;text-align:left}
+.caption-text{font-size:0.85rem;color:var(--ink);font-style:italic;font-weight:300}
+.image-credit{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap}
+hr { border: none; border-top: 1px solid var(--border);}
+h1,h2,h3{font-family:'Playfair Display',serif;margin-bottom:0.5rem}
+h1{font-size:2rem;border-bottom:2px solid var(--warm);padding-bottom:1rem}
+h2{font-size:1.5rem;color:var(--warm);border-bottom:1px solid var(--border)}
+footer{padding:4rem;border-top:1px solid var(--border);text-align:center;font-family:'Playfair Display',serif;font-style:italic;color:var(--muted)}
+.reference-item { display: block; padding-left: 2rem; text-indent: -2rem; margin-bottom: 1rem; text-align: left !important; font-size: 0.8rem;color: var(--muted);}
+@media (max-width:600px){figcaption{flex-direction:column;gap:0.3rem}}
+.subscribe-box{margin:4rem 0 0;padding:1.5rem;border:1px solid var(--border);background:var(--card);max-width:520px;text-align:center;margin-left:auto;margin-right:auto;}
+.subscribe-box h3{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:0.4rem;color:var(--warm)}
+.subscribe-box p{font-size:0.9rem;color:var(--muted);margin-bottom:1rem}
+.subscribe-actions{display:flex;justify-content:center;}
+.subscribe-btn{display:inline-block;padding:0.75rem 1rem;border:none;background:var(--warm);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.8rem;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;text-decoration:none}
+.subscribe-btn:hover{opacity:0.88}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../index.html">Rahul <span>Subbaraman</span></a>
+  <div class="nav-links">
+    <a href="../../Public/books.html">Bookshelf</a>
+    <a href="../../Public/magnets.html">Magnets</a>
+    <a href="../../Public/postcards.html">Postcards</a>
+    <a href="../../Public/sanskrit.html">Sanskrit</a>
+    <a href="../../Public/travel.html">Travels</a>
+    <a href="../../Public/watchlist.html">Watchlist</a>
+    <a href="../../Public/writing.html" class="active">Writing</a>
+    <a class="nav-admin" href="../Admin/admin.html">Admin</a>
+  </div>
+</nav>
+
+<article class="post-container">
+<a href="../Public/writing.html" class="back-link">&larr; WRITING</a>
+
+<header class="post-header">
+<h1 class="fancy-title">Zircon: Nature’s Best Clock</h1>
+<span class="post-metadata">Article &middot; Chemistry &middot; Earth Science &middot; 24.06.2020</span>
+</header>
+<br>
+
+<figure class="post-figure">
+<img src="YOUR_HUGGINGFACE_IMAGE_URL_HERE" alt="Assorted Zircon" class="post-image">
+</figure>
+
+<section class="post-content">
+<p>How old is our planet Earth? When did the dinosaurs live? When were ancient monuments built? It is a proven fact that the oldest rock ever found on Earth is as old as 4.375 &plusmn; 0.006 Ga (Giga annum or Billion years) old. How did the scientists calculate this age? The answer to the above questions is dating!</p>
+
+<p>One of the oldest and most reliable dating methods is the Uranium-Lead (U-Pb) dating. Uranium–Lead dating is a geological age-determination method that uses the radioactive decay of the unstable Uranium (U) (<sup>238</sup>U and <sup>235</sup>U) into stable isotopes of Lead (Pb) (<sup>206</sup>Pb and <sup>207</sup>Pb respectively). The two decay systems have half-lives of 4470 and 710 million years, respectively, which permit the dating of rocks as old as the age of the Earth (4.5 Ga) or just a few million years old. Techniques like secondary ion mass spectrometry (SIMS), laser-ablation induced coupled plasma–mass spectrometry (LA-ICP–MS) and thermal ionization mass spectrometry (TIMS) help us study trace element and isotopes signature in Zircon crystals and have made it possible to determine U–Pb ages with a high spatial resolution. For this technique, scientists use minerals like Monazite, Titanite, Baddeleyite and Zirconolite. Yet, the most common mineral used is Zircon.</p>
+</section>
+
+<figure class="post-figure">
+<img src="YOUR_HUGGINGFACE_IMAGE_URL_HERE" alt="Photomicrograph of a single Zircon crystal" class="post-image" style="max-width:211px; margin:0 auto;">
+<figcaption>
+<span class="caption-text">Figure 1: Photomicrograph of a single Zircon crystal.</span>
+</figcaption>
+</figure>
+
+<section class="post-content">
+<p>Tiny crystals of Zircon occur in most of the granitic rocks as the primary accessory mineral, i.e., a mineral that is found in a small quantity and not used for naming the rock. It is also present in most of the rocks metamorphosed from igneous rocks like gneiss and is a common constituent of sands (sediments). Thus, Zircon can be considered to be a ubiquitous mineral. As their atomic structure remains stable over very long periods of geological time, they can provide a clear picture of the Earth’s history.</p>
+
+<p>Zircon is a tetragonal (a type of crystal system) orthosilicate mineral in which isolated SiO<sub>4</sub> tetrahedra (triangular pyramid) are linked by sharing their edges and corners with intervening ZrO<sub>8</sub> dodecahedra (12 face polyhedron). These ZrO<sub>8</sub> dodecahedra share edges to form zigzag chains along the b axis, whereas, along the c axis, edges are shared with the SiO<sub>4</sub> tetrahedra to produce chains with alternating SiO<sub>4</sub> and ZrO<sub>8</sub> polyhedra. Zircon can incorporate many elements like P, Sc, Nb, Hf, Ti, U, Th, and Rare Earth Elements (REE) in trace (up to thousands of ppm) or minor (up to 3 wt%) amounts. Zr<sup>4+</sup> is in 8-fold coordination with an ionic radius of 0.084 nm while Si<sup>4+</sup> is in 4-fold coordination with an ionic radius of 0.026 nm. (OH-)<sub>4</sub> can replace SiO<sub>4</sub> while Hf<sup>4+</sup>, U<sup>4+</sup>, Th<sup>4+</sup>, Sc<sup>3+</sup>, Lu<sup>3+</sup>, Y<sup>3+</sup>, Ce<sup>4+</sup> and Ti<sup>4+</sup> are accommodated in the Zr<sup>4+</sup> site as substituents. U can reach wt% levels, although it is usually less than 5000 ppm. Now, due to the 8-fold coordination and an ionic radius of 0.129 nm, Pb<sup>2+</sup> is not incorporated into growing Zircon crystals at more than ppb levels. Thus, any Pb found in trace amounts must be radiogenic (product of U-Pb decay). This is exploited by scientists to calculate the ages.</p>
+</section>
+
+<figure class="post-figure">
+<img src="YOUR_HUGGINGFACE_IMAGE_URL_HERE" alt="Zircon CL Image" class="post-image" style="max-width:257px; margin:0 auto;">
+<figcaption>
+<span class="caption-text">Figure 2: Zircon CL Image with dating points and <sup>207</sup>Pb/<sup>206</sup>Pb ages (Ma).</span>
+</figcaption>
+</figure>
+
+<section class="post-content">
+<p>This steady decay of U causes accumulation of radiogenic Pb, and this provides the basis for accurate and precise determination of a Zircon’s isotopic age. Adding to this, Zircon is a hard, refractory mineral that can remain intact even if its host rock is metamorphosed, melted, or mechanically weathered away. Furthermore, diffusion rates within Zircon for elements like U and Pb are very low, so it retains age and other isotopic information even when exposed to magmatic temperatures. All these characteristics make zircon “<strong><em>nature’s best clock</em></strong>“.</p>
+</section>
+
+<figure class="post-figure">
+<img src="YOUR_HUGGINGFACE_IMAGE_URL_HERE" alt="Structure of Zircon" class="post-image" style="max-width:452px; margin:0 auto;">
+<figcaption>
+<span class="caption-text">Figure 3: Structure of Zircon. (a) projected from a-axis showing alternate SiO<sub>4</sub> – ZrO<sub>8</sub> (b) projected from a-axis with one ZrO<sub>8</sub> unshaded to reveal its sub-structure consisting of two distorted ZrO<sub>4</sub> tetrahedra.</span>
+</figcaption>
+</figure>
+
+<hr>
+
+<section class="post-content">
+<p><em>By,</em></p>
+<p><em>Rahul Subbaraman</em></p>
+<p><em>Department of Earth Science</em></p>
+<p><em>IISER Kolkata</em></p>
+</section>
+
+<section class="reference-list" style="margin-top:4rem; padding-top:2rem; border-top:1px solid var(--border);">
+<strong style="letter-spacing: 0.1em; display: block; margin-bottom: 1.5rem; font-size: 0.85rem;">REFERENCES</strong>
+<span class="reference-item">Zircon Dating. (2020) from <a href="https://scienceaid.net">https://scienceaid.net</a></span>
+<span class="reference-item">Harley, S. L., and Kelly, N. M. <em>Zircon Tiny but Timely.</em></span>
+<span class="reference-item">Turkina, Olga &amp; Urmantseva, Lena &amp; Berezhnaya, N. &amp; Skublov, S. (2011). <em>Formation and Mesoarchean metamorphism of hypersthene gneisses from the Irkut granulite-gneiss block (Sharyzhalgai uplift in the southwestern Siberian craton).</em> Russian Geology and Geophysics.</span>
+</section>
+
+<p style="margin-top: 3rem; font-size: 0.8rem; color: var(--muted); text-align: center;">Originally published in <a href="https://theqriusrhino.wordpress.com/2020/06/24/zircon-natures-best-clock/" target="_blank" rel="noopener">The Qrius Rhino</a>.</p>
+
+</article>
+
+<section class="subscribe-box">
+  <h3>Enjoyed this piece?</h3>
+  <p>Subscribe for future writing, updates, and new posts.</p>
+  <div class="subscribe-actions">
+    <a class="subscribe-btn" href="../../Public/subscribe.html">Go to subscribe form</a>
+  </div>
+</section>
+
+<script>
+(function(){
+  if (window.self === window.top) return;
+  const page = window.location.pathname;
+  const sessionKey = 'counted_' + page;
+  if (sessionStorage.getItem(sessionKey)) return;
+  if (localStorage.getItem('admin_ignore') === 'true') return;
+  const DB = 'https://script.google.com/macros/s/AKfycbzpa1fUDZDXfQT5L6SxQRNf1zEFk-tpHV_2Tq9CY2iG4iSqa4W__Rnqs6fshnGJ0pnvRQ/exec';
+  let uid = localStorage.getItem('_rsuid');
+  if (!uid) { 
+    uid = 'u' + Date.now() + Math.random().toString(36).slice(2,7); 
+    localStorage.setItem('_rsuid', uid); 
+  }
+  fetch(`${DB}?action=visit&page=${encodeURIComponent(page)}&uid=${uid}`)
+    .then(() => { sessionStorage.setItem(sessionKey, 'true'); })
+    .catch(err => console.error('Tracking failed', err));
+})();
+</script>
+</body>
+</html>
