@@ -427,9 +427,8 @@ async function driveWrite(file, data) {
 
 
 // ── Map setup ────────────────────────────────────────────
-const map = L.map('map', {center:[20,10], zoom:3, doubleClickZoom:false});
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-  attribution:'© OpenStreetMap © CartoDB', maxZoom:19
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution:'© OpenStreetMap contributors', maxZoom:19
 }).addTo(map);
 
 // Click map → place temp marker + fill coords
