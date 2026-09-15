@@ -28,6 +28,7 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(250,246,239,0.92);backdro
 .flag-circle{width:30px;height:30px;border-radius:50%;border:3px solid #fff;background:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;overflow:hidden}
 .flag-stem{width:2.5px;height:14px;background:#555;margin-top:-1px}
 .flag-tip{width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid #555;margin-top:-1px}
+.flag-label{background:rgba(255,255,255,0.92);border:1px solid var(--border);padding:1px 5px;border-radius:3px;font-size:10px;font-weight:500;white-space:nowrap;margin-top:2px;box-shadow:0 1px 3px rgba(0,0,0,0.12);text-align:center}
 
 /* Popup */
 .leaflet-popup-content-wrapper{background:var(--card);border:1px solid var(--border);border-radius:4px;box-shadow:0 4px 16px rgba(26,18,8,0.15);padding:0}
@@ -60,9 +61,6 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(250,246,239,0.92);backdro
 .cp-emoji{font-size:13px;line-height:1;flex-shrink:0}
 .cp-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
 .cp-count{font-size:0.65rem;color:var(--muted);flex-shrink:0}
-.cp-cats{display:flex;gap:0.3rem;padding:0.45rem 0.75rem;border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap}
-.cat-pill{font-size:0.67rem;padding:0.18rem 0.5rem;border-radius:12px;border:1px solid var(--border);background:var(--parchment);color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
-.cat-pill.on{background:var(--warm);color:#fff;border-color:var(--warm)}
 .cp-cats{display:flex;gap:0.3rem;padding:0.45rem 0.75rem;border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap}
 .cat-pill{font-size:0.67rem;padding:0.18rem 0.5rem;border-radius:12px;border:1px solid var(--border);background:var(--parchment);color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
 .cat-pill.on{background:var(--warm);color:#fff;border-color:var(--warm)}
@@ -164,7 +162,7 @@ function countryToEmoji(name, explicitCode) {
   return codeToEmoji(code);
 }
 
-function makePin(category, country, countryCode) {
+function makePin(category, country, countryCode, name) {
   let symbol;
   if (category === 'temple')       symbol = '🕉️';
   else if (category === 'airport') symbol = '✈️';
@@ -173,13 +171,14 @@ function makePin(category, country, countryCode) {
     <div class="flag-circle">${symbol}</div>
     <div class="flag-stem"></div>
     <div class="flag-tip"></div>
+    <div class="flag-label">${name}</div>
   </div>`;
-  return L.divIcon({html, className:'', iconSize:[30,50], iconAnchor:[15,50], popupAnchor:[0,-50]});
+  return L.divIcon({html, className:'', iconSize:[30,65], iconAnchor:[15,50], popupAnchor:[0,-50]});
 }
 
 function makePopup(p) {
   const emoji = countryToEmoji(p.country||'', p.countryCode||'');
-  const cityKey = p.cityPage || null; // set cityPage:'manchester' on the pin to enable link
+  const cityKey = p.cityPage || null;
   return `<div class="popup-inner">
     ${emoji?`<div style="font-size:1.4rem;margin-bottom:0.3rem">${emoji}</div>`:''}
     <div class="popup-name">${p.name}</div>
@@ -190,9 +189,8 @@ function makePopup(p) {
   </div>`;
 }
 
-// State
-const countryMarkers = {}; // country → [Leaflet markers]
-const countryVisible = {}; // country → bool
+const countryMarkers = {};
+const countryVisible = {};
 const catVisible = {place:true, temple:true, airport:true};
 let allPins = [];
 
@@ -205,7 +203,6 @@ function markerShouldShow(p) {
 function toggleCat(cat, btn) {
   catVisible[cat] = !catVisible[cat];
   btn.classList.toggle('on', catVisible[cat]);
-  // Show/hide all markers for this category
   allPins.forEach((p, i) => {
     const m = allPins[i]._marker;
     if (!m) return;
@@ -219,10 +216,10 @@ function buildCountryPanel() {
   const countries = Object.keys(countryMarkers).sort();
   const list = document.getElementById('cp-list');
   list.innerHTML = countries.map(c => {
-    const pin    = allPins.find(p => p.country === c);
-    const emoji  = countryToEmoji(c, pin?.countryCode||'') || '🌍';
-    const count  = countryMarkers[c].length;
-    const safeC  = c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    const pin   = allPins.find(p => p.country === c);
+    const emoji = countryToEmoji(c, pin?.countryCode||'') || '🌍';
+    const count = countryMarkers[c].length;
+    const safeC = c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
     return `<label class="cp-item">
       <input type="checkbox" checked onchange="toggleCountry('${safeC}', this.checked)">
       <span class="cp-emoji">${emoji}</span>
@@ -234,7 +231,6 @@ function buildCountryPanel() {
 
 function toggleCountry(country, show) {
   countryVisible[country] = show;
-  // Only show if category is also visible
   allPins.forEach(p => {
     if ((p.country||'Unknown') !== country || !p._marker) return;
     markerShouldShow(p) ? p._marker.addTo(map) : map.removeLayer(p._marker);
@@ -259,6 +255,7 @@ function collapsePanel() {
   document.getElementById('country-panel').style.display = 'none';
   document.getElementById('panel-show-btn').style.display = 'block';
 }
+
 function expandPanel() {
   document.getElementById('country-panel').style.display = 'flex';
   document.getElementById('panel-show-btn').style.display = 'none';
@@ -274,10 +271,10 @@ async function load() {
 
     allPins.forEach(p => {
       if (!p.lat || !p.lng) return;
-      const m = L.marker([p.lat, p.lng], {icon: makePin(p.category||'place', p.country||'', p.countryCode||'')})
+      const m = L.marker([p.lat, p.lng], {icon: makePin(p.category||'place', p.country||'', p.countryCode||'', p.name)})
         .bindPopup(makePopup(p), {maxWidth:220})
         .addTo(map);
-      p._marker = m; // store reference for category toggling
+      p._marker = m;
       const c = p.country || 'Unknown';
       if (!countryMarkers[c]) { countryMarkers[c] = []; countryVisible[c] = true; }
       countryMarkers[c].push(m);
@@ -290,6 +287,5 @@ async function load() {
 }
 load();
 </script>
-  
 </body>
 </html>
