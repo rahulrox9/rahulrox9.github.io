@@ -11,6 +11,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -32,7 +33,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 .nav-links a:hover{color:var(--warm)}
 .nav-links a.active{color:var(--ink);font-weight:500}
 
-.hero{display:grid;grid-template-columns:1fr 420px;min-height:calc(100vh - 56px);max-width:1200px;margin:0 auto;padding:0 4rem;gap:4rem;align-items:center}
+.hero{display:grid;grid-template-columns:1fr 420px;min-height:100vh;max-width:1200px;margin:0 auto;padding:0 4rem;gap:4rem;align-items:center}
 .eyebrow{font-size:0.68rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.6rem}
 .eyebrow::before{content:'';display:inline-block;width:24px;height:1px;background:var(--warm)}
 .hero-name{font-family:'Playfair Display',serif;font-size:clamp(3rem,5vw,5rem);font-weight:700;line-height:1.05;letter-spacing:-0.02em;margin-bottom:1.2rem}
@@ -115,25 +116,6 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 </head>
 <body>
 
-<nav>
-  <a class="nav-logo" href="index.html">Rahul <span>Subbaraman</span></a>
-  <div class="nav-links">
-    <div class="nav-group">
-      <a href="cv.html">Curriculum Vitae</a>
-    </div>
-    <div class="nav-divider"></div>
-    <div class="nav-group">
-      <a href="watchlist.html">Watchlist</a>
-      <a href="travel.html">Travels</a>
-      <a href="books.html">Bookshelf</a>
-      <a href="magnets.html">Magnets</a>
-      <a href="postcards.html">Postcards</a>
-      <a href="sanskrit.html">Sanskrit</a>
-      <a href="writing.html">Writing</a>
-      <a class="nav-admin" href="../Admin/admin.html">Admin</a>
-    </div>
-  </div>
-</nav>
 
 <div class="hero">
   <div>
@@ -142,12 +124,12 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
     <p class="hero-bio fade-up d2"> Life is too interesting to have just one passion. This site is a digital archive where I collect memories, stories, ideas, perspectives and professional milestones. By training and trade, I am a Quantitative Earth Scientist, currently an Interim Associate Editor for <i>Communications Earth & Environment</i> at Springer Nature Technology and Publishing Solutions. I have completed a PhD in Earth Sciences from the University of Manchester specialising in volcanic petrology. </p>
 
 <div class="social-row fade-up d4">
-      <a class="social-link" href="https://github.com/rahulrox9" target="_blank">GitHub</a>
-      <a class="social-link" href="https://www.linkedin.com/in/rahul-subbaraman/" target="_blank">LinkedIn</a>
-      <a class="social-link" href="https://orcid.org/0000-0003-3801-3029" target="_blank">ORCID</a>
-      <a class="social-link" href="https://www.instagram.com/volcdoc9/" target="_blank">Instagram</a>
-      <a class="social-link" href="mailto:rahulsubbarox@gmail.com">Email</a>
-    </div>
+  <a class="social-link" href="https://github.com/rahulrox9" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+  <a class="social-link" href="https://www.linkedin.com/in/rahul-subbaraman/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+  <a class="social-link" href="https://orcid.org/0000-0003-3801-3029" target="_blank"><i class="fab fa-orcid"></i> ORCID</a>
+  <a class="social-link" href="https://www.instagram.com/volcdoc9/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+  <a class="social-link" href="mailto:rahulsubbarox@gmail.com"><i class="fas fa-envelope"></i> Email</a>
+</div>
 
     <div class="hero-actions fade-up d4">
       <a href="cv.html" class="btn btn-primary">View Academic Profile</a>
