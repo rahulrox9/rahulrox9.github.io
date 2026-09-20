@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curriculum Vitae | Rahul Subbaraman</title>
+<meta name="description" content="Curriculum Vitae of Rahul Subbaraman. Quantitative Earth Scientist and Interim Associate Editor.">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a1208">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;
+  --card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);overflow-x:hidden}
+
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35}
+
+.nav-back{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:1rem 4rem;display:flex;align-items:center;justify-content:space-between}
+.nav-back a{font-size:0.85rem;color:var(--muted);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;font-weight:500;transition:color 0.2s}
+.nav-back a:hover{color:var(--warm)}
+
+.view-toggle-container{display:flex;align-items:center;gap:1rem}
+.toggle-label{font-size:0.75rem;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;transition:color 0.3s}
+.toggle-label.active{color:var(--warm);font-weight:600}
+.switch{position:relative;display:inline-block;width:40px;height:22px}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:var(--border);transition:.4s;border-radius:34px}
+.slider:before{position:absolute;content:"";height:14px;width:14px;left:4px;bottom:4px;background-color:var(--warm);transition:.4s;border-radius:50%}
+input:checked + .slider{background-color:var(--ink)}
+input:checked + .slider:before{transform:translateX(18px);background-color:var(--card)}
+
+body.view-general .content-academic { display: none; }
+body.view-academic .content-general { display: none; }
+
+.cv-container{max-width:900px;margin:0 auto;padding:4rem 4rem 8rem;position:relative}
+.cv-header{margin-bottom:4rem;border-bottom:2px solid var(--border);padding-bottom:2rem}
+.cv-name{font-family:'Playfair Display',serif;font-size:clamp(4rem,4vw,3.5rem);font-weight:700;line-height:1.1;letter-spacing:-0.02em;margin-bottom:0.5rem}
+.cv-title{font-size:1.1rem;color:var(--warm);font-weight:500;letter-spacing:0.05em;margin-bottom:1.5rem}
+.cv-contact{display:flex;gap:1.5rem;flex-wrap:wrap;font-size:0.85rem;color:var(--muted)}
+.cv-contact a{color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;transition:color 0.2s}
+.cv-contact a:hover{color:var(--warm)}
+
+.cv-section{margin-bottom:3.5rem}
+.section-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--ink);margin-bottom:2rem;display:flex;align-items:center;gap:1rem}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.cv-item{margin-bottom:2.5rem;display:grid;grid-template-columns:180px 1fr;gap:2rem;align-items:start}
+.cv-date{font-size:0.85rem;color:var(--muted);font-weight:500;letter-spacing:0.05em;text-transform:uppercase;padding-top:0.3rem}
+.cv-role{font-size:1.2rem;font-weight:600;color:var(--ink);margin-bottom:0.2rem}
+.cv-org{font-size:1rem;color:var(--warm);font-style:italic;margin-bottom:0.8rem}
+.cv-desc{font-size:0.95rem;color:var(--muted);line-height:1.7;font-weight:300}
+.cv-desc ul{list-style:none;margin-top:0.8rem}
+.cv-desc li{position:relative;padding-left:1.2rem;margin-bottom:0.5rem}
+.cv-desc li::before{content:'•';position:absolute;left:0;color:var(--warm)}
+.cv-desc a{color:var(--warm);text-decoration:none}
+.cv-desc a:hover{text-decoration:underline}
+
+.skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2rem}
+.skill-category{margin-bottom:1.5rem}
+.skill-title{font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:0.8rem}
+.skill-list{font-size:0.9rem;color:var(--muted);line-height:1.6;font-weight:300}
+
+@media(max-width:768px){
+  .nav-back{padding:1rem 1.5rem}
+  .cv-container{padding:3rem 1.5rem}
+  .cv-item{grid-template-columns:1fr;gap:0.5rem}
+  .cv-date{padding-top:0;margin-bottom:0.5rem;color:var(--warm)}
+  .skills-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body class="view-general">
+
+<div class="nav-back">
+  <a href="index.html">← Back to Home</a>
+  <div class="view-toggle-container">
+    <span class="toggle-label active" id="label-general">General</span>
+    <label class="switch">
+      <input type="checkbox" id="cv-toggle">
+      <span class="slider"></span>
+    </label>
+    <span class="toggle-label" id="label-academic">Academic</span>
+  </div>
+</div>
+
+<div class="cv-container">
+<header class="cv-header">
+    <h1 class="cv-name">Rahul Subbaraman</h1>
+    <div class="cv-title">Associate Editor | Quantitative Earth Scientist | Data Analytics <br> Computational Methods | Science Communication & Teaching</div>
+    <div class="cv-contact">
+      <a href="mailto:rahulsubbarox@gmail.com"><i class="fas fa-envelope"></i> rahulsubbarox@gmail.com</a>
+      <a href="https://rahulrox9.github.io" target="_blank"><i class="fas fa-globe"></i> rahulrox9.github.io</a>
+ 
+      <a href="https://www.linkedin.com/in/rahul-subbaraman" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+      <a href="https://orcid.org/0000-0003-3801-3029" target="_blank"><i class="fab fa-orcid"></i> ORCID</a>
+      <a href="https://github.com/rahulrox9" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+    </div>
+  </header>
+
+<section class="cv-section">
+    <h2 class="section-title">Professional Profile</h2>
+    <div class="cv-desc" style="font-size: 1.05rem; margin-bottom: 1rem;">
+      <div class="content-general">
+        <p>
+          Interim Associate Editor (Springer Nature) and Quantitative Earth Scientist with a recently defended PhD. Directs full lifecycle research initiatives from conceptualisation and funding acquisition to deadline execution and annual reporting. Combines domain expertise with advanced data analytics, bespoke software development and practical analytical instrument operation. Excels at integrating multisource and multidimensional datasets to solve complex problems. A certified educator and science communicator proven in translating highly technical concepts to diverse audiences.
+        </p>
+      </div>
+      <div class="content-academic">
+        <p>
+          Igneous petrologist, Quantitative Earth Scientist and Interim Associate Editor (Springer Nature) specialising in basaltic magmatism, crystal mush systems and magma plumbing processes. My doctoral research combines petrography, mineral and glass chemistry, electron backscatter diffraction, X ray computed tomography and quantitative analysis to investigate the assembly, evolution, preservation, disaggregation and multiscale heterogeneity of Icelandic basaltic crystal mushes. I develop bespoke open source computational workflows in MATLAB and Python for multidimensional data analytics, spatial dataset restoration and statistical modelling. My earlier research used whole rock and Nd isotope geochemistry to investigate the petrogenesis of Archean mafic volcanic rocks. I am an Associate Fellow of the Higher Education Academy (AFHEA) with extensive experience in university teaching and public science communication.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cv-section">
+    <h2 class="section-title">Professional Experience</h2>
+    
+    <div class="cv-item">
+      <div class="cv-date">Sep 2026 to Present</div>
+      <div>
+        <div class="cv-role">Associate Editor (Interim)</div>
+        <div class="cv-org">Communications Earth & Environment, Springer Nature Technology and Publishing Solutions Private Limited[cite: 1]</div>
+        <div class="cv-desc">
+          <ul>
+            <li>Managing the peer review lifecycle for high impact Q1 multidisciplinary Earth and environmental science research across a 23 week contract[cite: 1].</li>
+            <li>Critically evaluating manuscript submissions, selecting expert reviewers and executing decisive editorial decisions[cite: 1].</li>
+            <li>Coordinating across global timezones with international colleagues, authors and the internal editorial board to uphold rigorous scientific standards[cite: 1].</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div class="cv-date">Oct 2022 to Present</div>
+      <div>
+        <div class="cv-role">PhD Researcher</div>
+        <div class="cv-org">University of Manchester, UK[cite: 1]</div>
+        <div class="cv-desc">
+          <ul class="content-general">
+            <li>Executed a four year independent doctoral project comprising three complementary technical subprojects to investigate the structure, composition and evolution of the crust beneath an active volcanic system using volcano derived rocks as proxies[cite: 1].</li>
+            <li>Acquired and integrated multidimensional datasets using complementary chemical and textural analytical approaches[cite: 1].</li>
+            <li>Established a quantitative framework and developed bespoke open source customisable software to process large scale interdisciplinary data[cite: 1].</li>
+            <li>Coordinated multidisciplinary collaborations with academic partners across the UK and international institutions to facilitate advanced data acquisition and technique integration[cite: 1].</li>
+            <li>Managed comprehensive project deliverables including funding acquisition, international conference presentations, annual reports and peer reviewed publication[cite: 1].</li>
+          </ul>
+          <ul class="content-academic">
+            <li>Investigated the assembly, modification and disaggregation of upper crustal crystal mushes at Gígöldur, central Iceland, using gabbroic nodules and crystal rich scoria to assess the controls on mush cohesion, preservation and mobilisation during ascent and eruption.</li>
+            <li>Characterised and quantified chemical and microstructural heterogeneity from grain to mesoscale within the mush.</li>
+            <li>Integrated petrography, mineral and glass geochemistry, electron backscatter diffraction and X ray computed tomography to investigate mush architecture and organisation.</li>
+            <li>Developed and applied the MAPClean GRaMC GRaFT workflow for adaptive pixel level cleaning, grain reconstruction and quantitative crystallographic, morphological and spatial fabric analysis.</li>
+            <li>Conducted fieldwork in Iceland and collected gabbroic nodules and crystal rich scoria.</li>
+            <li>Published a first author paper in Earth and Planetary Science Letters; two further first author manuscripts are in preparation for Geochemistry, Geophysics, Geosystems and Journal of Geophysical Research: Solid Earth.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div class="cv-date">Aug 2021 to May 2022</div>
+      <div>
+        <div class="cv-role">Graduate Researcher (MS Thesis)</div>
+        <div class="cv-org">IISER Kolkata, India[cite: 1]</div>
+        <div class="cv-desc">
+          <ul class="content-general">
+            <li>Integrated diverse chemical datasets, mineral dating techniques and petrological modelling using Python and R to determine the origin of rocks older than one billion years[cite: 1].</li>
+            <li>Executed comprehensive field planning and spatial mapping operations using GIS[cite: 1].</li>
+            <li>Managed diverse sample preparation workflows employing mechanical separation and chemical extraction techniques tailored to distinct analytical objectives[cite: 1].</li>
+          </ul>
+          <ul class="content-academic">
+            <li>Investigated the petrogenesis of Archean mafic volcanic rocks within the banded iron formation bearing Iron Ore Group of the Jamda Koira Basin, Singhbhum Craton.</li>
+            <li>Integrated field observations and petrography with whole rock geochemistry and Nd isotope systematics to investigate magma generation and evolution, mantle source characteristics and tectonic setting.</li>
+            <li>Performed assimilation fractional crystallisation (AFC) modelling to evaluate the roles of magmatic differentiation and crustal contamination.</li>
+            <li>Conducted fieldwork and prepared samples for petrographic, geochemical and isotopic analysis.</li>
+            <li>Prepared zircon mineral separates for U Pb geochronology and coordinated external isotope analyses.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cv-section">
+    <h2 class="section-title">Education</h2>
+    
+    <div class="cv-item">
+      <div class="cv-date">Oct 2022 to Jul 2026</div>
+      <div>
+        <div class="cv-role">PhD in Earth Sciences (Volcanology)</div>
+        <div class="cv-org">University of Manchester, UK[cite: 1]</div>
+        <div class="cv-desc">
+          <ul>
+            <li>Thesis: Mapping the Magma Mush Interface[cite: 1].</li>
+            <li>Status: Successfully defended on 31 July 2026[cite: 1].</li>
+            <li>Supervisors: David Neave, Margaret Hartley, Margherita Polacci and Romain Tartèse[cite: 1].</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div class="cv-date">Aug 2017 to May 2022</div>
+      <div>
+        <div class="cv-role">BS MS Dual Degree</div>
+        <div class="cv-org">IISER Kolkata, India[cite: 1]</div>
+        <div class="cv-desc">
+          <ul>
+            <li>Major: Geological Sciences[cite: 1]. Minor: Chemical Sciences[cite: 1]. CGPA: 9.28/10.00[cite: 1].</li>
+            <li>Thesis: Geochemistry and Petrogenesis of Archean Mafic Volcanic Rocks of the Iron Ore Group, Jamda Koira Basin, Singhbhum Craton[cite: 1].</li>
+            <li>Supervisor: Sukanta Dey[cite: 1].</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cv-section">
+    <h2 class="section-title">Technical Skills</h2>
+    <div class="skills-grid">
+      <div class="skill-category">
+        <div class="skill-title">Programming and Data Science</div>
+        <div class="skill-list">
+          Python (pandas, NumPy, scikit learn, SciPy and PyGMT)[cite: 1]<br>
+          MATLAB[cite: 1]<br>
+          R[cite: 1]<br>
+          Machine learning and multidimensional statistical analysis[cite: 1]<br>
+          GIS, MTEX, JupyterLab, Git, LaTeX and Inkscape[cite: 1]
+        </div>
+      </div>
+      <div class="skill-category">
+        <div class="skill-title">Analytical Instrumentation</div>
+        <div class="skill-list">
+          Electron Probe Microanalysis (EPMA)[cite: 1]<br>
+          Laser Ablation Inductively Coupled Plasma Mass Spectrometry (LA ICP MS)[cite: 1]<br>
+          Scanning Electron Microscopy (SEM EBSD and SEM EDS)[cite: 1]<br>
+          X ray Computed Tomography (XCT)[cite: 1]<br>
+          X ray Fluorescence (XRF)[cite: 1]<br>
+          UV Vis and IR spectroscopy[cite: 1]<br>
+          Mechanical sample preparation, chemical extraction and rock coring[cite: 1]
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cv-section">
+    <h2 class="section-title">Scientific Software</h2>
+    
+    <div class="cv-item">
+      <div class="cv-date">Software</div>
+      <div>
+        <div class="cv-role">Computational Ecosystems</div>
+        <div class="cv-desc">
+          <ul>
+            <li><strong>MAPClean:</strong> Engineered a modular MATLAB pipeline employing parallelised computing and adaptive clustering algorithms for the automated pixel level restoration of large scale multidimensional spatial datasets. DOI: 10.5281/zenodo.18052287[cite: 1]</li>
+            <li><strong>GRaMC:</strong> Developed a heuristic microstructural reconstruction framework featuring automated crystallographic twin merging and dynamic population filtering to extract robust quantitative datasets. DOI: 10.5281/zenodo.18107589[cite: 1]</li>
+            <li><strong>GRaFT:</strong> Architected a dual environment analytical ecosystem bridging MATLAB and Python to automate the extraction, statistical visualisation and cross sample synthesis of multidimensional textural and deformation data. DOI: 10.5281/zenodo.18107626[cite: 1]</li>
+            <li><strong>LaTeCT:</strong> Built an end to end open source Python machine learning pipeline encompassing automated data preprocessing, unsupervised clustering and optimised Random Forest classification to derive predictive models from complex geochemical datasets[cite: 1].</li>
+            <li><strong>DenCalc:</strong> Developed a Python based thermodynamic modelling utility utilising pandas and NumPy to compute complex phase specific and bulk densities by integrating pressure, temperature and multicomponent geochemical datasets. DOI: 10.5281/zenodo.16943747[cite: 1]</li>
+            <li><strong>MOSAIC:</strong> Architecting a comprehensive open source statistical framework for the multivariate analysis of compositional datasets[cite: 1].</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cv-section">
+    <h2 class="section-title">Publications</h2>
+    
+    <div class="cv-item">
+      <div class="cv-date">2026</div>
+      <div>
+        <div class="cv-role">Peer reviewed Article</div>
+        <div class="cv-org">Earth and Planetary Science Letters</div>
+        <div class="cv-desc">
+          Insights into the 3D structure and behaviour of Icelandic crystal mushes from gabbroic nodules.<br>
+          Subbaraman, R., Hartley, M. E., Fellowes, J., Polacci, M., Bonechi, B., Pappalardo, L., Buono, G. and Neave, D. A.<br>
+          DOI: <a href="https://doi.org/10.1016/j.epsl.2025.119791" target="_blank">10.1016/j.epsl.2025.119791</a>[cite: 1]
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+document.getElementById('cv-toggle').addEventListener('change', function() {
+  if (this.checked) {
+    document.body.classList.remove('view-general');
+    document.body.classList.add('view-academic');
+    document.getElementById('label-general').classList.remove('active');
+    document.getElementById('label-academic').classList.add('active');
+  } else {
+    document.body.classList.remove('view-academic');
+    document.body.classList.add('view-general');
+    document.getElementById('label-academic').classList.remove('active');
+    document.getElementById('label-general').classList.add('active');
+  }
+});
+
+(function(){
+  if (window.self === window.top) return;
+
+  const page = window.location.pathname;
+  const sessionKey = 'counted_' + page;
+
+  if (sessionStorage.getItem(sessionKey)) {
+    console.log('Page already counted in this session. Skipping.');
+    return;
+  }
+
+  if (localStorage.getItem('admin_ignore') === 'true') return;
+
+  const DB = 'https://script.google.com/macros/s/AKfycbzpa1fUDZDXfQT5L6SxQRNf1zEFk-tpHV_2Tq9CY2iG4iSqa4W__Rnqs6fshnGJ0pnvRQ/exec';
+  
+  let uid = localStorage.getItem('_rsuid');
+  if (!uid) { 
+    uid = 'u' + Date.now() + Math.random().toString(36).slice(2,7); 
+    localStorage.setItem('_rsuid', uid); 
+  }
+
+  fetch(`${DB}?action=visit&page=${encodeURIComponent(page)}&uid=${uid}`)
+    .then(() => {
+      sessionStorage.setItem(sessionKey, 'true');
+    })
+    .catch(err => console.error('Tracking failed', err));
+})();
+</script>
+</body>
+</html>
