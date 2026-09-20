@@ -27,15 +27,15 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .nav-back a{font-size:0.85rem;color:var(--muted);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;font-weight:500;transition:color 0.2s}
 .nav-back a:hover{color:var(--warm)}
 
-.view-toggle-container{display:flex;align-items:center;gap:1rem}
-.toggle-label{font-size:0.75rem;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;transition:color 0.3s}
+.view-toggle-container{display:flex;align-items:center;gap:1.5rem}
+.toggle-label{font-size:0.9rem;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;transition:color 0.3s}
 .toggle-label.active{color:var(--warm);font-weight:600}
-.switch{position:relative;display:inline-block;width:40px;height:22px}
+.switch{position:relative;display:inline-block;width:60px;height:34px}
 .switch input{opacity:0;width:0;height:0}
 .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:var(--border);transition:.4s;border-radius:34px}
-.slider:before{position:absolute;content:"";height:14px;width:14px;left:4px;bottom:4px;background-color:var(--warm);transition:.4s;border-radius:50%}
+.slider:before{position:absolute;content:"";height:26px;width:26px;left:4px;bottom:4px;background-color:var(--warm);transition:.4s;border-radius:50%}
 input:checked + .slider{background-color:var(--ink)}
-input:checked + .slider:before{transform:translateX(18px);background-color:var(--card)}
+input:checked + .slider:before{transform:translateX(26px);background-color:var(--card)}
 
 body.view-general .content-academic { display: none; }
 body.view-academic .content-general { display: none; }
@@ -52,7 +52,7 @@ body.view-academic .content-general { display: none; }
 .section-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--ink);margin-bottom:2rem;display:flex;align-items:center;gap:1rem}
 .section-title::after{content:'';flex:1;height:1px;background:var(--border)}
 
-.cv-item{margin-bottom:2.5rem;display:grid;grid-template-columns:180px 1fr;gap:2rem;align-items:start}
+.cv-item{margin-bottom:2.5rem;display:grid;grid-template-columns:160px 1fr;gap:2rem;align-items:start}
 .cv-date{font-size:0.85rem;color:var(--muted);font-weight:500;letter-spacing:0.05em;text-transform:uppercase;padding-top:0.3rem}
 .cv-role{font-size:1.2rem;font-weight:600;color:var(--ink);margin-bottom:0.2rem}
 .cv-org{font-size:1rem;color:var(--warm);font-style:italic;margin-bottom:0.8rem}
@@ -106,64 +106,63 @@ body.view-academic .content-general { display: none; }
   </header>
 
 <section class="cv-section">
-    <h2 class="section-title">Professional Profile</h2>
+    <h2 class="section-title">Profile Summary</h2>
     <div class="cv-desc" style="font-size: 1.05rem; margin-bottom: 1rem;">
-      <div class="content-general">
-        <p>
-          Interim Associate Editor (Springer Nature) and Quantitative Earth Scientist with a recently defended PhD. Directs full lifecycle research initiatives from conceptualisation and funding acquisition to deadline execution and annual reporting. Combines domain expertise with advanced data analytics, bespoke software development and practical analytical instrument operation. Excels at integrating multisource and multidimensional datasets to solve complex problems. A certified educator and science communicator proven in translating highly technical concepts to diverse audiences.
-        </p>
-      </div>
-      <div class="content-academic">
-        <p>
-          Igneous petrologist, Quantitative Earth Scientist and Interim Associate Editor (Springer Nature) specialising in basaltic magmatism, crystal mush systems and magma plumbing processes. My doctoral research combines petrography, mineral and glass chemistry, electron backscatter diffraction, X ray computed tomography and quantitative analysis to investigate the assembly, evolution, preservation, disaggregation and multiscale heterogeneity of Icelandic basaltic crystal mushes. I develop bespoke open source computational workflows in MATLAB and Python for multidimensional data analytics, spatial dataset restoration and statistical modelling. My earlier research used whole rock and Nd isotope geochemistry to investigate the petrogenesis of Archean mafic volcanic rocks. I am an Associate Fellow of the Higher Education Academy (AFHEA) with extensive experience in university teaching and public science communication.
-        </p>
-      </div>
-    </div>
-  </section>
+      <div class="content-general"> <p> Interim Associate Editor (<i>Communications Earth & Environment</i>) and Quantitative Earth Scientist with a recently defended PhD. Directs full lifecycle research initiatives from conceptualisation and funding acquisition to deadline execution and annual reporting. Combines domain expertise with advanced data analytics, bespoke software development and practical analytical instrument operation. Excels at integrating multisource and multidimensional datasets to solve complex problems. A certified educator and science communicator proven in translating highly technical concepts to diverse audiences. </p> </div>
+      <div class="content-academic"> <p> Interim Associate Editor (<i>Communications Earth & Environment</i>) and Quantitative Earth Scientist with a recently defended PhD, specialising in basaltic magmatism, crystal mush systems and magma plumbing processes.My doctoral research integrated field studies, petrography, mineral and glass geochemistry and 2D & 3D microtextural imaging to investigate the structure, compositon, evolution, and multiscale heterogeneity of Icelandic crystal mushes. I develop open source MATLAB and Python workflows for multidimensional data analytics, spatial dataset restoration and statistical modelling. Earlier work investigated the petrogenesis of Archean mafic volcanic rocks using whole rock major & trace element and Nd-isotope geochemistry. I am also an Associate Fellow of the Higher Education Academy (AFHEA) active in university teaching and science communication.</p> </div>
+    </div> </section>
 
-  <section class="cv-section">
+<section class="cv-section">
     <h2 class="section-title">Professional Experience</h2>
-    
     <div class="cv-item">
-      <div class="cv-date">Sep 2026 to Present</div>
+      <div>
+        <div class="cv-date">Sep 2026 – Present</div>
+        <div style="font-size:0.9rem;color:var(--muted);margin-top:0.3rem;">PUNE, INDIA</div>
+      </div>
       <div>
         <div class="cv-role">Associate Editor (Interim)</div>
-        <div class="cv-org">Communications Earth & Environment, Springer Nature Technology and Publishing Solutions Private Limited[cite: 1]</div>
+        <div class="cv-org">Communications Earth & Environment, Springer Nature</div>
         <div class="cv-desc">
-          <ul>
-            <li>Managing the peer review lifecycle for high impact Q1 multidisciplinary Earth and environmental science research across a 23 week contract[cite: 1].</li>
-            <li>Critically evaluating manuscript submissions, selecting expert reviewers and executing decisive editorial decisions[cite: 1].</li>
-            <li>Coordinating across global timezones with international colleagues, authors and the internal editorial board to uphold rigorous scientific standards[cite: 1].</li>
-          </ul>
+          <div class="content-academic"><ul>
+            <li>Managing the peer review lifecycle for high impact Q1 multidisciplinary Earth and environmental science research across a 23 week contract.</li>
+            <li>Critically evaluating manuscript submissions, selecting expert reviewers and executing decisive editorial decisions.</li>
+            <li>Coordinating across global timezones with international colleagues, authors and the internal editorial board to uphold rigorous scientific standards.</li>
+          </ul></div>
+          <div class="content-general"><ul>
+            <li>Managing the end-to-end evaluation and review process for high-impact scientific research on a 23-week contract.</li>
+            <li>Assessing complex technical submissions, identifying subject matter experts and making executive decisions on project viability.</li>
+            <li>Coordinating across global timezones with international stakeholders, authors and internal teams to maintain rigorous quality control standards.</li>
+          </ul></div>
         </div>
       </div>
     </div>
 
     <div class="cv-item">
-      <div class="cv-date">Oct 2022 to Present</div>
+      <div>
+        <div class="cv-date">Oct 2022 - Jul 2026</div>
+        <div style="font-size:0.9rem;color:var(--muted);margin-top:0.3rem;">MANCHESTER, UK</div>
+      </div>
       <div>
         <div class="cv-role">PhD Researcher</div>
-        <div class="cv-org">University of Manchester, UK[cite: 1]</div>
+        <div class="cv-org">University of Manchester</div>
         <div class="cv-desc">
-          <ul class="content-general">
-            <li>Executed a four year independent doctoral project comprising three complementary technical subprojects to investigate the structure, composition and evolution of the crust beneath an active volcanic system using volcano derived rocks as proxies[cite: 1].</li>
-            <li>Acquired and integrated multidimensional datasets using complementary chemical and textural analytical approaches[cite: 1].</li>
-            <li>Established a quantitative framework and developed bespoke open source customisable software to process large scale interdisciplinary data[cite: 1].</li>
-            <li>Coordinated multidisciplinary collaborations with academic partners across the UK and international institutions to facilitate advanced data acquisition and technique integration[cite: 1].</li>
-            <li>Managed comprehensive project deliverables including funding acquisition, international conference presentations, annual reports and peer reviewed publication[cite: 1].</li>
-          </ul>
-          <ul class="content-academic">
-            <li>Investigated the assembly, modification and disaggregation of upper crustal crystal mushes at Gígöldur, central Iceland, using gabbroic nodules and crystal rich scoria to assess the controls on mush cohesion, preservation and mobilisation during ascent and eruption.</li>
+          <div class="content-academic"><ul>
+            <li>Investigated the structure, composition, assembly and evolution of upper crustal crystal mushes at Gígöldur, central Iceland, using gabbroic nodules and crystal rich scoria.</li>
             <li>Characterised and quantified chemical and microstructural heterogeneity from grain to mesoscale within the mush.</li>
             <li>Integrated petrography, mineral and glass geochemistry, electron backscatter diffraction and X ray computed tomography to investigate mush architecture and organisation.</li>
-            <li>Developed and applied the MAPClean GRaMC GRaFT workflow for adaptive pixel level cleaning, grain reconstruction and quantitative crystallographic, morphological and spatial fabric analysis.</li>
+            <li>Developed and applied the MAPClean, GRaMC and GRaFT workflows for adaptive pixel level cleaning, grain reconstruction and quantitative crystallographic, morphological and spatial fabric analysis.</li>
             <li>Conducted fieldwork in Iceland and collected gabbroic nodules and crystal rich scoria.</li>
             <li>Published a first author paper in Earth and Planetary Science Letters; two further first author manuscripts are in preparation for Geochemistry, Geophysics, Geosystems and Journal of Geophysical Research: Solid Earth.</li>
-          </ul>
+          </ul></div>
+          <div class="content-general"><ul>
+            <li>Led a four year independent research project investigating complex physical systems using advanced 3D imaging and chemical analysis.</li>
+            <li>Characterised and quantified multiscale multidimensional data to uncover hidden patterns and structural organisation.</li>
+            <li>Engineered bespoke Python and MATLAB computational pipelines for automated image processing, data cleaning and spatial analysis of large scale datasets.</li>
+            <li>Managed end to end project deliverables including international fieldwork, cross functional collaboration and publishing findings in leading peer reviewed journals.</li>
+          </ul></div>
         </div>
       </div>
     </div>
-
     <div class="cv-item">
       <div class="cv-date">Aug 2021 to May 2022</div>
       <div>
