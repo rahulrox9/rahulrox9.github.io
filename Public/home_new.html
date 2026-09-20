@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rahul Subbaraman</title>
-<meta name="description" content="Volcanic petrologist, data nerd, and PhD candidate at University of Manchester. Personal site tracking films, travels, books and writing.">
+<meta name="description" content="Volcanic petrologist, data nerd and PhD candidate at University of Manchester. Personal site tracking films, travels, books and writing.">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a1208">
 <meta name="mobile-web-app-capable" content="yes">
@@ -23,16 +23,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--in
 
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35}
 
-nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 4rem;display:flex;align-items:center;justify-content:space-between;height:56px}
-.nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;text-decoration:none;color:var(--ink)}
-.nav-logo span{color:var(--warm);font-style:italic}
-.nav-links{display:flex;gap:1.5rem;align-items:center}
-.nav-group{display:flex;gap:1.5rem;align-items:center}
-.nav-divider{width:1px;height:20px;background:var(--border)}
-.nav-links a{font-size:0.78rem;color:var(--muted);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
-.nav-links a:hover{color:var(--warm)}
-.nav-links a.active{color:var(--ink);font-weight:500}
-
 .hero{display:grid;grid-template-columns:1fr 420px;min-height:100vh;max-width:1200px;margin:0 auto;padding:0 4rem;gap:4rem;align-items:center}
 .eyebrow{font-size:0.68rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.6rem}
 .eyebrow::before{content:'';display:inline-block;width:24px;height:1px;background:var(--warm)}
@@ -40,17 +30,10 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 .hero-name em{font-style:italic;color:var(--warm);display:block}
 .hero-bio{font-size:1rem;color:var(--muted);line-height:1.8;max-width:480px;margin-bottom:0.8rem;font-weight:300}
 .hero-bio strong{color:var(--ink);font-weight:500}
-.hero-sub{font-size:0.82rem;color:var(--muted);line-height:1.7;max-width:440px;margin-bottom:2rem;font-weight:300;font-style:italic}
 .social-row{display:flex;gap:1rem;align-items:center;margin-bottom:1.5rem}
 .social-link{display:inline-flex;align-items:center;gap:0.35rem;font-size:0.75rem;color:var(--muted);text-decoration:none;transition:color 0.15s}
 .social-link:hover{color:var(--warm)}
-
-.hero-actions{display:flex;gap:1rem;margin-top:1rem}
-.btn{display:inline-block;padding:0.8rem 1.5rem;font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:all 0.2s;cursor:pointer}
-.btn-primary{background:var(--warm);color:var(--card);border:1px solid var(--warm)}
-.btn-primary:hover{background:var(--ink);border-color:var(--ink)}
-.btn-secondary{background:transparent;color:var(--ink);border:1px solid var(--border)}
-.btn-secondary:hover{border-color:var(--warm);color:var(--warm)}
+.social-link i{font-size:14px}
 
 .hero-photo-wrap{position:relative}
 .hero-photo{width:100%;aspect-ratio:3/4;background:var(--ink);border-radius:2px;overflow:hidden;position:relative}
@@ -73,49 +56,19 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 .col-desc{font-size:0.8rem;color:var(--muted);line-height:1.65;flex:1;font-weight:300}
 .col-arrow{display:inline-block;margin-top:1.2rem;font-size:0.73rem;color:var(--warm);letter-spacing:0.05em;transition:transform 0.2s}
 
-.writing-section{background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:5rem 4rem}
-.writing-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:280px 1fr;gap:5rem;align-items:start}
-.writing-sidebar p{font-size:0.82rem;color:var(--muted);line-height:1.7;font-weight:300;margin-bottom:1.5rem}
-.writing-list{display:flex;flex-direction:column;gap:0}
-.writing-item{padding:1.3rem 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--ink);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start;transition:opacity 0.15s}
-.writing-item:first-child{border-top:1px solid var(--border)}
-.writing-item:hover{opacity:0.7}
-.writing-item:hover .wi-arrow{transform:translate(3px,-3px)}
-.wi-tag{font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--warm);margin-bottom:0.3rem}
-.wi-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;line-height:1.3;margin-bottom:0.3rem}
-.wi-desc{font-size:0.77rem;color:var(--muted);font-weight:300;line-height:1.5}
-.wi-meta{font-size:0.7rem;color:var(--muted);white-space:nowrap;display:flex;flex-direction:column;align-items:flex-end;gap:0.3rem}
-.wi-arrow{font-size:0.8rem;color:var(--warm);transition:transform 0.2s}
-.view-all-link{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.78rem;color:var(--warm);text-decoration:none;letter-spacing:0.04em;margin-top:1.5rem;font-weight:500}
-
-footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;max-width:100%}
-.footer-left{font-family:'Playfair Display',serif;font-size:0.9rem;font-style:italic;color:var(--muted)}
-.footer-right{display:flex;gap:1.8rem;flex-wrap:wrap}
-.footer-right a{font-size:0.75rem;color:var(--muted);text-decoration:none;transition:color 0.15s}
-.footer-right a:hover{color:var(--warm)}
-
 .fade-up{opacity:0;transform:translateY(20px);animation:fu 0.7s ease forwards}
 @keyframes fu{to{opacity:1;transform:none}}
 .d1{animation-delay:0.05s}.d2{animation-delay:0.15s}.d3{animation-delay:0.25s}.d4{animation-delay:0.4s}
 
 @media(max-width:960px){
-  nav{padding:0 1.5rem}
-  .nav-group{display:none}
-  .nav-group:first-child{display:flex}
-  .nav-divider{display:none}
-  .nav-admin{display:flex!important}
   .hero{grid-template-columns:1fr;padding:3rem 1.5rem;min-height:auto;gap:3rem}
   .hero-photo-wrap{max-width:280px;margin:0 auto}
   .collections{padding:3rem 1.5rem}
   .cards-grid{grid-template-columns:1fr}
-  .writing-section{padding:3rem 1.5rem}
-  .writing-inner{grid-template-columns:1fr;gap:2rem}
-  footer{padding:1.5rem;flex-direction:column;gap:1rem;text-align:center}
 }
 </style>
 </head>
 <body>
-
 
 <div class="hero">
   <div>
@@ -123,17 +76,12 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
     <h1 class="hero-name fade-up d1">Rahul <em>Subbaraman</em></h1>
     <p class="hero-bio fade-up d2"> Life is too interesting to have just one passion. This site is a digital archive where I collect memories, stories, ideas, perspectives and professional milestones. By training and trade, I am a Quantitative Earth Scientist, currently an Interim Associate Editor for <i>Communications Earth & Environment</i> at Springer Nature Technology and Publishing Solutions. I have completed a PhD in Earth Sciences from the University of Manchester specialising in volcanic petrology. </p>
 
-<div class="social-row fade-up d4">
-  <a class="social-link" href="https://github.com/rahulrox9" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-  <a class="social-link" href="https://www.linkedin.com/in/rahul-subbaraman/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
-  <a class="social-link" href="https://orcid.org/0000-0003-3801-3029" target="_blank"><i class="fab fa-orcid"></i> ORCID</a>
-  <a class="social-link" href="https://www.instagram.com/volcdoc9/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
-  <a class="social-link" href="mailto:rahulsubbarox@gmail.com"><i class="fas fa-envelope"></i> Email</a>
-</div>
-
-    <div class="hero-actions fade-up d4">
-      <a href="cv.html" class="btn btn-primary">View Academic Profile</a>
-      <a href="#personal-archives" class="btn btn-secondary">Explore Personal Archives</a>
+    <div class="social-row fade-up d4">
+      <a class="social-link" href="https://github.com/rahulrox9" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+      <a class="social-link" href="https://www.linkedin.com/in/rahul-subbaraman/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+      <a class="social-link" href="https://orcid.org/0000-0003-3801-3029" target="_blank"><i class="fab fa-orcid"></i> ORCID</a>
+      <a class="social-link" href="https://www.instagram.com/volcdoc9/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+      <a class="social-link" href="mailto:rahulsubbarox@gmail.com"><i class="fas fa-envelope"></i> Email</a>
     </div>
   </div>
 
@@ -147,7 +95,7 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 
 <div class="collections">
   <div class="section-eyebrow">Academic Portfolio</div>
-  <h2 class="section-title">Professional<br><em style="font-style:italic;color:var(--warm)">outputs</em></h2>
+  <h2 class="section-title">Professional <em style="font-style:italic;color:var(--warm)">outputs</em></h2>
   <div class="cards-grid">
     <a class="col-card" href="cv.html">
       <div class="col-icon">📄</div>
@@ -175,7 +123,7 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 
 <div class="collections secondary" id="personal-archives">
   <div class="section-eyebrow">Personal Archives</div>
-  <h2 class="section-title">What I keep<br><em style="font-style:italic;color:var(--warm)">track of</em></h2>
+  <h2 class="section-title">What I keep <em style="font-style:italic;color:var(--warm)">track of</em></h2>
   <div class="cards-grid">
     <a class="col-card" href="watchlist.html">
       <div class="col-icon">🎬</div>
@@ -188,22 +136,15 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
       <div class="col-icon">🗺️</div>
       <div class="col-tag">Live</div>
       <div class="col-title">Rahul's Travels</div>
-      <div class="col-desc">An interactive map of everywhere I've been — cities, temples, field sites — pinned with flag emojis by country.</div>
+      <div class="col-desc">An interactive map of everywhere I've been including cities, temples and field sites pinned with flag emojis by country.</div>
       <span class="col-arrow">Open the map ↗</span>
     </a>
     <a class="col-card" href="books.html">
       <div class="col-icon">📚</div>
       <div class="col-tag">Live</div>
       <div class="col-title">Rahul's Bookshelf</div>
-      <div class="col-desc">My reading history pulled live from Goodreads. Covers, ratings, genres and dates — everything in one shelf.</div>
+      <div class="col-desc">My reading history pulled live from Goodreads. Covers, ratings, genres and dates compiled into one shelf.</div>
       <span class="col-arrow">Browse the shelf ↗</span>
-    </a>
-    <a class="col-card" href="magnets.html">
-      <div class="col-icon">🧲</div>
-      <div class="col-tag">Gallery</div>
-      <div class="col-title">Magnet Collection</div>
-      <div class="col-desc">One magnet from every trip. A small, growing archive of everywhere I've been — more honest than a highlight reel.</div>
-      <span class="col-arrow">See the collection ↗</span>
     </a>
     <a class="col-card" href="postcards.html">
       <div class="col-icon">📮</div>
@@ -212,6 +153,20 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
       <div class="col-desc">Postcards collected before the magnets took over. Each one a small window into a place and a moment.</div>
       <span class="col-arrow">See the collection ↗</span>
     </a>
+  </div>
+</div>
+
+<div class="collections secondary" id="creative-projects">
+  <div class="section-eyebrow">Creative Portfolio</div>
+  <h2 class="section-title">Creative <em style="font-style:italic;color:var(--warm)">corner</em></h2>
+  <div class="cards-grid">
+    <a class="col-card" href="writing.html">
+      <div class="col-icon">✍️</div>
+      <div class="col-tag">Essays</div>
+      <div class="col-title">Writing</div>
+      <div class="col-desc">Essays, travelogues, field notes and the occasional opinion on science, cinema, food, geopolitics and whatever else demands to be written down.</div>
+      <span class="col-arrow">Read posts ↗</span>
+    </a>
     <a class="col-card" href="sanskrit.html">
       <div class="col-icon">🕉️</div>
       <div class="col-tag">Lessons</div>
@@ -219,44 +174,16 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
       <div class="col-desc">Informal lessons on sanskrit grammar. A digital notebook for my Sanskrit teaching and practice.</div>
       <span class="col-arrow">Start learning ↗</span>
     </a>
+    <a class="col-card" href="art.html">
+      <div class="col-icon">🎨</div>
+      <div class="col-tag">Gallery</div>
+      <div class="col-title">Art</div>
+      <div class="col-desc">A curated collection of sketches, digital art and visual experiments explored during my free time.</div>
+      <span class="col-arrow">View gallery ↗</span>
+    </a>
   </div>
 </div>
 
-<div class="writing-section">
-  <div class="writing-inner">
-    <div class="writing-sidebar">
-      <div class="section-eyebrow">Writing</div>
-      <h2 class="section-title" style="font-size:1.8rem;margin-bottom:1rem">Things I've<br><em style="color:var(--warm)">written</em></h2>
-      <p>Essays, travelogues, field notes and the occasional opinion — on science, cinema, food, geopolitics and whatever else demands to be written down.</p>
-      <a class="view-all-link" href="writing.html">All posts →</a>
-    </div>
-    <div class="writing-list" id="Writing-preview">
-      <a class="writing-item" href="writing.html">
-        <div>
-          <div class="wi-tag">Coming soon</div>
-          <div class="wi-title">Posts are on their way</div>
-          <div class="wi-desc">Check back soon — I'm migrating writing from my old site.</div>
-        </div>
-        <div class="wi-meta"><span class="wi-arrow">↗</span></div>
-      </a>
-    </div>
-  </div>
-</div>
-
-<footer>
-  <div class="footer-left">Rahul Subbaraman</div>
-  <div class="footer-right">
-    <a href="cv.html">Curriculum Vitae</a>
-    <a href="watchlist.html">Watchlist</a>
-    <a href="travel.html">Travels</a>
-    <a href="books.html">Bookshelf</a>
-    <a href="magnets.html">Magnets</a>
-    <a href="postcards.html">Postcards</a>
-    <a href="sanskrit.html">Sanskrit</a>
-    <a href="writing.html">Writing</a>
-    <a href="mailto:rahulrox9website@gmail.com">Contact</a>
-  </div>
-</footer>
 <script>
 (function(){
   if (window.self === window.top) return;
