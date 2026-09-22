@@ -37,8 +37,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 input:checked + .slider{background-color:var(--ink)}
 input:checked + .slider:before{transform:translateX(26px);background-color:var(--card)}
 
-body.view-general .content-academic { display: none; }
-body.view-academic .content-general { display: none; }
+body.view-general .content-academic { display: none !important; }
+body.view-academic .content-general { display: none !important; }
 
 .cv-container{max-width:900px;margin:0 auto;padding:4rem 4rem 8rem;position:relative}
 .cv-header{margin-bottom:4rem;border-bottom:2px solid var(--border);padding-bottom:2rem}
@@ -82,7 +82,7 @@ body.view-academic .content-general { display: none; }
 <body class="view-general">
 
 <div class="nav-back">
-  <a href="../index.html">← Back to Home</a>
+  <a href="index.html">← Back to Home</a>
   <div class="view-toggle-container">
     <span class="toggle-label active" id="label-general">General</span>
     <label class="switch">
@@ -111,9 +111,8 @@ body.view-academic .content-general { display: none; }
     <h2 class="section-title">Profile Summary</h2>
     <div class="cv-desc" style="font-size: 1.05rem; margin-bottom: 1rem;">
       <div class="content-general"> <p> Interim Associate Editor (<i>Communications Earth & Environment</i>) and Quantitative Earth Scientist with a recently defended PhD. Directs full lifecycle research initiatives from conceptualisation and funding acquisition to deadline execution and annual reporting. Combines domain expertise with advanced data analytics, bespoke software development and practical analytical instrument operation. Excels at integrating multisource and multidimensional datasets to solve complex problems. A certified educator and science communicator proven in translating highly technical concepts to diverse audiences. </p> </div>
-      <div class="content-academic"> <p> Interim Associate Editor (<i>Communications Earth & Environment</i>) and Quantitative Earth Scientist with a recently defended PhD, specialising in basaltic magmatism, crystal mush systems and magma plumbing processes.My doctoral research integrated field studies, petrography, geochemistry and 2D & 3D microtextural imaging to investigate the structure, compositon, evolution, and multiscale heterogeneity of Icelandic crystal mushes. I develop open source MATLAB and Python workflows for multidimensional data analytics, spatial dataset restoration and statistical modelling. Earlier work investigated the petrogenesis of Archean mafic volcanic rocks using whole rock major & trace element and Nd-isotope geochemistry. I am also an Associate Fellow of the Higher Education Academy (AFHEA) active in university teaching and science communication.</p> </div>
+      <div class="content-academic"> <p> Interim Associate Editor (<i>Communications Earth & Environment</i>) and Quantitative Earth Scientist with a recently defended PhD, specialising in basaltic magmatism, crystal mush systems and magma plumbing processes. My doctoral research integrated field studies, petrography, geochemistry and 2D & 3D microtextural imaging to investigate the structure, compositon, evolution, and multiscale heterogeneity of Icelandic crystal mushes. I develop open source MATLAB and Python workflows for multidimensional data analytics, spatial dataset restoration and statistical modelling. Earlier work investigated the petrogenesis of Archean mafic volcanic rocks using whole rock major & trace element and Nd-isotope geochemistry. I am also an Associate Fellow of the Higher Education Academy (AFHEA) active in university teaching and science communication.</p> </div>
     </div> </section>
-
 
 <section class="cv-section">
     <h2 class="section-title">Education</h2>
@@ -167,12 +166,12 @@ body.view-academic .content-general { display: none; }
         <div class="cv-org">Communications Earth & Environment, Springer Nature</div>
         <div class="cv-desc">
           <div class="content-academic"><ul>
-            <li>Managing the peer review lifecycle for high impact Q1 multidisciplinary Earth and environmental science research across a 23 week contract.</li>
+            <li>Managing the peer review lifecycle for high impact Q1 multidisciplinary Earth and environmental science research.</li>
             <li>Critically evaluating manuscript submissions, selecting expert reviewers and executing decisive editorial decisions.</li>
             <li>Coordinating across global timezones with international colleagues, authors and the internal editorial board to uphold rigorous scientific standards.</li>
           </ul></div>
           <div class="content-general"><ul>
-            <li>Managing the end-to-end evaluation and review process for high-impact scientific research on a 23-week contract.</li>
+            <li>Managing the end-to-end evaluation and review process for high-impact scientific research.</li>
             <li>Assessing complex technical submissions, identifying subject matter experts and making executive decisions on project viability.</li>
             <li>Coordinating across global timezones with international stakeholders, authors and internal teams to maintain rigorous quality control standards.</li>
           </ul></div>
@@ -207,7 +206,7 @@ body.view-academic .content-general { display: none; }
       </div>
     </div>
 
-<div class="cv-item">
+    <div class="cv-item">
       <div>
         <div class="cv-date">Feb 2023 - Aug 2026</div>
         <div style="font-size:0.9rem;color:var(--muted);margin-top:0.3rem;">MANCHESTER, UK</div>
@@ -234,7 +233,7 @@ body.view-academic .content-general { display: none; }
       </div>
     </div>
 
-<div class="cv-item">
+    <div class="cv-item">
       <div>
         <div class="cv-date">Aug 2021 - May 2022</div>
         <div style="font-size:0.9rem;color:var(--muted);margin-top:0.3rem;">MOHANPUR, INDIA</div>
@@ -260,168 +259,191 @@ body.view-academic .content-general { display: none; }
       </div>
     </div>
 
-  <div class="cv-item">
-    <div>
-      <div class="cv-date">Aug 2021 - Apr 2022</div>
-      <div style="font-size:0.9rem;color:var(--muted);margin-top:0.3rem;">MOHANPUR, INDIA</div>
-    </div>
-    <div>
-      <div class="cv-role">Teaching Assistant</div>
-      <div class="cv-org">IISER Kolkata</div>
-      <div class="cv-desc">
-        <div class="content-academic"><ul>
-          <li>Delivered lectures and tutorials for Year 1 BS MS students in Introduction to Earth and Planetary Sciences.</li>
-          <li>Managed petrology laboratory sessions for Year 4 students and conducted academic evaluations.</li>
-        </ul></div>
-        <div class="content-general"><ul>
-          <li>Mentored undergraduate cohorts across introductory and advanced scientific modules.</li>
-          <li>Delivered instructional lectures, managed practical laboratory sessions and administered evaluations to support institutional teaching objectives.</li>
-        </ul></div>
+    <div class="cv-item">
+      <div>
+        <div class="cv-date">Aug 2021 - Apr 2022</div>
+        <div style="font-size:0.9rem;color:var(--muted);margin-top:0.3rem;">MOHANPUR, INDIA</div>
       </div>
-    </div>
-  </div>
-
-<section class="cv-section">
-    <h2 class="section-title">Skills</h2>
-    
-    <div class="content-academic">
-      <div class="skills-grid">
-        <div>
-          <div class="skill-category">
-            <div class="skill-title">Analytical Techniques</div>
-            <div class="skill-list">EPMA, LA ICP MS, XRF, SEM EDS, SEM EBSD, X ray computed tomography (XCT), UV Vis and IR spectroscopy.</div>
-          </div>
-          <div class="skill-category">
-            <div class="skill-title">Petrology & Geochemistry</div>
-            <div class="skill-list">Petrography, mineral and glass chemistry, whole rock major and trace element geochemistry, Sm Nd isotope systematics.</div>
-          </div>
-          <div class="skill-category">
-            <div class="skill-title">Petrological Modelling</div>
-            <div class="skill-list">OPAM thermobarometry, mineral melt equilibrium calculations, volatile saturation and degassing modelling, assimilation fractional crystallisation (AFC) modelling.</div>
-          </div>
-          <div class="skill-category">
-            <div class="skill-title">Field & Laboratory</div>
-            <div class="skill-list">Geological fieldwork and sampling, petrographic sample selection, rock crushing and powder preparation, sample preparation for geochemical analysis, zircon mineral separation.</div>
-          </div>
-        </div>
-        <div>
-          <div class="skill-category">
-            <div class="skill-title">Quantitative Methods</div>
-            <div class="skill-list">Compositional data analysis, hypothesis testing, principal component analysis (PCA), regression, clustering, multivariate statistics, crystallographic fabric analysis and exploratory machine learning.</div>
-          </div>
-          <div class="skill-category">
-            <div class="skill-title">Computational & Data Analysis</div>
-            <div class="skill-list">Python (NumPy, pandas, SciPy, matplotlib and seaborn), MATLAB, R, SQL and Git, workflow automation, reproducible pipelines, research software development and machine learning workflows.</div>
-          </div>
-          <div class="skill-category">
-            <div class="skill-title">Imaging & Visualisation</div>
-            <div class="skill-list">Avizo, AZtec, Fiji and MTEX, 2D and 3D image processing, EBSD data processing, grain reconstruction and visualisation of crystallographic fabrics.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="content-general">
-      <div class="skills-grid">
-        <div>
-          <div class="skill-category">
-            <div class="skill-title">Data Science & Analytics</div>
-            <div class="skill-list">Python (NumPy, pandas, SciPy, matplotlib and seaborn), MATLAB, R, SQL and Git, workflow automation, reproducible pipelines and bespoke research software development.</div>
-          </div>
-          <div class="skill-category">
-            <div class="skill-title">Quantitative Methods</div>
-            <div class="skill-list">Hypothesis testing, principal component analysis (PCA), regression, clustering, multivariate statistics, spatial data analysis and exploratory machine learning.</div>
-          </div>
-          <div class="skill-category">
-            <div class="skill-title">Project & Laboratory Management</div>
-            <div class="skill-list">End to end project lifecycles, international field logistics, rigorous quality control protocols and complex physical sample preparation.</div>
-          </div>
-        </div>
-        <div>
-          <div class="skill-category">
-            <div class="skill-title">Advanced Imaging</div>
-            <div class="skill-list">2D and 3D image processing, microstructural mapping, spatial reconstruction and quantitative visual data interpretation using Avizo and Fiji.</div>
-          </div>
-          <div class="skill-category">
-            <div class="skill-title">Analytical Techniques</div>
-            <div class="skill-list">High resolution microscopy, mass spectrometry, X ray spectroscopy and non destructive materials characterisation.</div>
-          </div>
+      <div>
+        <div class="cv-role">Teaching Assistant</div>
+        <div class="cv-org">IISER Kolkata</div>
+        <div class="cv-desc">
+          <div class="content-academic"><ul>
+            <li>Delivered lectures and tutorials for Year 1 BS MS students in Introduction to Earth and Planetary Sciences.</li>
+            <li>Managed petrology laboratory sessions for Year 4 students and conducted academic evaluations.</li>
+          </ul></div>
+          <div class="content-general"><ul>
+            <li>Mentored undergraduate cohorts across introductory and advanced scientific modules.</li>
+            <li>Delivered instructional lectures, managed practical laboratory sessions and administered evaluations to support institutional teaching objectives.</li>
+          </ul></div>
         </div>
       </div>
     </div>
   </section>
 
-<section class="cv-section">
+<!-- ========================================== -->
+<!-- ACADEMIC-ONLY TRACK (Pubs -> SW -> Skills -> Presentations) -->
+<!-- ========================================== -->
+
+  <section class="cv-section content-academic">
+    <h2 class="section-title">Publications</h2>
+    <div class="cv-item">
+      <div><div class="cv-date">Peer reviewed manuscript</div></div>
+      <div><div class="cv-desc"><strong>Subbaraman, R.</strong>, Hartley, M. E., Fellowes, J., Polacci, M., Bonechi, B., Pappalardo, L., Buono, G. and Neave, D. A. (2026). Insights into the 3D structure and behaviour of Icelandic crystal mushes from gabbroic nodules. <em>Earth and Planetary Science Letters</em>, 676, 119791. <a href="https://doi.org/10.1016/j.epsl.2025.119791" target="_blank">DOI: 10.1016/j.epsl.2025.119791</a></div></div>
+    </div>
+    <div class="cv-item">
+      <div><div class="cv-date">Manuscript in preparation</div></div>
+      <div><div class="cv-desc"><strong>Subbaraman, R.</strong> et al. Multi scale chemical heterogeneity in Icelandic crystal mushes: A statistical perspective. (For <em>Geochemistry, Geophysics, Geosystems</em>)</div></div>
+    </div>
+    <div class="cv-item">
+      <div><div class="cv-date">Manuscript in preparation</div></div>
+      <div><div class="cv-desc"><strong>Subbaraman, R.</strong> et al. Mesoscale microstructural records of Icelandic crystal mushes reveal scale dependent organisation. (For <em>Journal of Geophysical Research: Solid Earth</em>)</div></div>
+    </div>
+    <div class="cv-item">
+      <div><div class="cv-date">Manuscript in preparation</div></div>
+      <div><div class="cv-desc"><strong>Subbaraman, R.</strong> and Pandey, A. Distinct geochemical trends in global lamproites and a machine learning approach to tectonic discrimination. (For <em>Lithos</em>)</div></div>
+    </div>
+  </section>
+
+  <section class="cv-section content-academic">
     <h2 class="section-title">Scientific Software & Machine Learning Ecosystems</h2>
-    
     <div style="width: 100%;">
       <div class="cv-desc">
         <ul>
           <li><strong>MAPClean:</strong> A modular MATLAB pipeline employing parallelised computing and adaptive clustering algorithms for the automated pixel level restoration of large scale multidimensional spatial (EBSD) datasets. <a href="https://doi.org/10.5281/zenodo.18052287" target="_blank">DOI: 10.5281/zenodo.18052287</a></li>
-          
           <li><strong>GRaMC:</strong> A heuristic microstructural reconstruction framework featuring automated crystallographic twin merging and dynamic population filtering to extract robust quantitative datasets. <a href="https://doi.org/10.5281/zenodo.18107589" target="_blank">DOI: 10.5281/zenodo.18107589</a></li>
-          
           <li><strong>GRaFT:</strong> A dual environment analytical ecosystem bridging MATLAB and Python to automate the extraction, statistical visualisation and cross sample synthesis of multidimensional textural data. <a href="https://doi.org/10.5281/zenodo.18107626" target="_blank">DOI: 10.5281/zenodo.18107626</a></li>
-          
           <li><strong>LaTeCT:</strong> An end to end open source Python machine learning pipeline encompassing automated data preprocessing, unsupervised clustering and optimised Random Forest classification to derive predictive models from complex geochemical datasets.</li>
-          
           <li><strong>DenCalc:</strong> A Python based thermodynamic modelling utility utilising pandas and NumPy to compute complex phase specific and bulk densities by integrating pressure, temperature and multicomponent geochemical datasets. <a href="https://doi.org/10.5281/zenodo.16943747" target="_blank">DOI: 10.5281/zenodo.16943747</a></li>
-          
           <li><strong>MOSAIC (In Development):</strong> A comprehensive open source statistical framework for the multivariate analysis of compositional datasets. It integrates unsupervised machine learning (PCA, k means), robust distributional comparisons (Wasserstein distances, bootstrap resampling) and multidimensional variance metrics (Mahalanobis distances) to quantify latent population structures and complex chemical heterogeneity.</li>
         </ul>
       </div>
     </div>
   </section>
 
-<section class="cv-section">
-    <h2 class="section-title">Publications</h2>
-    
-    <div class="cv-item">
+  <section class="cv-section content-academic">
+    <h2 class="section-title">Skills</h2>
+    <div class="skills-grid">
       <div>
-        <div class="cv-date">Peer reviewed manuscript</div>
-      </div>
-      <div>
-        <div class="cv-desc">
-          <strong>Subbaraman, R.</strong>, Hartley, M. E., Fellowes, J., Polacci, M., Bonechi, B., Pappalardo, L., Buono, G. and Neave, D. A. (2026). Insights into the 3D structure and behaviour of Icelandic crystal mushes from gabbroic nodules. <em>Earth and Planetary Science Letters</em>, 676, 119791. <a href="https://doi.org/10.1016/j.epsl.2025.119791" target="_blank">DOI: 10.1016/j.epsl.2025.119791</a>
+        <div class="skill-category">
+          <div class="skill-title">Analytical Techniques</div>
+          <div class="skill-list">EPMA, LA ICP MS, XRF, SEM EDS, SEM EBSD, X ray computed tomography (XCT), UV Vis and IR spectroscopy.</div>
+        </div>
+        <div class="skill-category">
+          <div class="skill-title">Petrology & Geochemistry</div>
+          <div class="skill-list">Petrography, mineral and glass chemistry, whole rock major and trace element geochemistry, Sm Nd isotope systematics.</div>
+        </div>
+        <div class="skill-category">
+          <div class="skill-title">Petrological Modelling</div>
+          <div class="skill-list">OPAM thermobarometry, mineral melt equilibrium calculations, volatile saturation and degassing modelling, assimilation fractional crystallisation (AFC) modelling.</div>
+        </div>
+        <div class="skill-category">
+          <div class="skill-title">Field & Laboratory</div>
+          <div class="skill-list">Geological fieldwork and sampling, petrographic sample selection, rock crushing and powder preparation, sample preparation for geochemical analysis, zircon mineral separation.</div>
         </div>
       </div>
-    </div>
-
-    <div class="cv-item">
       <div>
-        <div class="cv-date">Manuscript in preparation</div>
-      </div>
-      <div>
-        <div class="cv-desc">
-          <strong>Subbaraman, R.</strong> et al. Multi scale chemical heterogeneity in Icelandic crystal mushes: A statistical perspective. (For <em>Geochemistry, Geophysics, Geosystems</em>)
+        <div class="skill-category">
+          <div class="skill-title">Quantitative Methods</div>
+          <div class="skill-list">Compositional data analysis, hypothesis testing, principal component analysis (PCA), regression, clustering, multivariate statistics, crystallographic fabric analysis and exploratory machine learning.</div>
         </div>
-      </div>
-    </div>
-
-    <div class="cv-item">
-      <div>
-        <div class="cv-date">Manuscript in preparation</div>
-      </div>
-      <div>
-        <div class="cv-desc">
-          <strong>Subbaraman, R.</strong> et al. Mesoscale microstructural records of Icelandic crystal mushes reveal scale dependent organisation. (For <em>Journal of Geophysical Research: Solid Earth</em>)
+        <div class="skill-category">
+          <div class="skill-title">Computational & Data Analysis</div>
+          <div class="skill-list">Python (NumPy, pandas, SciPy, matplotlib and seaborn), MATLAB, R, SQL and Git, workflow automation, reproducible pipelines, research software development and machine learning workflows.</div>
         </div>
-      </div>
-    </div>
-
-    <div class="cv-item">
-      <div>
-        <div class="cv-date">Manuscript in preparation</div>
-      </div>
-      <div>
-        <div class="cv-desc">
-          <strong>Subbaraman, R.</strong> and Pandey, A. Distinct geochemical trends in global lamproites and a machine learning approach to tectonic discrimination. (For <em>Lithos</em>)
+        <div class="skill-category">
+          <div class="skill-title">Imaging & Visualisation</div>
+          <div class="skill-list">Avizo, AZtec, Fiji and MTEX, 2D and 3D image processing, EBSD data processing, grain reconstruction and visualisation of crystallographic fabrics.</div>
         </div>
       </div>
     </div>
   </section>
 
-<section class="cv-section compact-list">
+  <section class="cv-section content-academic compact-list">
+    <h2 class="section-title">Presentations</h2>
+    <div class="cv-item"><div><div class="cv-date">Oral Presentation</div></div><div><div class="cv-desc"><strong>Subbaraman, R.</strong> et al. (Jul 2025). Goldschmidt Conference, Prague, Czech Republic.</div></div></div>
+    <div class="cv-item"><div><div class="cv-date">Oral Presentation</div></div><div><div class="cv-desc"><strong>Subbaraman, R.</strong> et al. (Jan 2025). VMSG MDSG Conference, Dublin, Ireland.</div></div></div>
+    <div class="cv-item"><div><div class="cv-date">Poster Presentation</div></div><div><div class="cv-desc"><strong>Subbaraman, R.</strong> et al. (Jun 2024). 1st International Conference of the IAVCEI Commission on Volcanic & Igneous Plumbing Systems (VIPS) Conference 2024, Liverpool, UK.</div></div></div>
+    <div class="cv-item"><div><div class="cv-date">Poster Presentation</div></div><div><div class="cv-desc"><strong>Subbaraman, R.</strong> et al. (Jan 2024). VMSG Conference 2024, Bristol, UK.</div></div></div>
+    <div class="cv-item"><div><div class="cv-date">Poster Presentation</div></div><div><div class="cv-desc"><strong>Subbaraman, R.</strong> et al. (Jan 2023). VMSG Conference 2023, London, UK.</div></div></div>
+    <div class="cv-item"><div><div class="cv-date">Poster Presentation</div></div><div><div class="cv-desc"><strong>Subbaraman, R.</strong> and Dey (Apr 2022). DES Day Convergence 2022, IISER Kolkata, India.</div></div></div>
+  </section>
+
+<!-- ========================================== -->
+<!-- GENERAL-ONLY TRACK (Skills -> SW -> Pubs) -->
+<!-- ========================================== -->
+
+  <section class="cv-section content-general">
+    <h2 class="section-title">Skills</h2>
+    <div class="skills-grid">
+      <div>
+        <div class="skill-category">
+          <div class="skill-title">Data Science & Analytics</div>
+          <div class="skill-list">Python (NumPy, pandas, SciPy, matplotlib and seaborn), MATLAB, R, SQL and Git, workflow automation, reproducible pipelines and bespoke research software development.</div>
+        </div>
+        <div class="skill-category">
+          <div class="skill-title">Quantitative Methods</div>
+          <div class="skill-list">Hypothesis testing, principal component analysis (PCA), regression, clustering, multivariate statistics, spatial data analysis and exploratory machine learning.</div>
+        </div>
+        <div class="skill-category">
+          <div class="skill-title">Project & Laboratory Management</div>
+          <div class="skill-list">End to end project lifecycles, international field logistics, rigorous quality control protocols and complex physical sample preparation.</div>
+        </div>
+      </div>
+      <div>
+        <div class="skill-category">
+          <div class="skill-title">Advanced Imaging</div>
+          <div class="skill-list">2D and 3D image processing, microstructural mapping, spatial reconstruction and quantitative visual data interpretation using Avizo and Fiji.</div>
+        </div>
+        <div class="skill-category">
+          <div class="skill-title">Analytical Techniques</div>
+          <div class="skill-list">High resolution microscopy, mass spectrometry, X ray spectroscopy and non destructive materials characterisation.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cv-section content-general">
+    <h2 class="section-title">Scientific Software & Machine Learning Ecosystems</h2>
+    <div style="width: 100%;">
+      <div class="cv-desc">
+        <ul>
+          <li><strong>MAPClean:</strong> A modular MATLAB pipeline employing parallelised computing and adaptive clustering algorithms for the automated pixel level restoration of large scale multidimensional spatial (EBSD) datasets. <a href="https://doi.org/10.5281/zenodo.18052287" target="_blank">DOI: 10.5281/zenodo.18052287</a></li>
+          <li><strong>GRaMC:</strong> A heuristic microstructural reconstruction framework featuring automated crystallographic twin merging and dynamic population filtering to extract robust quantitative datasets. <a href="https://doi.org/10.5281/zenodo.18107589" target="_blank">DOI: 10.5281/zenodo.18107589</a></li>
+          <li><strong>GRaFT:</strong> A dual environment analytical ecosystem bridging MATLAB and Python to automate the extraction, statistical visualisation and cross sample synthesis of multidimensional textural data. <a href="https://doi.org/10.5281/zenodo.18107626" target="_blank">DOI: 10.5281/zenodo.18107626</a></li>
+          <li><strong>LaTeCT:</strong> An end to end open source Python machine learning pipeline encompassing automated data preprocessing, unsupervised clustering and optimised Random Forest classification to derive predictive models from complex geochemical datasets.</li>
+          <li><strong>DenCalc:</strong> A Python based thermodynamic modelling utility utilising pandas and NumPy to compute complex phase specific and bulk densities by integrating pressure, temperature and multicomponent geochemical datasets. <a href="https://doi.org/10.5281/zenodo.16943747" target="_blank">DOI: 10.5281/zenodo.16943747</a></li>
+          <li><strong>MOSAIC (In Development):</strong> A comprehensive open source statistical framework for the multivariate analysis of compositional datasets. It integrates unsupervised machine learning (PCA, k means), robust distributional comparisons (Wasserstein distances, bootstrap resampling) and multidimensional variance metrics (Mahalanobis distances) to quantify latent population structures and complex chemical heterogeneity.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cv-section content-general">
+    <h2 class="section-title">Publications</h2>
+    <div class="cv-item">
+      <div><div class="cv-date">Peer reviewed manuscript</div></div>
+      <div><div class="cv-desc"><strong>Subbaraman, R.</strong>, Hartley, M. E., Fellowes, J., Polacci, M., Bonechi, B., Pappalardo, L., Buono, G. and Neave, D. A. (2026). Insights into the 3D structure and behaviour of Icelandic crystal mushes from gabbroic nodules. <em>Earth and Planetary Science Letters</em>, 676, 119791. <a href="https://doi.org/10.1016/j.epsl.2025.119791" target="_blank">DOI: 10.1016/j.epsl.2025.119791</a></div></div>
+    </div>
+    <div class="cv-item">
+      <div><div class="cv-date">Manuscript in preparation</div></div>
+      <div><div class="cv-desc"><strong>Subbaraman, R.</strong> et al. Multi scale chemical heterogeneity in Icelandic crystal mushes: A statistical perspective. (For <em>Geochemistry, Geophysics, Geosystems</em>)</div></div>
+    </div>
+    <div class="cv-item">
+      <div><div class="cv-date">Manuscript in preparation</div></div>
+      <div><div class="cv-desc"><strong>Subbaraman, R.</strong> et al. Mesoscale microstructural records of Icelandic crystal mushes reveal scale dependent organisation. (For <em>Journal of Geophysical Research: Solid Earth</em>)</div></div>
+    </div>
+    <div class="cv-item">
+      <div><div class="cv-date">Manuscript in preparation</div></div>
+      <div><div class="cv-desc"><strong>Subbaraman, R.</strong> and Pandey, A. Distinct geochemical trends in global lamproites and a machine learning approach to tectonic discrimination. (For <em>Lithos</em>)</div></div>
+    </div>
+  </section>
+
+<!-- ========================================== -->
+<!-- SHARED BOTTOM TRACK                        -->
+<!-- ========================================== -->
+
+  <section class="cv-section compact-list">
     <h2 class="section-title">Leadership, Service & Science Communication</h2>
     
     <div class="cv-item">
@@ -491,14 +513,13 @@ body.view-academic .content-general { display: none; }
           <br><br>
           Acted as <u>Event Organiser</u> coordinating science themed events including Sip of Science (Oct 2022 to Apr 2024).
           <br><br>
-          Delivered interactive science exhibits for the British Science Week @ Manchester Museum (Mar 2023, Mar 2024, Mar 2025, Mar 2026), The Universally Manchester Festival (Jun 2025), BlueDot festival @ Jodrell Bank Observatory (Jul 2023), Natural History Museum London (Jan 2023) and ScienceX @ Manchester Central Library (Oct 2022). Directed earth science outreach at the Kalyani Book Fair (Dec 2021) and coordinated community initiatives for Ek Pehal (Jul 2018 to Jul 2020).
-<br><br>
- Produced promotional video content for the Faculty of Science and Engineering (May 2025) and authored long form articles for online science platforms including Cogito137 and Scicatalyst (Apr 2020 to Dec 2021).
+          Designed and delivered interactive science exhibits for the British Science Week @ Manchester Museum (Mar 2023, Mar 2024, Mar 2025, Mar 2026), The Universally Manchester Festival (Jun 2025), BlueDot festival @ Jodrell Bank Observatory (Jul 2023), Natural History Museum London (Jan 2023) and ScienceX @ Manchester Central Library (Oct 2022). Directed earth science outreach at the Kalyani Book Fair (Dec 2021) and coordinated community initiatives for Ek Pehal (Jul 2018 to Jul 2020). Produced promotional video content for the Faculty of Science and Engineering (May 2025) and authored long form articles for online science platforms including Cogito137 and Scicatalyst (Apr 2020 to Dec 2021).
         </div>
       </div>
     </div>
   </section>
 
+</div>
 
 <script>
 document.getElementById('cv-toggle').addEventListener('change', function() {
