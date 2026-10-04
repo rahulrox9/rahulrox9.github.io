@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Publications & Software | Rahul Subbaraman</title>
+<meta name="description" content="Academic publications, scientific software ecosystems, datasets and conference abstracts by Rahul Subbaraman.">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a1208">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;
+  --card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);overflow-x:hidden}
+
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35}
+
+.nav-back{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:1rem 4rem;display:flex;align-items:center;justify-content:space-between}
+.nav-back a{font-size:0.85rem;color:var(--muted);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;font-weight:500;transition:color 0.2s}
+.nav-back a:hover{color:var(--warm)}
+
+.cv-container{max-width:900px;margin:0 auto;padding:4rem 4rem 8rem;position:relative}
+.cv-header{margin-bottom:4rem;border-bottom:2px solid var(--border);padding-bottom:2rem}
+.cv-name{font-family:'Playfair Display',serif;font-size:clamp(3rem,4vw,3.5rem);font-weight:700;line-height:1.1;letter-spacing:-0.02em;margin-bottom:0.5rem}
+.cv-title{font-size:1.1rem;color:var(--warm);font-weight:500;letter-spacing:0.05em;margin-bottom:1.5rem}
+.cv-contact{display:flex;gap:1.5rem;flex-wrap:wrap;font-size:0.85rem;color:var(--muted)}
+.cv-contact a{color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;transition:color 0.2s}
+.cv-contact a:hover{color:var(--warm)}
+
+.cv-section{margin-bottom:3.5rem}
+.section-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--ink);margin-bottom:2rem;display:flex;align-items:center;gap:1rem}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.cv-item{margin-bottom:1.5rem;display:grid;grid-template-columns:160px 1fr;gap:2rem;align-items:start}
+.cv-date{font-size:0.85rem;color:var(--muted);font-weight:500;letter-spacing:0.05em;text-transform:uppercase;padding-top:0.2rem}
+.cv-role{font-size:1.1rem;font-weight:600;color:var(--ink);margin-bottom:0.2rem}
+.cv-desc{font-size:0.95rem;color:var(--muted);line-height:1.7;font-weight:300}
+.cv-desc a{color:var(--warm);text-decoration:none;font-weight:400}
+.cv-desc a:hover{text-decoration:underline}
+
+@media(max-width:768px){
+  .nav-back{padding:1rem 1.5rem}
+  .cv-container{padding:3rem 1.5rem}
+  .cv-item{grid-template-columns:1fr;gap:0.4rem}
+  .cv-date{padding-top:0;margin-bottom:0.2rem;color:var(--warm)}
+}
+</style>
+</head>
+<body>
+
+<div class="nav-back">
+  <a href="index.html">← Back to Home</a>
+</div>
+
+<div class="cv-container">
+  <header class="cv-header">
+    <h1 class="cv-name">Research Outputs</h1>
+    <div class="cv-title">Publications | Scientific Software | Datasets | Conference Abstracts</div>
+    <div class="cv-contact">
+      <a href="https://orcid.org/0000-0003-3801-3029" target="_blank"><i class="fab fa-orcid"></i> ORCID</a>
+      <a href="https://github.com/rahulrox9" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+      <a href="mailto:rahulsubbarox@gmail.com"><i class="fas fa-envelope"></i> rahulsubbarox@gmail.com</a>
+    </div>
+  </header>
+
+  <section class="cv-section">
+    <h2 class="section-title">Peer Reviewed Publications & Manuscripts</h2>
+    
+    <div class="cv-item">
+      <div><div class="cv-date">Published (2026)</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong>, Hartley, M. E., Fellowes, J., Polacci, M., Bonechi, B., Pappalardo, L., Buono, G. and Neave, D. A. (2026). Insights into the 3D structure and behaviour of Icelandic crystal mushes from gabbroic nodules. <em>Earth and Planetary Science Letters</em>, 676, 119791. <a href="https://doi.org/10.1016/j.epsl.2025.119791" target="_blank">DOI: 10.1016/j.epsl.2025.119791</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">In Preparation</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong> et al. Multi scale chemical heterogeneity in Icelandic crystal mushes: A statistical perspective. (Target: <em>Geochemistry, Geophysics, Geosystems</em>)
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">In Preparation</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong> et al. Mesoscale microstructural records of Icelandic crystal mushes reveal scale dependent organisation. (Target: <em>Journal of Geophysical Research: Solid Earth</em>)
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">In Preparation</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong> and Pandey, A. Distinct geochemical trends in global lamproites and a machine learning approach to tectonic discrimination. (Target: <em>Lithos</em>)
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cv-section">
+    <h2 class="section-title">Scientific Software & Machine Learning Ecosystems</h2>
+    
+    <div class="cv-item">
+      <div><div class="cv-date">MAPClean (2025)</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong> (2025b). <em>MAPClean: Microstructurally Adaptive Pixel Level Cleaning</em>. A modular MATLAB pipeline employing parallelised computing and adaptive clustering algorithms for the automated pixel level restoration of large scale multidimensional spatial (EBSD) datasets. <a href="https://doi.org/10.5281/zenodo.18052287" target="_blank">DOI: 10.5281/zenodo.18052287</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">GRaMC (2025)</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong> (2025c). <em>GRaMC: Grain Reconstruction and Multi stage Cleaning</em>. A heuristic microstructural reconstruction framework featuring automated crystallographic twin merging and dynamic population filtering to extract robust quantitative datasets. <a href="https://doi.org/10.5281/zenodo.18107589" target="_blank">DOI: 10.5281/zenodo.18107589</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">GRaFT (2025)</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong> (2025d). <em>GRaFT: Grain Resolved analysis of Fabric and Texture</em>. A dual environment analytical ecosystem bridging MATLAB and Python to automate the extraction, statistical visualisation and cross sample synthesis of multidimensional textural data. <a href="https://doi.org/10.5281/zenodo.18107626" target="_blank">DOI: 10.5281/zenodo.18107626</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">DenCalc (2025)</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong> (2025a). <em>DenCalc: Density Calculator</em>. A Python based thermodynamic modelling utility utilising pandas and NumPy to compute complex phase specific and bulk densities of rocks and their carrier melts by integrating pressure, temperature and multicomponent geochemical datasets. <a href="https://doi.org/10.5281/zenodo.16943747" target="_blank">DOI: 10.5281/zenodo.16943747</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">LaTeCT</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>LaTeCT:</strong> An end to end open source Python machine learning pipeline encompassing automated data preprocessing, unsupervised clustering and optimised Random Forest classification to derive predictive models from complex geochemical datasets.
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">MOSAIC (In Dev)</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>MOSAIC:</strong> A comprehensive open source statistical framework for the multivariate analysis of compositional datasets. Integrates unsupervised machine learning (PCA, k means), robust distributional comparisons (Wasserstein distances, bootstrap resampling) and multidimensional variance metrics (Mahalanobis distances) to quantify latent population structures and complex chemical heterogeneity.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cv-section">
+    <h2 class="section-title">Published Datasets</h2>
+    
+    <div class="cv-item">
+      <div><div class="cv-date">2026</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong> (2026c). <em>X ray computed micro tomography (XCT) 3D cleaned datasets of Icelandic gabbroic nodules.</em> University of Manchester. Dataset. <a href="https://doi.org/10.48420/32750592" target="_blank">DOI: 10.48420/32750592</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">2026</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong> (2026b). <em>GRaMC EBSD Processing Outputs: Gabbroic Nodules from Gígöldur, Iceland.</em> University of Manchester. <a href="https://doi.org/10.48420/31985535" target="_blank">DOI: 10.48420/31985535</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">2026</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong> (2026a). <em>MAPClean EBSD Processing Outputs: Gabbroic Nodules from Gígöldur, Iceland.</em> University of Manchester. <a href="https://doi.org/10.48420/31914846" target="_blank">DOI: 10.48420/31914846</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">2025</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong> (2025e). <em>X ray computed micro tomography (XCT) 3D reconstructions of Icelandic gabbro nodules.</em> University of Manchester. <a href="https://doi.org/10.48420/28431773" target="_blank">DOI: 10.48420/28431773</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">2025</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong>, Hartley, M. E. and Neave, D. A. (2025b). <em>Thin section scans of gabbro nodules, scoria, plagioclase phyric basalt, hyaloclastite from Gígöldur, central Iceland.</em> University of Manchester. <a href="https://doi.org/10.48420/28435859" target="_blank">DOI: 10.48420/28435859</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">2025</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong>, Buono, G. and Pappalardo, L. (2025a). <em>3D XCT scans of 15mm gabbroic nodules from Gígöldur, Iceland.</em> GFZ Data Services. <a href="https://doi.org/10.5880/fidgeo.2025.082" target="_blank">DOI: 10.5880/fidgeo.2025.082</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cv-section">
+    <h2 class="section-title">Conference Abstracts</h2>
+    
+    <div class="cv-item">
+      <div><div class="cv-date">Jun 2026 (Oral)</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong>, Hughes, L., Hartley, M. E. and Neave, D. A. (Jun 2026). Microstructural record of Icelandic crystal mushes preserved in gabbroic nodules. <em>Mineralogical Society at 150: Past Discoveries and Future Frontiers</em>, Manchester, UK. <a href="https://minsoc-150.org/wp-content/uploads/2026/06/MinSoc-150-Programme-and-Abstracts-Final.pdf" target="_blank">Abstract Book Link</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">Jan 2026 (Poster)</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong>, Hughes, L., Mariani, E., Vukmanovic, Z., Hartley, M. E. and Neave, D. A. (Jan 2026). Microstructural record of Icelandic crystal mushes preserved in gabbroic nodules. <em>Volcanic and Magmatic Studies Group Conference 2026</em>, Southampton, UK. <a href="https://noc-events.co.uk/sites/default/files/documents/VMSG26-Programme_RevD-1.pdf" target="_blank">Abstract Book Link</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">Jul 2025 (Oral)</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong>, Hartley, M. E., Fellowes, J., Polacci, M., Bonechi, B., Pappalardo, L., Buono, G. and Neave, D. A. (Jul 2025). Gabbro Nodules: Windows into Icelandic Crystal Mush. <em>Goldschmidt Conference 2025</em>, Prague, Czech Republic. <a href="https://doi.org/10.7185/gold2025.25581" target="_blank">DOI: 10.7185/gold2025.25581</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">Jan 2025 (Oral)</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong>, Hartley, M. E., Bonechi, B., Polacci, M., Pappalardo, L., Buono, G. and Neave, D. A. (Jan 2025). 3D insights into the dynamics of Icelandic crustal mushes. <em>Volcanic and Magmatic Studies Group & Mineral Deposits Studies Group 2025</em>, Dublin, Ireland.
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">Jun 2024 (Poster)</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong>, Hartley, M., Bonechi, B., Polacci, M., Pappalardo, L., Buono, G. and Neave, D. A. (Jun 2024). Icelandic Nodules: Windows into Actively Evolving Mush Systems. <em>1st International Conference of the IAVCEI Commission on Volcanic & Igneous Plumbing Systems (VIPS) Conference 2024</em>, Liverpool, UK. <a href="https://vipscommission.org/wp-content/uploads/2024/06/Abstract-Brochure-1.pdf" target="_blank">Abstract Book Link</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">Jan 2024 (Poster)</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong>, Polacci, M., Bonechi, B., Pappalardo, L., Buono, G., Hartley, M. E. and Neave, D. A. (Jan 2024). Imaging and visualising mesoscale 3D mush textures. <em>Volcanic and Magmatic Studies Group Conference 2024</em>, Bristol, UK.
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">Jan 2023 (Poster)</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong>, Hartley, M. E., Polacci, M., Tartèse, R. and Neave, D. A. (Jan 2023). Mapping the Magma Mush Interface. <em>Volcanic and Magmatic Studies Group Conference 2023</em>, London, UK.
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-item">
+      <div><div class="cv-date">Apr 2022 (Poster)</div></div>
+      <div>
+        <div class="cv-desc">
+          <strong>Subbaraman, R.</strong> and Dey, S. (Apr 2022). Geochemistry and Petrogenesis of Archean Mafic Volcanic Rocks of the Iron Ore Group, Jamda Koira Basin, Singhbhum Craton. <em>DES Day Convergence 2022</em>, IISER Kolkata, India.
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  if (window.self === window.top) return;
+
+  const page = window.location.pathname;
+  const sessionKey = 'counted_' + page;
+
+  if (sessionStorage.getItem(sessionKey)) {
+    console.log('Page already counted in this session. Skipping.');
+    return;
+  }
+
+  if (localStorage.getItem('admin_ignore') === 'true') return;
+
+  const DB = 'https://script.google.com/macros/s/AKfycbzpa1fUDZDXfQT5L6SxQRNf1zEFk-tpHV_2Tq9CY2iG4iSqa4W__Rnqs6fshnGJ0pnvRQ/exec';
+  
+  let uid = localStorage.getItem('_rsuid');
+  if (!uid) { 
+    uid = 'u' + Date.now() + Math.random().toString(36).slice(2,7); 
+    localStorage.setItem('_rsuid', uid); 
+  }
+
+  fetch(`${DB}?action=visit&page=${encodeURIComponent(page)}&uid=${uid}`)
+    .then(() => {
+      sessionStorage.setItem(sessionKey, 'true');
+    })
+    .catch(err => console.error('Tracking failed', err));
+})();
+</script>
+</body>
+</html>
