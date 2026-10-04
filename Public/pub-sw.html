@@ -46,10 +46,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .cv-desc a{color:var(--warm);text-decoration:none;font-weight:400}
 .cv-desc a:hover{text-decoration:underline}
 
-/* EPSL Featured Publisher Card */
-.epsl-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.75rem;margin-bottom:2rem;width:100%}
-
-.og-preview{background:var(--parchment);border:1px solid var(--border);border-left:4px solid var(--warm);border-radius:8px;padding:1.35rem 1.5rem;margin-bottom:1.25rem}
+/* Clean Unified Output Card */
+.og-preview{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.75rem;margin-bottom:2rem;width:100%}
 .og-top-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.65rem}
 .og-domain{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:0.4rem}
 .og-badges{display:flex;gap:0.45rem;flex-wrap:wrap;align-items:center}
@@ -65,7 +63,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .og-authors strong{font-weight:700;text-decoration:underline;text-underline-offset:3px}
 .og-authors sup{font-size:0.7rem;color:var(--warm);font-weight:600;margin-left:1px}
 
-.og-affiliations{font-size:0.8rem;color:var(--muted);line-height:1.55;margin-bottom:0.85rem;font-weight:300;padding-left:0.75rem;border-left:2px solid var(--border)}
+.og-affiliations{font-size:0.8rem;color:var(--muted);line-height:1.55;margin-bottom:0.85rem;font-weight:300}
 .og-affiliations div{margin-bottom:0.2rem}
 .og-affiliations sup{font-weight:600;color:var(--ink);margin-right:0.25rem}
 
@@ -81,7 +79,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .pub-details summary::-webkit-details-marker{display:none}
 .pub-details summary::before{content:'+';font-weight:700;font-size:0.95rem}
 .pub-details[open] summary::before{content:'−'}
-.details-box{margin-top:0.75rem;margin-bottom:0.4rem;font-size:0.9rem;color:var(--muted);line-height:1.75;font-weight:300;background:var(--parchment);padding:1.1rem 1.35rem;border-radius:6px;border-left:3px solid var(--warm)}
+.details-box{margin-top:0.75rem;margin-bottom:0.4rem;font-size:0.9rem;color:var(--muted);line-height:1.75;font-weight:300;background:var(--parchment);padding:1.1rem 1.35rem;border-radius:6px;border:1px solid var(--border)}
 .details-box ul{list-style:none;margin:0;padding:0}
 .details-box li{position:relative;padding-left:1.1rem;margin-bottom:0.4rem}
 .details-box li:last-child{margin-bottom:0}
@@ -95,7 +93,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   .cv-container{padding:3rem 1.5rem}
   .cv-item{grid-template-columns:1fr;gap:0.4rem}
   .cv-date{padding-top:0;margin-bottom:0.2rem;color:var(--warm)}
-  .og-preview{padding:1.1rem}
+  .og-preview{padding:1.25rem}
 }
 </style>
 </head>
@@ -119,45 +117,44 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <section class="cv-section">
     <h2 class="section-title">Peer Reviewed Publications</h2>
     
-    <div class="epsl-card">
-      <!-- Publisher Header & Metadata Preview -->
-      <div class="og-preview">
-        <div class="og-top-bar">
-          <div class="og-domain">
-            <i class="fas fa-book-open"></i> Earth and Planetary Science Letters • Vol. 676, 119791 (2026)
-          </div>
-          <div class="og-badges">
-            <span class="og-badge">Short communication</span>
-            <span class="og-badge oa">Open access</span>
-          </div>
+    <!-- EPSL Publication Card -->
+    <div class="og-preview">
+      <div class="og-top-bar">
+        <div class="og-domain">
+          <i class="fas fa-book-open"></i> Earth and Planetary Science Letters • Vol. 676, 119791 (2026)
         </div>
-
-        <h3 class="og-title">
-          <a href="https://doi.org/10.1016/j.epsl.2025.119791" target="_blank" rel="noopener">
-            Insights into the 3D structure and behaviour of Icelandic crystal mushes from gabbroic nodules
-          </a>
-        </h3>
-
-        <div class="og-authors">
-          <strong>Rahul Subbaraman</strong><sup>a</sup>, Margaret E. Hartley<sup>a</sup>, Jonathan Fellowes<sup>a</sup>, Margherita Polacci<sup>a</sup>, Barbara Bonechi<sup>a</sup>, Lucia Pappalardo<sup>b</sup>, Gianmarco Buono<sup>b</sup> and David A. Neave<sup>a</sup>
+        <div class="og-badges">
+          <span class="og-badge">Short communication</span>
+          <span class="og-badge oa">Open access</span>
         </div>
+      </div>
 
-        <div class="og-affiliations">
-          <div><sup>a</sup>Department of Earth and Environmental Sciences, University of Manchester, Oxford Road, Manchester, M13 9PL, UK</div>
-          <div><sup>b</sup>Istituto Nazionale di Geofisica e Vulcanologia, Osservatorio Vesuviano, Sezione di Napoli, Via Diocleziano, 328, Napoli, 80125, NA, Italy</div>
-        </div>
+      <h3 class="og-title">
+        <a href="https://doi.org/10.1016/j.epsl.2025.119791" target="_blank" rel="noopener">
+          Insights into the 3D structure and behaviour of Icelandic crystal mushes from gabbroic nodules
+        </a>
+      </h3>
 
-        <div class="og-history">
-          <div>Available online 28 December 2025, Published:  15 February 2026.</div>
-          <div class="og-editor">Editor: Dr C. M. Petrone</div>
-        </div>
+      <div class="og-authors">
+        <strong>Rahul Subbaraman</strong><sup>a</sup>, Margaret E. Hartley<sup>a</sup>, Jonathan Fellowes<sup>a</sup>, Margherita Polacci<sup>a</sup>, Barbara Bonechi<sup>a</sup>, Lucia Pappalardo<sup>b</sup>, Gianmarco Buono<sup>b</sup> and David A. Neave<sup>a</sup>
+      </div>
 
-        <div class="og-footer">
-          <a href="https://doi.org/10.1016/j.epsl.2025.119791" target="_blank" rel="noopener" class="og-cta">
-            Get content on ScienceDirect (DOI: 10.1016/j.epsl.2025.119791) ↗
-          </a>
-        </div>
- <br>
+      <div class="og-affiliations">
+        <div><sup>a</sup>Department of Earth and Environmental Sciences, University of Manchester, Oxford Road, Manchester, M13 9PL, UK</div>
+        <div><sup>b</sup>Istituto Nazionale di Geofisica e Vulcanologia, Osservatorio Vesuviano, Sezione di Napoli, Via Diocleziano, 328, Napoli, 80125, NA, Italy</div>
+      </div>
+
+      <div class="og-history">
+        <div>Available online 28 December 2025, Published: 15 February 2026.</div>
+        <div class="og-editor">Editor: Dr C. M. Petrone</div>
+      </div>
+
+      <div class="og-footer">
+        <a href="https://doi.org/10.1016/j.epsl.2025.119791" target="_blank" rel="noopener" class="og-cta">
+          Get content on ScienceDirect (DOI: 10.1016/j.epsl.2025.119791) ↗
+        </a>
+      </div>
+      <br>
 
       <!-- Expandable Highlights, Abstract & Keywords -->
       <div class="pub-toggles">
@@ -196,7 +193,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         </details>
       </div>
     </div>
-     </div>
+
     <div class="cv-item">
       <div><div class="cv-date">In Preparation</div></div>
       <div>
@@ -228,33 +225,186 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <section class="cv-section">
     <h2 class="section-title">Scientific Software & Machine Learning Ecosystems</h2>
     
-    <div class="cv-item">
-      <div><div class="cv-date">MAPClean (2025)</div></div>
-      <div>
-        <div class="cv-desc">
-          <strong>Subbaraman, R.</strong> (2025b). <em>MAPClean: Microstructurally Adaptive Pixel Level Cleaning</em>. A modular MATLAB pipeline employing parallelised computing and adaptive clustering algorithms for the automated pixel level restoration of large scale multidimensional spatial (EBSD) datasets. <a href="https://doi.org/10.5281/zenodo.18052287" target="_blank">DOI: 10.5281/zenodo.18052287</a>
+    <!-- MAPClean Card -->
+    <div class="og-preview">
+      <div class="og-top-bar">
+        <div class="og-domain">
+          <i class="fas fa-code"></i> Zenodo • 2025b • DOI: 10.5281/zenodo.18052287
         </div>
+        <div class="og-badges">
+          <span class="og-badge">MATLAB</span>
+          <span class="og-badge">MTEX</span>
+          <span class="og-badge">Parallel Computing</span>
+          <span class="og-badge oa">GPLv3</span>
+        </div>
+      </div>
+
+      <h3 class="og-title">
+        <a href="https://doi.org/10.5281/zenodo.18052287" target="_blank" rel="noopener">
+          MAPClean: Microstructurally Adaptive Pixel Level Cleaning
+        </a>
+      </h3>
+
+      <div class="og-authors">
+        <strong>Rahul Subbaraman</strong>
+      </div>
+
+      <div style="font-size:0.9rem;color:var(--muted);line-height:1.65;font-weight:300;margin-bottom:0.85rem;">
+        A modular MATLAB pipeline built on the open source MTEX toolbox for automated pixel level restoration of large scale Electron Backscatter Diffraction (EBSD) datasets. Combines phase aware and orientation aware logic with intelligent Strict versus Relaxed protocol selection to remove noise, correct misindexed pixels and reconstruct missing data prior to grain reconstruction.
+      </div>
+
+      <div class="og-footer">
+        <a href="https://doi.org/10.5281/zenodo.18052287" target="_blank" rel="noopener" class="og-cta">
+          View repository and code on Zenodo (DOI: 10.5281/zenodo.18052287) ↗
+        </a>
+      </div>
+      <br>
+
+      <div class="pub-toggles">
+        <details class="pub-details">
+          <summary>Overview: Specialists & General Audience</summary>
+          <div class="details-box">
+            <p style="margin-bottom:0.85rem;"><strong style="color:var(--ink);font-weight:600;">For specialists:</strong> Current EBSD workflows typically follow a grain first approach, where denoising and orientation filling depend on initial grain definition. At the mesoscale (full thin section mapping), data quality is often degraded by topographic artefacts and long acquisition times (~10 hours), leading to stage drift. This frequently prevents grain reconstruction altogether, creating a processing deadlock. MAPClean addresses this by operating at the pixel level, performing microstructurally adaptive restoration before grain reconstruction. It uses phase aware logic and parallelised cluster filling. Applied to datasets exceeding 34 million pixels across four samples, it enables recovery of crystallographic fabrics from maps previously considered unusable.</p>
+            <p><strong style="color:var(--ink);font-weight:600;">For non specialists:</strong> EBSD allows us to map how crystals are oriented inside a rock, essentially revealing its internal structure. At large scales, however, data becomes noisy due to long scan times and minor imperfections in the sample. Existing tools struggle because they require relatively clean data to begin with. MAPClean acts as a digital restoration tool, repairing noisy regions point by point using the surrounding crystal structure, allowing previously unusable datasets to be recovered.</p>
+          </div>
+        </details>
+
+        <details class="pub-details">
+          <summary>Pipeline Architecture & Key Features</summary>
+          <div class="details-box">
+            <ul>
+              <li><strong style="color:var(--ink);font-weight:600;">Modular Stage Control & Checkpointing:</strong> Enable or disable individual pipeline stages via boolean flags. Each stage saves a <code>.mat</code> checkpoint and exports phase and Inverse Pole Figure (IPF) maps automatically, allowing interrupted runs to resume without reprocessing.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Automated Protocol Selection:</strong> Automatically selects Strict mode (well indexed data) or Relaxed mode (sparse data) based on the fraction of <code>notIndexed</code> pixels within the physically constrained <code>sampleMask</code>.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">MAD Filtering & Sample Mask Generation:</strong> Removes unreliable pixels exceeding a user defined Mean Angular Deviation threshold and estimates physically grounded specimen boundaries directly from indexed pixels.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Phase & Orientation Wild Spike Removal (WSR):</strong> Corrects misindexed pixels against local neighbourhoods and resolves orientation wild spikes via local misorientation clustering with twin boundary protection for Anorthite.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Parallelised BFS (Strict) & Iterative MPF (Relaxed) Hole Filling:</strong> Screens disconnected hole clusters for neighbourhood support and fills them in parallel via Breadth First Search, or applies vectorised Multi Pass Filling with serial dominant phase and orientation coherence checks for sparse maps.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Orientation Clustering & Protected Hole Filling:</strong> Assigns mean orientations via hierarchical single linkage quaternion clustering (with ring based fallback) and executes a final conservative recovery of uncertain grain interiors.</li>
+            </ul>
+          </div>
+        </details>
       </div>
     </div>
 
-    <div class="cv-item">
-      <div><div class="cv-date">GRaMC (2025)</div></div>
-      <div>
-        <div class="cv-desc">
-          <strong>Subbaraman, R.</strong> (2025c). <em>GRaMC: Grain Reconstruction and Multi stage Cleaning</em>. A heuristic microstructural reconstruction framework featuring automated crystallographic twin merging and dynamic population filtering to extract robust quantitative datasets. <a href="https://doi.org/10.5281/zenodo.18107589" target="_blank">DOI: 10.5281/zenodo.18107589</a>
+    <!-- GRaMC Card -->
+    <div class="og-preview">
+      <div class="og-top-bar">
+        <div class="og-domain">
+          <i class="fas fa-code"></i> Zenodo • 2025c • DOI: 10.5281/zenodo.18107589
         </div>
+        <div class="og-badges">
+          <span class="og-badge">MATLAB</span>
+          <span class="og-badge">MTEX</span>
+          <span class="og-badge oa">GPLv3</span>
+        </div>
+      </div>
+
+      <h3 class="og-title">
+        <a href="https://doi.org/10.5281/zenodo.18107589" target="_blank" rel="noopener">
+          GRaMC: Grain Reconstruction and Multi stage Cleaning
+        </a>
+      </h3>
+
+      <div class="og-authors">
+        <strong>Rahul Subbaraman</strong>
+      </div>
+
+      <div style="font-size:0.9rem;color:var(--muted);line-height:1.65;font-weight:300;margin-bottom:0.85rem;">
+        A heuristic grain level reconstruction and microstructural restoration framework for EBSD data designed to operate in tandem with MAPClean. Moves beyond standard MTEX reconstruction by incorporating automated phase splitting, zero GOS artefact removal, crystallographic twin merging, pixel level daughter grain reorientation and area based population filtering.
+      </div>
+
+      <div class="og-footer">
+        <a href="https://doi.org/10.5281/zenodo.18107589" target="_blank" rel="noopener" class="og-cta">
+          View repository and code on Zenodo (DOI: 10.5281/zenodo.18107589) ↗
+        </a>
+      </div>
+      <br>
+
+      <div class="pub-toggles">
+        <details class="pub-details">
+          <summary>Overview: Specialists & General Audience</summary>
+          <div class="details-box">
+            <p style="margin-bottom:0.85rem;"><strong style="color:var(--ink);font-weight:600;">For specialists:</strong> Following pixel level restoration with MAPClean, GRaMC takes the cleaned EBSD output and applies phase aware grain reconstruction logic. Standard grain reconstruction workflows can still struggle at the mesoscale when datasets contain fragmented grains, twin related domains and artefactual grain populations. GRaMC addresses this through a multi stage reconstruction workflow incorporating adaptive cleanup, crystallographic twin merging, grain size diagnostics and population filtering. Applied downstream of MAPClean, it enables the generation of physically consistent, analysis ready grain datasets from large and previously problematic EBSD maps.</p>
+            <p><strong style="color:var(--ink);font-weight:600;">For non specialists:</strong> After noisy EBSD maps are restored, the next challenge is deciding which mapped points belong to the same crystal. This is not always straightforward because crystals may be broken into fragments by noise, polishing effects or internal structures such as twins. GRaMC acts as a digital grain reconstruction tool. It rebuilds crystals from cleaned EBSD data, removes unreliable grain artefacts, merges related crystal fragments and produces grain maps that can be used for later microstructural and texture analysis.</p>
+          </div>
+        </details>
+
+        <details class="pub-details">
+          <summary>Pipeline Architecture & Key Features</summary>
+          <div class="details-box">
+            <ul>
+              <li><strong style="color:var(--ink);font-weight:600;">Phase Splitting & Multi stage Checkpointing:</strong> Automatically splits MAPClean outputs into phase specific <code>.ctf</code> files (processing Diopside, Forsterite and Anorthite independently) with checkpointed inspection at every major reconstruction stage.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Initial Reconstruction & GOS = 0 Cleanup:</strong> Reconstructs grains using a fixed misorientation threshold, removes sub resolution noise below a minimum pixel count and resets artefactual zero Grain Orientation Spread (<code>GOS = 0</code>) grains in Anorthite to <code>notIndexed</code> prior to recalculation.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Crystallographic Twin Boundary Merging:</strong> Automatically detects and merges Anorthite grains separated by specific twin laws: Albite, Pericline, Carlsbad, Manebach, Baveno Right, Baveno Left, <code>Ala_A</code> and <code>Ala_B</code>.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Pixel Level Daughter Reorientation & Property Recalculation:</strong> Rotates daughter grain EBSD pixels into the parent reference frame after twin merging to maintain physical consistency and recalculates area weighted mean orientations and GOS.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Grain Size Diagnostics & Population Filtering:</strong> Exports <code>log10(area)</code> histograms and colour coded grain maps to apply sample specific area thresholds, isolating target crystal frameworks from fine grained microlite populations.</li>
+            </ul>
+          </div>
+        </details>
       </div>
     </div>
 
-    <div class="cv-item">
-      <div><div class="cv-date">GRaFT (2025)</div></div>
-      <div>
-        <div class="cv-desc">
-          <strong>Subbaraman, R.</strong> (2025d). <em>GRaFT: Grain Resolved analysis of Fabric and Texture</em>. A dual environment analytical ecosystem bridging MATLAB and Python to automate the extraction, statistical visualisation and cross sample synthesis of multidimensional textural data. <a href="https://doi.org/10.5281/zenodo.18107626" target="_blank">DOI: 10.5281/zenodo.18107626</a>
+    <!-- GRaFT Card -->
+    <div class="og-preview">
+      <div class="og-top-bar">
+        <div class="og-domain">
+          <i class="fas fa-code"></i> Zenodo • 2025d • DOI: 10.5281/zenodo.18107626
         </div>
+        <div class="og-badges">
+          <span class="og-badge">MATLAB</span>
+          <span class="og-badge">MTEX</span>
+          <span class="og-badge">Python</span>
+          <span class="og-badge oa">GPLv3</span>
+        </div>
+      </div>
+
+      <h3 class="og-title">
+        <a href="https://doi.org/10.5281/zenodo.18107626" target="_blank" rel="noopener">
+          GRaFT: Grain Resolved analysis of Fabric and Texture
+        </a>
+      </h3>
+
+      <div class="og-authors">
+        <strong>Rahul Subbaraman</strong>
+      </div>
+
+      <div style="font-size:0.9rem;color:var(--muted);line-height:1.65;font-weight:300;margin-bottom:0.85rem;">
+        A dual environment analytical workflow bridging MATLAB and Python for process agnostic quantitative texture and microstructural analysis of reconstructed EBSD datasets. While GRaMC outputs can be fed into any custom statistical script, GRaFT was built using identical variable naming conventions and data structures to provide a seamless, end to end pipeline from raw EBSD data to statistical synthesis.
+      </div>
+
+      <div class="og-footer">
+        <a href="https://doi.org/10.5281/zenodo.18107626" target="_blank" rel="noopener" class="og-cta">
+          View repository and code on Zenodo (DOI: 10.5281/zenodo.18107626) ↗
+        </a>
+      </div>
+      <br>
+
+      <div class="pub-toggles">
+        <details class="pub-details">
+          <summary>Overview: Specialists & General Audience</summary>
+          <div class="details-box">
+            <p style="margin-bottom:0.85rem;"><strong style="color:var(--ink);font-weight:600;">For specialists:</strong> Although the reconstructed grain outputs from GRaMC (<code>*_finalGrains.mat</code>) can be used as input for any custom statistical or analytical code, GRaFT was developed as the dedicated third stage of the MAPClean ecosystem. By maintaining identical variable naming conventions and data structures across all three tools, it establishes a seamless workflow from raw pixel level EBSD data to final statistical synthesis. The workflow separates computation across two linked environments: the MATLAB and MTEX stage processes <code>*_finalGrains.mat</code> objects to compute Orientation Distribution Functions (ODFs), fabric tensors, grain scale morphological parameters, pixel scale intracrystalline deformation metrics (GOS, GROD and KAM) and grain contact pair geometries, exporting 11 publication ready map types per phase. A companion Python workflow ingests the exported CSV datasets for distributional analysis, population comparison and cross sample synthesis.</p>
+            <p><strong style="color:var(--ink);font-weight:600;">For non specialists:</strong> Once individual crystals have been digitally rebuilt from a rock scan by GRaMC, that data is ready to be analysed by any statistical software. GRaFT was built as a dedicated companion tool to make the transition from raw scan data to final statistics completely automatic. It measures the shapes, sizes, alignments and internal strain of the reconstructed crystals, generates visual maps of their properties and transfers the results directly into Python to compare crystal populations across different rock samples.</p>
+          </div>
+        </details>
+
+        <details class="pub-details">
+          <summary>Pipeline Architecture & Key Features</summary>
+          <div class="details-box">
+            <ul>
+              <li><strong style="color:var(--ink);font-weight:600;">Seamless End to End Ecosystem:</strong> While GRaMC outputs (<code>*_finalGrains.mat</code>) are compatible with any external analysis script, GRaFT shares exact variable naming conventions and data structures with MAPClean and GRaMC to provide a unified, three part pipeline from raw EBSD data to statistical interpretation.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Dual Environment Architecture:</strong> Separates crystallographic and geometric computation in MATLAB and MTEX (EBSD loading, grain object analysis, checkpointing, map export and CSV generation) from downstream statistical plotting and cross sample synthesis in Python.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Core Texture & Fabric Quantification:</strong> Automates Orientation Distribution Function (ODF) calculation, Pole Figure (PF) and Inverse Pole Figure (IPF) generation, texture strength quantification and fabric tensor analysis across Anorthite, Forsterite and Diopside.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Grain Scale Morphological Analysis:</strong> Quantifies Equivalent Circular Diameter (ECD), aspect ratio, long axis orientation, ellipse fitting and crystal shape visualisations for every reconstructed grain.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Pixel Scale Intracrystalline Deformation:</strong> Maps internal crystal strain using Grain Orientation Spread (GOS), Grain Reference Orientation Deviation (GROD), Kernel Average Misorientation (KAM) and GROD/GOS ratio distributions.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Contact Network & Pair Analysis:</strong> Evaluates local framework organisation by computing grain pair misorientations alongside long axis and crystallographic axis angular comparisons.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Automated 11 Map Export Suite:</strong> Exports 11 standardised publication ready maps per mineral phase: <code>01</code> Pole Figure (PF), <code>02</code> Inverse Pole Figure (IPF), <code>03</code> Aspect Ratio Map, <code>04</code> Grain Size (ECD) Map, <code>05</code> Long Axis Orientation Map, <code>06</code> GOS Map, <code>07</code> GROD Map, <code>08</code> GROD/GOS Ratio Map, <code>09</code> Crystal Shape Map, <code>10</code> KAM Map and <code>11</code> Ellipse Fit Map.</li>
+            </ul>
+          </div>
+        </details>
       </div>
     </div>
 
+    <!-- Remaining Software Entries -->
     <div class="cv-item">
       <div><div class="cv-date">DenCalc (2025)</div></div>
       <div>
