@@ -46,11 +46,56 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .cv-desc a{color:var(--warm);text-decoration:none;font-weight:400}
 .cv-desc a:hover{text-decoration:underline}
 
+/* EPSL Featured Publisher Card */
+.epsl-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.75rem;margin-bottom:2rem;width:100%}
+
+.og-preview{background:var(--parchment);border:1px solid var(--border);border-left:4px solid var(--warm);border-radius:8px;padding:1.35rem 1.5rem;margin-bottom:1.25rem}
+.og-top-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.65rem}
+.og-domain{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:0.4rem}
+.og-badges{display:flex;gap:0.45rem;flex-wrap:wrap;align-items:center}
+.og-badge{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;padding:0.2rem 0.6rem;border-radius:4px;font-weight:600;background:var(--border);color:var(--ink)}
+.og-badge.oa{background:var(--green);color:#fff}
+.og-badge.cc{background:transparent;border:1px solid var(--border);color:var(--muted);font-weight:400}
+
+.og-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--ink);line-height:1.35;margin-bottom:0.6rem}
+.og-title a{color:inherit;text-decoration:none;transition:color 0.2s}
+.og-title a:hover{color:var(--warm)}
+
+.og-authors{font-size:0.92rem;color:var(--ink);line-height:1.6;margin-bottom:0.6rem;font-weight:400}
+.og-authors strong{font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.og-authors sup{font-size:0.7rem;color:var(--warm);font-weight:600;margin-left:1px}
+
+.og-affiliations{font-size:0.8rem;color:var(--muted);line-height:1.55;margin-bottom:0.85rem;font-weight:300;padding-left:0.75rem;border-left:2px solid var(--border)}
+.og-affiliations div{margin-bottom:0.2rem}
+.og-affiliations sup{font-weight:600;color:var(--ink);margin-right:0.25rem}
+
+.og-history{font-size:0.78rem;color:var(--muted);line-height:1.6;padding-top:0.75rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:0.25rem}
+.og-editor{font-weight:500;color:var(--ink)}
+
+.og-footer{margin-top:0.9rem;padding-top:0.75rem;border-top:1px dashed var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem}
+.og-cta{font-size:0.82rem;color:var(--warm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem}
+.og-cta:hover{text-decoration:underline}
+
+.pub-toggles{display:flex;flex-direction:column;gap:0.6rem;padding-top:0.25rem}
+.pub-details summary{font-size:0.82rem;font-weight:600;color:var(--warm);cursor:pointer;user-select:none;text-transform:uppercase;letter-spacing:0.05em;list-style:none;display:inline-flex;align-items:center;gap:0.45rem}
+.pub-details summary::-webkit-details-marker{display:none}
+.pub-details summary::before{content:'+';font-weight:700;font-size:0.95rem}
+.pub-details[open] summary::before{content:'−'}
+.details-box{margin-top:0.75rem;margin-bottom:0.4rem;font-size:0.9rem;color:var(--muted);line-height:1.75;font-weight:300;background:var(--parchment);padding:1.1rem 1.35rem;border-radius:6px;border-left:3px solid var(--warm)}
+.details-box ul{list-style:none;margin:0;padding:0}
+.details-box li{position:relative;padding-left:1.1rem;margin-bottom:0.4rem}
+.details-box li:last-child{margin-bottom:0}
+.details-box li::before{content:'•';position:absolute;left:0;color:var(--warm)}
+
+.kw-list{display:flex;flex-wrap:wrap;gap:0.45rem;margin-top:0.5rem}
+.kw-tag{font-size:0.78rem;color:var(--ink);background:var(--card);border:1px solid var(--border);padding:0.25rem 0.75rem;border-radius:14px;font-weight:400}
+
 @media(max-width:768px){
   .nav-back{padding:1rem 1.5rem}
   .cv-container{padding:3rem 1.5rem}
   .cv-item{grid-template-columns:1fr;gap:0.4rem}
   .cv-date{padding-top:0;margin-bottom:0.2rem;color:var(--warm)}
+  .og-preview{padding:1.1rem}
 }
 </style>
 </head>
@@ -72,17 +117,86 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   </header>
 
   <section class="cv-section">
-    <h2 class="section-title">Peer Reviewed Publications & Manuscripts</h2>
+    <h2 class="section-title">Peer Reviewed Publications</h2>
     
-    <div class="cv-item">
-      <div><div class="cv-date">Published (2026)</div></div>
-      <div>
-        <div class="cv-desc">
-          <strong>Subbaraman, R.</strong>, Hartley, M. E., Fellowes, J., Polacci, M., Bonechi, B., Pappalardo, L., Buono, G. and Neave, D. A. (2026). Insights into the 3D structure and behaviour of Icelandic crystal mushes from gabbroic nodules. <em>Earth and Planetary Science Letters</em>, 676, 119791. <a href="https://doi.org/10.1016/j.epsl.2025.119791" target="_blank">DOI: 10.1016/j.epsl.2025.119791</a>
+    <div class="epsl-card">
+      <!-- Publisher Header & Metadata Preview -->
+      <div class="og-preview">
+        <div class="og-top-bar">
+          <div class="og-domain">
+            <i class="fas fa-book-open"></i> Earth and Planetary Science Letters • Vol. 676, 119791 (2026)
+          </div>
+          <div class="og-badges">
+            <span class="og-badge">Short communication</span>
+            <span class="og-badge oa">Open access</span>
+          </div>
         </div>
+
+        <h3 class="og-title">
+          <a href="https://doi.org/10.1016/j.epsl.2025.119791" target="_blank" rel="noopener">
+            Insights into the 3D structure and behaviour of Icelandic crystal mushes from gabbroic nodules
+          </a>
+        </h3>
+
+        <div class="og-authors">
+          <strong>Rahul Subbaraman</strong><sup>a</sup>, Margaret E. Hartley<sup>a</sup>, Jonathan Fellowes<sup>a</sup>, Margherita Polacci<sup>a</sup>, Barbara Bonechi<sup>a</sup>, Lucia Pappalardo<sup>b</sup>, Gianmarco Buono<sup>b</sup> and David A. Neave<sup>a</sup>
+        </div>
+
+        <div class="og-affiliations">
+          <div><sup>a</sup>Department of Earth and Environmental Sciences, University of Manchester, Oxford Road, Manchester, M13 9PL, UK</div>
+          <div><sup>b</sup>Istituto Nazionale di Geofisica e Vulcanologia, Osservatorio Vesuviano, Sezione di Napoli, Via Diocleziano, 328, Napoli, 80125, NA, Italy</div>
+        </div>
+
+        <div class="og-history">
+          <div>Available online 28 December 2025, Published:  15 February 2026.</div>
+          <div class="og-editor">Editor: Dr C. M. Petrone</div>
+        </div>
+
+        <div class="og-footer">
+          <a href="https://doi.org/10.1016/j.epsl.2025.119791" target="_blank" rel="noopener" class="og-cta">
+            Get content on ScienceDirect (DOI: 10.1016/j.epsl.2025.119791) ↗
+          </a>
+        </div>
+ <br>
+
+      <!-- Expandable Highlights, Abstract & Keywords -->
+      <div class="pub-toggles">
+        <details class="pub-details">
+          <summary>Highlights</summary>
+          <div class="details-box">
+            <ul>
+              <li>Gabbroic nodules sample plagioclase rich roof cumulates in upper crustal mushes.</li>
+              <li>Recycled plagioclase cores and zoning show non steady growth in homogeneous melts.</li>
+              <li>Volatile saturation and high vesicularity suggest free CO<sub>2</sub> rich vapour.</li>
+              <li>Strong framework and connected bubble networks enable nodule preservation.</li>
+              <li>Loss of connectivity drives disaggregation into plagioclase rich crystal cargoes.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="pub-details">
+          <summary>Abstract</summary>
+          <div class="details-box">
+            Crystal mushes, porous yet cohesive frameworks of crystals interspersed with interstitial melts, form the plumbing systems of most active volcanoes. In Iceland, magmatic plumbing systems are inferred to be constructed from vertically stacked mushy magma reservoirs separated by subsolidus rock. Gabbroic nodules from Gígöldur in central Iceland provide a rare window into the structure, evolution and degassing behaviour of upper crustal (6 to 10 km) mushy magma reservoirs. These plagioclase rich nodules preserve recycled high An plagioclase cores, rim overgrowths and interstitial crystallisation of mafic phases, reflecting in situ modification within the final storage reservoir and roof cumulate formation via density driven segregation. Oscillatory zoning and variable rim patterns indicate that crystals experienced non steady state growth and were incorporated into clusters at different times. Compositional similarities between carrier and interstitial melts demonstrate that the final stages of mush evolution occurred in relatively homogeneous melts. Volatile saturation pressures of ~2.0 to 2.8 kbar, together with high vesicularities (21 to 30 vol.%) and extensive connectivities (greater than 93%), are consistent with the presence of a CO<sub>2</sub> rich vapour phase within the mush. Nodules are erupted when a rigid crystal framework and a well connected bubble network that enables effective degassing preserve their integrity. When bubble networks fail to form, degassing disrupts the framework, even if initially rigid, causing disaggregation into plagioclase phyric crystal cargoes, akin to plagioclase ultraphyric basalts erupted in diverse settings. Nodules record the dynamics of stratified mushy magma reservoirs, the influence of volatiles on mush behaviour and the transport of crystalline material in active volcanic systems, providing key insights into how crystal mushes shape the storage and mobilisation of magma in the Earth’s crust.
+          </div>
+        </details>
+
+        <details class="pub-details">
+          <summary>Keywords</summary>
+          <div class="details-box">
+            <div class="kw-list">
+              <span class="kw-tag">Gabbroic nodules</span>
+              <span class="kw-tag">Crystal mush</span>
+              <span class="kw-tag">Magma plumbing system</span>
+              <span class="kw-tag">Plagioclase rich cumulates</span>
+              <span class="kw-tag">Stratified magma reservoirs</span>
+              <span class="kw-tag">Icelandic volcanism</span>
+            </div>
+          </div>
+        </details>
       </div>
     </div>
-
+     </div>
     <div class="cv-item">
       <div><div class="cv-date">In Preparation</div></div>
       <div>
