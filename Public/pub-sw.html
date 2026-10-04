@@ -404,16 +404,64 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       </div>
     </div>
 
-    <!-- Remaining Software Entries -->
-    <div class="cv-item">
-      <div><div class="cv-date">DenCalc (2025)</div></div>
-      <div>
-        <div class="cv-desc">
-          <strong>Subbaraman, R.</strong> (2025a). <em>DenCalc: Density Calculator</em>. A Python based thermodynamic modelling utility utilising pandas and NumPy to compute complex phase specific and bulk densities of rocks and their carrier melts by integrating pressure, temperature and multicomponent geochemical datasets. <a href="https://doi.org/10.5281/zenodo.16943747" target="_blank">DOI: 10.5281/zenodo.16943747</a>
+    <!-- DenCalc Card -->
+    <div class="og-preview">
+      <div class="og-top-bar">
+        <div class="og-domain">
+          <i class="fas fa-code"></i> Zenodo • 2025a • DOI: 10.5281/zenodo.16943747
+        </div>
+        <div class="og-badges">
+          <span class="og-badge">Python</span>
+          <span class="og-badge">pandas</span>
+          <span class="og-badge">NumPy</span>
+          <span class="og-badge oa">Open Source</span>
         </div>
       </div>
-    </div>
 
+      <h3 class="og-title">
+        <a href="https://doi.org/10.5281/zenodo.16943747" target="_blank" rel="noopener">
+          DenCalc: Density Calculator
+        </a>
+      </h3>
+
+      <div class="og-authors">
+        <strong>Rahul Subbaraman</strong>
+      </div>
+
+      <div style="font-size:0.9rem;color:var(--muted);line-height:1.65;font-weight:300;margin-bottom:0.85rem;">
+        A Python based thermodynamic modelling utility utilising <code>pandas</code> and <code>NumPy</code> to compute phase specific and bulk densities of Icelandic gabbroic nodules and their carrier melts. Integrates multicomponent oxide compositions, pressure and temperature estimates and modal proportions to evaluate carrier melt, interstitial melt and crystalline phase densities.
+      </div>
+
+      <div class="og-footer">
+        <a href="https://doi.org/10.5281/zenodo.16943747" target="_blank" rel="noopener" class="og-cta">
+          View repository and code on Zenodo (DOI: 10.5281/zenodo.16943747) ↗
+        </a>
+      </div>
+      <br>
+
+      <div class="pub-toggles">
+        <details class="pub-details">
+          <summary>Overview: Specialists & General Audience</summary>
+          <div class="details-box">
+            <p style="margin-bottom:0.85rem;"><strong style="color:var(--ink);font-weight:600;">For specialists:</strong> DenCalc is a Python based thermodynamic calculation workflow designed to quantify the buoyancy and physical properties of Icelandic gabbroic nodules and their host magmas. The pipeline ingests average phase oxide compositions (<code>Average_Phase_Comp.csv</code>), thermobarometric constraints (<code>OPAM_HS24_PT.csv</code>) and modal phase proportions (<code>Modal_Propn.csv</code>) to compute densities across three distinct structural domains: carrier melt (scoria matrix glass), interstitial melt (nodule matrix) and mineral phases (plagioclase, olivine and clinopyroxene). Liquid densities incorporate empirical dissolved water estimations (<code>H2O = MgO * 0.052</code>) alongside thermodynamic pressure and temperature corrections, before combining phase specific densities with modal proportions to output bulk nodule density records (<code>exports/Density.csv</code>).</p>
+            <p><strong style="color:var(--ink);font-weight:600;">For non specialists:</strong> Whether crystal clusters float, sink or get carried to the surface during a volcanic eruption depends on their density compared to the surrounding liquid magma. DenCalc is a Python calculator that determines the exact density of both the solid crystals and the molten rock at deep underground pressures and temperatures. By combining the chemical makeup of each mineral with its volume fraction inside the rock, the tool calculates the overall density of the crystal nodules and the host magma.</p>
+          </div>
+        </details>
+
+        <details class="pub-details">
+          <summary>Pipeline Architecture & Key Features</summary>
+          <div class="details-box">
+            <ul>
+              <li><strong style="color:var(--ink);font-weight:600;">Automated Geochemical & Thermobarometric Ingestion:</strong> Reads <code>Average_Phase_Comp.csv</code> to partition compositional dataframes into carrier melt (<code>liq</code>), interstitial matrix melt (<code>mat</code>) and crystalline phases (<code>xl</code>), dynamically appending pressure and temperature constraints from <code>OPAM_HS24_PT.csv</code>.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Liquid & Matrix Melt Density Calculation:</strong> Passes <code>liq</code> and <code>mat</code> structures through <code>calculate_liquid_density()</code>, applying thermodynamic corrections and empirical dissolved water scaling (<code>H2O = MgO * 0.052</code>).</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Crystalline Phase Density Modelling:</strong> Evaluates solid phase densities across plagioclase, olivine and clinopyroxene by passing <code>xl</code> compositions and pressure and temperature conditions through <code>calculate_mineral_density()</code>.</li>
+              <li><strong style="color:var(--ink);font-weight:600;">Modal Integration & Bulk Nodule Synthesis:</strong> Combines phase resolved density dataframes with modal mineralogy (<code>propn</code> from <code>Modal_Propn.csv</code>) via <code>compute_bulk_density()</code>, exporting unified liquid, matrix, mineral and bulk nodule density tables to <code>exports/Density.csv</code>.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </div>
+    <!-- Remaining Software Entries -->
     <div class="cv-item">
       <div><div class="cv-date">LaTeCT</div></div>
       <div>
