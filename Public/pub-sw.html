@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Publications & Software | Rahul Subbaraman</title>
-<meta name="description" content="Academic publications, scientific software ecosystems, datasets and conference abstracts by Rahul Subbaraman.">
+<meta name="description" content="Academic publications, scientific software ecosystems, datasets and conference Presentations by Rahul Subbaraman.">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a1208">
 <meta name="mobile-web-app-capable" content="yes">
@@ -63,7 +63,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .og-authors strong{font-weight:700;text-decoration:underline;text-underline-offset:3px}
 .og-authors sup{font-size:0.7rem;color:var(--warm);font-weight:600;margin-left:1px}
 
-.og-affiliations{font-size:0.8rem;color:var(--muted);line-height:1.55;margin-bottom:0.85rem;font-weight:300}
+.og-affiliations{font-size:0.8rem;color:var(--muted);line-height:1.55;margin-bottom:0.85rem}
 .og-affiliations div{margin-bottom:0.2rem}
 .og-affiliations sup{font-weight:600;color:var(--ink);margin-right:0.25rem}
 
@@ -106,7 +106,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 <div class="cv-container">
   <header class="cv-header">
     <h1 class="cv-name">Research Outputs</h1>
-    <div class="cv-title">Publications | Scientific Software | Datasets | Conference Abstracts</div>
+    <div class="cv-title">Publications | Scientific Software | Datasets | Conference Presentations</div>
     <div class="cv-contact">
       <a href="https://orcid.org/0000-0003-3801-3029" target="_blank"><i class="fab fa-orcid"></i> ORCID</a>
       <a href="https://github.com/rahulrox9" target="_blank"><i class="fab fa-github"></i> GitHub</a>
@@ -156,7 +156,6 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       </div>
       <br>
 
-      <!-- Expandable Highlights, Abstract & Keywords -->
       <div class="pub-toggles">
         <details class="pub-details">
           <summary>Highlights</summary>
@@ -461,22 +460,56 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         </details>
       </div>
     </div>
-    <!-- Remaining Software Entries -->
-    <div class="cv-item">
-      <div><div class="cv-date">LaTeCT</div></div>
-      <div>
-        <div class="cv-desc">
-          <strong>LaTeCT:</strong> An end to end open source Python machine learning pipeline encompassing automated data preprocessing, unsupervised clustering and optimised Random Forest classification to derive predictive models from complex geochemical datasets.
+
+    <!-- LaTeCT Software Card -->
+    <div class="og-preview">
+      <div class="og-top-bar">
+        <div class="og-domain">
+          <i class="fas fa-code"></i> Open Source • Machine Learning
         </div>
+        <div class="og-badges">
+          <span class="og-badge">Python</span>
+          <span class="og-badge">Random Forest</span>
+          <span class="og-badge oa">Open Source</span>
+        </div>
+      </div>
+
+      <h3 class="og-title">
+        LaTeCT: Machine Learning Geochemical Pipeline
+      </h3>
+
+      <div class="og-authors">
+        <strong>Rahul Subbaraman</strong>
+      </div>
+
+      <div style="font-size:0.9rem;color:var(--muted);line-height:1.65;font-weight:300;margin-bottom:0.85rem;">
+        An end to end open source Python machine learning pipeline encompassing automated data preprocessing, unsupervised clustering and optimised Random Forest classification to derive predictive models from complex geochemical datasets.
       </div>
     </div>
 
-    <div class="cv-item">
-      <div><div class="cv-date">MOSAIC (In Dev)</div></div>
-      <div>
-        <div class="cv-desc">
-          <strong>MOSAIC:</strong> A comprehensive open source statistical framework for the multivariate analysis of compositional datasets. Integrates unsupervised machine learning (PCA, k means), robust distributional comparisons (Wasserstein distances, bootstrap resampling) and multidimensional variance metrics (Mahalanobis distances) to quantify latent population structures and complex chemical heterogeneity.
+    <!-- MOSAIC Software Card -->
+    <div class="og-preview">
+      <div class="og-top-bar">
+        <div class="og-domain">
+          <i class="fas fa-code"></i> Open Source • In Development
         </div>
+        <div class="og-badges">
+          <span class="og-badge">Python</span>
+          <span class="og-badge">Statistics</span>
+          <span class="og-badge oa">Open Source</span>
+        </div>
+      </div>
+
+      <h3 class="og-title">
+        MOSAIC: Multivariate Compositional Framework
+      </h3>
+
+      <div class="og-authors">
+        <strong>Rahul Subbaraman</strong>
+      </div>
+
+      <div style="font-size:0.9rem;color:var(--muted);line-height:1.65;font-weight:300;margin-bottom:0.85rem;">
+        A comprehensive open source statistical framework for the multivariate analysis of compositional datasets. Integrates unsupervised machine learning (PCA, k means), robust distributional comparisons (Wasserstein distances, bootstrap resampling) and multidimensional variance metrics (Mahalanobis distances) to quantify latent population structures and complex chemical heterogeneity.
       </div>
     </div>
   </section>
@@ -484,70 +517,415 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <section class="cv-section">
     <h2 class="section-title">Published Datasets</h2>
     
-    <div class="cv-item">
-      <div><div class="cv-date">2026</div></div>
-      <div>
-        <div class="cv-desc">
-          <strong>Subbaraman, R.</strong> (2026c). <em>X ray computed micro tomography (XCT) 3D cleaned datasets of Icelandic gabbroic nodules.</em> University of Manchester. Dataset. <a href="https://doi.org/10.48420/32750592" target="_blank">DOI: 10.48420/32750592</a>
+    <!-- MAPClean EBSD Processing Outputs Dataset Card (2026) -->
+    <div class="og-preview">
+      <div class="og-top-bar">
+        <div class="og-domain">
+          <i class="fas fa-database"></i> University of Manchester Figshare • Dataset (2026)
         </div>
+        <div class="og-badges">
+          <span class="og-badge">Dataset</span>
+          <span class="og-badge oa">Open Access</span>
+        </div>
+      </div>
+
+      <h3 class="og-title">
+        <a href="https://doi.org/10.48420/31914846" target="_blank" rel="noopener">
+          MAPClean EBSD Processing Outputs: Gabbroic Nodules from Gígöldur, Iceland
+        </a>
+      </h3>
+
+      <div class="og-authors">
+        <strong>Rahul Subbaraman</strong>
+      </div>
+
+      <div class="og-affiliations">
+        <div>Department of Earth and Environmental Sciences, University of Manchester</div>
+      </div>
+
+      <div class="og-history">
+        <div>Date made available: 2 Apr 2026 • Publisher: University of Manchester Figshare</div>
+      </div>
+
+      <div class="og-footer">
+        <a href="https://doi.org/10.48420/31914846" target="_blank" rel="noopener" class="og-cta">
+          Access dataset on Figshare (DOI: 10.48420/31914846) ↗
+        </a>
+      </div>
+      <br>
+
+      <div class="pub-toggles">
+        <details class="pub-details">
+          <summary>Description</summary>
+          <div class="details-box">
+            This dataset contains the processing outputs generated by MAPClean, a MATLAB-based EBSD map cleaning and processing tool, applied to electron backscatter diffraction (EBSD) data from gabbroic nodules collected at Gígöldur, Iceland. Samples contain plagioclase, clinopyroxene, and olivine. The dataset is organised into three components: (1) figure outputs, arranged by sample name, including inverse pole figure (IPF) maps for all phases present and phase maps generated at each successive stage of the cleaning workflow, allowing direct visual comparison of map quality before and after each processing step; (2) log files recording processing parameters and decisions for each sample; and (3) checkpoint files enabling reproduction or resumption of processing runs. These outputs are released to support replication of results reported in an associated forthcoming publication, and to enable community reuse of MAPClean with reference material from a natural petrological dataset.
+          </div>
+        </details>
+
+        <details class="pub-details">
+          <summary>Keywords</summary>
+          <div class="details-box">
+            <div class="kw-list">
+              <span class="kw-tag">EBSD</span>
+              <span class="kw-tag">MAPClean</span>
+              <span class="kw-tag">Forsterite Olivine</span>
+              <span class="kw-tag">Anorthite Plagioclase</span>
+              <span class="kw-tag">Diopside Clinopyroxene</span>
+              <span class="kw-tag">Gabbroic nodules</span>
+              <span class="kw-tag">Gígöldur, Iceland</span>
+              <span class="kw-tag">IPF map</span>
+              <span class="kw-tag">phase map</span>
+              <span class="kw-tag">MTEX</span>
+              <span class="kw-tag">MATLAB</span>
+              <span class="kw-tag">pixel-level image cleaning</span>
+            </div>
+          </div>
+        </details>
       </div>
     </div>
 
-    <div class="cv-item">
-      <div><div class="cv-date">2026</div></div>
-      <div>
-        <div class="cv-desc">
-          <strong>Subbaraman, R.</strong> (2026b). <em>GRaMC EBSD Processing Outputs: Gabbroic Nodules from Gígöldur, Iceland.</em> University of Manchester. <a href="https://doi.org/10.48420/31985535" target="_blank">DOI: 10.48420/31985535</a>
+    <!-- XCT Cleaned Dataset Card (2026) -->
+    <div class="og-preview">
+      <div class="og-top-bar">
+        <div class="og-domain">
+          <i class="fas fa-database"></i> University of Manchester Figshare • Dataset (2026)
         </div>
+        <div class="og-badges">
+          <span class="og-badge">Dataset</span>
+          <span class="og-badge oa">Open Access</span>
+        </div>
+      </div>
+
+      <h3 class="og-title">
+        <a href="https://doi.org/10.48420/32750592" target="_blank" rel="noopener">
+          X-ray computed micro-tomography (XCT) 3D cleaned datasets of Icelandic gabbroic nodules
+        </a>
+      </h3>
+
+      <div class="og-authors">
+        <strong>Rahul Subbaraman</strong>
+      </div>
+
+      <div class="og-affiliations">
+        <div>Department of Earth and Environmental Sciences, University of Manchester</div>
+      </div>
+
+      <div class="og-history">
+        <div>Date made available: 25 Jun 2026 • Publisher: University of Manchester Figshare • Grant: EXCITE - EC - HORIZON 2020 - INFRAIA (Grant Agreement No. 101005611)</div>
+      </div>
+
+      <div class="og-footer">
+        <a href="https://doi.org/10.48420/32750592" target="_blank" rel="noopener" class="og-cta">
+          Access dataset on Figshare (DOI: 10.48420/32750592) ↗
+        </a>
+      </div>
+      <br>
+
+      <div class="pub-toggles">
+        <details class="pub-details">
+          <summary>Description</summary>
+          <div class="details-box">
+            X-ray computed tomography (XCT) was performed using a Carl Zeiss Xradia Versa-410 3D X-ray microscope at the Istituto Nazionale di Geofisica e Vulcanologia—Sezione di Napoli Osservatorio Vesuviano (INGV-OV), Naples, Italy. Scans were conducted in absorption mode, with 1601 projections acquired over a 360° rotation at 90 kV and 8 W, using an optical magnification of x0.4. This setup resulted in a nominal voxel size of 16.0918 μm. Data reconstruction was performed using XRMReconstructor, while vesicle and crystal geometries were characterised and quantified using Thermo Scientific™ Avizo v. 2019.1 and Fiji v1.54f. This research was conducted under the Trans-National Access action, supported by EXCITE - EC - HORIZON 2020 - INFRAIA 2020 Integrating Activities for Starting Communities (Grant Agreement No. 101005611).
+          </div>
+        </details>
+
+        <details class="pub-details">
+          <summary>Keywords</summary>
+          <div class="details-box">
+            <div class="kw-list">
+              <span class="kw-tag">X-ray computed micro-tomography</span>
+              <span class="kw-tag">Gabbroic nodules</span>
+            </div>
+          </div>
+        </details>
       </div>
     </div>
 
-    <div class="cv-item">
-      <div><div class="cv-date">2026</div></div>
-      <div>
-        <div class="cv-desc">
-          <strong>Subbaraman, R.</strong> (2026a). <em>MAPClean EBSD Processing Outputs: Gabbroic Nodules from Gígöldur, Iceland.</em> University of Manchester. <a href="https://doi.org/10.48420/31914846" target="_blank">DOI: 10.48420/31914846</a>
+    <!-- GRaMC EBSD Processing Outputs Dataset Card (2026) -->
+    <div class="og-preview">
+      <div class="og-top-bar">
+        <div class="og-domain">
+          <i class="fas fa-database"></i> University of Manchester Figshare • Dataset (2026)
         </div>
+        <div class="og-badges">
+          <span class="og-badge">Dataset</span>
+          <span class="og-badge oa">Open Access</span>
+        </div>
+      </div>
+
+      <h3 class="og-title">
+        <a href="https://doi.org/10.48420/31985535" target="_blank" rel="noopener">
+          GRaMC EBSD Processing Outputs: Gabbroic Nodules from Gígöldur, Iceland
+        </a>
+      </h3>
+
+      <div class="og-authors">
+        <strong>Rahul Subbaraman</strong>
+      </div>
+
+      <div class="og-affiliations">
+        <div>Department of Earth and Environmental Sciences, University of Manchester</div>
+      </div>
+
+      <div class="og-history">
+        <div>Date made available: 14 Apr 2026 • Publisher: University of Manchester Figshare</div>
+      </div>
+
+      <div class="og-footer">
+        <a href="https://doi.org/10.48420/31985535" target="_blank" rel="noopener" class="og-cta">
+          Access dataset on Figshare (DOI: 10.48420/31985535) ↗
+        </a>
+      </div>
+      <br>
+
+      <div class="pub-toggles">
+        <details class="pub-details">
+          <summary>Description</summary>
+          <div class="details-box">
+            This dataset contains the processing outputs generated by GRaMC, a MATLAB-based EBSD map cleaning and processing tool, applied to electron backscatter diffraction (EBSD) data from gabbroic nodules collected at Gígöldur, Iceland. Samples contain plagioclase, clinopyroxene and olivine. The dataset is organised into three components: (1) figure outputs arranged by sample name, including grain boundary maps, inverse pole figure (IPF) maps and grain orientation spread (GOS) maps for anorthite plagioclase at each successive stage of the cleaning workflow, allowing direct visual comparison of map quality before and after each processing step; (2) log files recording processing parameters and decisions for each sample; and (3) checkpoint files enabling reproduction or resumption of processing runs. These outputs are released to support replication of results reported in an associated forthcoming publication and to enable community reuse of GRaMC with reference material from a natural petrological dataset.
+          </div>
+        </details>
+
+        <details class="pub-details">
+          <summary>Keywords</summary>
+          <div class="details-box">
+            <div class="kw-list">
+              <span class="kw-tag">EBSD</span>
+              <span class="kw-tag">GRaMC</span>
+              <span class="kw-tag">Forsterite Olivine</span>
+              <span class="kw-tag">Diopside Clinopyroxene</span>
+              <span class="kw-tag">Anorthite Plagioclase</span>
+              <span class="kw-tag">Gabbroic Nodules</span>
+              <span class="kw-tag">Gígöldur, Iceland</span>
+              <span class="kw-tag">IPF map</span>
+              <span class="kw-tag">MTEX</span>
+              <span class="kw-tag">MATLAB</span>
+              <span class="kw-tag">Grain-level Image Cleaning</span>
+              <span class="kw-tag">GOS map</span>
+            </div>
+          </div>
+        </details>
       </div>
     </div>
 
-    <div class="cv-item">
-      <div><div class="cv-date">2025</div></div>
-      <div>
-        <div class="cv-desc">
-          <strong>Subbaraman, R.</strong> (2025e). <em>X ray computed micro tomography (XCT) 3D reconstructions of Icelandic gabbro nodules.</em> University of Manchester. <a href="https://doi.org/10.48420/28431773" target="_blank">DOI: 10.48420/28431773</a>
+    <!-- XCT Reconstructions Dataset Card (2025) -->
+    <div class="og-preview">
+      <div class="og-top-bar">
+        <div class="og-domain">
+          <i class="fas fa-database"></i> University of Manchester Figshare • Dataset (2025)
         </div>
+        <div class="og-badges">
+          <span class="og-badge">Dataset</span>
+          <span class="og-badge oa">CC BY 4.0</span>
+        </div>
+      </div>
+
+      <h3 class="og-title">
+        <a href="https://doi.org/10.48420/28431773.v1" target="_blank" rel="noopener">
+          X-ray computed micro-tomography (XCT) 3D reconstructions of Icelandic gabbro nodules
+        </a>
+      </h3>
+
+      <div class="og-authors">
+        <strong>Rahul Subbaraman</strong>, Margaret Hartley, Margherita Polacci, Barbara Bonechi, Lucia Pappalardo, Gianmarco Buono and David Neave
+      </div>
+
+      <div class="og-affiliations">
+        <div>Department of Earth and Environmental Sciences, The University of Manchester</div>
+      </div>
+
+      <div class="og-history">
+        <div>Date made available: 10 Mar 2025 • Publisher: University of Manchester Figshare • Grant: EXCITE - EC - HORIZON 2020 - INFRAIA (Grant Agreement No. 101005611)</div>
+      </div>
+
+      <div class="og-footer">
+        <a href="https://doi.org/10.48420/28431773.v1" target="_blank" rel="noopener" class="og-cta">
+          Access dataset on Figshare (DOI: 10.48420/28431773.v1) ↗
+        </a>
+      </div>
+      <br>
+
+      <div class="pub-toggles">
+        <details class="pub-details">
+          <summary>Description</summary>
+          <div class="details-box">
+            X-ray computed tomography (XCT) was performed using a Carl Zeiss Xradia Versa-410 3D X-ray microscope at the Istituto Nazionale di Geofisica e Vulcanologia—Sezione di Napoli Osservatorio Vesuviano (INGV-OV), Naples, Italy. Scans were conducted in absorption mode, with 1601 projections acquired over a 360° rotation at 90 kV and 8 W, using an optical magnification of x0.4. This setup resulted in a nominal voxel size of 16.0918 μm. Data reconstruction was performed using XRMReconstructor, while vesicle and crystal geometries were characterised and quantified using Thermo Scientific™ Avizo v. 2019.1 and Fiji v1.54f. This research was conducted under the Trans-National Access action, supported by EXCITE - EC - HORIZON 2020 - INFRAIA 2020 Integrating Activities for Starting Communities (Grant Agreement No. 101005611). The diameter of each core is approximately 15mm. Phase colour key: Plagioclase – Cyan, Mafic minerals (Olivine ± Clinopyroxene) – Orange, Glass – Green, Vesicles – Grey, Cr-spinel – Black. Figure naming convention: ALL – All phases combined, G – Glass, M – Mafics, O – Cr-spinel, P – Plagioclase, V – Vesicles, Con – Connected vesicles, Iso – Isolated vesicles, Large – Large vesicles, Tiny – Tiny vesicles.
+          </div>
+        </details>
+
+        <details class="pub-details">
+          <summary>Keywords</summary>
+          <div class="details-box">
+            <div class="kw-list">
+              <span class="kw-tag">X-ray computed micro-tomography</span>
+              <span class="kw-tag">Gabbro nodules</span>
+              <span class="kw-tag">Crystal Mushes</span>
+            </div>
+          </div>
+        </details>
       </div>
     </div>
 
-    <div class="cv-item">
-      <div><div class="cv-date">2025</div></div>
-      <div>
-        <div class="cv-desc">
-          <strong>Subbaraman, R.</strong>, Hartley, M. E. and Neave, D. A. (2025b). <em>Thin section scans of gabbro nodules, scoria, plagioclase phyric basalt, hyaloclastite from Gígöldur, central Iceland.</em> University of Manchester. <a href="https://doi.org/10.48420/28435859" target="_blank">DOI: 10.48420/28435859</a>
+    <!-- Thin Section Scans Dataset Card (2025) -->
+    <div class="og-preview">
+      <div class="og-top-bar">
+        <div class="og-domain">
+          <i class="fas fa-database"></i> University of Manchester Figshare • Dataset (2025)
         </div>
+        <div class="og-badges">
+          <span class="og-badge">Dataset</span>
+          <span class="og-badge oa">CC BY 4.0</span>
+        </div>
+      </div>
+
+      <h3 class="og-title">
+        <a href="https://doi.org/10.48420/28435859.v1" target="_blank" rel="noopener">
+          Thin section scans of gabbro nodules, scoria, plagioclase-phyric basalt, hyaloclastite from Gígöldur, central Iceland
+        </a>
+      </h3>
+
+      <div class="og-authors">
+        <strong>Rahul Subbaraman</strong>, Margaret Hartley and David Neave
+      </div>
+
+      <div class="og-affiliations">
+        <div>Department of Earth and Environmental Sciences, The University of Manchester</div>
+      </div>
+
+      <div class="og-history">
+        <div>Date made available: 10 Mar 2025 • Publisher: University of Manchester Figshare</div>
+      </div>
+
+      <div class="og-footer">
+        <a href="https://doi.org/10.48420/28435859.v1" target="_blank" rel="noopener" class="og-cta">
+          Access dataset on Figshare (DOI: 10.48420/28435859.v1) ↗
+        </a>
+      </div>
+      <br>
+
+      <div class="pub-toggles">
+        <details class="pub-details">
+          <summary>Description</summary>
+          <div class="details-box">
+            Plane-polarised light (PPL), partial cross-polarised light (PXPL), and cross-polarised light (XPL) thin section scans were obtained for gabbroic nodules, scoria, plagioclase-phyric basalt, and hyaloclastite from Gígöldur, central Iceland. The PXPL scans are captured with a polariser-analyser angle of 45° to avoid the complete extinction of the silicate phases. The scale bars represent 5mm. Gígöldur is a broad NNE–SSW-trending ridge composed of interlayered hyaloclastites and postglacial craters, located in the highlands north of Vatnajökull glacier. Samples were collected from three locations along the ridge: Gígöldur North (GO23-04), Gígöldur Central (GO19-01 &amp; GO23-01), and Gígöldur South (GO19-02, GO23-02 &amp; GO23-03). The nodules, 5-10 cm in size, are rounded to sub-angular and consist primarily of plagioclase aggregates encased in glass. They contain small but variable amounts of interstitial olivine and, occasionally, dark green clinopyroxene. The scoria clasts, 2-5 cm in size, are highly vesicular, with predominantly circular, uncoalesced vesicles. The hyaloclastite samples consist of angular glass shards, plagioclase and olivine crystals, and fine-grained volcanic debris. The plagioclase-phyric basalt consists of plagioclase and mafic phenocrysts set in a variably porous glassy matrix.
+          </div>
+        </details>
+
+        <details class="pub-details">
+          <summary>Keywords</summary>
+          <div class="details-box">
+            <div class="kw-list">
+              <span class="kw-tag">Crystal Mushes</span>
+              <span class="kw-tag">Gabbroic Nodules</span>
+              <span class="kw-tag">Iceland</span>
+              <span class="kw-tag">Thin Sections</span>
+              <span class="kw-tag">Optical Microscopy</span>
+            </div>
+          </div>
+        </details>
       </div>
     </div>
 
-    <div class="cv-item">
-      <div><div class="cv-date">2025</div></div>
-      <div>
-        <div class="cv-desc">
-          <strong>Subbaraman, R.</strong>, Buono, G. and Pappalardo, L. (2025a). <em>3D XCT scans of 15mm gabbroic nodules from Gígöldur, Iceland.</em> GFZ Data Services. <a href="https://doi.org/10.5880/fidgeo.2025.082" target="_blank">DOI: 10.5880/fidgeo.2025.082</a>
+    <!-- GFZ Dataset Card (2025) -->
+    <div class="og-preview">
+      <div class="og-top-bar">
+        <div class="og-domain">
+          <i class="fas fa-database"></i> GFZ Data Services • Dataset (2025)
         </div>
+        <div class="og-badges">
+          <span class="og-badge">3D XCT Scan</span>
+          <span class="og-badge oa">CC BY Licence</span>
+        </div>
+      </div>
+
+      <h3 class="og-title">
+        <a href="https://doi.org/10.5880/fidgeo.2025.082" target="_blank" rel="noopener">
+          3D XCT scans of 15mm gabbroic nodules from Gígöldur, Iceland
+        </a>
+      </h3>
+
+      <div class="og-authors">
+        <strong>Rahul Subbaraman</strong>, Gianmarco Buono and Lucia Pappalardo
+      </div>
+
+      <div class="og-affiliations">
+        <div>Department of Earth and Environmental Sciences, University of Manchester</div>
+      </div>
+
+      <div class="og-history">
+        <div>Published: 2025 • Publisher: GFZ Data Services • Grant: EC H2020 INFRAIA (EXCITE grant agreement No. 101005611)</div>
+      </div>
+
+      <div class="og-footer">
+        <a href="https://doi.org/10.5880/fidgeo.2025.082" target="_blank" rel="noopener" class="og-cta">
+          Access dataset on GFZ Data Services (DOI: 10.5880/fidgeo.2025.082) ↗
+        </a>
+      </div>
+      <br>
+
+      <div class="pub-toggles">
+        <details class="pub-details">
+          <summary>Abstract</summary>
+          <div class="details-box">
+            This dataset comprises 3D X ray computed tomography (XCT) scans of eight rock cores (15 mm diameter) prepared from two gabbroic nodules collected at Gígöldur, Central Iceland. The scans are provided in the Tagged Image File Format (*.tif). Data were acquired using a Carl Zeiss Xradia Versa 410 3D X ray microscope at the Istituto Nazionale di Geofisica e Vulcanologia, Osservatorio Vesuviano (INGV OV), Italy. Data collection was carried out under Trans National Access support through EXCITE (EC H2020 INFRAIA, grant agreement No. 101005611).
+          </div>
+        </details>
+
+        <details class="pub-details">
+          <summary>Keywords</summary>
+          <div class="details-box">
+            <div class="kw-list">
+              <span class="kw-tag">Gabbroic nodules</span>
+              <span class="kw-tag">Crystal mush</span>
+              <span class="kw-tag">Magma plumbing system</span>
+              <span class="kw-tag">Plagioclase rich cumulates</span>
+              <span class="kw-tag">Icelandic volcanism</span>
+              <span class="kw-tag">X ray computed microtomography</span>
+            </div>
+          </div>
+        </details>
       </div>
     </div>
   </section>
 
   <section class="cv-section">
-    <h2 class="section-title">Conference Abstracts</h2>
+    <h2 class="section-title">Conference Presentations</h2>
     
-    <div class="cv-item">
-      <div><div class="cv-date">Jun 2026 (Oral)</div></div>
-      <div>
-        <div class="cv-desc">
-          <strong>Subbaraman, R.</strong>, Hughes, L., Hartley, M. E. and Neave, D. A. (Jun 2026). Microstructural record of Icelandic crystal mushes preserved in gabbroic nodules. <em>Mineralogical Society at 150: Past Discoveries and Future Frontiers</em>, Manchester, UK. <a href="https://minsoc-150.org/wp-content/uploads/2026/06/MinSoc-150-Programme-and-Abstracts-Final.pdf" target="_blank">Abstract Book Link</a>
+    <!-- MinSoc Conference Card with Photo & LinkedIn Link -->
+    <div class="og-preview">
+      <div class="og-top-bar">
+        <div class="og-domain">
+          <i class="fas fa-bullhorn"></i> Oral Presentation • Jun 2026
         </div>
+        <div class="og-badges">
+          <span class="og-badge">Conference</span>
+        </div>
+      </div>
+
+      <h3 class="og-title">
+        Microstructural record of Icelandic crystal mushes preserved in gabbroic nodules
+      </h3>
+
+      <div class="og-authors">
+        <strong>Rahul Subbaraman</strong>, L. Hughes, Margaret E. Hartley and David A. Neave
+      </div>
+
+      <div class="og-affiliations">
+        <div>Mineralogical Society at 150: Past Discoveries and Future Frontiers, Manchester, UK</div>
+      </div>
+
+      <div style="margin: 1rem 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border);">
+        <img src="https://huggingface.co/datasets/rahulrox9/Blog_Photos/resolve/main/MinSoc.jpg" alt="MinSoc Conference Photo" style="width: 100%; height: auto; display: block;">
+      </div>
+
+      <div style="font-size:0.9rem;color:var(--muted);line-height:1.65;font-weight:300;margin-bottom:0.85rem;font-style: italic;">
+        Subbaraman, R., Hughes, L., Hartley, M. E., & Neave, D. A. (2026, June). Microstructural record of Icelandic crystal mushes preserved in gabbroic nodules [Oral presentation]. Mineralogical Society at 150: Past Discoveries and Future Frontiers, Manchester, UK.
+      </div>
+
+      <div class="og-footer">
+        <a href="https://www.linkedin.com/posts/rahul-subbaraman_what-better-way-to-end-my-phd-conference-activity-7475383489509576704-stal?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAACyRIdsB0LkDvVtKZMW3ZjycTxTXZi-kfgQ" target="_blank" rel="noopener" class="og-cta">
+          View LinkedIn Post & Reflection ↗
+        </a>
       </div>
     </div>
 
