@@ -301,7 +301,7 @@ function buildLangFilters() {
   ].join('');
 }
 
-function buildFranchiseFilters() {} // no-op, franchise filtering via search box
+function buildFranchiseFilters() {}
 
 function setLang(lang, btn) {
   activeLang = lang;
@@ -380,8 +380,7 @@ function renderCurrent() {
         <div class="poster-wrap">${e.poster?`<img src="${e.poster}" alt="${e.title}">`:'<div class="poster-ph">🎬</div>'}</div>
         <div class="info">
           <span class="badge movie">Movie</span>
-          <div class="entry-title">${e.title}</div>
-          ${e.year?`<div class="meta">${e.year}</div>`:''}
+          <div class="entry-title">${e.title}</div>${e.year?`<div class="meta">${e.year}</div>`:''}
           ${e.franchise?`<span class="franchise-tag" onclick="event.stopPropagation();filterByFranchise('${e.franchise.replace(/'/g,"\\'")}')" title="Filter: ${e.franchise}">🎬 ${e.franchise}</span>`:''}
           ${e.myRating?`<div class="my-rating">${e.myRating}<span class="oo">/10</span></div>`:''}
           ${e.review?`<div class="review-snip">${e.review}</div>`:''}
@@ -398,8 +397,7 @@ function renderCurrent() {
           <div class="poster-wrap">${e.poster?`<img src="${e.poster}" alt="${e.title}">`:'<div class="poster-ph">📺</div>'}</div>
           <div class="info">
             <span class="badge show">Series</span>
-            <div class="entry-title">${e.title}</div>
-            ${e.year?`<div class="meta">${e.year}${e.language?' · '+langName(e.language):''}</div>`:''}
+            <div class="entry-title">${e.title}</div>${e.year?`<div class="meta">${e.year}${e.language?' · '+langName(e.language):''}</div>`:''}
             ${totalSeasons?`<div class="meta">${totalSeasons} season${totalSeasons!==1?'s':''} · ${reviewedSeasons} reviewed</div>`:''}
             ${e.franchise?`<span class="franchise-tag" onclick="event.stopPropagation();filterByFranchise('${e.franchise.replace(/'/g,"\\'")}')" title="Filter: ${e.franchise}">🎬 ${e.franchise}</span>`:''}
             ${e.myRating?`<div class="my-rating">${e.myRating}<span class="oo">/10</span></div>`:''}
@@ -410,7 +408,6 @@ function renderCurrent() {
   }
 }
 
-// ── Modal ────────────────────────────────────────────────
 function closeModal(e) {
   if (e && e.target!==document.getElementById('overlay')) return;
   document.getElementById('overlay').classList.remove('on');
@@ -434,7 +431,6 @@ async function openModal(id) {
 
   document.getElementById('m-badges').innerHTML = `<span class="badge ${entry.type}">${entry.type==='show'?'Series':'Movie'}</span>${entry.franchise?` <span class="franchise-tag" onclick="closeModal();filterByFranchise('${entry.franchise.replace(/'/g,"\\'")}')">🎬 ${entry.franchise}</span>`:''}`;
 
-  // My info
   const ratingEl  = document.getElementById('m-my-rating');
   const reviewEl  = document.getElementById('m-my-review');
   const watchedEl = document.getElementById('m-watched');
@@ -446,7 +442,6 @@ async function openModal(id) {
   watchedEl.style.display = hasWatchedDate ? 'block' : 'none';
   if (hasWatchedDate) document.getElementById('m-watched-val').textContent = displayWatchedDate(entry);
 
-  // Seasons
   if (entry.type==='show' && entry.seasonsData?.length) {
     document.getElementById('m-seasons-wrap').style.display = 'block';
     const tabs   = document.getElementById('m-season-tabs');
@@ -474,7 +469,6 @@ async function openModal(id) {
     }).join('');
   }
 
-  // Fetch TMDB details
   try {
     const ep = entry.type==='show' ? 'tv' : 'movie';
     const idToUse = entry.tmdbId;
@@ -537,7 +531,6 @@ function filterByFranchise(franchise) {
   renderCurrent();
 }
 
-// ── Load ─────────────────────────────────────────────────
 async function load() {
   const sortSelect = document.getElementById('sort-select');
   if (sortSelect) sortSelect.value = 'watched-desc';
