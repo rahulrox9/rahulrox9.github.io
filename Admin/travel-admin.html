@@ -68,6 +68,7 @@ textarea{resize:vertical;min-height:48px}
 .pin-group{margin-bottom:0.5rem}
 .pin-group-header{font-size:0.67rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);padding:0.4rem 0 0.2rem;border-bottom:1px solid var(--border);margin-bottom:0.2rem;display:flex;align-items:center;gap:0.35rem}
 .pin-count{font-weight:300;color:var(--border)}
+.pin-subgroup-title{font-size:0.63rem;font-weight:500;color:var(--muted);padding:0.2rem 0.2rem 0.1rem;margin-top:0.2rem;text-transform:uppercase;letter-spacing:0.05em}
 .pin-item{display:flex;align-items:center;gap:0.4rem;padding:0.32rem 0.4rem;border-radius:3px;cursor:pointer;transition:background 0.1s}
 .pin-item:hover{background:var(--parchment)}
 .pin-cat-icon{font-size:12px;flex-shrink:0;width:16px;text-align:center}
@@ -736,29 +737,52 @@ function renderPinList(filter = '') {
     groups[key].push(p);
   });
 
+  const catNames = { place: 'Places', temple: 'Temples', airport: 'Airports' };
+
   list.innerHTML = Object.keys(groups).sort().map(country => {
-    const grp   = groups[country].sort((a, b) => a.name.localeCompare(b.name));
+    const grp   = groups[country];
     const emoji = countryEmoji(country, grp[0].countryCode||'') || '🌍';
-    const rows  = grp.map(p => `
-      <div class="pin-item"
-        onclick="flyTo(${p.lat},${p.lng})"
-        ondblclick="startEdit('${p.id}')">
-        <span class="pin-cat-icon">${catIcon(p.category)||emoji}</span>
-        <div class="pin-info">
-          <div class="pin-name">${p.name}</div>
-        </div>
-        <div class="pin-actions">
-          <button class="icon-btn" title="Edit" onclick="event.stopPropagation();startEdit('${p.id}')">✏️</button>
-          <button class="icon-btn del" title="Remove" onclick="event.stopPropagation();deletePin('${p.id}')">✕</button>
-        </div>
-      </div>`).join('');
+
+    // Group items inside country by category
+    const catGroups = {};
+    grp.forEach(p => {
+      const c = p.category || 'place';
+      if (!catGroups[c]) catGroups[c] = [];
+      catGroups[c].push(p);
+    });
+
+    // Sort categories alphabetically or consistently (Airports, Places, Temples)
+    const sortedCategories = Object.keys(catGroups).sort();
+
+    const subSections = sortedCategories.map(cat => {
+      const items = catGroups[cat].sort((a, b) => a.name.localeCompare(b.name));
+      const subLabel = catNames[cat] || cat.toUpperCase();
+      const rows = items.map(p => `
+        <div class="pin-item"
+          onclick="flyTo(${p.lat},${p.lng})"
+          ondblclick="startEdit('${p.id}')">
+          <span class="pin-cat-icon">${catIcon(p.category)||emoji}</span>
+          <div class="pin-info">
+            <div class="pin-name">${p.name}</div>
+          </div>
+          <div class="pin-actions">
+            <button class="icon-btn" title="Edit" onclick="event.stopPropagation();startEdit('${p.id}')">✏️</button>
+            <button class="icon-btn del" title="Remove" onclick="event.stopPropagation();deletePin('${p.id}')">✕</button>
+          </div>
+        </div>`).join('');
+
+      return `
+        <div class="pin-subgroup-title">${subLabel} (${items.length})</div>
+        ${rows}
+      `;
+    }).join('');
 
     return `<div class="pin-group">
       <div class="pin-group-header">
         ${emoji} ${country}
         <span class="pin-count">(${grp.length})</span>
       </div>
-      ${rows}
+      ${subSections}
     </div>`;
   }).join('');
 }
