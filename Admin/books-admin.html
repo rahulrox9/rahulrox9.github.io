@@ -44,7 +44,6 @@ main{max-width:1120px;margin:0 auto;padding:1.35rem}
   <div class="hero"><div><h1>Bookshelf <span>Database</span></h1><p>Manage your library, page progress, series search &amp; barcode scanner.</p></div><div id="save-state" class="status">Loading…</div></div>
 
   <section class="panel">
-    <!-- ADD BOOK ACTION BAR WITH BUILT-IN LINK / TITLE SEARCH INPUT -->
     <div style="display:flex;gap:0.5rem;margin-bottom:0.8rem;flex-wrap:wrap">
       <input id="quick-query" class="control" style="flex:1;min-width:240px;border-radius:5px;background:var(--parchment)" placeholder="Type book title or paste Goodreads link…" onkeydown="if(event.key==='Enter')quickOnlineSearch()">
       <button class="btn blue" onclick="quickOnlineSearch()">🔍 Fetch Book</button>
@@ -103,7 +102,7 @@ main{max-width:1120px;margin:0 auto;padding:1.35rem}
 </div>
 
 <script>
-const DB_URL='https://script.google.com/macros/s/AKfycbwyRBVXxMuiYfxgGXa7tpFF_4e4nYACbAio935382mRYKFwqhYicUcqb0mTfWUxuuT-zw/exec';
+const DB_URL='https://script.google.com/macros/s/AKfycbzpa1fUDZDXfQT5L6SxQRNf1zEFk-tpHV_2Tq9CY2iG4iSqa4W__Rnqs6fshnGJ0pnvRQ/exec';
 const BOOKS_FILE='books.json';
 const RULES_FILE='book_genre_rules.json';
 const PAGE_SIZE=100;
@@ -168,7 +167,7 @@ function editorHtml(b){const genres=allGenres();const rating=b.rating10===null||
 function readingRowsHtml(b){return(b.readings||[]).map((r,i)=>`<div class="reading-row"><select onchange="changeReading(${i},'precision',this.value)"><option value="day" ${r.precision==='day'?'selected':''}>Exact date</option><option value="month" ${r.precision==='month'?'selected':''}>Month and year</option><option value="unknown" ${r.precision==='unknown'?'selected':''}>Date unknown</option></select>${r.precision==='unknown'?'<span class="note">No date stored</span>':`<input type="${r.precision==='month'?'month':'date'}" value="${esc(r.date\vert{}\vert{}'')}" onchange="changeReading(${i},'date',this.value)">`}<button class="icon-btn" onclick="removeReading(${i})">Remove</button></div>`).join('')||'<div class="note">No reading history recorded.</div>'}
 function editorChanged(){const b=database.books.find(x=>x.id===editingBookId);if(!b)return;b.title=document.getElementById('ed-title').value.trim();b.author=document.getElementById('ed-author').value.trim();b.series=document.getElementById('ed-series').value.trim();b.seriesNumber=document.getElementById('ed-seriesnum').value.trim();b.shelf=document.getElementById('ed-shelf').value;b.cover=document.getElementById('ed-cover').value.trim();b.publisher=document.getElementById('ed-publisher').value.trim();b.currentPage=Number(document.getElementById('ed-currpage').value)||0;b.pages=Number(document.getElementById('ed-pages').value)||0;b.description=document.getElementById('ed-description').value.trim();const v=document.getElementById('ed-rating').value;b.rating10=v===''?null:Math.max(0,Math.min(10,Number(v)));b.review=document.getElementById('ed-review').value;b.genres=[...document.querySelectorAll('.genre-options input:checked')].map(x=>x.value);b.tags=splitList(document.getElementById('ed-tags').value);b.updatedAt=Date.now();document.getElementById('editor-heading').textContent=b.title||'Edit book';renderStats();scheduleSave()}
 function addReading(){const b=database.books.find(x=>x.id===editingBookId);if(!b)return;b.readings.push({id:uid('reading'),date:todayIso(),precision:'day'});document.getElementById('reading-editor').innerHTML=readingRowsHtml(b);scheduleSave()}
-function changeReading(i,key,value){const b=database.books.find(x=>x.id===editingBookId);if(!b||!b.readings[i])return;b.readings[i][key]=value;if(key==='precision'){if(value==='unknown')b.readings[i].date='';else if(value==='month'&&/^\d{4}-\d{2}-\d{2}$/.test(b.readings[i].date\vert{}\vert{}''))b.readings[i].date=b.readings[i].date.slice(0,7);else if(value==='day'&&!/^\d{4}-\d{2}-\d{2}$/.test(b.readings[i].date||''))b.readings[i].date=todayIso();document.getElementById('reading-editor').innerHTML=readingRowsHtml(b)}scheduleSave()}
+function changeReading(i,key,value){const b=database.books.find(x=>x.id===editingBookId);if(!b||!b.readings[i])return;b.readings[i][key]=value;if(key==='precision'){if(value==='unknown')b.readings[i].date='';else if(value==='month'&&/^\d{4}-\d{2}$/.test(b.readings[i].date\vert{}\vert{}''))b.readings[i].date=b.readings[i].date.slice(0,7);else if(value==='day'&&!/^\d{4}-\d{2}-\d{2}$/.test(b.readings[i].date||''))b.readings[i].date=todayIso();document.getElementById('reading-editor').innerHTML=readingRowsHtml(b)}scheduleSave()}
 function removeReading(i){const b=database.books.find(x=>x.id===editingBookId);if(!b)return;b.readings.splice(i,1);document.getElementById('reading-editor').innerHTML=readingRowsHtml(b);scheduleSave()}
 function splitList(v){return [...new Set(String(v||'').split(',').map(x=>x.trim()).filter(Boolean))]}
 function deleteBook(id){const b=database.books.find(x=>x.id===id);if(!b||!confirm(`Delete “${b.title}” from books.json?`))return;database.books=database.books.filter(x=>x.id!==id);refreshAll();scheduleSave()}
