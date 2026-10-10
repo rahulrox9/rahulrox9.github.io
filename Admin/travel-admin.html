@@ -608,7 +608,7 @@ async function savePin() {
   if (!name)          { msg.className='form-msg err'; msg.textContent='Name is required.'; return; }
   if (isNaN(lat)||isNaN(lng)) { msg.className='form-msg err'; msg.textContent='Set a location first.'; return; }
 
-  const country     = document.getElementById('pin-country').value.trim();
+  const country       = document.getElementById('pin-country').value.trim();
   const countryCode = document.getElementById('pin-country-code').value.trim() || toCode(country);
   const category    = document.getElementById('pin-cat').value;
   const notes       = document.getElementById('pin-notes').value.trim();
@@ -905,7 +905,7 @@ let urlMode = 'url';
 const CAT_EMOJIS = {
   place:'📍', temple:'🕉️', church:'⛪', museum:'🏛️', park:'🌳',
   hill:'⛰️', lake:'🏞️', river:'🌊', cafe:'☕', restaurant:'🍽️',
-  stadium:'🏟️', market:'🛍️'
+  stadium:'🏟️', market:'🛍️', airport:'✈️'
 };
 
 async function loadCityPlaces() {
