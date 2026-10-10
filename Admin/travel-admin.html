@@ -737,7 +737,7 @@ function renderPinList(filter = '') {
   });
 
   list.innerHTML = Object.keys(groups).sort().map(country => {
-    const grp   = groups[country];
+    const grp   = groups[country].sort((a, b) => a.name.localeCompare(b.name));
     const emoji = countryEmoji(country, grp[0].countryCode||'') || '🌍';
     const rows  = grp.map(p => `
       <div class="pin-item"
@@ -932,7 +932,7 @@ async function saveCustomCategories() {
 
 function rebuildCitySelect() {
   const sel = document.getElementById('city-select');
-  const keys = Object.keys(cityPlaces).sort();
+  const keys = Object.keys(cityPlaces).sort((a, b) => cityPlaces[a].name.localeCompare(cityPlaces[b].name));
   sel.innerHTML = '<option value="">— select city —</option>' +
     keys.map(k => `<option value="${k}"${k===activeCityKey?' selected':''}>${cityPlaces[k].name}</option>`).join('');
 }
@@ -993,7 +993,7 @@ function loadCity() {
   const sel = document.getElementById('city-pin-link');
   const city = cityPlaces[activeCityKey];
   sel.innerHTML = '<option value="">— not linked —</option>' +
-    pins.map(p => `<option value="${p.id}"${p.cityPage===activeCityKey?' selected':''}>${p.name}${p.country?' ('+p.country+')':''}</option>`).join('');
+    pins.slice().sort((a, b) => a.name.localeCompare(b.name)).map(p => `<option value="${p.id}"${p.cityPage===activeCityKey?' selected':''}>${p.name}${p.country?' ('+p.country+')':''}</option>`).join('');
 
   renderCityPlaces();
 }
@@ -1018,7 +1018,8 @@ function renderCityPlaces() {
     list.innerHTML = '<div style="font-size:0.76rem;color:var(--muted);font-style:italic;padding:0.3rem 0">No places yet — add one above.</div>';
     return;
   }
-  list.innerHTML = city.places.map(p => {
+  const sortedPlaces = [...city.places].sort((a, b) => a.name.localeCompare(b.name));
+  list.innerHTML = sortedPlaces.map(p => {
     const emoji = getPlaceEmoji(p);
     return `<div class="city-place-item${p.id===activePlaceId?' active':''}" onclick="selectCityPlace('${p.id}')">
       <span class="cpi-emoji">${emoji}</span>
