@@ -613,7 +613,7 @@ function editorHtml(b) {
     <div class="field wide"><label>Dated reading progress</label>
       <p class="note">Enter pages read in this session. The number is added to the current page and stored with its date. Reaching the final page automatically marks the book Read.</p>
       <div class="actions">
-        <input id="log-pages" type="number" min="1" step="1" placeholder="Pages read" style="width:125px">
+        <input id="log-pages" type="number" min="1" step="1" placeholder="Current page" style="width:125px">
         <input id="log-date" type="date" value="${todayIso()}">
         <input id="log-note" placeholder="Optional note">
         <button class="btn green" onclick="logReadingProgress()">Log pages</button>
@@ -677,20 +677,54 @@ function removeReading(i) {
   b.readings.splice(i,1);$('reading-editor').innerHTML=readingRowsHtml(b);scheduleSave();
 }
 function logReadingProgress() {
-  const b=database.books.find(x=>x.id===editingBookId);if(!b)return;
-  const pagesRead=Number($('log-pages').value),date=$('log-date').value,note=$('log-note').value.trim();
-  if(!Number.isSafeInteger(pagesRead)||pagesRead<=0){alert('Enter a positive whole number of pages.');return;}
-  if(!isValidDate(date)){alert('Choose a valid date.');return;}
-  const next=(Number(b.currentPage)||0)+pagesRead;
-  if(b.pages>0&&next>b.pages){alert('This would exceed the total page count.');return;}
-  b.currentPage=next;
-  b.progressHistory.push({id:uid('progress'),date,pagesRead,page:next,note});
-  if(b.pages>0&&next===b.pages){
-    b.shelf='read';b.status='finished';
-    if(!b.readings.some(r=>r.date===date&&r.precision==='day'))b.readings.push({id:uid('reading'),date,precision:'day'});
-  }else{b.shelf='reading';b.status='reading';}
-  b.updatedAt=Date.now();
-  $('editor-form').innerHTML=editorHtml(b);refreshAll();scheduleSave();
+  const b = database.books.find(x => x.id === editingBookId);
+  if (!b) return;
+
+  const currentPage = Number($('log-pages').value);
+  const previousPage = Number(b.currentPage) || 0;
+  const pagesRead = currentPage - previousPage;
+  const date = $('log-date').value;
+  const note = $('log-note').value.trim();
+
+  if (!Number.isSafeInteger(currentPage) || currentPage <= previousPage) {
+    alert('Enter a page number greater than your current page.');
+    return;
+  }
+
+  if (!isValidDate(date)) {
+    alert('Choose a valid date.');
+    return;
+  }
+
+  if (b.pages > 0 && currentPage > b.pages) {
+    alert('The page number exceeds the total pages.');
+    return;
+  }
+
+  b.currentPage = currentPage;
+  b.progressHistory.push({
+    id: uid('progress'),
+    date,
+    pagesRead,
+    page: currentPage,
+    note
+  });
+
+  if (b.pages > 0 && currentPage === b.pages) {
+    b.shelf = 'read';
+    b.status = 'finished';
+    if (!b.readings.some(r => r.date === date && r.precision === 'day')) {
+      b.readings.push({ id: uid('reading'), date, precision: 'day' });
+    }
+  } else {
+    b.shelf = 'reading';
+    b.status = 'reading';
+  }
+
+  b.updatedAt = Date.now();
+  $('editor-form').innerHTML = editorHtml(b);
+  refreshAll();
+  scheduleSave();
 }
 function removeProgress(id) {
   const b=database.books.find(x=>x.id===editingBookId);if(!b)return;
