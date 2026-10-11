@@ -24,7 +24,7 @@ main{max-width:1120px;margin:0 auto;padding:1.35rem}
 .pagination{display:flex;justify-content:center;gap:.5rem;align-items:center;margin-top:1rem;font-size:.72rem;color:var(--muted)}
 .field{margin-bottom:.75rem}.field label{display:block;font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.25rem}.field input,.field textarea,.field select{width:100%;border:1px solid var(--border);border-radius:5px;background:var(--parchment);padding:.5rem .62rem;color:var(--ink);font-size:.8rem;outline:none}.field textarea{min-height:80px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--warm)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}.wide{grid-column:1/-1}
 .overlay{display:none;position:fixed;inset:0;background:rgba(26,18,8,.62);z-index:500;align-items:center;justify-content:center;padding:1rem}.overlay.on{display:flex}.modal{background:var(--card);width:min(760px,100%);max-height:92vh;overflow:auto;border-radius:9px;position:relative;padding:1.1rem}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:1rem}.modal h2{font-family:'Playfair Display',serif;font-size:1.25rem}.close{border:none;background:none;font-size:1.3rem;color:var(--muted);cursor:pointer}
-.genre-options{display:flex;flex-wrap:wrap;gap:.35rem;max-height:150px;overflow:auto;border:1px solid var(--border);background:var(--parchment);padding:.5rem;border-radius:5px}.genre-option{display:flex;align-items:center;gap:.3rem;font-size:.7rem;border:1px solid var(--border);background:var(--card);padding:.24rem .45rem;border-radius:12px;text-transform:none;letter-spacing:0;color:var(--ink)}.genre-option input{width:auto;accent-color:var(--warm)}
+.genre-chosen{display:flex;flex-wrap:wrap;gap:.35rem;padding:.4rem 0}.genre-chosen .chip{font-size:.72rem;padding:.25rem .4rem}.genre-chosen button{border:0;background:transparent;color:var(--red);cursor:pointer;margin-left:.4rem}.genre-entry{display:flex;gap:.4rem;align-items:center}.genre-entry input{flex:1}.genre-options{display:flex;flex-wrap:wrap;gap:.35rem;max-height:150px;overflow:auto;border:1px solid var(--border);background:var(--parchment);padding:.5rem;border-radius:5px}.genre-option{display:flex;align-items:center;gap:.3rem;font-size:.7rem;border:1px solid var(--border);background:var(--card);padding:.24rem .45rem;border-radius:12px;text-transform:none;letter-spacing:0;color:var(--ink)}.genre-option input{width:auto;accent-color:var(--warm)}
 .reading-row{display:grid;grid-template-columns:120px 1fr auto;gap:.45rem;margin-bottom:.4rem;align-items:center}.reading-row select,.reading-row input{border:1px solid var(--border);border-radius:4px;background:var(--parchment);padding:.42rem;font-size:.75rem}.empty{text-align:center;padding:2.5rem;color:var(--muted);font-family:'Playfair Display',serif;font-style:italic}.note{font-size:.7rem;color:var(--muted);line-height:1.5}
 #reader-container{max-width:400px;margin:1rem auto;display:none}
 .search-modal-results{display:flex;flex-direction:column;gap:.5rem;max-height:300px;overflow-y:auto;margin-top:.5rem}
@@ -40,11 +40,11 @@ main{max-width:1120px;margin:0 auto;padding:1.35rem}
   <div class="nav-right"><a class="nav-link" href="../Public/books.html">Public bookshelf</a><a class="nav-link" href="admin.html">Admin home</a></div>
 </nav>
 <main>
-  <div class="hero"><div><h1>Bookshelf <span>Database</span></h1><p>Manage your library, page progress, series search &amp; barcode scanner.</p></div><div id="save-state" class="status">Loading…</div></div>
+  <div class="hero"><div><h1>Bookshelf <span>Database</span></h1><p>Manage your library, retrieve extended metadata and maintain unrestricted genres.</p></div><div id="save-state" class="status">Loading…</div></div>
 
   <section class="panel">
     <div style="display:flex;gap:0.5rem;margin-bottom:0.8rem;flex-wrap:wrap">
-      <input id="quick-query" class="control" style="flex:1;min-width:240px;border-radius:5px;background:var(--parchment)" placeholder="Type book title or paste Goodreads link…" onkeydown="if(event.key==='Enter')quickOnlineSearch()">
+      <input id="quick-query" class="control" style="flex:1;min-width:240px;border-radius:5px;background:var(--parchment)" placeholder="Search title, author, ISBN or paste Goodreads link…" onkeydown="if(event.key==='Enter')quickOnlineSearch()">
       <button class="btn blue" onclick="quickOnlineSearch()">🔍 Fetch Book</button>
       <button class="btn green" onclick="createManualBook()">＋ Manual Add</button>
       <button class="btn blue" onclick="toggleScanner()">📷 Scan Barcode</button>
@@ -86,16 +86,16 @@ main{max-width:1120px;margin:0 auto;padding:1.35rem}
 
   <section id="section-rules" class="section">
     <div class="panel" style="max-width:500px">
-      <h3 style="font-family:'Playfair Display',serif;margin-bottom:.75rem">Controlled genres &amp; custom folders</h3>
-      <div id="genre-cloud" class="genre-cloud" style="margin-bottom:1rem"></div>
-      <div class="field"><label>Add custom genre / folder</label><div class="actions"><input id="new-genre" class="control" style="border-radius:5px;flex:1" placeholder="e.g. Classics, Sci-Fi Favorites"><button class="btn sm" onclick="addCustomGenre()">Add</button></div></div>
+      <h3 style="font-family:'Playfair Display',serif;margin-bottom:.75rem">Genre suggestions and custom folders</h3>
+      <p class="note" style="margin-bottom:.6rem">All genres used in your books, all imported classifications and any new name you type are supported. This list only manages reusable suggestions.</p><div id="genre-cloud" class="genre-cloud" style="margin-bottom:1rem"></div>
+      <div class="field"><label>Save a genre suggestion</label><div class="actions"><input id="new-genre" class="control" style="border-radius:5px;flex:1" placeholder="e.g. Classics, Sci-Fi Favorites"><button class="btn sm" onclick="addCustomGenre()">Add</button></div></div>
     </div>
   </section>
 </main>
 
 <div class="overlay" id="editor-overlay" onclick="closeEditor(event)">
   <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-head"><div><h2 id="editor-heading">Edit book</h2><div class="note">Changes save automatically.</div></div><button class="close" onclick="closeEditor()">×</button></div>
+    <div class="modal-head"><div><h2 id="editor-heading">Edit book</h2><div class="note">Changes save automatically. Genre suggestions are optional and do not restrict entries.</div></div><button class="close" onclick="closeEditor()">×</button></div>
     <div id="editor-form"></div>
   </div>
 </div>
@@ -116,7 +116,26 @@ if (!ADMIN_TOKEN) {
 const BOOKS_FILE = 'books.json';
 const RULES_FILE = 'book_genre_rules.json';
 const PAGE_SIZE = 100;
-const BASE_GENRES = ['Fiction','Nonfiction','Literary Fiction','Historical Fiction','Science Fiction','Fantasy','Mystery','Thriller','Crime','Horror','Romance','Adventure','Short Stories','Poetry','Graphic Novel','Biography','Memoir','History','Politics','Philosophy','Science','Technology','Business','Economics','Psychology','Essays','Travel','Religion','Self-help','Humour','Young Adult','Children'];
+const BASE_GENRES = [
+  'Fiction|Literary Fiction|Contemporary Fiction|Classic Fiction|General Fiction|Historical Fiction|Speculative Fiction|Experimental Fiction|Metafiction|Coming of Age|Bildungsroman|Domestic Fiction|Family Saga|Multigenerational Fiction|Upmarket Fiction|Women’s Fiction|LGBTQ+ Fiction|Diaspora Fiction|Postcolonial Fiction|Magical Realism|Satire|Humour|Comic Fiction|Tragicomedy|Absurdist Fiction|Autofiction|Epistolary Fiction|Gothic Fiction|Southern Gothic|Campus Novel|Political Fiction|Social Fiction|Religious Fiction|Philosophical Fiction|Psychological Fiction|Literary Criticism',
+  'Science Fiction|Hard Science Fiction|Soft Science Fiction|Space Opera|Military Science Fiction|Cyberpunk|Biopunk|Steampunk|Dieselpunk|Solarpunk|Climate Fiction|Apocalyptic Fiction|Post-apocalyptic Fiction|Dystopian Fiction|Utopian Fiction|Time Travel|Alternate History|First Contact|Alien Invasion|Artificial Intelligence Fiction|Robot Fiction|Genetic Engineering Fiction|Near-future Fiction|Space Exploration Fiction|Science Fantasy|Afrofuturism|Slipstream|New Weird',
+  'Fantasy|Epic Fantasy|High Fantasy|Low Fantasy|Urban Fantasy|Contemporary Fantasy|Dark Fantasy|Grimdark|Historical Fantasy|Portal Fantasy|Mythic Fantasy|Fairy Tales|Folklore|Sword and Sorcery|Heroic Fantasy|Romantic Fantasy|Cozy Fantasy|Progression Fantasy|LitRPG|Gaslamp Fantasy|Arthurian Fantasy|Mythology Retellings|Retellings|Paranormal Fantasy',
+  'Mystery|Cozy Mystery|Locked-room Mystery|Historical Mystery|Police Procedural|Detective Fiction|Private Investigator Fiction|Noir|Hardboiled Fiction|Crime Fiction|True Crime|Legal Thriller|Medical Thriller|Psychological Thriller|Domestic Thriller|Spy Thriller|Political Thriller|Techno-thriller|Action Thriller|Suspense|Conspiracy Thriller|Military Thriller|Adventure Thriller|Espionage|Heist Fiction',
+  'Horror|Gothic Horror|Psychological Horror|Cosmic Horror|Body Horror|Folk Horror|Supernatural Horror|Paranormal Horror|Haunted House|Ghost Stories|Vampire Fiction|Zombie Fiction|Monster Horror|Weird Fiction|Splatterpunk|Occult Fiction|Dark Academia',
+  'Romance|Contemporary Romance|Historical Romance|Regency Romance|Romantic Comedy|Paranormal Romance|Fantasy Romance|Science Fiction Romance|Romantic Suspense|Queer Romance|LGBTQ+ Romance|Young Adult Romance|New Adult Romance|Sports Romance|Holiday Romance|Small-town Romance|Second-chance Romance|Friends-to-lovers Romance|Enemies-to-lovers Romance',
+  'Adventure|Action and Adventure|Historical Adventure|Survival Fiction|Western|Frontier Fiction|Sea Adventure|Pirate Fiction|War Fiction|Military Fiction|Sports Fiction|Travel Fiction|Nature Writing|Wilderness Fiction',
+  'Nonfiction|Narrative Nonfiction|Creative Nonfiction|Literary Nonfiction|Essays|Personal Essays|Collected Essays|Memoir|Autobiography|Biography|Collective Biography|Letters|Diaries|Journals|Oral History|Interviews|Reference|Encyclopaedia|Dictionary|Handbook|Textbook|Study Guide|Academic Writing|Research Methods|Popular Science|Science Communication|Investigative Journalism|Reportage',
+  'History|Ancient History|Medieval History|Early Modern History|Modern History|Contemporary History|World History|European History|British History|Indian History|Asian History|African History|American History|Latin American History|Middle Eastern History|Military History|Naval History|Cultural History|Social History|Economic History|Environmental History|Intellectual History|Political History|History of Science|History of Technology|Archaeology|Art History|Public History|Microhistory|Historical Biography',
+  'Science|Physics|Astronomy|Astrophysics|Cosmology|Planetary Science|Earth Science|Geology|Geochemistry|Geophysics|Volcanology|Petrology|Mineralogy|Palaeontology|Oceanography|Meteorology|Climate Science|Environmental Science|Ecology|Biology|Evolutionary Biology|Botany|Zoology|Marine Biology|Microbiology|Genetics|Molecular Biology|Neuroscience|Medicine|Public Health|Epidemiology|Chemistry|Biochemistry|Mathematics|Statistics|Data Science|Computer Science|Artificial Intelligence|Machine Learning|Robotics|Engineering|Architecture|Agriculture|Conservation|Nature|Natural History',
+  'Philosophy|Ethics|Logic|Metaphysics|Epistemology|Aesthetics|Political Philosophy|Philosophy of Science|Existentialism|Phenomenology|Stoicism|Critical Theory|Social Theory|Sociology|Anthropology|Cultural Studies|Gender Studies|Queer Studies|Feminism|Linguistics|Language|Literary Theory|Rhetoric|Education|Pedagogy|Psychology|Cognitive Psychology|Developmental Psychology|Social Psychology|Clinical Psychology|Psychoanalysis|Mental Health|Self-help|Personal Development|Mindfulness|Meditation',
+  'Politics|Government|International Relations|Geopolitics|Public Policy|Law|Legal Studies|Constitutional Law|Human Rights|Activism|Social Justice|Economics|Macroeconomics|Microeconomics|Economic Development|Finance|Personal Finance|Investing|Business|Management|Leadership|Entrepreneurship|Marketing|Strategy|Innovation|Technology|Digital Culture|Internet|Cybersecurity',
+  'Art|Visual Arts|Painting|Sculpture|Photography|Design|Graphic Design|Illustration|Fashion|Music|Music History|Music Theory|Film|Cinema|Film Studies|Television|Theatre|Drama|Performing Arts|Dance|Comics|Graphic Novel|Manga|Manhwa|Webcomic|Art Book|Architecture|Interior Design',
+  'Poetry|Epic Poetry|Lyric Poetry|Narrative Poetry|Free Verse|Haiku|Sonnets|Poetry Anthology|Short Stories|Short Story Collection|Flash Fiction|Novella|Anthology|Literary Anthology|Play|Screenplay|Script|Humorous Essays',
+  'Travel|Travelogue|Travel Memoir|Guidebook|Food|Food Writing|Cookbook|Culinary History|Baking|Gardening|Crafts|DIY|Home|Lifestyle|Sports|Football|Cricket|Olympics|Outdoor Recreation|Mountaineering|Hiking|Camping',
+  'Religion|Theology|Spirituality|Comparative Religion|Christianity|Islam|Hinduism|Buddhism|Judaism|Mythology|Classical Mythology|Indian Mythology|World Mythology|Folklore Studies',
+  'Children|Picture Book|Early Reader|Middle Grade|Young Adult|New Adult|Juvenile Fiction|Children’s Nonfiction|Educational Children’s Books|Children’s Fantasy|Young Adult Fantasy|Young Adult Science Fiction|Young Adult Mystery|Young Adult Contemporary',
+  'Bilingual|Translations|Translated Fiction|Translated Nonfiction|World Literature|Indian Literature|British Literature|American Literature|African Literature|European Literature|Japanese Literature|Korean Literature|Chinese Literature|Arabic Literature|Latin American Literature|Regional Literature'
+].join('|').split('|');
 
 let database = { version: 2, updatedAt: 0, books: [] };
 let rules = { version: 1, customGenres: [] };
@@ -142,17 +161,21 @@ function generateReceiptId() {
 function jsonp(url, params) {
   return new Promise((resolve, reject) => {
     const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-    const s = document.createElement('script');
-    window[cb] = data => { delete window[cb]; s.remove(); resolve(data); };
-    s.onerror = () => { delete window[cb]; s.remove(); reject(new Error('Network read failed')); };
+    const s = document.createElement('script'); let settled = false;
+    const cleanup = () => { clearTimeout(timer); delete window[cb]; s.remove(); };
+    const finish = (error, data) => { if (settled) return; settled = true; cleanup(); error ? reject(error) : resolve(data); };
+    const timer = setTimeout(() => finish(new Error('Book API request timed out')), 25000);
+    window[cb] = data => finish(null, data);
+    s.onerror = () => finish(new Error('Network read failed'));
     const qs = Object.entries(params).map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v)).join('&');
     s.src = url + '?' + qs + '&callback=' + cb;
     document.head.appendChild(s);
   });
 }
-
 async function serverAction(action, params = {}) {
-  return await jsonp(DB_URL, { action, ...params });
+  const response = await jsonp(DB_URL, { action, ...params });
+  if (!response || response.ok === false) throw new Error(response?.error || action + ' failed');
+  return response;
 }
 
 async function driveWrite(file, data, currentHash) {
@@ -190,7 +213,7 @@ function latestReading(book) {
   return known[0] || readings.find(r => r.precision === 'unknown') || null;
 }
 function latestReadTs(book) { const r = latestReading(book); return r && r.precision !== 'unknown' ? dateTs(r.date) : 0; }
-function allGenres() { return [...new Set([...BASE_GENRES, ...(rules.customGenres || [])])].sort((a, b) => a.localeCompare(b)); }
+function allGenres() { return [...new Set([...BASE_GENRES, ...(rules.customGenres || []), ...database.books.flatMap(b => b.genres || [])])].sort((a, b) => a.localeCompare(b)); }
 
 function normaliseDatabase(value) {
   const db = Array.isArray(value) ? { version: 2, updatedAt: 0, books: value } : value && Array.isArray(value.books) ? value : { version: 2, updatedAt: 0, books: [] };
@@ -211,14 +234,15 @@ function normaliseBook(b) {
     rating10: b.rating10 === 0 ? 0 : (b.rating10 ?? null), review: b.review || '', description: b.description || '',
     shelf: b.shelf || 'read', status: b.status || computedStatus, series: b.series || '', seriesNumber: b.seriesNumber || '',
     currentPage: Number(b.currentPage) || 0, pages: Number(b.pages) || 0, readings, genres, tags: Array.isArray(b.tags) ? b.tags : [],
+    subjects: Array.isArray(b.subjects) ? b.subjects : [], categories: Array.isArray(b.categories) ? b.categories : [],
     createdAt: b.createdAt || b.addedAt || Date.now(), updatedAt: b.updatedAt || Date.now()
   };
 }
 
 async function loadAll() {
   try {
-    const dbRaw = await jsonp(DB_URL, { file: BOOKS_FILE }).catch(() => null);
-    const rRaw = await jsonp(DB_URL, { file: RULES_FILE }).catch(() => null);
+    const dbRaw = await jsonp(DB_URL, { file: BOOKS_FILE });
+    const rRaw = await jsonp(DB_URL, { file: RULES_FILE });
     booksFileHash = await sha256(dbRaw || { version: 2, updatedAt: 0, books: [] });
     rulesFileHash = await sha256(rRaw || { version: 1, customGenres: [] });
     database = normaliseDatabase(dbRaw);
@@ -254,21 +278,23 @@ function switchSection(name, btn) {
 
 function buildGenreControls() {
   const genres = allGenres(); const f = document.getElementById('genre-filter'); const current = f.value;
-  f.innerHTML = '<option value="">All genres</option>' + genres.map(g => `<option value="${esc(g)}">${esc(g)}</option>`).join('');
-  f.value = current; document.getElementById('genre-cloud').innerHTML = genres.map(g => `<span class="chip">${esc(g)}</span>`).join('');
+  const usedGenres = [...new Set(database.books.flatMap(b => b.genres || []))].sort((a, b) => a.localeCompare(b));
+  f.innerHTML = '<option value="">All genres</option>' + usedGenres.map(g => `<option value="${esc(g)}">${esc(g)}</option>`).join('');
+  f.value = usedGenres.includes(current) ? current : '';
+  document.getElementById('genre-cloud').innerHTML = (rules.customGenres || []).map(g => `<span class="chip">${esc(g)}</span>`).join('') || '<span class="note">No additional suggestions saved. Every genre can still be entered directly on a book.</span>'; 
 }
 
 function filteredBooks() {
   const q = (document.getElementById('search').value || '').toLowerCase().trim();
   const sf = document.getElementById('shelf-filter').value; const gf = document.getElementById('genre-filter').value; const sort = document.getElementById('sort').value;
   const arr = database.books.filter(b => {
-    const hay = [b.title, b.author, b.series, (b.genres || []).join(' '), (b.tags || []).join(' ')].join(' ').toLowerCase();
+    const hay = [b.title, b.author, b.series, (b.genres || []).join(' '), (b.tags || []).join(' '), (b.subjects || []).join(' '), (b.categories || []).join(' ')].join(' ').toLowerCase();
     const shelfOk = !sf || (b.shelf || 'read') === sf; const gOk = !gf || (b.genres || []).includes(gf);
     return (!q || hay.includes(q)) && shelfOk && gOk;
   });
   arr.sort((a, b) => {
     if (sort === 'read-desc') return latestReadTs(b) - latestReadTs(a) || (b.createdAt || 0) - (a.createdAt || 0);
-    if (sort === 'rating-desc') return (Number(b.rating10) || -1) - (Number(a.rating10) || -1);
+    if (sort === 'rating-desc') return (b.rating10 == null ? -1 : Number(b.rating10)) - (a.rating10 == null ? -1 : Number(a.rating10));
     if (sort === 'title-asc') return (a.title || '').localeCompare(b.title || '');
     if (sort === 'author-asc') return (a.author || '').localeCompare(b.author || '');
     if (sort === 'added-desc') return (b.createdAt || 0) - (a.createdAt || 0);
@@ -342,36 +368,160 @@ function stopScanner() { if (html5QrCode) { html5QrCode.stop().then(() => { html
 
 async function quickOnlineSearch() {
   const query = document.getElementById('quick-query').value.trim(); const container = document.getElementById('quick-results');
-  if (!query) { container.innerHTML = '<div class="empty" style="padding:0.5rem">Please enter a title or author to search.</div>'; return; }
-  container.innerHTML = '<div class="empty" style="padding:0.5rem">Searching Open Library…</div>';
+  if (!query) { container.innerHTML = '<div class="note">Enter a title, author or ISBN.</div>'; return; }
+  container.innerHTML = '<div class="note">Searching book catalogues…</div>';
   try {
     const res = await serverAction('searchBook', { query }); const books = res.books || [];
-    if (!books.length) { container.innerHTML = '<div class="empty" style="padding:0.5rem">No books found online. Try manual add.</div>'; return; }
-    container.innerHTML = `<div class="search-modal-results">${books.map((b, index) => `<div class="search-result-item" onclick="selectSearchedBook(${index})">${b.cover ? `<img src="${esc(b.cover)}" alt="">` : '<div style="width:36px;height:54px;background:var(--border)"></div>'}<div><div style="font-weight:700;font-size:0.82rem">${esc(b.title)}</div><div style="font-size:0.72rem;color:var(--muted)">${esc(b.author || 'Unknown author')}${b.originalPublicationYear ? '(' + b.originalPublicationYear + ')' : ''}</div></div></div>`).join('')}</div>`;
+    if (!books.length) { container.innerHTML = '<div class="note">No matching book found. Use Manual Add.</div>'; return; }
     window._tempSearchResults = books;
-  } catch (e) { container.innerHTML = `<div class="empty" style="padding:0.5rem;color:var(--red)">Search failed: ${esc(e.message)}</div>`; }
+    container.innerHTML = `<div class="search-modal-results">${books.map((b, index) => `<div class="search-result-item" onclick="selectSearchedBook(${index})">${b.cover ? `<img src="${esc(b.cover)}" alt="">` : '<div style="width:36px;height:54px;background:var(--border)"></div>'}<div><div style="font-weight:700;font-size:.82rem">${esc(b.title)}</div><div style="font-size:.72rem;color:var(--muted)">${esc(b.author || 'Unknown author')}${b.originalPublicationYear ? ' (' + esc(b.originalPublicationYear) + ')' : ''}</div><div class="note">${b.editionVerified ? 'Edition identified' : 'Work record: check edition details'}</div></div></div>`).join('')}</div>`;
+  } catch (e) { container.innerHTML = `<div class="note" style="color:var(--red)">Search failed: ${esc(e.message)}</div>`; }
 }
-function selectSearchedBook(index) { const books = window._tempSearchResults || []; const bookData = books[index]; if (!bookData) return; createManualBook(bookData); document.getElementById('quick-results').innerHTML = ''; document.getElementById('quick-query').value = ''; setStatus('Book imported from online search!', 'ok'); }
+function searchMetadataForExisting() {
+  const b = database.books.find(x => x.id === editingBookId); if (!b) return;
+  window._enrichBookId = b.id; closeEditor();
+  document.getElementById('quick-query').value = b.isbn13 || b.isbn10 || (b.title + ' ' + (b.author || '')).trim();
+  setStatus('Choose a search result to enrich the existing book. Your review, rating, reading history and shelf will be preserved.', 'ok');
+  quickOnlineSearch();
+}
+function mergeBookMetadata(existing, incoming) {
+  const personal = new Set(['id','rating10','review','shelf','status','currentPage','readings','tags','createdAt','updatedAt']);
+  for (const [key, value] of Object.entries(incoming)) {
+    if (personal.has(key) || value === null || value === undefined || value === '') continue;
+    if (Array.isArray(value)) {
+      const prior = Array.isArray(existing[key]) ? existing[key] : [];
+      existing[key] = [...new Set([...prior, ...value])];
+    } else if (typeof value === 'object') {
+      if (!existing[key] || !Object.keys(existing[key]).length) existing[key] = value;
+    } else if (!existing[key]) existing[key] = value;
+  }
+  existing.updatedAt = Date.now();
+}
+async function selectSearchedBook(index) {
+  const b = (window._tempSearchResults || [])[index]; if (!b) return;
+  const container = document.getElementById('quick-results');
+  container.innerHTML = '<div class="note">Retrieving work, edition and supplementary metadata…</div>';
+  try {
+    const result = b.metadataSources ? { book: b } : await serverAction('bookDetails', {
+      workKey: b.openLibraryWorkKey || '', editionKey: b.openLibraryEditionKey || '',
+      isbn: b.isbn13 || b.isbn10 || '', googleBooksId: b.googleBooksId || '',
+      title: b.title || '', author: b.author || '', originalPublicationYear: b.originalPublicationYear || '', editionCount: b.editionCount || 0
+    });
+    if (!result.book || !result.book.title) throw new Error('No usable metadata returned');
+    const catalogue = new Map(BASE_GENRES.map(g => [g.toLowerCase(), g]));
+    const explicitGenreSubjects = (result.book.subjects || []).map(g => catalogue.get(g.toLowerCase())).filter(Boolean);
+    result.book.genres = [...new Map([...(result.book.genres || []), ...explicitGenreSubjects].map(g => [g.toLowerCase(), g])).values()];
+    const existing = database.books.find(x => x.id === window._enrichBookId);
+    if (existing) { mergeBookMetadata(existing, result.book); refreshAll(); scheduleSave(); openEditor(existing.id); }
+    else createManualBook(result.book);
+    window._enrichBookId = null; container.innerHTML = ''; document.getElementById('quick-query').value = '';
+    setStatus('Metadata imported. Check the edition, subjects and genres before saving.', 'ok');
+    if (result.warnings && result.warnings.length) setStatus('Imported with source warnings: ' + result.warnings.join('; '), 'err');
+  } catch (e) { container.innerHTML = `<div class="note" style="color:var(--red)">Metadata retrieval failed: ${esc(e.message)}. No book was created.</div>`; }
+}
 
 function openEditor(id) { const b = database.books.find(x => x.id === id); if (!b) return; editingBookId = id; document.getElementById('editor-heading').textContent = b.title || 'Edit book'; document.getElementById('editor-form').innerHTML = editorHtml(b); document.getElementById('editor-overlay').classList.add('on'); }
 function closeEditor(e) { if (e && e.target !== document.getElementById('editor-overlay')) return; document.getElementById('editor-overlay').classList.remove('on'); editingBookId = null; refreshAll(); }
 
+function genreSelectedHtml(b) {
+  return (b.genres || []).map((g, i) => `<span class="chip">${esc(g)}<button type="button" onclick="removeBookGenre(${i})" aria-label="Remove ${esc(g)}">×</button></span>`).join('') || '<span class="note">No genres assigned. Search the suggestions or enter any new genre.</span>';
+}
+function renderSelectedGenres() {
+  const b = database.books.find(x => x.id === editingBookId);
+  const node = document.getElementById('genre-chosen');
+  if (b && node) node.innerHTML = genreSelectedHtml(b);
+}
+function addBookGenre() {
+  const b = database.books.find(x => x.id === editingBookId);
+  const input = document.getElementById('genre-add'); if (!b || !input) return;
+  const values = input.value.split(',').map(v => v.trim()).filter(Boolean);
+  for (const name of values) if (!(b.genres || []).some(g => g.toLowerCase() === name.toLowerCase())) b.genres.push(name);
+  input.value = ''; renderSelectedGenres(); buildGenreControls(); scheduleSave();
+}
+function removeBookGenre(i) {
+  const b = database.books.find(x => x.id === editingBookId);
+  if (!b || i < 0 || i >= b.genres.length) return;
+  b.genres.splice(i, 1); renderSelectedGenres(); buildGenreControls(); scheduleSave();
+}
 function editorHtml(b) {
-  const genres = allGenres(); const rating = b.rating10 === null || b.rating10 === undefined ? '' : b.rating10;
-  return `<div class="form-grid"><div class="field"><label>Title</label><input id="ed-title" value="${esc(b.title)}" oninput="editorChanged()"></div><div class="field"><label>Author</label><input id="ed-author" value="${esc(b.author)}" oninput="editorChanged()"></div><div class="field"><label>Series Name</label><input id="ed-series" value="${esc(b.series || '')}" oninput="editorChanged()" placeholder="e.g. Harry Potter"></div><div class="field"><label>Book # in Series</label><input id="ed-seriesnum" value="${esc(b.seriesNumber || '')}" oninput="editorChanged()" placeholder="e.g. 1 or 3.5"></div><div class="field"><label>Shelf</label><select id="ed-shelf" onchange="editorChanged()"><option value="read" ${b.shelf === 'read' ? 'selected' : ''}>Read</option><option value="towatch" ${b.shelf === 'towatch' ? 'selected' : ''}>To Read</option></select></div><div class="field"><label>Rating out of 10</label><input id="ed-rating" type="number" min="0" max="10" step="0.5" value="${rating}" oninput="editorChanged()"></div><div class="field wide"><label>Cover URL</label><input id="ed-cover" value="${esc(b.cover || '')}" oninput="editorChanged()"></div><div class="field"><label>Publisher</label><input id="ed-publisher" value="${esc(b.publisher || '')}" oninput="editorChanged()"></div><div class="field"><label>Current Page</label><input id="ed-currpage" type="number" min="0" value="${Number(b.currentPage) || 0}" oninput="editorChanged()"></div><div class="field"><label>Total Pages</label><input id="ed-pages" type="number" min="0" value="${Number(b.pages) || ''}" oninput="editorChanged()"></div><div class="field wide"><label>Genres &amp; Custom Folders</label><div class="genre-options">${genres.map(g => `<label class="genre-option"><input type="checkbox" value="${esc(g)}" ${(b.genres || []).includes(g) ? 'checked' : ''} onchange="editorChanged()">${esc(g)}</label>`).join('')}</div></div><div class="field wide"><label>Tags, comma separated</label><input id="ed-tags" value="${esc((b.tags || []).join(', '))}" oninput="editorChanged()"></div><div class="field wide"><label>My review</label><textarea id="ed-review" oninput="editorChanged()">${esc(b.review || '')}</textarea></div><div class="field wide"><label>Description</label><textarea id="ed-description" oninput="editorChanged()">${esc(b.description || '')}</textarea></div><div class="field wide"><label>Reading history</label><div id="reading-editor">${readingRowsHtml(b)}</div><button class="btn sm secondary" onclick="addReading()">Add reading</button></div><div class="wide actions"><button class="btn red" onclick="deleteBook('${esc(b.id)}');closeEditor()">Delete book</button><button class="btn secondary" onclick="closeEditor()">Done</button></div></div>`;
+  const rating = b.rating10 === null || b.rating10 === undefined ? '' : b.rating10;
+  const suggestions = allGenres().map(g => `<option value="${esc(g)}"></option>`).join('');
+  const info = [
+    ['Publisher(s)', (b.publishers || []).join(', ')], ['Edition', b.editionName],
+    ['Languages', (b.languages || []).join(', ')], ['ISBN-13 identifiers', (b.isbn13s || []).join(', ')],
+    ['ISBN-10 identifiers', (b.isbn10s || []).join(', ')], ['Publish places', (b.publishPlaces || []).join(', ')],
+    ['Physical format', b.physicalFormat], ['Dimensions', b.physicalDimensions], ['Weight', b.weight],
+    ['Contributors', (b.contributors || []).join(', ')], ['Subjects: places', (b.subjectPlaces || []).join(', ')],
+    ['Subjects: people', (b.subjectPeople || []).join(', ')], ['Subjects: periods', (b.subjectTimes || []).join(', ')],
+    ['Dewey Decimal', (b.deweyDecimalClass || []).join(', ')], ['LC classification', (b.lcClassifications || []).join(', ')],
+    ['LCCN', (b.lccn || []).join(', ')], ['OCLC', (b.oclc || []).join(', ')],
+    ['First sentence', b.firstSentence], ['Notes', b.notes],
+    ['Table of contents', (b.tableOfContents || []).join(' | ')],
+    ['Google Books rating (not your rating)', b.externalRatings?.googleAverage == null ? '' : String(b.externalRatings.googleAverage) + ' / 5'],
+    ['Metadata sources', (b.metadataSources || []).join(', ')]
+  ].filter(([, value]) => value !== undefined && value !== null && String(value).trim());
+  const links = [['Open Library', b.openLibraryUrl], ['Google Books', b.googleBooksUrl], ['Preview', b.previewLink]]
+    .filter(([, url]) => /^https:\/\//.test(url || ''))
+    .map(([label, url]) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`).join(' · ');
+  return `<div class="form-grid">
+    <div class="field"><label>Title</label><input id="ed-title" value="${esc(b.title)}" oninput="editorChanged()"></div>
+    <div class="field"><label>Subtitle</label><input id="ed-subtitle" value="${esc(b.subtitle || '')}" oninput="editorChanged()"></div>
+    <div class="field"><label>Author(s)</label><input id="ed-author" value="${esc(b.author)}" oninput="editorChanged()"></div>
+    <div class="field"><label>Series name</label><input id="ed-series" value="${esc(b.series || '')}" oninput="editorChanged()"></div>
+    <div class="field"><label>Book number in series</label><input id="ed-seriesnum" value="${esc(b.seriesNumber || '')}" oninput="editorChanged()"></div>
+    <div class="field"><label>Shelf</label><select id="ed-shelf" onchange="editorChanged()"><option value="read" ${b.shelf === 'read' ? 'selected' : ''}>Read</option><option value="towatch" ${b.shelf === 'towatch' ? 'selected' : ''}>To Read</option></select></div>
+    <div class="field"><label>Rating out of 10</label><input id="ed-rating" type="number" min="0" max="10" step="0.5" value="${rating}" oninput="editorChanged()"></div>
+    <div class="field"><label>Publisher</label><input id="ed-publisher" value="${esc(b.publisher || '')}" oninput="editorChanged()"></div>
+    <div class="field"><label>Edition publication date (as supplied)</label><input id="ed-publishdate" value="${esc(b.publishDate || '')}" oninput="editorChanged()"></div>
+    <div class="field"><label>Original publication year</label><input id="ed-originalyear" value="${esc(b.originalPublicationYear || '')}" oninput="editorChanged()"></div>
+    <div class="field"><label>ISBN-13</label><input id="ed-isbn13" value="${esc(b.isbn13 || '')}" oninput="editorChanged()"></div>
+    <div class="field"><label>ISBN-10</label><input id="ed-isbn10" value="${esc(b.isbn10 || '')}" oninput="editorChanged()"></div>
+    <div class="field"><label>Language</label><input id="ed-language" value="${esc(b.language || '')}" oninput="editorChanged()"></div>
+    <div class="field"><label>Current page</label><input id="ed-currpage" type="number" min="0" value="${Number(b.currentPage) || 0}" oninput="editorChanged()"></div>
+    <div class="field"><label>Total pages</label><input id="ed-pages" type="number" min="0" value="${Number(b.pages) || ''}" oninput="editorChanged()"></div>
+    <div class="field wide"><label>Cover URL</label><input id="ed-cover" value="${esc(b.cover || '')}" oninput="editorChanged()"></div>
+    <div class="field wide"><label>Genres: unlimited, with catalogue suggestions</label><div class="genre-chosen" id="genre-chosen">${genreSelectedHtml(b)}</div>
+      <div class="genre-entry"><input id="genre-add" list="genre-suggestions" placeholder="Search or type any genre; press Enter to add" onkeydown="if(event.key==='Enter'){event.preventDefault();addBookGenre()}"><button class="btn sm" type="button" onclick="addBookGenre()">Add genre</button></div><datalist id="genre-suggestions">${suggestions}</datalist>
+      <p class="note" style="margin-top:.3rem">Imported genre labels are retained. Subjects and source categories are recorded separately below.</p>
+    </div>
+    <div class="field wide"><label>Catalogue subjects, one per line</label><textarea id="ed-subjects" oninput="editorChanged()">${esc((b.subjects || []).join('\n'))}</textarea></div>
+    <div class="field wide"><label>Source categories, one per line</label><textarea id="ed-categories" oninput="editorChanged()">${esc((b.categories || []).join('\n'))}</textarea></div>
+    <div class="field wide"><label>Personal tags, comma separated</label><input id="ed-tags" value="${esc((b.tags || []).join(', '))}" oninput="editorChanged()"></div>
+    <div class="field wide"><label>My review</label><textarea id="ed-review" oninput="editorChanged()">${esc(b.review || '')}</textarea></div>
+    <div class="field wide"><label>Description</label><textarea id="ed-description" oninput="editorChanged()">${esc(b.description || '')}</textarea></div>
+    <div class="field wide"><label>Reading history</label><div id="reading-editor">${readingRowsHtml(b)}</div><button class="btn sm secondary" onclick="addReading()">Add reading</button></div>
+    <div class="field wide"><details><summary class="note" style="cursor:pointer">Additional imported metadata (${info.length} fields)</summary>
+      <div style="margin-top:.7rem;font-size:.75rem;line-height:1.6">${info.map(([k,v]) => `<div><strong>${esc(k)}:</strong> ${esc(v)}</div>`).join('')}${links ? `<p style="margin-top:.5rem">${links}</p>` : ''}</div>
+    </details></div>
+    <div class="wide actions"><button class="btn blue" onclick="searchMetadataForExisting()">Fetch more metadata</button><button class="btn red" onclick="deleteBook('${esc(b.id)}');closeEditor()">Delete book</button><button class="btn secondary" onclick="closeEditor()">Done</button></div>
+  </div>`;
 }
 
 function readingRowsHtml(b) { return (b.readings || []).map((r, i) => `<div class="reading-row"><select onchange="changeReading(${i},'precision',this.value)"><option value="day" ${r.precision === 'day' ? 'selected' : ''}>Exact date</option><option value="month" ${r.precision === 'month' ? 'selected' : ''}>Month and year</option><option value="unknown" ${r.precision === 'unknown' ? 'selected' : ''}>Date unknown</option></select>${r.precision === 'unknown' ? '<span class="note">No date stored</span>' : `<input type="${r.precision === 'month' ? 'month' : 'date'}" value="${esc(r.date || '')}" onchange="changeReading(${i},'date',this.value)">`}<button class="icon-btn" onclick="removeReading(${i})">Remove</button></div>`).join('') || '<div class="note">No reading history recorded.</div>'; }
 
 function editorChanged() {
   const b = database.books.find(x => x.id === editingBookId); if (!b) return;
-  b.title = document.getElementById('ed-title').value.trim(); b.author = document.getElementById('ed-author').value.trim(); b.series = document.getElementById('ed-series').value.trim(); b.seriesNumber = document.getElementById('ed-seriesnum').value.trim(); b.shelf = document.getElementById('ed-shelf').value; b.cover = document.getElementById('ed-cover').value.trim(); b.publisher = document.getElementById('ed-publisher').value.trim(); b.currentPage = Number(document.getElementById('ed-currpage').value) || 0; b.pages = Number(document.getElementById('ed-pages').value) || 0; b.status = b.shelf === 'towatch' ? 'towatch' : ((b.currentPage > 0 && b.currentPage < b.pages) ? 'reading' : 'finished'); b.description = document.getElementById('ed-description').value.trim(); const v = document.getElementById('ed-rating').value; b.rating10 = v === '' ? null : Math.max(0, Math.min(10, Number(v))); b.review = document.getElementById('ed-review').value; b.genres = [...document.querySelectorAll('.genre-options input:checked')].map(x => x.value); b.tags = splitList(document.getElementById('ed-tags').value); b.updatedAt = Date.now();
-  document.getElementById('editor-heading').textContent = b.title || 'Edit book'; renderStats(); scheduleSave();
+  const val = id => document.getElementById('ed-' + id).value.trim();
+  b.title = val('title'); b.subtitle = val('subtitle'); b.author = val('author');
+  b.series = val('series'); b.seriesNumber = val('seriesnum'); b.shelf = val('shelf');
+  b.cover = val('cover'); b.publisher = val('publisher'); b.publishDate = val('publishdate');
+  b.originalPublicationYear = val('originalyear'); b.isbn13 = val('isbn13'); b.isbn10 = val('isbn10'); b.language = val('language');
+  b.currentPage = Number(val('currpage')) || 0; b.pages = Number(val('pages')) || 0;
+  b.status = b.shelf === 'towatch' ? 'towatch' : (b.currentPage > 0 && b.currentPage < b.pages ? 'reading' : 'finished');
+  b.description = val('description');
+  const r = val('rating'); b.rating10 = r === '' ? null : Math.max(0, Math.min(10, Number(r)));
+  b.review = document.getElementById('ed-review').value;
+  b.subjects = splitLines(val('subjects')); b.categories = splitLines(val('categories'));
+  b.tags = splitList(val('tags')); b.updatedAt = Date.now();
+  document.getElementById('editor-heading').textContent = b.title || 'Edit book';
+  renderStats(); scheduleSave();
 }
+
 function addReading() { const b = database.books.find(x => x.id === editingBookId); if (!b) return; b.readings.push({ id: uid('reading'), date: todayIso(), precision: 'day' }); document.getElementById('reading-editor').innerHTML = readingRowsHtml(b); scheduleSave(); }
-function changeReading(i, key, value) { const b = database.books.find(x => x.id === editingBookId); if (!b || !b.readings[i]) return; b.readings[i][key] = value; if (key === 'precision') { if (value === 'unknown') b.readings[i].date = ''; else if (value === 'month' && /^\d{4}-\d{2}$/.test(b.readings[i].date || '')) b.readings[i].date = b.readings[i].date.slice(0, 7); else if (value === 'day' && !/^\d{4}-\d{2}-\d{2}$/.test(b.readings[i].date || '')) b.readings[i].date = todayIso(); document.getElementById('reading-editor').innerHTML = readingRowsHtml(b); } scheduleSave(); }
+function changeReading(i, key, value) { const b = database.books.find(x => x.id === editingBookId); if (!b || !b.readings[i]) return; b.readings[i][key] = value; if (key === 'precision') { if (value === 'unknown') b.readings[i].date = ''; else if (value === 'month') b.readings[i].date = /^\d{4}-\d{2}/.test(b.readings[i].date || '') ? b.readings[i].date.slice(0, 7) : todayIso().slice(0, 7); else if (value === 'day' && !/^\d{4}-\d{2}-\d{2}$/.test(b.readings[i].date || '')) b.readings[i].date = todayIso(); document.getElementById('reading-editor').innerHTML = readingRowsHtml(b); } scheduleSave(); }
 function removeReading(i) { const b = database.books.find(x => x.id === editingBookId); if (!b) return; b.readings.splice(i, 1); document.getElementById('reading-editor').innerHTML = readingRowsHtml(b); scheduleSave(); }
 function splitList(v) { return [...new Set(String(v || '').split(',').map(x => x.trim()).filter(Boolean))]; }
+function splitLines(v) { return [...new Set(String(v || '').split(/\r?\n/).map(x => x.trim()).filter(Boolean))]; }
 function deleteBook(id) { const b = database.books.find(x => x.id === id); if (!b || !confirm(`Delete "${b.title}" from books.json?`)) return; database.books = database.books.filter(x => x.id !== id); refreshAll(); scheduleSave(); }
 
 loadAll();
