@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bookshelf Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<!-- Html5-qrcode library for bookstore barcode scanning -->
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -103,10 +102,16 @@ main{max-width:1120px;margin:0 auto;padding:1.35rem}
 
 <script>
 // =======================================================
-// PASTE YOUR NEW APPS SCRIPT URL AND TOKEN HERE:
+// PASTE YOUR NEW APPS SCRIPT URL HERE:
 // =======================================================
 const DB_URL = 'YOUR_NEW_APPS_SCRIPT_URL_HERE'; 
-const ADMIN_TOKEN = 'rahul_bookshelf_admin_secret_token_1234567'; 
+
+// PROMPT FOR THE SIMPLE PIN
+let ADMIN_TOKEN = sessionStorage.getItem('admin_pin');
+if (!ADMIN_TOKEN) {
+  ADMIN_TOKEN = prompt("Enter your numeric unlock code to access the Bookshelf Admin:");
+  if (ADMIN_TOKEN) sessionStorage.setItem('admin_pin', ADMIN_TOKEN);
+}
 
 const BOOKS_FILE = 'books.json';
 const RULES_FILE = 'book_genre_rules.json';
@@ -124,20 +129,16 @@ let saveInFlight = false;
 let saveAgain = false;
 let html5QrCode = null;
 
-// Cryptographic hash for optimistic concurrency
 async function sha256(dataObj) {
   const str = JSON.stringify(dataObj);
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// Generate exact 32-char hex ID required by backend receipt system
 function generateReceiptId() {
-  return Array.from(crypto.getRandomValues(new Uint8Array(16)))
-    .map(b => b.toString(16).padStart(2, '0')).join('');
+  return Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// JSONP for read-only actions and polling
 function jsonp(url, params) {
   return new Promise((resolve, reject) => {
     const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
@@ -150,24 +151,20 @@ function jsonp(url, params) {
   });
 }
 
-// Route external API calls through backend JSONP
 async function serverAction(action, params = {}) {
   return await jsonp(DB_URL, { action, ...params });
 }
 
-// The new secure blind-post & poll saving mechanism
 async function driveWrite(file, data, currentHash) {
   const requestId = generateReceiptId();
   const payload = { action: 'write', token: ADMIN_TOKEN, file, data, baseHash: currentHash, requestId };
 
-  // 1. Blind POST (Bypasses CORS restrictions)
   fetch(DB_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
 
-  // 2. Poll for the receipt via JSONP
   for (let i = 0; i < 8; i++) {
-    await new Promise(r => setTimeout(r, 1200)); // wait 1.2s between checks
+    await new Promise(r => setTimeout(r, 1200)); 
     const receipt = await jsonp(DB_URL, { action: 'receipt', id: requestId });
-    if (receipt.state === 'ok') return receipt.hash; // Return new hash on success
+    if (receipt.state === 'ok') return receipt.hash; 
     if (receipt.state === 'error') throw new Error(receipt.error);
   }
   throw new Error('Save timed out. Please refresh.');
@@ -222,14 +219,10 @@ async function loadAll() {
   try {
     const dbRaw = await jsonp(DB_URL, { file: BOOKS_FILE }).catch(() => null);
     const rRaw = await jsonp(DB_URL, { file: RULES_FILE }).catch(() => null);
-    
-    // Calculate and store initial hashes to prevent write conflicts
     booksFileHash = await sha256(dbRaw || { version: 2, updatedAt: 0, books: [] });
     rulesFileHash = await sha256(rRaw || { version: 1, customGenres: [] });
-
     database = normaliseDatabase(dbRaw);
     rules = rRaw && typeof rRaw === 'object' && !Array.isArray(rRaw) ? rRaw : { version: 1, customGenres: [] };
-
     refreshAll();
     setStatus(`Loaded ${database.books.length} personal books.`, 'ok');
     setSaveState('Saved', 'ok');
@@ -253,34 +246,26 @@ function renderStats() {
 }
 
 function switchSection(name, btn) {
-  document.querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
-  btn.classList.add('on');
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('on')); btn.classList.add('on');
   document.querySelectorAll('.section').forEach(x => x.classList.remove('on'));
   document.getElementById('section-' + name).classList.add('on');
   if (name === 'rules') renderRules();
 }
 
 function buildGenreControls() {
-  const genres = allGenres();
-  const f = document.getElementById('genre-filter');
-  const current = f.value;
+  const genres = allGenres(); const f = document.getElementById('genre-filter'); const current = f.value;
   f.innerHTML = '<option value="">All genres</option>' + genres.map(g => `<option value="${esc(g)}">${esc(g)}</option>`).join('');
-  f.value = current;
-  document.getElementById('genre-cloud').innerHTML = genres.map(g => `<span class="chip">${esc(g)}</span>`).join('');
+  f.value = current; document.getElementById('genre-cloud').innerHTML = genres.map(g => `<span class="chip">${esc(g)}</span>`).join('');
 }
 
 function filteredBooks() {
   const q = (document.getElementById('search').value || '').toLowerCase().trim();
-  const sf = document.getElementById('shelf-filter').value;
-  const gf = document.getElementById('genre-filter').value;
-  const sort = document.getElementById('sort').value;
+  const sf = document.getElementById('shelf-filter').value; const gf = document.getElementById('genre-filter').value; const sort = document.getElementById('sort').value;
   const arr = database.books.filter(b => {
     const hay = [b.title, b.author, b.series, (b.genres || []).join(' '), (b.tags || []).join(' ')].join(' ').toLowerCase();
-    const shelfOk = !sf || (b.shelf || 'read') === sf;
-    const gOk = !gf || (b.genres || []).includes(gf);
+    const shelfOk = !sf || (b.shelf || 'read') === sf; const gOk = !gf || (b.genres || []).includes(gf);
     return (!q || hay.includes(q)) && shelfOk && gOk;
   });
-  
   arr.sort((a, b) => {
     if (sort === 'read-desc') return latestReadTs(b) - latestReadTs(a) || (b.createdAt || 0) - (a.createdAt || 0);
     if (sort === 'rating-desc') return (Number(b.rating10) || -1) - (Number(a.rating10) || -1);
@@ -293,21 +278,15 @@ function filteredBooks() {
 }
 
 function renderBooks() {
-  renderStats();
-  const arr = filteredBooks();
-  const pages = Math.max(1, Math.ceil(arr.length / PAGE_SIZE));
-  bookPage = Math.min(bookPage, pages);
-  const visible = arr.slice((bookPage - 1) * PAGE_SIZE, bookPage * PAGE_SIZE);
-  const list = document.getElementById('book-list');
+  renderStats(); const arr = filteredBooks(); const pages = Math.max(1, Math.ceil(arr.length / PAGE_SIZE)); bookPage = Math.min(bookPage, pages);
+  const visible = arr.slice((bookPage - 1) * PAGE_SIZE, bookPage * PAGE_SIZE); const list = document.getElementById('book-list');
   
   if (!visible.length) { list.innerHTML = '<div class="empty">No books match your filters.</div>'; } 
   else {
     list.innerHTML = visible.map(b => {
-      const r = latestReading(b);
-      const rating = b.rating10 !== null && b.rating10 !== '' && b.rating10 !== undefined ? `${Number(b.rating10).toFixed(Number(b.rating10) % 1 ? 1 : 0)}/10` : 'Unrated';
+      const r = latestReading(b); const rating = b.rating10 !== null && b.rating10 !== '' && b.rating10 !== undefined ? `${Number(b.rating10).toFixed(Number(b.rating10) % 1 ? 1 : 0)}/10` : 'Unrated';
       const seriesInfo = b.series ? ` · Series: ${b.series}${b.seriesNumber ? ' #' + b.seriesNumber : ''}` : '';
-      const totalPages = Number(b.pages) || 0; const currPage = Number(b.currentPage) || 0;
-      const pct = totalPages > 0 ? Math.min(100, Math.round((currPage / totalPages) * 100)) : 0;
+      const totalPages = Number(b.pages) || 0; const currPage = Number(b.currentPage) || 0; const pct = totalPages > 0 ? Math.min(100, Math.round((currPage / totalPages) * 100)) : 0;
       return `
         <div class="book-row">
           ${b.cover ? `<img class="cover" src="${esc(b.cover)}" alt="${esc(b.title)}" loading="lazy">` : '<div class="cover-ph">📖</div>'}
@@ -333,14 +312,8 @@ async function saveNow() {
   try {
     booksFileHash = await driveWrite(BOOKS_FILE, database, booksFileHash);
     setSaveState('Saved', 'ok');
-  } catch (e) {
-    console.error(e);
-    setSaveState('Save failed', 'err');
-    setStatus('Save failed: ' + e.message, 'err');
-  } finally {
-    saveInFlight = false;
-    if (saveAgain) { saveAgain = false; saveNow(); }
-  }
+  } catch (e) { console.error(e); setSaveState('Save failed', 'err'); setStatus('Save failed: ' + e.message, 'err'); } 
+  finally { saveInFlight = false; if (saveAgain) { saveAgain = false; saveNow(); } }
 }
 
 async function saveRules() {
