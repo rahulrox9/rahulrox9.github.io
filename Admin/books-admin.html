@@ -106,13 +106,6 @@ main{max-width:1120px;margin:0 auto;padding:1.35rem}
 // =======================================================
 const DB_URL = 'https://script.google.com/macros/s/AKfycbyrGy4Stw2IKEcK9a7WfzrOVrEs6s5mF-m2vKE6l-_Jt3Am5X248llZ4z9rpX5piJwuZQ/exec'; 
 
-// PROMPT FOR THE SIMPLE PIN
-let ADMIN_TOKEN = sessionStorage.getItem('admin_pin');
-if (!ADMIN_TOKEN) {
-  ADMIN_TOKEN = prompt("Enter your numeric unlock code to access the Bookshelf Admin:");
-  if (ADMIN_TOKEN) sessionStorage.setItem('admin_pin', ADMIN_TOKEN);
-}
-
 const BOOKS_FILE = 'books.json';
 const RULES_FILE = 'book_genre_rules.json';
 const PAGE_SIZE = 100;
@@ -180,16 +173,17 @@ async function serverAction(action, params = {}) {
 
 async function driveWrite(file, data, currentHash) {
   const requestId = generateReceiptId();
-  const payload = { action: 'write', token: ADMIN_TOKEN, file, data, baseHash: currentHash, requestId };
+  const payload = { action: 'write', file, data, baseHash: currentHash, requestId };
 
   fetch(DB_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
 
   for (let i = 0; i < 8; i++) {
-    await new Promise(r => setTimeout(r, 1200)); 
+    await new Promise(r => setTimeout(r, 1200));
     const receipt = await jsonp(DB_URL, { action: 'receipt', id: requestId });
-    if (receipt.state === 'ok') return receipt.hash; 
+    if (receipt.state === 'ok') return receipt.hash;
     if (receipt.state === 'error') throw new Error(receipt.error);
   }
+
   throw new Error('Save timed out. Please refresh.');
 }
 
