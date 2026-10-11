@@ -1,523 +1,823 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bookshelf Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/html5-qrcode" defer></script>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e;--red:#b64335;--blue:#365f9d;--purple:#72549a}
-body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;padding-bottom:5rem}
-button,input,select,textarea{font:inherit}
-nav{position:sticky;top:0;z-index:100;background:#1a1208;color:#fff;height:50px;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between}
-.nav-logo{font-family:'Playfair Display',serif;font-weight:700;color:#fff;text-decoration:none}.nav-logo span{color:var(--warm);font-style:italic}.nav-right{display:flex;gap:.6rem;align-items:center}.nav-link{color:rgba(255,255,255,.72);text-decoration:none;font-size:.72rem;border:1px solid rgba(255,255,255,.18);padding:.27rem .62rem;border-radius:4px}
-main{max-width:1120px;margin:0 auto;padding:1.35rem}
-.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;margin-bottom:1rem}.hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,4vw,2.45rem)}.hero h1 span{color:var(--warm);font-style:italic}.hero p{font-size:.77rem;color:var(--muted);margin-top:.25rem}
-.panel{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem}.actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}.btn{border:none;border-radius:5px;padding:.55rem .86rem;background:var(--warm);color:#fff;font-size:.78rem;font-weight:500;cursor:pointer}.btn:hover{opacity:.88}.btn:disabled{opacity:.45;cursor:not-allowed}.btn.secondary{background:transparent;color:var(--muted);border:1px solid var(--border)}.btn.green{background:var(--green)}.btn.blue{background:var(--blue)}.btn.red{background:var(--red)}.btn.sm{padding:.32rem .58rem;font-size:.69rem}
-.status{font-size:.74rem;color:var(--muted);margin-top:.65rem;min-height:1.1rem}.status.ok{color:var(--green)}.status.err{color:var(--red)}
-.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.65rem;margin-bottom:1rem}.stat{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:.75rem}.stat strong{display:block;font-family:'Playfair Display',serif;font-size:1.25rem}.stat span{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
-.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:1rem;gap:.2rem}.tab{background:none;border:none;border-bottom:2px solid transparent;padding:.5rem .9rem;color:var(--muted);cursor:pointer;font-size:.76rem}.tab.on{color:var(--warm);border-bottom-color:var(--warm);font-weight:600}.section{display:none}.section.on{display:block}
-.controls{display:flex;gap:.55rem;flex-wrap:wrap;align-items:center}.control{border:1px solid var(--border);background:var(--card);color:var(--ink);border-radius:20px;padding:.5rem .75rem;font-size:.78rem;outline:none}.control:focus{border-color:var(--warm)}.search{flex:1;min-width:220px}
-.book-list{display:flex;flex-direction:column;gap:.6rem}.book-row{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:.72rem;display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:.75rem;align-items:center}.cover{width:52px;height:78px;object-fit:cover;border-radius:3px;background:var(--border)}.cover-ph{width:52px;height:78px;display:flex;align-items:center;justify-content:center;border-radius:3px;background:var(--border);font-size:1.25rem}.book-title{font-family:'Playfair Display',serif;font-size:.93rem;font-weight:700}.book-meta{font-size:.7rem;color:var(--muted);margin-top:.15rem;line-height:1.45}.chips{display:flex;gap:.28rem;flex-wrap:wrap;margin-top:.35rem}.chip{font-size:.58rem;border-radius:10px;padding:.1rem .4rem;background:#f6e8d7;color:var(--warm)}.chip.tag{background:#ece7f4;color:var(--purple)}.chip.towatch{background:#e2eefc;color:var(--blue)}.row-actions{display:flex;gap:.35rem;align-items:center}.icon-btn{border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:4px;padding:.35rem .48rem;cursor:pointer;font-size:.7rem}.icon-btn:hover{border-color:var(--warm);color:var(--warm)}
-.pagination{display:flex;justify-content:center;gap:.5rem;align-items:center;margin-top:1rem;font-size:.72rem;color:var(--muted)}
-.field{margin-bottom:.75rem}.field label{display:block;font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.25rem}.field input,.field textarea,.field select{width:100%;border:1px solid var(--border);border-radius:5px;background:var(--parchment);padding:.5rem .62rem;color:var(--ink);font-size:.8rem;outline:none}.field textarea{min-height:80px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--warm)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}.wide{grid-column:1/-1}
-.overlay{display:none;position:fixed;inset:0;background:rgba(26,18,8,.62);z-index:500;align-items:center;justify-content:center;padding:1rem}.overlay.on{display:flex}.modal{background:var(--card);width:min(760px,100%);max-height:92vh;overflow:auto;border-radius:9px;position:relative;padding:1.1rem}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:1rem}.modal h2{font-family:'Playfair Display',serif;font-size:1.25rem}.close{border:none;background:none;font-size:1.3rem;color:var(--muted);cursor:pointer}
-.genre-chosen{display:flex;flex-wrap:wrap;gap:.35rem;padding:.4rem 0}.genre-chosen .chip{font-size:.72rem;padding:.25rem .4rem}.genre-chosen button{border:0;background:transparent;color:var(--red);cursor:pointer;margin-left:.4rem}.genre-entry{display:flex;gap:.4rem;align-items:center}.genre-entry input{flex:1}.genre-options{display:flex;flex-wrap:wrap;gap:.35rem;max-height:150px;overflow:auto;border:1px solid var(--border);background:var(--parchment);padding:.5rem;border-radius:5px}.genre-option{display:flex;align-items:center;gap:.3rem;font-size:.7rem;border:1px solid var(--border);background:var(--card);padding:.24rem .45rem;border-radius:12px;text-transform:none;letter-spacing:0;color:var(--ink)}.genre-option input{width:auto;accent-color:var(--warm)}
-.reading-row{display:grid;grid-template-columns:120px 1fr auto;gap:.45rem;margin-bottom:.4rem;align-items:center}.reading-row select,.reading-row input{border:1px solid var(--border);border-radius:4px;background:var(--parchment);padding:.42rem;font-size:.75rem}.empty{text-align:center;padding:2.5rem;color:var(--muted);font-family:'Playfair Display',serif;font-style:italic}.note{font-size:.7rem;color:var(--muted);line-height:1.5}
-#reader-container{max-width:400px;margin:1rem auto;display:none}
-.search-modal-results{display:flex;flex-direction:column;gap:.5rem;max-height:300px;overflow-y:auto;margin-top:.5rem}
-.search-result-item{display:flex;align-items:center;gap:.6rem;padding:.4rem;border:1px solid var(--border);border-radius:5px;background:var(--parchment);cursor:pointer}
-.search-result-item:hover{background:var(--card);border-color:var(--warm)}
-.search-result-item img{width:36px;height:54px;object-fit:cover;border-radius:2px}
-@media(max-width:760px){main{padding:.85rem}.hero{align-items:flex-start;flex-direction:column}.stats{grid-template-columns:repeat(2,1fr)}.book-row{grid-template-columns:48px minmax(0,1fr)}.cover,.cover-ph{width:48px;height:72px}.row-actions{grid-column:2}.form-grid{grid-template-columns:1fr}.wide{grid-column:auto}.reading-row{grid-template-columns:105px 1fr auto}.actions .btn{flex:1;min-width:135px}}
+:root{--ink:#1a1208;--bg:#faf6ef;--card:#fff9f2;--accent:#c8873a;--muted:#806f5c;--line:#e6ddcf;--green:#2d6b5e;--red:#b64335}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font:14px 'DM Sans',sans-serif;color:var(--ink)}
+nav{background:var(--ink);color:white;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+nav a{color:white;text-decoration:none;font-size:12px}
+nav strong{font:700 18px 'Playfair Display',serif}
+nav span{color:var(--accent)}
+main{max-width:1160px;margin:auto;padding:24px 16px 80px}
+h1,h2,h3{font-family:'Playfair Display',serif}
+h1{font-size:34px;margin:0 0 5px}
+h2{font-size:22px}
+p{line-height:1.5}
+.muted,.note{color:var(--muted);font-size:12px}
+.panel,.stat,.book-row{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:14px}
+.actions,.toolbar,.chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toolbar{margin:15px 0}
+.btn,button{cursor:pointer}
+.btn{border:0;border-radius:5px;padding:10px 13px;background:var(--accent);color:white;font:500 12px 'DM Sans',sans-serif}
+.btn.secondary{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.green{background:var(--green)}
+.btn.red{background:var(--red)}
+.btn.blue{background:#365f9d}
+.btn:disabled{opacity:.45;cursor:default}
+input,select,textarea{font:13px 'DM Sans',sans-serif;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:9px;border-radius:5px;max-width:100%}
+textarea{width:100%;min-height:95px;resize:vertical}
+input[type=file]{max-width:100%}
+.search{flex:1;min-width:190px}
+.status{font-size:12px;color:var(--muted);margin-top:8px}
+.status.ok{color:var(--green)}
+.status.err{color:var(--red)}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}
+.stat{margin:0}
+.stat strong{display:block;font:700 23px 'Playfair Display',serif}
+.stat small{color:var(--muted)}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin:22px 0 15px;flex-wrap:wrap}
+.tab{padding:12px;background:transparent;border:0;color:var(--muted)}
+.tab.on{border-bottom:2px solid var(--accent);color:var(--ink)}
+.section{display:none}
+.section.on{display:block}
+.book-row{display:grid;grid-template-columns:54px minmax(0,1fr) auto;gap:12px;align-items:center;margin-bottom:8px}
+.cover{width:54px;height:80px;object-fit:cover;background:#ded2c0}
+.book-title{font:700 17px 'Playfair Display',serif}
+.book-meta{color:var(--muted);font-size:12px;margin:3px 0}
+.chip{display:inline-block;background:#f7e9d5;border-radius:11px;color:#87571e;font-size:11px;padding:3px 8px}
+.chip.custom{background:#ebe6f5;color:#654b8c}
+.chip button{border:0;background:none;color:var(--red);margin-left:5px}
+.row-actions{display:flex;gap:5px;flex-wrap:wrap}
+.row-actions .btn{padding:7px}
+.bar{height:5px;background:#e8dfd0;border-radius:8px;overflow:hidden;margin-top:5px}
+.fill{height:100%;background:var(--accent)}
+.overlay{display:none;position:fixed;inset:0;background:#1a1208aa;align-items:center;justify-content:center;padding:12px;z-index:20}
+.overlay.on{display:flex}
+.modal{position:relative;background:var(--card);width:min(820px,100%);max-height:94vh;overflow:auto;padding:20px;border-radius:10px}
+.close{position:absolute;top:12px;right:14px;background:none;border:0;font-size:26px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field label{font-size:11px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+.field input,.field select{width:100%}
+.wide{grid-column:1/-1}
+.item-list{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.item-entry{display:flex;gap:6px}
+.item-entry input{flex:1}
+.progress-entry{padding:7px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;font-size:12px}
+.empty{padding:20px;text-align:center;color:var(--muted)}
+#reader-container{display:none;max-width:400px}
+#quick-results{margin:8px 0}
+.search-result{display:flex;gap:10px;padding:8px;border:1px solid var(--line);margin:5px 0;cursor:pointer}
+.search-result img{width:42px;height:62px;object-fit:cover}
+.csv-preview{margin:12px 0;padding:12px;border:1px solid var(--line);border-radius:6px}
+@media(max-width:750px){
+.stats{grid-template-columns:repeat(2,1fr)}
+.form-grid{grid-template-columns:1fr}
+.wide{grid-column:auto}
+.book-row{grid-template-columns:46px minmax(0,1fr)}
+.row-actions{grid-column:2}
+.toolbar>*{flex:1}
+.modal{padding:13px}
+.item-entry{flex-wrap:wrap}
+}
 </style>
 </head>
 <body>
 <nav>
-  <a class="nav-logo" href="admin.html">Admin <span>Bookshelf</span></a>
-  <div class="nav-right"><a class="nav-link" href="../Public/books.html">Public bookshelf</a><a class="nav-link" href="admin.html">Admin home</a></div>
+  <strong>Admin <span>Bookshelf</span></strong>
+  <div><a href="../Public/books.html">Public bookshelf</a> · <a href="admin.html">Admin home</a></div>
 </nav>
 <main>
-  <div class="hero"><div><h1>Bookshelf <span>Database</span></h1><p>Manage your library, retrieve extended metadata and maintain unrestricted genres.</p></div><div id="save-state" class="status">Loading…</div></div>
+  <h1>Bookshelf Database</h1>
+  <p class="muted">Manage books, bibliographic metadata, genres, shelves and dated reading progress.</p>
+  <div id="save-state" class="status">Loading…</div>
 
   <section class="panel">
-    <div style="display:flex;gap:0.5rem;margin-bottom:0.8rem;flex-wrap:wrap">
-      <input id="quick-query" class="control" style="flex:1;min-width:240px;border-radius:5px;background:var(--parchment)" placeholder="Search title, author, ISBN or paste Goodreads link…" onkeydown="if(event.key==='Enter')quickOnlineSearch()">
-      <button class="btn blue" onclick="quickOnlineSearch()">🔍 Fetch Book</button>
-      <button class="btn green" onclick="createManualBook()">＋ Manual Add</button>
-      <button class="btn blue" onclick="toggleScanner()">📷 Scan Barcode</button>
+    <h2>Find a book</h2>
+    <div class="actions">
+      <input id="quick-query" class="search" placeholder="Title, author, ISBN or Goodreads link" onkeydown="if(event.key==='Enter')quickOnlineSearch()">
+      <button class="btn blue" onclick="quickOnlineSearch()">Search</button>
+      <button class="btn green" onclick="createManualBook()">Manual add</button>
+      <button class="btn secondary" onclick="toggleScanner()">Scan ISBN</button>
     </div>
-    <div id="quick-results" style="margin-bottom:0.5rem"></div>
-    <div id="reader-container"><div id="reader"></div><button class="btn sm red" style="margin-top:0.5rem;width:100%" onclick="stopScanner()">Close Camera</button></div>
-    <div id="status" class="status">Loading books.json…</div>
+    <div id="quick-results"></div>
+    <div id="reader-container">
+      <div id="reader"></div>
+      <button class="btn red" onclick="stopScanner()">Stop scanner</button>
+    </div>
+    <div id="status" class="status"></div>
   </section>
 
   <div class="stats">
-    <div class="stat"><strong id="stat-total">0</strong><span>Books</span></div>
-    <div class="stat"><strong id="stat-rated">0</strong><span>Rated (/10)</span></div>
-    <div class="stat"><strong id="stat-towatch">0</strong><span>To Read</span></div>
-    <div class="stat"><strong id="stat-reread">0</strong><span>Reread</span></div>
-    <div class="stat"><strong id="stat-average">—</strong><span>Average /10</span></div>
+    <div class="stat"><strong id="stat-total">0</strong><small>Books</small></div>
+    <div class="stat"><strong id="stat-reading">0</strong><small>Currently reading</small></div>
+    <div class="stat"><strong id="stat-towatch">0</strong><small>To read</small></div>
+    <div class="stat"><strong id="stat-read">0</strong><small>Read</small></div>
+    <div class="stat"><strong id="stat-reread">0</strong><small>Reread</small></div>
+    <div class="stat"><strong id="stat-average">—</strong><small>Average rating /10</small></div>
   </div>
 
   <div class="tabs">
     <button class="tab on" onclick="switchSection('books',this)">Books</button>
-    <button class="tab" onclick="switchSection('rules',this)">Custom Folders &amp; Genres</button>
+    <button class="tab" onclick="switchSection('rules',this)">Custom shelves and genres</button>
+    <button class="tab" onclick="switchSection('goodreads',this)">Import Goodreads CSV</button>
   </div>
 
   <section id="section-books" class="section on">
-    <div class="panel controls">
-      <input id="search" class="control search" placeholder="Search title, author or genre…" oninput="bookPage=1;renderBooks()">
-      <select id="shelf-filter" class="control" onchange="bookPage=1;renderBooks()">
-        <option value="">All shelves</option>
-        <option value="read">Read</option>
-        <option value="towatch">To Read</option>
-      </select>
-      <select id="genre-filter" class="control" onchange="bookPage=1;renderBooks()"><option value="">All genres</option></select>
-      <select id="sort" class="control" onchange="bookPage=1;renderBooks()">
-        <option value="read-desc">Recently read</option><option value="rating-desc">Highest rated</option><option value="title-asc">Title A–Z</option><option value="author-asc">Author A–Z</option><option value="added-desc">Recently added</option>
+    <div class="toolbar">
+      <input id="search" class="search" placeholder="Search your books" oninput="bookPage=1;renderBooks()">
+      <select id="shelf-filter" onchange="bookPage=1;renderBooks()"></select>
+      <select id="genre-filter" onchange="bookPage=1;renderBooks()"></select>
+      <select id="sort" onchange="bookPage=1;renderBooks()">
+        <option value="read-desc">Recently read</option>
+        <option value="read-asc">Oldest read</option>
+        <option value="added-desc">Recently added</option>
+        <option value="title-asc">Title A to Z</option>
+        <option value="author-asc">Author A to Z</option>
+        <option value="rating-desc">Highest rated</option>
+        <option value="rating-asc">Lowest rated</option>
       </select>
     </div>
-    <div id="book-list" class="book-list"><div class="empty">Loading…</div></div>
-    <div id="pagination" class="pagination"></div>
+    <div id="book-list"></div>
+    <div id="pagination" class="actions"></div>
   </section>
 
   <section id="section-rules" class="section">
-    <div class="panel" style="max-width:500px">
-      <h3 style="font-family:'Playfair Display',serif;margin-bottom:.75rem">Genre suggestions and custom folders</h3>
-      <p class="note" style="margin-bottom:.6rem">All genres used in your books, all imported classifications and any new name you type are supported. This list only manages reusable suggestions.</p><div id="genre-cloud" class="genre-cloud" style="margin-bottom:1rem"></div>
-      <div class="field"><label>Save a genre suggestion</label><div class="actions"><input id="new-genre" class="control" style="border-radius:5px;flex:1" placeholder="e.g. Classics, Sci-Fi Favorites"><button class="btn sm" onclick="addCustomGenre()">Add</button></div></div>
+    <div class="panel">
+      <h2>Custom shelves</h2>
+      <p class="note">Create as many as you like. Books can belong to several custom shelves. Their reading status remains separate.</p>
+      <div class="actions">
+        <input id="new-shelf" class="search" placeholder="New shelf name">
+        <button class="btn" onclick="addCustomShelf()">Add shelf</button>
+      </div>
+      <div id="shelf-cloud" class="item-list"></div>
+    </div>
+    <div class="panel">
+      <h2>Genres</h2>
+      <p class="note">Genre names are unrestricted. Suggestions include the imported catalogue classifications and every genre already assigned to your books.</p>
+      <div class="actions">
+        <input id="new-genre" class="search" placeholder="New genre">
+        <button class="btn" onclick="addCustomGenre()">Add genre</button>
+      </div>
+      <div id="genre-cloud" class="item-list"></div>
+    </div>
+  </section>
+
+  <section id="section-goodreads" class="section">
+    <div class="panel">
+      <h2>Import your Goodreads library</h2>
+      <p class="note">Choose the original Goodreads CSV. A preview checks duplicates before changes are saved. It imports reading dates, ratings, reviews, identifiers and shelves, but not historical daily page progress.</p>
+      <input id="goodreads-file" type="file" accept=".csv,text/csv">
+      <div class="actions" style="margin-top:10px">
+        <button class="btn blue" onclick="previewGoodreadsImport()">Preview CSV</button>
+        <button id="goodreads-apply" class="btn green" onclick="applyGoodreadsImport()" disabled>Import previewed books</button>
+      </div>
+      <div id="goodreads-preview" class="csv-preview note">No file selected.</div>
     </div>
   </section>
 </main>
 
-<div class="overlay" id="editor-overlay" onclick="closeEditor(event)">
+<div id="editor-overlay" class="overlay" onclick="closeEditor(event)">
   <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-head"><div><h2 id="editor-heading">Edit book</h2><div class="note">Changes save automatically. Genre suggestions are optional and do not restrict entries.</div></div><button class="close" onclick="closeEditor()">×</button></div>
+    <button class="close" onclick="closeEditor()">×</button>
+    <h2 id="editor-heading">Book</h2>
+    <p class="note">Edits save automatically. Use Log pages to record each reading session.</p>
     <div id="editor-form"></div>
   </div>
 </div>
 
 <script>
-// =======================================================
-// PASTE YOUR NEW APPS SCRIPT URL HERE:
-// =======================================================
-const DB_URL = 'https://script.google.com/macros/s/AKfycbyrGy4Stw2IKEcK9a7WfzrOVrEs6s5mF-m2vKE6l-_Jt3Am5X248llZ4z9rpX5piJwuZQ/exec'; 
-
-const BOOKS_FILE = 'books.json';
-const RULES_FILE = 'book_genre_rules.json';
-const PAGE_SIZE = 100;
+const DB_URL = 'https://script.google.com/macros/s/AKfycbyrGy4Stw2IKEcK9a7WfzrOVrEs6s5mF-m2vKE6l-_Jt3Am5X248llZ4z9rpX5piJwuZQ/exec';
+const BOOKS_FILE = 'books.json', RULES_FILE = 'book_genre_rules.json', PAGE_SIZE = 100;
+const DEFAULT_SHELVES = [{ value: 'towatch', label: 'To Read' }, { value: 'reading', label: 'Currently Reading' }, { value: 'read', label: 'Read' }];
 const BASE_GENRES = [
-  'Fiction|Literary Fiction|Contemporary Fiction|Classic Fiction|General Fiction|Historical Fiction|Speculative Fiction|Experimental Fiction|Metafiction|Coming of Age|Bildungsroman|Domestic Fiction|Family Saga|Multigenerational Fiction|Upmarket Fiction|Women’s Fiction|LGBTQ+ Fiction|Diaspora Fiction|Postcolonial Fiction|Magical Realism|Satire|Humour|Comic Fiction|Tragicomedy|Absurdist Fiction|Autofiction|Epistolary Fiction|Gothic Fiction|Southern Gothic|Campus Novel|Political Fiction|Social Fiction|Religious Fiction|Philosophical Fiction|Psychological Fiction|Literary Criticism',
-  'Science Fiction|Hard Science Fiction|Soft Science Fiction|Space Opera|Military Science Fiction|Cyberpunk|Biopunk|Steampunk|Dieselpunk|Solarpunk|Climate Fiction|Apocalyptic Fiction|Post-apocalyptic Fiction|Dystopian Fiction|Utopian Fiction|Time Travel|Alternate History|First Contact|Alien Invasion|Artificial Intelligence Fiction|Robot Fiction|Genetic Engineering Fiction|Near-future Fiction|Space Exploration Fiction|Science Fantasy|Afrofuturism|Slipstream|New Weird',
-  'Fantasy|Epic Fantasy|High Fantasy|Low Fantasy|Urban Fantasy|Contemporary Fantasy|Dark Fantasy|Grimdark|Historical Fantasy|Portal Fantasy|Mythic Fantasy|Fairy Tales|Folklore|Sword and Sorcery|Heroic Fantasy|Romantic Fantasy|Cozy Fantasy|Progression Fantasy|LitRPG|Gaslamp Fantasy|Arthurian Fantasy|Mythology Retellings|Retellings|Paranormal Fantasy',
-  'Mystery|Cozy Mystery|Locked-room Mystery|Historical Mystery|Police Procedural|Detective Fiction|Private Investigator Fiction|Noir|Hardboiled Fiction|Crime Fiction|True Crime|Legal Thriller|Medical Thriller|Psychological Thriller|Domestic Thriller|Spy Thriller|Political Thriller|Techno-thriller|Action Thriller|Suspense|Conspiracy Thriller|Military Thriller|Adventure Thriller|Espionage|Heist Fiction',
-  'Horror|Gothic Horror|Psychological Horror|Cosmic Horror|Body Horror|Folk Horror|Supernatural Horror|Paranormal Horror|Haunted House|Ghost Stories|Vampire Fiction|Zombie Fiction|Monster Horror|Weird Fiction|Splatterpunk|Occult Fiction|Dark Academia',
-  'Romance|Contemporary Romance|Historical Romance|Regency Romance|Romantic Comedy|Paranormal Romance|Fantasy Romance|Science Fiction Romance|Romantic Suspense|Queer Romance|LGBTQ+ Romance|Young Adult Romance|New Adult Romance|Sports Romance|Holiday Romance|Small-town Romance|Second-chance Romance|Friends-to-lovers Romance|Enemies-to-lovers Romance',
-  'Adventure|Action and Adventure|Historical Adventure|Survival Fiction|Western|Frontier Fiction|Sea Adventure|Pirate Fiction|War Fiction|Military Fiction|Sports Fiction|Travel Fiction|Nature Writing|Wilderness Fiction',
-  'Nonfiction|Narrative Nonfiction|Creative Nonfiction|Literary Nonfiction|Essays|Personal Essays|Collected Essays|Memoir|Autobiography|Biography|Collective Biography|Letters|Diaries|Journals|Oral History|Interviews|Reference|Encyclopaedia|Dictionary|Handbook|Textbook|Study Guide|Academic Writing|Research Methods|Popular Science|Science Communication|Investigative Journalism|Reportage',
-  'History|Ancient History|Medieval History|Early Modern History|Modern History|Contemporary History|World History|European History|British History|Indian History|Asian History|African History|American History|Latin American History|Middle Eastern History|Military History|Naval History|Cultural History|Social History|Economic History|Environmental History|Intellectual History|Political History|History of Science|History of Technology|Archaeology|Art History|Public History|Microhistory|Historical Biography',
-  'Science|Physics|Astronomy|Astrophysics|Cosmology|Planetary Science|Earth Science|Geology|Geochemistry|Geophysics|Volcanology|Petrology|Mineralogy|Palaeontology|Oceanography|Meteorology|Climate Science|Environmental Science|Ecology|Biology|Evolutionary Biology|Botany|Zoology|Marine Biology|Microbiology|Genetics|Molecular Biology|Neuroscience|Medicine|Public Health|Epidemiology|Chemistry|Biochemistry|Mathematics|Statistics|Data Science|Computer Science|Artificial Intelligence|Machine Learning|Robotics|Engineering|Architecture|Agriculture|Conservation|Nature|Natural History',
-  'Philosophy|Ethics|Logic|Metaphysics|Epistemology|Aesthetics|Political Philosophy|Philosophy of Science|Existentialism|Phenomenology|Stoicism|Critical Theory|Social Theory|Sociology|Anthropology|Cultural Studies|Gender Studies|Queer Studies|Feminism|Linguistics|Language|Literary Theory|Rhetoric|Education|Pedagogy|Psychology|Cognitive Psychology|Developmental Psychology|Social Psychology|Clinical Psychology|Psychoanalysis|Mental Health|Self-help|Personal Development|Mindfulness|Meditation',
-  'Politics|Government|International Relations|Geopolitics|Public Policy|Law|Legal Studies|Constitutional Law|Human Rights|Activism|Social Justice|Economics|Macroeconomics|Microeconomics|Economic Development|Finance|Personal Finance|Investing|Business|Management|Leadership|Entrepreneurship|Marketing|Strategy|Innovation|Technology|Digital Culture|Internet|Cybersecurity',
-  'Art|Visual Arts|Painting|Sculpture|Photography|Design|Graphic Design|Illustration|Fashion|Music|Music History|Music Theory|Film|Cinema|Film Studies|Television|Theatre|Drama|Performing Arts|Dance|Comics|Graphic Novel|Manga|Manhwa|Webcomic|Art Book|Architecture|Interior Design',
-  'Poetry|Epic Poetry|Lyric Poetry|Narrative Poetry|Free Verse|Haiku|Sonnets|Poetry Anthology|Short Stories|Short Story Collection|Flash Fiction|Novella|Anthology|Literary Anthology|Play|Screenplay|Script|Humorous Essays',
-  'Travel|Travelogue|Travel Memoir|Guidebook|Food|Food Writing|Cookbook|Culinary History|Baking|Gardening|Crafts|DIY|Home|Lifestyle|Sports|Football|Cricket|Olympics|Outdoor Recreation|Mountaineering|Hiking|Camping',
-  'Religion|Theology|Spirituality|Comparative Religion|Christianity|Islam|Hinduism|Buddhism|Judaism|Mythology|Classical Mythology|Indian Mythology|World Mythology|Folklore Studies',
-  'Children|Picture Book|Early Reader|Middle Grade|Young Adult|New Adult|Juvenile Fiction|Children’s Nonfiction|Educational Children’s Books|Children’s Fantasy|Young Adult Fantasy|Young Adult Science Fiction|Young Adult Mystery|Young Adult Contemporary',
-  'Bilingual|Translations|Translated Fiction|Translated Nonfiction|World Literature|Indian Literature|British Literature|American Literature|African Literature|European Literature|Japanese Literature|Korean Literature|Chinese Literature|Arabic Literature|Latin American Literature|Regional Literature'
+'Fiction|Literary Fiction|Contemporary Fiction|Classic Fiction|General Fiction|Historical Fiction|Speculative Fiction|Experimental Fiction|Metafiction|Coming of Age|Bildungsroman|Domestic Fiction|Family Saga|Multigenerational Fiction|Upmarket Fiction|Women’s Fiction|LGBTQ+ Fiction|Diaspora Fiction|Postcolonial Fiction|Magical Realism|Satire|Humour|Comic Fiction|Tragicomedy|Absurdist Fiction|Autofiction|Epistolary Fiction|Gothic Fiction|Southern Gothic|Campus Novel|Political Fiction|Social Fiction|Religious Fiction|Philosophical Fiction|Psychological Fiction|Literary Criticism',
+'Science Fiction|Hard Science Fiction|Soft Science Fiction|Space Opera|Military Science Fiction|Cyberpunk|Biopunk|Steampunk|Dieselpunk|Solarpunk|Climate Fiction|Apocalyptic Fiction|Post-apocalyptic Fiction|Dystopian Fiction|Utopian Fiction|Time Travel|Alternate History|First Contact|Alien Invasion|Artificial Intelligence Fiction|Robot Fiction|Genetic Engineering Fiction|Near-future Fiction|Space Exploration Fiction|Science Fantasy|Afrofuturism|Slipstream|New Weird',
+'Fantasy|Epic Fantasy|High Fantasy|Low Fantasy|Urban Fantasy|Contemporary Fantasy|Dark Fantasy|Grimdark|Historical Fantasy|Portal Fantasy|Mythic Fantasy|Fairy Tales|Folklore|Sword and Sorcery|Heroic Fantasy|Romantic Fantasy|Cozy Fantasy|Progression Fantasy|LitRPG|Gaslamp Fantasy|Arthurian Fantasy|Mythology Retellings|Retellings|Paranormal Fantasy',
+'Mystery|Cozy Mystery|Locked-room Mystery|Historical Mystery|Police Procedural|Detective Fiction|Private Investigator Fiction|Noir|Hardboiled Fiction|Crime Fiction|True Crime|Legal Thriller|Medical Thriller|Psychological Thriller|Domestic Thriller|Spy Thriller|Political Thriller|Techno-thriller|Action Thriller|Suspense|Conspiracy Thriller|Military Thriller|Adventure Thriller|Espionage|Heist Fiction',
+'Horror|Gothic Horror|Psychological Horror|Cosmic Horror|Body Horror|Folk Horror|Supernatural Horror|Paranormal Horror|Haunted House|Ghost Stories|Vampire Fiction|Zombie Fiction|Monster Horror|Weird Fiction|Splatterpunk|Occult Fiction|Dark Academia',
+'Romance|Contemporary Romance|Historical Romance|Regency Romance|Romantic Comedy|Paranormal Romance|Fantasy Romance|Science Fiction Romance|Romantic Suspense|Queer Romance|LGBTQ+ Romance|Young Adult Romance|New Adult Romance|Sports Romance|Holiday Romance|Small-town Romance|Second-chance Romance|Friends-to-lovers Romance|Enemies-to-lovers Romance',
+'Adventure|Action and Adventure|Historical Adventure|Survival Fiction|Western|Frontier Fiction|Sea Adventure|Pirate Fiction|War Fiction|Military Fiction|Sports Fiction|Travel Fiction|Nature Writing|Wilderness Fiction',
+'Nonfiction|Narrative Nonfiction|Creative Nonfiction|Literary Nonfiction|Essays|Personal Essays|Collected Essays|Memoir|Autobiography|Biography|Collective Biography|Letters|Diaries|Journals|Oral History|Interviews|Reference|Encyclopaedia|Dictionary|Handbook|Textbook|Study Guide|Academic Writing|Research Methods|Popular Science|Science Communication|Investigative Journalism|Reportage',
+'History|Ancient History|Medieval History|Early Modern History|Modern History|Contemporary History|World History|European History|British History|Indian History|Asian History|African History|American History|Latin American History|Middle Eastern History|Military History|Naval History|Cultural History|Social History|Economic History|Environmental History|Intellectual History|Political History|History of Science|History of Technology|Archaeology|Art History|Public History|Microhistory|Historical Biography',
+'Science|Physics|Astronomy|Astrophysics|Cosmology|Planetary Science|Earth Science|Geology|Geochemistry|Geophysics|Volcanology|Petrology|Mineralogy|Palaeontology|Oceanography|Meteorology|Climate Science|Environmental Science|Ecology|Biology|Evolutionary Biology|Botany|Zoology|Marine Biology|Microbiology|Genetics|Molecular Biology|Neuroscience|Medicine|Public Health|Epidemiology|Chemistry|Biochemistry|Mathematics|Statistics|Data Science|Computer Science|Artificial Intelligence|Machine Learning|Robotics|Engineering|Architecture|Agriculture|Conservation|Nature|Natural History',
+'Philosophy|Ethics|Logic|Metaphysics|Epistemology|Aesthetics|Political Philosophy|Philosophy of Science|Existentialism|Phenomenology|Stoicism|Critical Theory|Social Theory|Sociology|Anthropology|Cultural Studies|Gender Studies|Queer Studies|Feminism|Linguistics|Language|Literary Theory|Rhetoric|Education|Pedagogy|Psychology|Cognitive Psychology|Developmental Psychology|Social Psychology|Clinical Psychology|Psychoanalysis|Mental Health|Self-help|Personal Development|Mindfulness|Meditation',
+'Politics|Government|International Relations|Geopolitics|Public Policy|Law|Legal Studies|Constitutional Law|Human Rights|Activism|Social Justice|Economics|Macroeconomics|Microeconomics|Economic Development|Finance|Personal Finance|Investing|Business|Management|Leadership|Entrepreneurship|Marketing|Strategy|Innovation|Technology|Digital Culture|Internet|Cybersecurity',
+'Art|Visual Arts|Painting|Sculpture|Photography|Design|Graphic Design|Illustration|Fashion|Music|Music History|Music Theory|Film|Cinema|Film Studies|Television|Theatre|Drama|Performing Arts|Dance|Comics|Graphic Novel|Manga|Manhwa|Webcomic|Art Book|Architecture|Interior Design',
+'Poetry|Epic Poetry|Lyric Poetry|Narrative Poetry|Free Verse|Haiku|Sonnets|Poetry Anthology|Short Stories|Short Story Collection|Flash Fiction|Novella|Anthology|Literary Anthology|Play|Screenplay|Script|Humorous Essays',
+'Travel|Travelogue|Travel Memoir|Guidebook|Food|Food Writing|Cookbook|Culinary History|Baking|Gardening|Crafts|DIY|Home|Lifestyle|Sports|Football|Cricket|Olympics|Outdoor Recreation|Mountaineering|Hiking|Camping',
+'Religion|Theology|Spirituality|Comparative Religion|Christianity|Islam|Hinduism|Buddhism|Judaism|Mythology|Classical Mythology|Indian Mythology|World Mythology|Folklore Studies',
+'Children|Picture Book|Early Reader|Middle Grade|Young Adult|New Adult|Juvenile Fiction|Children’s Nonfiction|Educational Children’s Books|Children’s Fantasy|Young Adult Fantasy|Young Adult Science Fiction|Young Adult Mystery|Young Adult Contemporary',
+'Bilingual|Translations|Translated Fiction|Translated Nonfiction|World Literature|Indian Literature|British Literature|American Literature|African Literature|European Literature|Japanese Literature|Korean Literature|Chinese Literature|Arabic Literature|Latin American Literature|Regional Literature'
 ].join('|').split('|');
 
-let database = { version: 2, updatedAt: 0, books: [] };
-let rules = { version: 1, customGenres: [] };
-let booksFileHash = '';
-let rulesFileHash = '';
-let bookPage = 1;
-let editingBookId = null;
-let saveTimer = null;
-let saveInFlight = false;
-let saveAgain = false;
-let html5QrCode = null;
+let database = { version: 2, updatedAt: 0, books: [] }, rules = { version: 1, customGenres: [], customShelves: [] };
+let booksFileHash = '', rulesFileHash = '', bookPage = 1, editingBookId = null, saveTimer = null, saveInFlight = false, saveAgain = false, rulesSaveInFlight = false, rulesSaveAgain = false, html5QrCode = null;
+let goodreadsPreview = null, goodreadsPreviewSource = null;
+const $ = id => document.getElementById(id);
+const esc = v => String(v ?? '').replace(/[&<>"']/g,c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const jsArg = v => esc(JSON.stringify(String(v)));
+const uid = (prefix = 'id') => prefix + '-' + Date.now() + '-' + crypto.getRandomValues(new Uint32Array(1))[0].toString(36);
+const todayIso = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+const shelfLabel = value => DEFAULT_SHELVES.find(s => s.value === value)?.label || value;
+const splitList = v => [...new Set(String(v || '').split(',').map(x => x.trim()).filter(Boolean))];
+const splitLines = v => [...new Set(String(v || '').split(/\r?\n/).map(x => x.trim()).filter(Boolean))];
 
-async function sha256(dataObj) {
-  const str = JSON.stringify(dataObj);
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
+function setStatus(message, state = '') { $('status').textContent = message; $('status').className = 'status ' + state; }
+function setSaveState(message, state = '') { $('save-state').textContent = message; $('save-state').className = 'status ' + state; }
+function isValidDate(value) { if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false; const [y,m,d] = value.split('-').map(Number); const v = new Date(Date.UTC(y,m-1,d)); return v.getUTCFullYear() === y && v.getUTCMonth()+1 === m && v.getUTCDate() === d; }
+function goodreadsDate(value) { const s = String(value || '').trim().replace(/\//g,'-'); return isValidDate(s) ? s : ''; }
+function dateTs(value) { if (!value) return 0; const d = new Date(value.length === 7 ? value + '-01T00:00:00' : value + 'T00:00:00'); return Number.isNaN(d.getTime()) ? 0 : d.getTime(); }
+function formatReading(r) { if (!r || r.precision === 'unknown') return 'Date unknown'; const ts = dateTs(r.date); return ts ? new Date(ts).toLocaleDateString('en-GB',r.precision === 'month' ? {month:'short',year:'numeric'} : {day:'numeric',month:'short',year:'numeric'}) : 'Date unknown'; }
+function latestReading(b) { return (b.readings || []).filter(r => r.precision !== 'unknown' && dateTs(r.date)).sort((a,b) => dateTs(b.date)-dateTs(a.date))[0] || null; }
+async function sha256(data) { const bytes = new TextEncoder().encode(JSON.stringify(data)); return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(x=>x.toString(16).padStart(2,'0')).join(''); }
+function generateReceiptId() { return [...crypto.getRandomValues(new Uint8Array(16))].map(x=>x.toString(16).padStart(2,'0')).join(''); }
 
-function generateReceiptId() {
-  return Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-function jsonp(url, params) {
-  return new Promise((resolve, reject) => {
+function jsonp(url,params) {
+  return new Promise((resolve,reject) => {
     const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-    const s = document.createElement('script'); let settled = false;
-    const cleanup = () => { clearTimeout(timer); delete window[cb]; s.remove(); };
-    const finish = (error, data) => { if (settled) return; settled = true; cleanup(); error ? reject(error) : resolve(data); };
-    const timer = setTimeout(() => finish(new Error('Book API request timed out')), 25000);
-    window[cb] = data => finish(null, data);
-    s.onerror = () => finish(new Error('Network read failed'));
-    const qs = Object.entries(params).map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v)).join('&');
-    s.src = url + '?' + qs + '&callback=' + cb;
+    const s = document.createElement('script');
+    let done = false;
+    const finish = (error,data) => {
+      if (done) return;
+      done = true; clearTimeout(timer); delete window[cb]; s.remove();
+      error ? reject(error) : resolve(data);
+    };
+    const timer = setTimeout(() => finish(new Error('API request timed out')),30000);
+    window[cb] = data => finish(null,data);
+    s.onerror = () => finish(new Error('API network error'));
+    s.src = url + '?' + new URLSearchParams({...params,callback:cb,_:Date.now()});
     document.head.appendChild(s);
   });
 }
-async function serverAction(action, params = {}) {
-  const response = await jsonp(DB_URL, { action, ...params });
-  if (!response || response.ok === false) throw new Error(response?.error || action + ' failed');
-  return response;
+
+async function serverAction(action,params={}) {
+  const r = await jsonp(DB_URL,{action,...params});
+  if (!r || r.ok === false) throw new Error(r?.error || `${action} failed`);
+  return r;
 }
 
-async function driveWrite(file, data, currentHash) {
+async function driveWrite(file,data,currentHash) {
   const requestId = generateReceiptId();
-  const payload = { action: 'write', file, data, baseHash: currentHash, requestId };
-
-  fetch(DB_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-
-  for (let i = 0; i < 8; i++) {
-    await new Promise(r => setTimeout(r, 1200));
-    const receipt = await jsonp(DB_URL, { action: 'receipt', id: requestId });
+  const payload = {action:'write',file,data,baseHash:currentHash,requestId};
+  fetch(DB_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)}).catch(()=>{});
+  for (let i=0;i<12;i++) {
+    await new Promise(r=>setTimeout(r,1200));
+    const receipt = await serverAction('receipt',{id:requestId});
     if (receipt.state === 'ok') return receipt.hash;
     if (receipt.state === 'error') throw new Error(receipt.error);
   }
-
-  throw new Error('Save timed out. Please refresh.');
-}
-
-function setStatus(text, type = '') { const el = document.getElementById('status'); el.textContent = text; el.className = 'status ' + type; }
-function setSaveState(text, type = '') { const el = document.getElementById('save-state'); el.textContent = text; el.className = 'status ' + type; }
-function esc(v = '') { return String(v).replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c])); }
-function uid(prefix = 'id') { return prefix + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7); }
-function todayIso() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
-function dateTs(v) { if (!v) return 0; const d = new Date(v.length === 7 ? v + '-01T00:00:00' : v + 'T00:00:00'); return Number.isNaN(d.getTime()) ? 0 : d.getTime(); }
-
-function formatReading(r) {
-  if (!r || r.precision === 'unknown') return 'Date unknown';
-  if (r.precision === 'month' && /^\d{4}-\d{2}$/.test(r.date || '')) return new Date(r.date + '-01T00:00:00').toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
-  if (/^\d{4}-\d{2}-\d{2}$/.test(r.date || '')) return new Date(r.date + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-  return r.date || 'Date unknown';
-}
-
-function latestReading(book) {
-  const readings = (book.readings || []);
-  const known = readings.filter(r => r.precision !== 'unknown' && dateTs(r.date)).sort((a, b) => dateTs(b.date) - dateTs(a.date));
-  return known[0] || readings.find(r => r.precision === 'unknown') || null;
-}
-function latestReadTs(book) { const r = latestReading(book); return r && r.precision !== 'unknown' ? dateTs(r.date) : 0; }
-function allGenres() { return [...new Set([...BASE_GENRES, ...(rules.customGenres || []), ...database.books.flatMap(b => b.genres || [])])].sort((a, b) => a.localeCompare(b)); }
-
-function normaliseDatabase(value) {
-  const db = Array.isArray(value) ? { version: 2, updatedAt: 0, books: value } : value && Array.isArray(value.books) ? value : { version: 2, updatedAt: 0, books: [] };
-  db.version = 2; db.books = db.books.map(normaliseBook);
-  return db;
+  throw new Error('Save receipt timed out. Check Drive before retrying.');
 }
 
 function normaliseBook(b) {
-  let readings = Array.isArray(b.readings) ? b.readings : [];
-  if (!readings.length && b.readDate) readings = [{ id: uid('reading'), date: b.readDate, precision: /^\d{4}-\d{2}-\d{2}$/.test(b.readDate) ? 'day' : 'month' }];
-  const genres = Array.isArray(b.genres) ? b.genres : (b.genre ? [b.genre] : []);
-  let computedStatus = 'finished';
-  if (b.shelf === 'towatch') computedStatus = 'towatch';
-  else if (Number(b.currentPage) > 0 && Number(b.currentPage) < Number(b.pages)) computedStatus = 'reading';
-  
+  const shelf = b.shelf === 'reading' || ((b.shelf === 'read' || !b.shelf) && b.status === 'reading') ? 'reading' : b.shelf === 'towatch' || b.status === 'towatch' ? 'towatch' : 'read';
+  const readings = Array.isArray(b.readings) ? b.readings : (b.readDate ? [{id:uid('reading'),date:b.readDate,precision:b.readDate.length===7?'month':'day'}] : []);
   return {
-    ...b, id: b.id || uid('book'), additionalAuthors: Array.isArray(b.additionalAuthors) ? b.additionalAuthors : [],
-    rating10: b.rating10 === 0 ? 0 : (b.rating10 ?? null), review: b.review || '', description: b.description || '',
-    shelf: b.shelf || 'read', status: b.status || computedStatus, series: b.series || '', seriesNumber: b.seriesNumber || '',
-    currentPage: Number(b.currentPage) || 0, pages: Number(b.pages) || 0, readings, genres, tags: Array.isArray(b.tags) ? b.tags : [],
-    subjects: Array.isArray(b.subjects) ? b.subjects : [], categories: Array.isArray(b.categories) ? b.categories : [],
-    createdAt: b.createdAt || b.addedAt || Date.now(), updatedAt: b.updatedAt || Date.now()
+    ...b, id:b.id || uid('book'), shelf, status:shelf==='read'?'finished':shelf,
+    genres:Array.isArray(b.genres)?b.genres:(b.genre?[b.genre]:[]),
+    shelves:Array.isArray(b.shelves)?b.shelves:[],
+    tags:Array.isArray(b.tags)?b.tags:[],
+    subjects:Array.isArray(b.subjects)?b.subjects:[],
+    categories:Array.isArray(b.categories)?b.categories:[],
+    readings,
+    progressHistory:Array.isArray(b.progressHistory)?b.progressHistory:[],
+    currentPage:Number(b.currentPage)||0,
+    pages:Number(b.pages)||0,
+    rating10:b.rating10==null||b.rating10===''?null:Number(b.rating10),
+    createdAt:b.createdAt||b.addedAt||Date.now(),
+    updatedAt:b.updatedAt||Date.now()
   };
 }
+function normaliseDatabase(raw) { const db=Array.isArray(raw)?{version:2,updatedAt:0,books:raw}:raw; if(!db||!Array.isArray(db.books))throw new Error('Invalid books.json');return {...db,books:db.books.map(normaliseBook)}; }
+function allCustomShelves() { return [...new Set([...(rules.customShelves||[]),...database.books.flatMap(b=>b.shelves||[])])].sort((a,b)=>a.localeCompare(b)); }
+function allGenres() { return [...new Set([...BASE_GENRES,...(rules.customGenres||[]),...database.books.flatMap(b=>b.genres||[])])].sort((a,b)=>a.localeCompare(b)); }
 
 async function loadAll() {
   try {
-    const dbRaw = await jsonp(DB_URL, { file: BOOKS_FILE });
-    const rRaw = await jsonp(DB_URL, { file: RULES_FILE });
-    booksFileHash = await sha256(dbRaw || { version: 2, updatedAt: 0, books: [] });
-    rulesFileHash = await sha256(rRaw || { version: 1, customGenres: [] });
-    database = normaliseDatabase(dbRaw);
-    rules = rRaw && typeof rRaw === 'object' && !Array.isArray(rRaw) ? rRaw : { version: 1, customGenres: [] };
+    const raw = await jsonp(DB_URL,{file:BOOKS_FILE});
+    if (raw?.ok===false) throw new Error(raw.error);
+    const rRaw = await jsonp(DB_URL,{file:RULES_FILE});
+    if (rRaw?.ok===false) throw new Error(rRaw.error);
+    booksFileHash = await sha256(raw);
+    rulesFileHash = await sha256(rRaw);
+    database = normaliseDatabase(raw);
+    rules = {version:1,customGenres:[],customShelves:[],...rRaw};
     refreshAll();
-    setStatus(`Loaded ${database.books.length} personal books.`, 'ok');
-    setSaveState('Saved', 'ok');
-  } catch (e) {
-    console.error(e);
-    setStatus('Could not load books: ' + e.message, 'err');
-    setSaveState('Load failed', 'err');
+    setStatus(`Loaded ${database.books.length} books.`,'ok');
+    setSaveState('Saved','ok');
+  } catch(err) {
+    console.error(err);
+    setStatus('Load failed: '+err.message,'err');
+    setSaveState('Load failed','err');
   }
 }
-
-function refreshAll() { renderStats(); buildGenreControls(); renderBooks(); renderRules(); }
-
+function refreshAll() { renderStats();buildGenreControls();buildShelfControls();renderRules();renderBooks(); }
 function renderStats() {
-  const rated = database.books.filter(b => Number.isFinite(Number(b.rating10)) && b.rating10 !== null && b.rating10 !== '');
-  const avg = rated.length ? rated.reduce((s, b) => s + Number(b.rating10), 0) / rated.length : 0;
-  document.getElementById('stat-total').textContent = database.books.length;
-  document.getElementById('stat-rated').textContent = rated.length;
-  document.getElementById('stat-towatch').textContent = database.books.filter(b => b.shelf === 'towatch').length;
-  document.getElementById('stat-reread').textContent = database.books.filter(b => (b.readings || []).length > 1).length;
-  document.getElementById('stat-average').textContent = avg ? avg.toFixed(1) : '—';
+  $('stat-total').textContent=database.books.length;
+  $('stat-reading').textContent=database.books.filter(b=>b.shelf==='reading').length;
+  $('stat-towatch').textContent=database.books.filter(b=>b.shelf==='towatch').length;
+  $('stat-read').textContent=database.books.filter(b=>b.shelf==='read').length;
+  $('stat-reread').textContent=database.books.filter(b=>b.readings.length>1).length;
+  const rated=database.books.filter(b=>b.rating10!==null&&Number.isFinite(Number(b.rating10)));
+  $('stat-average').textContent=rated.length?(rated.reduce((n,b)=>n+Number(b.rating10),0)/rated.length).toFixed(1):'—';
 }
-
-function switchSection(name, btn) {
-  document.querySelectorAll('.tab').forEach(x => x.classList.remove('on')); btn.classList.add('on');
-  document.querySelectorAll('.section').forEach(x => x.classList.remove('on'));
-  document.getElementById('section-' + name).classList.add('on');
-  if (name === 'rules') renderRules();
+function switchSection(name,button) {
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  button.classList.add('on');
+  document.querySelectorAll('.section').forEach(x=>x.classList.remove('on'));
+  $('section-'+name).classList.add('on');
 }
-
 function buildGenreControls() {
-  const genres = allGenres(); const f = document.getElementById('genre-filter'); const current = f.value;
-  const usedGenres = [...new Set(database.books.flatMap(b => b.genres || []))].sort((a, b) => a.localeCompare(b));
-  f.innerHTML = '<option value="">All genres</option>' + usedGenres.map(g => `<option value="${esc(g)}">${esc(g)}</option>`).join('');
-  f.value = usedGenres.includes(current) ? current : '';
-  document.getElementById('genre-cloud').innerHTML = (rules.customGenres || []).map(g => `<span class="chip">${esc(g)}</span>`).join('') || '<span class="note">No additional suggestions saved. Every genre can still be entered directly on a book.</span>'; 
+  const el=$('genre-filter'),selected=el.value;
+  el.innerHTML='<option value="">All genres</option>'+[...new Set(database.books.flatMap(b=>b.genres||[]))].sort().map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('');
+  el.value=selected;
 }
-
+function buildShelfControls() {
+  const el=$('shelf-filter'),selected=el.value;
+  el.innerHTML='<option value="">All shelves</option>'+DEFAULT_SHELVES.map(s=>`<option value="${s.value}">${s.label}</option>`).join('')+allCustomShelves().map(s=>`<option value="custom:${esc(s)}">${esc(s)}</option>`).join('');
+  el.value=selected;
+}
 function filteredBooks() {
-  const q = (document.getElementById('search').value || '').toLowerCase().trim();
-  const sf = document.getElementById('shelf-filter').value; const gf = document.getElementById('genre-filter').value; const sort = document.getElementById('sort').value;
-  const arr = database.books.filter(b => {
-    const hay = [b.title, b.author, b.series, (b.genres || []).join(' '), (b.tags || []).join(' '), (b.subjects || []).join(' '), (b.categories || []).join(' ')].join(' ').toLowerCase();
-    const shelfOk = !sf || (b.shelf || 'read') === sf; const gOk = !gf || (b.genres || []).includes(gf);
-    return (!q || hay.includes(q)) && shelfOk && gOk;
+  const q=$('search').value.trim().toLowerCase(),sf=$('shelf-filter').value,gf=$('genre-filter').value,sort=$('sort').value;
+  const books=database.books.filter(b=>{
+    const hay=[b.title,b.author,b.series,b.review,b.isbn13,b.isbn10,...b.genres,...b.shelves,...b.tags,...b.subjects,...b.categories].join(' ').toLowerCase();
+    return (!q||hay.includes(q))&&(!gf||b.genres.includes(gf))&&(!sf||(sf.startsWith('custom:')?b.shelves.includes(sf.slice(7)):b.shelf===sf));
   });
-  arr.sort((a, b) => {
-    if (sort === 'read-desc') return latestReadTs(b) - latestReadTs(a) || (b.createdAt || 0) - (a.createdAt || 0);
-    if (sort === 'rating-desc') return (b.rating10 == null ? -1 : Number(b.rating10)) - (a.rating10 == null ? -1 : Number(a.rating10));
-    if (sort === 'title-asc') return (a.title || '').localeCompare(b.title || '');
-    if (sort === 'author-asc') return (a.author || '').localeCompare(b.author || '');
-    if (sort === 'added-desc') return (b.createdAt || 0) - (a.createdAt || 0);
-    return 0;
+  books.sort((a,b)=>{
+    if(sort==='title-asc')return(a.title||'').localeCompare(b.title||'');
+    if(sort==='author-asc')return(a.author||'').localeCompare(b.author||'');
+    if(sort==='rating-desc')return Number(b.rating10??-1)-Number(a.rating10??-1);
+    if(sort==='rating-asc')return Number(a.rating10??99)-Number(b.rating10??99);
+    if(sort==='added-desc')return(b.createdAt||0)-(a.createdAt||0);
+    if(sort==='read-asc')return(dateTs(latestReading(a)?.date)||Number.MAX_SAFE_INTEGER)-(dateTs(latestReading(b)?.date)||Number.MAX_SAFE_INTEGER);
+    return dateTs(latestReading(b)?.date)-dateTs(latestReading(a)?.date)||(b.createdAt||0)-(a.createdAt||0);
   });
-  return arr;
+  return books;
 }
-
 function renderBooks() {
-  renderStats(); const arr = filteredBooks(); const pages = Math.max(1, Math.ceil(arr.length / PAGE_SIZE)); bookPage = Math.min(bookPage, pages);
-  const visible = arr.slice((bookPage - 1) * PAGE_SIZE, bookPage * PAGE_SIZE); const list = document.getElementById('book-list');
-  
-  if (!visible.length) { list.innerHTML = '<div class="empty">No books match your filters.</div>'; } 
-  else {
-    list.innerHTML = visible.map(b => {
-      const r = latestReading(b); const rating = b.rating10 !== null && b.rating10 !== '' && b.rating10 !== undefined ? `${Number(b.rating10).toFixed(Number(b.rating10) % 1 ? 1 : 0)}/10` : 'Unrated';
-      const seriesInfo = b.series ? ` · Series: ${b.series}${b.seriesNumber ? ' #' + b.seriesNumber : ''}` : '';
-      const totalPages = Number(b.pages) || 0; const currPage = Number(b.currentPage) || 0; const pct = totalPages > 0 ? Math.min(100, Math.round((currPage / totalPages) * 100)) : 0;
-      return `
-        <div class="book-row">
-          ${b.cover ? `<img class="cover" src="${esc(b.cover)}" alt="${esc(b.title)}" loading="lazy">` : '<div class="cover-ph">📖</div>'}
-          <div>
-            <div class="book-title">${esc(b.title)}</div>
-            <div class="book-meta">${esc(b.author || 'Unknown author')}${seriesInfo} · Rating: ${rating}${r ? ' · Read: ' + esc(formatReading(r)) : ''}</div>
-            <div class="chips">${b.shelf === 'towatch' ? '<span class="chip towatch">To Read</span>' : ''}${(b.genres || []).map(g => `<span class="chip">${esc(g)}</span>`).join('')}${(b.tags || []).slice(0, 3).map(t => `<span class="chip tag">${esc(t)}</span>`).join('')}</div>
-            ${totalPages > 0 ? `<div style="margin-top:0.35rem;font-size:0.68rem;color:var(--muted)">Page ${currPage} of ${totalPages} (${pct}%)<div style="background:var(--border);border-radius:99px;height:4px;overflow:hidden;margin-top:0.15rem"><div style="background:var(--warm);height:100%;width:${pct}%"></div></div></div>` : ''}
-          </div>
-          <div class="row-actions"><button class="icon-btn" onclick="openEditor('${esc(b.id)}')">Edit</button><button class="icon-btn" onclick="deleteBook('${esc(b.id)}')">Delete</button></div>
-        </div>
-      `;
-    }).join('');
-  }
-  document.getElementById('pagination').innerHTML = arr.length > PAGE_SIZE ? `<button class="icon-btn" onclick="bookPage=Math.max(1,bookPage-1);renderBooks()" ${bookPage === 1 ? 'disabled' : ''}>Previous</button><span>Page ${bookPage} of ${pages} · ${arr.length} books</span><button class="icon-btn" onclick="bookPage=Math.min(${pages},bookPage+1);renderBooks()" ${bookPage === pages ? 'disabled' : ''}>Next</button>` : `<span>${arr.length} books</span>`;
+  const arr=filteredBooks(),maxPage=Math.max(1,Math.ceil(arr.length/PAGE_SIZE));
+  bookPage=Math.max(1,Math.min(bookPage,maxPage));
+  $('book-list').innerHTML=arr.slice((bookPage-1)*PAGE_SIZE,bookPage*PAGE_SIZE).map(b=>{
+    const pct=b.pages>0?Math.min(100,Math.round(100*b.currentPage/b.pages)):0;
+    return `<div class="book-row">
+      <div>${b.cover?`<img class="cover" src="${esc(b.cover)}" alt="">`:'<div class="cover" style="padding:14px 5px">Book</div>'}</div>
+      <div>
+        <div class="book-title">${esc(b.title)}</div>
+        <div class="book-meta">${esc(b.author||'Unknown author')} · ${b.rating10==null?'Unrated':esc(b.rating10+'/10')}${latestReading(b)?' · Read '+esc(formatReading(latestReading(b))):''}</div>
+        <div class="chips"><span class="chip">${esc(shelfLabel(b.shelf))}</span>${b.shelves.map(s=>`<span class="chip custom">${esc(s)}</span>`).join('')}${b.genres.slice(0,3).map(g=>`<span class="chip">${esc(g)}</span>`).join('')}</div>
+        ${b.shelf==='reading'?`<div class="note">Page ${b.currentPage}${b.pages?' of '+b.pages+' · '+pct+'%':''}</div><div class="bar"><div class="fill" style="width:${pct}%"></div></div>`:''}
+      </div>
+      <div class="row-actions">
+        ${b.shelf==='reading'?`<button class="btn green" onclick="openProgressEditor(${jsArg(b.id)})">Log pages</button>`:''}
+        <button class="btn secondary" onclick="openEditor(${jsArg(b.id)})">Edit</button>
+        <button class="btn red" onclick="deleteBook(${jsArg(b.id)})">Delete</button>
+      </div>
+    </div>`;
+  }).join('')||'<div class="empty">No books match.</div>';
+  $('pagination').innerHTML=arr.length>PAGE_SIZE?`<button class="btn secondary" onclick="bookPage--;renderBooks()" ${bookPage===1?'disabled':''}>Previous</button><span>Page ${bookPage} of ${maxPage}</span><button class="btn secondary" onclick="bookPage++;renderBooks()" ${bookPage===maxPage?'disabled':''}>Next</button>`:`<span class="note">${arr.length} books</span>`;
+  renderStats();
 }
-
-function scheduleSave() { database.updatedAt = Date.now(); setSaveState('Unsaved changes'); clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 650); }
-
+function scheduleSave() {
+  database.updatedAt=Date.now();
+  setSaveState('Unsaved changes');
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{saveTimer=null;saveNow();},700);
+}
 async function saveNow() {
-  if (saveInFlight) { saveAgain = true; return; }
-  saveInFlight = true; setSaveState('Saving…');
+  if(saveInFlight){saveAgain=true;return;}
+  saveInFlight=true;setSaveState('Saving…');
+  const snapshot=JSON.parse(JSON.stringify(database));
   try {
-    booksFileHash = await driveWrite(BOOKS_FILE, database, booksFileHash);
-    setSaveState('Saved', 'ok');
-  } catch (e) { console.error(e); setSaveState('Save failed', 'err'); setStatus('Save failed: ' + e.message, 'err'); } 
-  finally { saveInFlight = false; if (saveAgain) { saveAgain = false; saveNow(); } }
+    const nextHash=await driveWrite(BOOKS_FILE,snapshot,booksFileHash);
+    booksFileHash=nextHash;
+    if(JSON.stringify(database)!==JSON.stringify(snapshot))saveAgain=true;
+    setSaveState(saveAgain?'Saving further changes…':'Saved',saveAgain?'':'ok');
+  } catch(err) {
+    console.error(err);setSaveState('Save failed','err');
+    setStatus('Save failed: '+err.message,'err');
+    saveAgain=false;
+  } finally {
+    saveInFlight=false;
+    if(saveAgain){saveAgain=false;saveNow();}
+  }
 }
-
 async function saveRules() {
-  try { rulesFileHash = await driveWrite(RULES_FILE, rules, rulesFileHash); setStatus('Genres updated.', 'ok'); } 
-  catch (e) { setStatus('Could not save genres: ' + e.message, 'err'); }
-}
-
-function renderRules() { buildGenreControls(); }
-function addCustomGenre() { const el = document.getElementById('new-genre'); const value = el.value.trim(); if (!value) return; if (!rules.customGenres.includes(value)) rules.customGenres.push(value); el.value = ''; renderRules(); saveRules(); }
-
-function createManualBook(data = {}) {
-  const b = normaliseBook({ id: uid('book'), title: data.title || 'New book', author: data.author || '', cover: data.cover || '', publisher: data.publisher || '', pages: data.pages || 0, series: data.series || '', seriesNumber: data.seriesNumber || '', currentPage: 0, rating10: null, shelf: 'read', status: 'finished', readings: [{ id: uid('reading'), date: todayIso(), precision: 'day' }], genres: [], tags: [], createdAt: Date.now(), updatedAt: Date.now(), ...data });
-  database.books.unshift(b); refreshAll(); scheduleSave(); openEditor(b.id);
-}
-
-function toggleScanner() {
-  const container = document.getElementById('reader-container'); if (container.style.display === 'block') { stopScanner(); return; } container.style.display = 'block';
-  html5QrCode = new Html5Qrcode('reader');
-  html5QrCode.start({ facingMode: 'environment' }, { fps: 10, qrbox: { width: 250, height: 150 } }, async (decodedText) => {
-      stopScanner(); setStatus(`Scanned ISBN: ${decodedText}. Fetching book metadata…`, 'ok');
-      try { const res = await serverAction('lookupIsbn', { isbn: decodedText }); createManualBook(res.book); setStatus('Book imported successfully from barcode!', 'ok'); } 
-      catch (e) { setStatus('Barcode book lookup failed: ' + e.message, 'err'); }
-  }, (errorMessage) => {}).catch(err => { setStatus('Camera start failed: ' + err, 'err'); });
-}
-function stopScanner() { if (html5QrCode) { html5QrCode.stop().then(() => { html5QrCode.clear(); }).catch(e => console.log(e)); html5QrCode = null; } document.getElementById('reader-container').style.display = 'none'; }
-
-async function quickOnlineSearch() {
-  const query = document.getElementById('quick-query').value.trim(); const container = document.getElementById('quick-results');
-  if (!query) { container.innerHTML = '<div class="note">Enter a title, author or ISBN.</div>'; return; }
-  container.innerHTML = '<div class="note">Searching book catalogues…</div>';
+  if(rulesSaveInFlight){rulesSaveAgain=true;return;}
+  rulesSaveInFlight=true;
+  const snapshot=JSON.parse(JSON.stringify(rules));
   try {
-    const res = await serverAction('searchBook', { query }); const books = res.books || [];
-    if (!books.length) { container.innerHTML = '<div class="note">No matching book found. Use Manual Add.</div>'; return; }
-    window._tempSearchResults = books;
-    container.innerHTML = `<div class="search-modal-results">${books.map((b, index) => `<div class="search-result-item" onclick="selectSearchedBook(${index})">${b.cover ? `<img src="${esc(b.cover)}" alt="">` : '<div style="width:36px;height:54px;background:var(--border)"></div>'}<div><div style="font-weight:700;font-size:.82rem">${esc(b.title)}</div><div style="font-size:.72rem;color:var(--muted)">${esc(b.author || 'Unknown author')}${b.originalPublicationYear ? ' (' + esc(b.originalPublicationYear) + ')' : ''}</div><div class="note">${b.editionVerified ? 'Edition identified' : 'Work record: check edition details'}</div></div></div>`).join('')}</div>`;
-  } catch (e) { container.innerHTML = `<div class="note" style="color:var(--red)">Search failed: ${esc(e.message)}</div>`; }
+    rulesFileHash=await driveWrite(RULES_FILE,snapshot,rulesFileHash);
+    setStatus('Shelves and genres saved.','ok');
+    if(JSON.stringify(rules)!==JSON.stringify(snapshot))rulesSaveAgain=true;
+  } catch(err) {
+    setStatus('Could not save shelves: '+err.message,'err');
+    rulesSaveAgain=false;
+  } finally {
+    rulesSaveInFlight=false;
+    if(rulesSaveAgain){rulesSaveAgain=false;saveRules();}
+  }
+}
+function renderRules() {
+  $('shelf-cloud').innerHTML=allCustomShelves().map(s=>`<span class="chip custom">${esc(s)} <button onclick="removeCustomShelf(${jsArg(s)})">×</button></span>`).join('')||'<span class="note">No custom shelves yet.</span>';
+  $('genre-cloud').innerHTML=(rules.customGenres||[]).map(g=>`<span class="chip">${esc(g)}</span>`).join('')||'<span class="note">No saved genre suggestions. You may type any genre when editing a book.</span>';
+}
+function addCustomShelf() {
+  const s=$('new-shelf').value.trim();
+  if(!s)return;
+  if(DEFAULT_SHELVES.some(x=>x.value===s.toLowerCase()||x.label.toLowerCase()===s.toLowerCase())){setStatus('That is a default reading shelf.','err');return;}
+  if(!allCustomShelves().some(x=>x.toLowerCase()===s.toLowerCase())){rules.customShelves.push(s);saveRules();}
+  $('new-shelf').value='';refreshAll();
+}
+function removeCustomShelf(s) {
+  if(!confirm(`Remove custom shelf "${s}" from all books? The books will not be deleted.`))return;
+  rules.customShelves=rules.customShelves.filter(x=>x!==s);
+  for(const b of database.books)b.shelves=b.shelves.filter(x=>x!==s);
+  refreshAll();saveRules();scheduleSave();
+}
+function addCustomGenre() {
+  const g=$('new-genre').value.trim();
+  if(!g)return;
+  if(!(rules.customGenres||[]).some(x=>x.toLowerCase()===g.toLowerCase())){rules.customGenres.push(g);saveRules();}
+  $('new-genre').value='';refreshAll();
+}
+function createManualBook(data={}) {
+  const b=normaliseBook({id:uid('book'),title:'New book',author:'',rating10:null,shelf:'towatch',status:'towatch',currentPage:0,readings:[],shelves:[],genres:[],progressHistory:[],tags:[],createdAt:Date.now(),...data});
+  database.books.unshift(b);refreshAll();scheduleSave();openEditor(b.id);
+}
+function toggleScanner() {
+  if(html5QrCode){stopScanner();return;}
+  if(typeof Html5Qrcode==='undefined'){setStatus('Barcode scanner library is unavailable.','err');return;}
+  $('reader-container').style.display='block';
+  html5QrCode=new Html5Qrcode('reader');
+  html5QrCode.start({facingMode:'environment'},{fps:10,qrbox:{width:250,height:150}},async code=>{
+    await stopScanner();
+    try {
+      const r=await serverAction('lookupIsbn',{isbn:code});
+      if(!r.book)throw new Error('No book found');
+      createManualBook(r.book);
+    }catch(err){setStatus('ISBN lookup failed: '+err.message,'err');}
+  },()=>{}).catch(err=>setStatus('Camera error: '+err.message,'err'));
+}
+async function stopScanner() {
+  const scanner=html5QrCode;html5QrCode=null;$('reader-container').style.display='none';
+  if(scanner){try{await scanner.stop();await scanner.clear();}catch(err){console.warn(err);}}
+}
+async function quickOnlineSearch() {
+  const query=$('quick-query').value.trim();if(!query)return;
+  $('quick-results').textContent='Searching catalogues…';
+  try {
+    const r=await serverAction('searchBook',{query});
+    window._tempSearchResults=r.books||[];
+    $('quick-results').innerHTML=window._tempSearchResults.map((b,i)=>`<div class="search-result" onclick="selectSearchedBook(${i})">${b.cover?`<img src="${esc(b.cover)}" alt="">`:''}<div><strong>${esc(b.title)}</strong><div class="note">${esc(b.author||'Unknown author')}${b.originalPublicationYear?' · '+esc(b.originalPublicationYear):''}</div></div></div>`).join('')||'No books found.';
+  }catch(err){$('quick-results').textContent='Search failed: '+err.message;}
+}
+function mergeBookMetadata(existing,incoming) {
+  const personal=new Set(['id','rating10','review','shelf','status','currentPage','readings','progressHistory','shelves','tags','createdAt','updatedAt','goodreadsId']);
+  for(const [key,value] of Object.entries(incoming)){
+    if(personal.has(key)||value==null||value==='')continue;
+    if(Array.isArray(value))existing[key]=[...new Set([...(Array.isArray(existing[key])?existing[key]:[]),...value])];
+    else if(!existing[key])existing[key]=value;
+  }
+  existing.updatedAt=Date.now();
 }
 function searchMetadataForExisting() {
-  const b = database.books.find(x => x.id === editingBookId); if (!b) return;
-  window._enrichBookId = b.id; closeEditor();
-  document.getElementById('quick-query').value = b.isbn13 || b.isbn10 || (b.title + ' ' + (b.author || '')).trim();
-  setStatus('Choose a search result to enrich the existing book. Your review, rating, reading history and shelf will be preserved.', 'ok');
+  const b=database.books.find(x=>x.id===editingBookId);if(!b)return;
+  window._enrichBookId=b.id;closeEditor();
+  $('quick-query').value=b.isbn13||b.isbn10||(b.title+' '+(b.author||''));
   quickOnlineSearch();
 }
-function mergeBookMetadata(existing, incoming) {
-  const personal = new Set(['id','rating10','review','shelf','status','currentPage','readings','tags','createdAt','updatedAt']);
-  for (const [key, value] of Object.entries(incoming)) {
-    if (personal.has(key) || value === null || value === undefined || value === '') continue;
-    if (Array.isArray(value)) {
-      const prior = Array.isArray(existing[key]) ? existing[key] : [];
-      existing[key] = [...new Set([...prior, ...value])];
-    } else if (typeof value === 'object') {
-      if (!existing[key] || !Object.keys(existing[key]).length) existing[key] = value;
-    } else if (!existing[key]) existing[key] = value;
-  }
-  existing.updatedAt = Date.now();
-}
-async function selectSearchedBook(index) {
-  const b = (window._tempSearchResults || [])[index]; if (!b) return;
-  const container = document.getElementById('quick-results');
-  container.innerHTML = '<div class="note">Retrieving work, edition and supplementary metadata…</div>';
+async function selectSearchedBook(i) {
+  const b=(window._tempSearchResults||[])[i];if(!b)return;
+  $('quick-results').textContent='Retrieving detailed metadata…';
   try {
-    const result = b.metadataSources ? { book: b } : await serverAction('bookDetails', {
-      workKey: b.openLibraryWorkKey || '', editionKey: b.openLibraryEditionKey || '',
-      isbn: b.isbn13 || b.isbn10 || '', googleBooksId: b.googleBooksId || '',
-      title: b.title || '', author: b.author || '', originalPublicationYear: b.originalPublicationYear || '', editionCount: b.editionCount || 0
+    const r=b.metadataSources?{book:b}:await serverAction('bookDetails',{
+      workKey:b.openLibraryWorkKey||'',editionKey:b.openLibraryEditionKey||'',
+      isbn:b.isbn13||b.isbn10||'',googleBooksId:b.googleBooksId||'',
+      title:b.title||'',author:b.author||'',
+      originalPublicationYear:b.originalPublicationYear||''
     });
-    if (!result.book || !result.book.title) throw new Error('No usable metadata returned');
-    const catalogue = new Map(BASE_GENRES.map(g => [g.toLowerCase(), g]));
-    const explicitGenreSubjects = (result.book.subjects || []).map(g => catalogue.get(g.toLowerCase())).filter(Boolean);
-    result.book.genres = [...new Map([...(result.book.genres || []), ...explicitGenreSubjects].map(g => [g.toLowerCase(), g])).values()];
-    const existing = database.books.find(x => x.id === window._enrichBookId);
-    if (existing) { mergeBookMetadata(existing, result.book); refreshAll(); scheduleSave(); openEditor(existing.id); }
-    else createManualBook(result.book);
-    window._enrichBookId = null; container.innerHTML = ''; document.getElementById('quick-query').value = '';
-    setStatus('Metadata imported. Check the edition, subjects and genres before saving.', 'ok');
-    if (result.warnings && result.warnings.length) setStatus('Imported with source warnings: ' + result.warnings.join('; '), 'err');
-  } catch (e) { container.innerHTML = `<div class="note" style="color:var(--red)">Metadata retrieval failed: ${esc(e.message)}. No book was created.</div>`; }
+    if(!r.book?.title)throw new Error('No metadata returned');
+    const catalogue=new Map(BASE_GENRES.map(g=>[g.toLowerCase(),g]));
+    const matches=(r.book.subjects||[]).map(s=>catalogue.get(String(s).toLowerCase())).filter(Boolean);
+    r.book.genres=[...new Set([...(r.book.genres||[]),...matches])];
+    const existing=database.books.find(x=>x.id===window._enrichBookId);
+    if(existing){mergeBookMetadata(existing,r.book);refreshAll();scheduleSave();openEditor(existing.id);}
+    else createManualBook(r.book);
+    window._enrichBookId=null;$('quick-results').textContent='';
+  }catch(err){$('quick-results').textContent='Metadata retrieval failed: '+err.message;}
 }
-
-function openEditor(id) { const b = database.books.find(x => x.id === id); if (!b) return; editingBookId = id; document.getElementById('editor-heading').textContent = b.title || 'Edit book'; document.getElementById('editor-form').innerHTML = editorHtml(b); document.getElementById('editor-overlay').classList.add('on'); }
-function closeEditor(e) { if (e && e.target !== document.getElementById('editor-overlay')) return; document.getElementById('editor-overlay').classList.remove('on'); editingBookId = null; refreshAll(); }
-
-function genreSelectedHtml(b) {
-  return (b.genres || []).map((g, i) => `<span class="chip">${esc(g)}<button type="button" onclick="removeBookGenre(${i})" aria-label="Remove ${esc(g)}">×</button></span>`).join('') || '<span class="note">No genres assigned. Search the suggestions or enter any new genre.</span>';
+function openEditor(id) {
+  const b=database.books.find(x=>x.id===id);if(!b)return;
+  editingBookId=id;
+  $('editor-heading').textContent=b.title||'Edit book';
+  $('editor-form').innerHTML=editorHtml(b);
+  $('editor-overlay').classList.add('on');
 }
-function renderSelectedGenres() {
-  const b = database.books.find(x => x.id === editingBookId);
-  const node = document.getElementById('genre-chosen');
-  if (b && node) node.innerHTML = genreSelectedHtml(b);
+function closeEditor(e) {
+  if(e&&e.target!==$('editor-overlay'))return;
+  $('editor-overlay').classList.remove('on');editingBookId=null;refreshAll();
 }
-function addBookGenre() {
-  const b = database.books.find(x => x.id === editingBookId);
-  const input = document.getElementById('genre-add'); if (!b || !input) return;
-  const values = input.value.split(',').map(v => v.trim()).filter(Boolean);
-  for (const name of values) if (!(b.genres || []).some(g => g.toLowerCase() === name.toLowerCase())) b.genres.push(name);
-  input.value = ''; renderSelectedGenres(); buildGenreControls(); scheduleSave();
+function openProgressEditor(id) { openEditor(id);$('log-pages')?.focus(); }
+function selectedItemsHtml(items,type) {
+  return items.map((s,i)=>`<span class="chip ${type==='shelf'?'custom':''}">${esc(s)} <button type="button" onclick="removeBookItem('${type}',${i})">×</button></span>`).join('')||'<span class="note">None selected.</span>';
 }
-function removeBookGenre(i) {
-  const b = database.books.find(x => x.id === editingBookId);
-  if (!b || i < 0 || i >= b.genres.length) return;
-  b.genres.splice(i, 1); renderSelectedGenres(); buildGenreControls(); scheduleSave();
+function addBookItem(type) {
+  const b=database.books.find(x=>x.id===editingBookId),el=$(type+'-add');if(!b||!el)return;
+  const key=type==='shelf'?'shelves':'genres';
+  for(const item of splitList(el.value)){
+    if(!b[key].some(x=>x.toLowerCase()===item.toLowerCase()))b[key].push(item);
+    if(type==='shelf'&&!allCustomShelves().some(x=>x.toLowerCase()===item.toLowerCase())){rules.customShelves.push(item);saveRules();}
+  }
+  el.value='';$(type+'-chosen').innerHTML=selectedItemsHtml(b[key],type);refreshAll();scheduleSave();
+}
+function removeBookItem(type,i) {
+  const b=database.books.find(x=>x.id===editingBookId);if(!b)return;
+  const key=type==='shelf'?'shelves':'genres';b[key].splice(i,1);
+  $(type+'-chosen').innerHTML=selectedItemsHtml(b[key],type);refreshAll();scheduleSave();
+}
+function readingRowsHtml(b) {
+  return b.readings.map((r,i)=>`<div class="actions" style="margin-bottom:6px">
+    <select onchange="changeReading(${i},'precision',this.value)">
+      <option value="day" ${r.precision==='day'?'selected':''}>Exact date</option>
+      <option value="month" ${r.precision==='month'?'selected':''}>Month</option>
+      <option value="unknown" ${r.precision==='unknown'?'selected':''}>Unknown</option>
+    </select>
+    ${r.precision==='unknown'?'':`<input type="${r.precision==='month'?'month':'date'}" value="${esc(r.date||'')}" onchange="changeReading(${i},'date',this.value)">`}
+    <button class="btn secondary" onclick="removeReading(${i})">Remove</button>
+  </div>`).join('')||'<p class="note">No completed reading dates recorded.</p>';
+}
+function progressHistoryHtml(b) {
+  return b.progressHistory.slice().sort((a,z)=>z.date.localeCompare(a.date)).map(p=>`<div class="progress-entry">
+    <span>${esc(p.date)} · +${Number(p.pagesRead)} pages · page ${Number(p.page)}${p.note?' · '+esc(p.note):''}</span>
+    <button class="btn secondary" onclick="removeProgress(${jsArg(p.id)})">Remove</button>
+  </div>`).join('')||'<p class="note">No dated page updates yet.</p>';
 }
 function editorHtml(b) {
-  const rating = b.rating10 === null || b.rating10 === undefined ? '' : b.rating10;
-  const suggestions = allGenres().map(g => `<option value="${esc(g)}"></option>`).join('');
-  const info = [
-    ['Publisher(s)', (b.publishers || []).join(', ')], ['Edition', b.editionName],
-    ['Languages', (b.languages || []).join(', ')], ['ISBN-13 identifiers', (b.isbn13s || []).join(', ')],
-    ['ISBN-10 identifiers', (b.isbn10s || []).join(', ')], ['Publish places', (b.publishPlaces || []).join(', ')],
-    ['Physical format', b.physicalFormat], ['Dimensions', b.physicalDimensions], ['Weight', b.weight],
-    ['Contributors', (b.contributors || []).join(', ')], ['Subjects: places', (b.subjectPlaces || []).join(', ')],
-    ['Subjects: people', (b.subjectPeople || []).join(', ')], ['Subjects: periods', (b.subjectTimes || []).join(', ')],
-    ['Dewey Decimal', (b.deweyDecimalClass || []).join(', ')], ['LC classification', (b.lcClassifications || []).join(', ')],
-    ['LCCN', (b.lccn || []).join(', ')], ['OCLC', (b.oclc || []).join(', ')],
-    ['First sentence', b.firstSentence], ['Notes', b.notes],
-    ['Table of contents', (b.tableOfContents || []).join(' | ')],
-    ['Google Books rating (not your rating)', b.externalRatings?.googleAverage == null ? '' : String(b.externalRatings.googleAverage) + ' / 5'],
-    ['Metadata sources', (b.metadataSources || []).join(', ')]
-  ].filter(([, value]) => value !== undefined && value !== null && String(value).trim());
-  const links = [['Open Library', b.openLibraryUrl], ['Google Books', b.googleBooksUrl], ['Preview', b.previewLink]]
-    .filter(([, url]) => /^https:\/\//.test(url || ''))
-    .map(([label, url]) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`).join(' · ');
+  const options=DEFAULT_SHELVES.map(s=>`<option value="${s.value}" ${b.shelf===s.value?'selected':''}>${s.label}</option>`).join('');
+  const suggestions=allGenres().map(s=>`<option value="${esc(s)}"></option>`).join('');
+  const shelfSuggestions=allCustomShelves().map(s=>`<option value="${esc(s)}"></option>`).join('');
+  const extra=[
+    ['Edition',b.editionName],['Publishers',(b.publishers||[]).join(', ')],
+    ['Languages',(b.languages||[]).join(', ')],
+    ['ISBN-13 identifiers',(b.isbn13s||[]).join(', ')],
+    ['ISBN-10 identifiers',(b.isbn10s||[]).join(', ')],
+    ['Publish places',(b.publishPlaces||[]).join(', ')],
+    ['Format',b.physicalFormat],['Dimensions',b.physicalDimensions],['Weight',b.weight],
+    ['Contributors',(b.contributors||[]).join(', ')],
+    ['Subject places',(b.subjectPlaces||[]).join(', ')],
+    ['Subject people',(b.subjectPeople||[]).join(', ')],
+    ['Subject periods',(b.subjectTimes||[]).join(', ')],
+    ['Dewey Decimal',(b.deweyDecimalClass||[]).join(', ')],
+    ['Library of Congress',(b.lcClassifications||[]).join(', ')],
+    ['LCCN',(b.lccn||[]).join(', ')],['OCLC',(b.oclc||[]).join(', ')],
+    ['First sentence',b.firstSentence],['Notes',b.notes],
+    ['Table of contents',(b.tableOfContents||[]).join(' | ')],
+    ['Metadata sources',(b.metadataSources||[]).join(', ')],
+    ['Goodreads ID',b.goodreadsId],['Goodreads read count',b.goodreadsReadCount],
+    ['Goodreads average rating',b.goodreadsAverageRating],
+    ['Goodreads private notes',b.goodreadsPrivateNotes],
+    ['Goodreads owned copies',b.goodreadsOwnedCopies]
+  ].filter(([,v])=>v!==null&&v!==undefined&&String(v).trim());
+  const links=[['Open Library',b.openLibraryUrl],['Google Books',b.googleBooksUrl],['Preview',b.previewLink]]
+    .filter(([,url])=>/^https:\/\//.test(url||''))
+    .map(([label,url])=>`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`).join(' · ');
+  const other=Object.fromEntries(Object.entries(b).filter(([k,v])=>!['id','title','subtitle','author','cover','publisher','pages','currentPage','rating10','review','shelf','status','shelves','genres','tags','subjects','categories','description','readings','progressHistory','series','seriesNumber','publishDate','originalPublicationYear','isbn13','isbn10','language'].includes(k)&&v!==''&&v!=null));
   return `<div class="form-grid">
     <div class="field"><label>Title</label><input id="ed-title" value="${esc(b.title)}" oninput="editorChanged()"></div>
-    <div class="field"><label>Subtitle</label><input id="ed-subtitle" value="${esc(b.subtitle || '')}" oninput="editorChanged()"></div>
-    <div class="field"><label>Author(s)</label><input id="ed-author" value="${esc(b.author)}" oninput="editorChanged()"></div>
-    <div class="field"><label>Series name</label><input id="ed-series" value="${esc(b.series || '')}" oninput="editorChanged()"></div>
-    <div class="field"><label>Book number in series</label><input id="ed-seriesnum" value="${esc(b.seriesNumber || '')}" oninput="editorChanged()"></div>
-    <div class="field"><label>Shelf</label><select id="ed-shelf" onchange="editorChanged()"><option value="read" ${b.shelf === 'read' ? 'selected' : ''}>Read</option><option value="towatch" ${b.shelf === 'towatch' ? 'selected' : ''}>To Read</option></select></div>
-    <div class="field"><label>Rating out of 10</label><input id="ed-rating" type="number" min="0" max="10" step="0.5" value="${rating}" oninput="editorChanged()"></div>
-    <div class="field"><label>Publisher</label><input id="ed-publisher" value="${esc(b.publisher || '')}" oninput="editorChanged()"></div>
-    <div class="field"><label>Edition publication date (as supplied)</label><input id="ed-publishdate" value="${esc(b.publishDate || '')}" oninput="editorChanged()"></div>
-    <div class="field"><label>Original publication year</label><input id="ed-originalyear" value="${esc(b.originalPublicationYear || '')}" oninput="editorChanged()"></div>
-    <div class="field"><label>ISBN-13</label><input id="ed-isbn13" value="${esc(b.isbn13 || '')}" oninput="editorChanged()"></div>
-    <div class="field"><label>ISBN-10</label><input id="ed-isbn10" value="${esc(b.isbn10 || '')}" oninput="editorChanged()"></div>
-    <div class="field"><label>Language</label><input id="ed-language" value="${esc(b.language || '')}" oninput="editorChanged()"></div>
-    <div class="field"><label>Current page</label><input id="ed-currpage" type="number" min="0" value="${Number(b.currentPage) || 0}" oninput="editorChanged()"></div>
-    <div class="field"><label>Total pages</label><input id="ed-pages" type="number" min="0" value="${Number(b.pages) || ''}" oninput="editorChanged()"></div>
-    <div class="field wide"><label>Cover URL</label><input id="ed-cover" value="${esc(b.cover || '')}" oninput="editorChanged()"></div>
-    <div class="field wide"><label>Genres: unlimited, with catalogue suggestions</label><div class="genre-chosen" id="genre-chosen">${genreSelectedHtml(b)}</div>
-      <div class="genre-entry"><input id="genre-add" list="genre-suggestions" placeholder="Search or type any genre; press Enter to add" onkeydown="if(event.key==='Enter'){event.preventDefault();addBookGenre()}"><button class="btn sm" type="button" onclick="addBookGenre()">Add genre</button></div><datalist id="genre-suggestions">${suggestions}</datalist>
-      <p class="note" style="margin-top:.3rem">Imported genre labels are retained. Subjects and source categories are recorded separately below.</p>
+    <div class="field"><label>Subtitle</label><input id="ed-subtitle" value="${esc(b.subtitle)}" oninput="editorChanged()"></div>
+    <div class="field"><label>Author</label><input id="ed-author" value="${esc(b.author)}" oninput="editorChanged()"></div>
+    <div class="field"><label>Series</label><input id="ed-series" value="${esc(b.series)}" oninput="editorChanged()"></div>
+    <div class="field"><label>Series number</label><input id="ed-seriesnum" value="${esc(b.seriesNumber)}" oninput="editorChanged()"></div>
+    <div class="field"><label>Reading status</label><select id="ed-shelf" onchange="editorChanged()">${options}</select></div>
+    <div class="field wide"><label>Custom shelves</label>
+      <div id="shelf-chosen" class="item-list">${selectedItemsHtml(b.shelves,'shelf')}</div>
+      <div class="item-entry"><input id="shelf-add" list="shelf-suggestions" placeholder="Type any shelf" onkeydown="if(event.key==='Enter'){event.preventDefault();addBookItem('shelf')}"><button class="btn" onclick="addBookItem('shelf')">Add shelf</button><datalist id="shelf-suggestions">${shelfSuggestions}</datalist></div>
     </div>
-    <div class="field wide"><label>Catalogue subjects, one per line</label><textarea id="ed-subjects" oninput="editorChanged()">${esc((b.subjects || []).join('\n'))}</textarea></div>
-    <div class="field wide"><label>Source categories, one per line</label><textarea id="ed-categories" oninput="editorChanged()">${esc((b.categories || []).join('\n'))}</textarea></div>
-    <div class="field wide"><label>Personal tags, comma separated</label><input id="ed-tags" value="${esc((b.tags || []).join(', '))}" oninput="editorChanged()"></div>
-    <div class="field wide"><label>My review</label><textarea id="ed-review" oninput="editorChanged()">${esc(b.review || '')}</textarea></div>
-    <div class="field wide"><label>Description</label><textarea id="ed-description" oninput="editorChanged()">${esc(b.description || '')}</textarea></div>
-    <div class="field wide"><label>Reading history</label><div id="reading-editor">${readingRowsHtml(b)}</div><button class="btn sm secondary" onclick="addReading()">Add reading</button></div>
-    <div class="field wide"><details><summary class="note" style="cursor:pointer">Additional imported metadata (${info.length} fields)</summary>
-      <div style="margin-top:.7rem;font-size:.75rem;line-height:1.6">${info.map(([k,v]) => `<div><strong>${esc(k)}:</strong> ${esc(v)}</div>`).join('')}${links ? `<p style="margin-top:.5rem">${links}</p>` : ''}</div>
+    <div class="field"><label>Your rating /10</label><input id="ed-rating" type="number" min="0" max="10" step="0.5" value="${b.rating10??''}" oninput="editorChanged()"></div>
+    <div class="field"><label>Publisher</label><input id="ed-publisher" value="${esc(b.publisher)}" oninput="editorChanged()"></div>
+    <div class="field"><label>Publication date</label><input id="ed-publishdate" value="${esc(b.publishDate)}" oninput="editorChanged()"></div>
+    <div class="field"><label>Original publication year</label><input id="ed-originalyear" value="${esc(b.originalPublicationYear)}" oninput="editorChanged()"></div>
+    <div class="field"><label>ISBN-13</label><input id="ed-isbn13" value="${esc(b.isbn13)}" oninput="editorChanged()"></div>
+    <div class="field"><label>ISBN-10</label><input id="ed-isbn10" value="${esc(b.isbn10)}" oninput="editorChanged()"></div>
+    <div class="field"><label>Language</label><input id="ed-language" value="${esc(b.language)}" oninput="editorChanged()"></div>
+    <div class="field"><label>Total pages</label><input id="ed-pages" type="number" min="0" value="${b.pages||''}" oninput="editorChanged()"></div>
+    <div class="field"><label>Current page</label><input id="ed-currpage" type="number" min="0" value="${b.currentPage||0}" oninput="editorChanged()"></div>
+    <div class="field wide"><label>Cover URL</label><input id="ed-cover" value="${esc(b.cover)}" oninput="editorChanged()"></div>
+    <div class="field wide"><label>Dated reading progress</label>
+      <p class="note">Enter pages read in this session. The number is added to the current page and stored with its date. Reaching the final page automatically marks the book Read.</p>
+      <div class="actions">
+        <input id="log-pages" type="number" min="1" step="1" placeholder="Pages read" style="width:125px">
+        <input id="log-date" type="date" value="${todayIso()}">
+        <input id="log-note" placeholder="Optional note">
+        <button class="btn green" onclick="logReadingProgress()">Log pages</button>
+      </div>
+      <div id="progress-history">${progressHistoryHtml(b)}</div>
+    </div>
+    <div class="field wide"><label>Genres, unrestricted</label>
+      <div id="genre-chosen" class="item-list">${selectedItemsHtml(b.genres,'genre')}</div>
+      <div class="item-entry"><input id="genre-add" list="genre-suggestions" placeholder="Type any genre" onkeydown="if(event.key==='Enter'){event.preventDefault();addBookItem('genre')}"><button class="btn" onclick="addBookItem('genre')">Add genre</button><datalist id="genre-suggestions">${suggestions}</datalist></div>
+    </div>
+    <div class="field wide"><label>Subjects, one per line</label><textarea id="ed-subjects" oninput="editorChanged()">${esc(b.subjects.join('\n'))}</textarea></div>
+    <div class="field wide"><label>Source categories, one per line</label><textarea id="ed-categories" oninput="editorChanged()">${esc(b.categories.join('\n'))}</textarea></div>
+    <div class="field wide"><label>Personal tags, comma separated</label><input id="ed-tags" value="${esc(b.tags.join(', '))}" oninput="editorChanged()"></div>
+    <div class="field wide"><label>Your review</label><textarea id="ed-review" oninput="editorChanged()">${esc(b.review)}</textarea></div>
+    <div class="field wide"><label>Book description</label><textarea id="ed-description" oninput="editorChanged()">${esc(b.description)}</textarea></div>
+    <div class="field wide"><label>Completed reading dates and rereads</label><div id="reading-editor">${readingRowsHtml(b)}</div><button class="btn secondary" onclick="addReading()">Add completion date</button></div>
+    <div class="field wide"><details><summary>Detailed imported metadata (${extra.length} fields)</summary>
+      <div style="font-size:12px;line-height:1.7;margin-top:8px">${extra.map(([k,v])=>`<div><strong>${esc(k)}:</strong> ${esc(v)}</div>`).join('')}</div>
+      <p>${links}</p>
+      <details><summary>All remaining stored metadata</summary><pre style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px">${esc(JSON.stringify(other,null,2))}</pre></details>
     </details></div>
-    <div class="wide actions"><button class="btn blue" onclick="searchMetadataForExisting()">Fetch more metadata</button><button class="btn red" onclick="deleteBook('${esc(b.id)}');closeEditor()">Delete book</button><button class="btn secondary" onclick="closeEditor()">Done</button></div>
+    <div class="wide actions"><button class="btn blue" onclick="searchMetadataForExisting()">Fetch more metadata</button><button class="btn secondary" onclick="closeEditor()">Done</button><button class="btn red" onclick="deleteBook(${jsArg(b.id)});closeEditor()">Delete book</button></div>
   </div>`;
 }
-
-function readingRowsHtml(b) { return (b.readings || []).map((r, i) => `<div class="reading-row"><select onchange="changeReading(${i},'precision',this.value)"><option value="day" ${r.precision === 'day' ? 'selected' : ''}>Exact date</option><option value="month" ${r.precision === 'month' ? 'selected' : ''}>Month and year</option><option value="unknown" ${r.precision === 'unknown' ? 'selected' : ''}>Date unknown</option></select>${r.precision === 'unknown' ? '<span class="note">No date stored</span>' : `<input type="${r.precision === 'month' ? 'month' : 'date'}" value="${esc(r.date || '')}" onchange="changeReading(${i},'date',this.value)">`}<button class="icon-btn" onclick="removeReading(${i})">Remove</button></div>`).join('') || '<div class="note">No reading history recorded.</div>'; }
-
 function editorChanged() {
-  const b = database.books.find(x => x.id === editingBookId); if (!b) return;
-  const val = id => document.getElementById('ed-' + id).value.trim();
-  b.title = val('title'); b.subtitle = val('subtitle'); b.author = val('author');
-  b.series = val('series'); b.seriesNumber = val('seriesnum'); b.shelf = val('shelf');
-  b.cover = val('cover'); b.publisher = val('publisher'); b.publishDate = val('publishdate');
-  b.originalPublicationYear = val('originalyear'); b.isbn13 = val('isbn13'); b.isbn10 = val('isbn10'); b.language = val('language');
-  b.currentPage = Number(val('currpage')) || 0; b.pages = Number(val('pages')) || 0;
-  b.status = b.shelf === 'towatch' ? 'towatch' : (b.currentPage > 0 && b.currentPage < b.pages ? 'reading' : 'finished');
-  b.description = val('description');
-  const r = val('rating'); b.rating10 = r === '' ? null : Math.max(0, Math.min(10, Number(r)));
-  b.review = document.getElementById('ed-review').value;
-  b.subjects = splitLines(val('subjects')); b.categories = splitLines(val('categories'));
-  b.tags = splitList(val('tags')); b.updatedAt = Date.now();
-  document.getElementById('editor-heading').textContent = b.title || 'Edit book';
-  renderStats(); scheduleSave();
+  const b=database.books.find(x=>x.id===editingBookId);if(!b)return;
+  const val=id=>$('ed-'+id).value.trim();
+  b.title=val('title');b.subtitle=val('subtitle');b.author=val('author');
+  b.series=val('series');b.seriesNumber=val('seriesnum');
+  b.shelf=val('shelf');b.status=b.shelf==='read'?'finished':b.shelf;
+  b.rating10=val('rating')===''?null:Math.max(0,Math.min(10,Number(val('rating'))));
+  b.publisher=val('publisher');b.publishDate=val('publishdate');
+  b.originalPublicationYear=val('originalyear');
+  b.isbn13=val('isbn13');b.isbn10=val('isbn10');b.language=val('language');
+  b.pages=Math.max(0,Number(val('pages'))||0);
+  b.currentPage=Math.max(0,Number(val('currpage'))||0);
+  b.cover=val('cover');b.tags=splitList(val('tags'));
+  b.subjects=splitLines(val('subjects'));b.categories=splitLines(val('categories'));
+  b.review=$('ed-review').value;b.description=$('ed-description').value;
+  b.updatedAt=Date.now();$('editor-heading').textContent=b.title;
+  renderStats();scheduleSave();
+}
+function addReading() {
+  const b=database.books.find(x=>x.id===editingBookId);if(!b)return;
+  b.readings.push({id:uid('reading'),date:todayIso(),precision:'day'});
+  $('reading-editor').innerHTML=readingRowsHtml(b);scheduleSave();
+}
+function changeReading(i,key,value) {
+  const b=database.books.find(x=>x.id===editingBookId);if(!b||!b.readings[i])return;
+  b.readings[i][key]=value;
+  if(key==='precision'){
+    if(value==='unknown')b.readings[i].date='';
+    else if(value==='month')b.readings[i].date=(b.readings[i].date||todayIso()).slice(0,7);
+    else if(value==='day'&&!isValidDate(b.readings[i].date))b.readings[i].date=todayIso();
+    $('reading-editor').innerHTML=readingRowsHtml(b);
+  }
+  scheduleSave();
+}
+function removeReading(i) {
+  const b=database.books.find(x=>x.id===editingBookId);if(!b)return;
+  b.readings.splice(i,1);$('reading-editor').innerHTML=readingRowsHtml(b);scheduleSave();
+}
+function logReadingProgress() {
+  const b=database.books.find(x=>x.id===editingBookId);if(!b)return;
+  const pagesRead=Number($('log-pages').value),date=$('log-date').value,note=$('log-note').value.trim();
+  if(!Number.isSafeInteger(pagesRead)||pagesRead<=0){alert('Enter a positive whole number of pages.');return;}
+  if(!isValidDate(date)){alert('Choose a valid date.');return;}
+  const next=(Number(b.currentPage)||0)+pagesRead;
+  if(b.pages>0&&next>b.pages){alert('This would exceed the total page count.');return;}
+  b.currentPage=next;
+  b.progressHistory.push({id:uid('progress'),date,pagesRead,page:next,note});
+  if(b.pages>0&&next===b.pages){
+    b.shelf='read';b.status='finished';
+    if(!b.readings.some(r=>r.date===date&&r.precision==='day'))b.readings.push({id:uid('reading'),date,precision:'day'});
+  }else{b.shelf='reading';b.status='reading';}
+  b.updatedAt=Date.now();
+  $('editor-form').innerHTML=editorHtml(b);refreshAll();scheduleSave();
+}
+function removeProgress(id) {
+  const b=database.books.find(x=>x.id===editingBookId);if(!b)return;
+  const entry=b.progressHistory.find(x=>x.id===id);if(!entry)return;
+  if(!confirm('Remove this dated log? Its pages will not automatically be subtracted from the current page.'))return;
+  b.progressHistory=b.progressHistory.filter(x=>x.id!==id);
+  $('progress-history').innerHTML=progressHistoryHtml(b);scheduleSave();
+}
+function deleteBook(id) {
+  const b=database.books.find(x=>x.id===id);
+  if(!b||!confirm(`Delete "${b.title}" from books.json?`))return;
+  database.books=database.books.filter(x=>x.id!==id);
+  if(editingBookId===id)closeEditor();
+  refreshAll();scheduleSave();
 }
 
-function addReading() { const b = database.books.find(x => x.id === editingBookId); if (!b) return; b.readings.push({ id: uid('reading'), date: todayIso(), precision: 'day' }); document.getElementById('reading-editor').innerHTML = readingRowsHtml(b); scheduleSave(); }
-function changeReading(i, key, value) { const b = database.books.find(x => x.id === editingBookId); if (!b || !b.readings[i]) return; b.readings[i][key] = value; if (key === 'precision') { if (value === 'unknown') b.readings[i].date = ''; else if (value === 'month') b.readings[i].date = /^\d{4}-\d{2}/.test(b.readings[i].date || '') ? b.readings[i].date.slice(0, 7) : todayIso().slice(0, 7); else if (value === 'day' && !/^\d{4}-\d{2}-\d{2}$/.test(b.readings[i].date || '')) b.readings[i].date = todayIso(); document.getElementById('reading-editor').innerHTML = readingRowsHtml(b); } scheduleSave(); }
-function removeReading(i) { const b = database.books.find(x => x.id === editingBookId); if (!b) return; b.readings.splice(i, 1); document.getElementById('reading-editor').innerHTML = readingRowsHtml(b); scheduleSave(); }
-function splitList(v) { return [...new Set(String(v || '').split(',').map(x => x.trim()).filter(Boolean))]; }
-function splitLines(v) { return [...new Set(String(v || '').split(/\r?\n/).map(x => x.trim()).filter(Boolean))]; }
-function deleteBook(id) { const b = database.books.find(x => x.id === id); if (!b || !confirm(`Delete "${b.title}" from books.json?`)) return; database.books = database.books.filter(x => x.id !== id); refreshAll(); scheduleSave(); }
-
+function parseGoodreadsCSV(text) {
+  text=String(text).replace(/^\uFEFF/,'');
+  let rows=[],row=[],field='',quoted=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(c==='"'){if(quoted&&text[i+1]==='"'){field+='"';i++;}else quoted=!quoted;}
+    else if(c===','&&!quoted){row.push(field);field='';}
+    else if((c==='\n'||c==='\r')&&!quoted){
+      if(c==='\r'&&text[i+1]==='\n')i++;
+      row.push(field);if(row.some(v=>v.trim()))rows.push(row);
+      row=[];field='';
+    }else field+=c;
+  }
+  if(quoted)throw new Error('Unclosed quote in CSV.');
+  row.push(field);if(row.some(v=>v.trim()))rows.push(row);
+  if(rows.length<2)throw new Error('No Goodreads records found.');
+  const headers=rows.shift().map(s=>s.trim());
+  if(!['Title','Author','Exclusive Shelf'].every(k=>headers.includes(k)))throw new Error('CSV is missing Goodreads library columns.');
+  return rows.map(values=>Object.fromEntries(headers.map((key,i)=>[key,(values[i]||'').trim()])));
+}
+function goodreadsISBN(value) { return String(value||'').replace(/^=\s*"(.*)"$/,'$1').replace(/[^\dXx]/g,'').toUpperCase(); }
+function goodreadsCustomShelves(row) { return splitList(row.Bookshelves||'').filter(x=>!['read','currently-reading','to-read'].includes(x.toLowerCase())); }
+function goodreadsStatus(row) { return {'to-read':'towatch','currently-reading':'reading',read:'read'}[(row['Exclusive Shelf']||'').toLowerCase()]||'towatch'; }
+function goodreadsMatch(row,books) {
+  const id=String(row['Book Id']||''),isbn13=goodreadsISBN(row.ISBN13),isbn10=goodreadsISBN(row.ISBN);
+  const checks=[
+    b=>id&&String(b.goodreadsId||'')===id,
+    b=>(isbn13&&([b.isbn13,...(b.isbn13s||[])].some(x=>goodreadsISBN(x)===isbn13)))||(isbn10&&([b.isbn10,...(b.isbn10s||[])].some(x=>goodreadsISBN(x)===isbn10))),
+    b=>(b.title||'').trim().toLowerCase()===(row.Title||'').trim().toLowerCase()&&(b.author||'').trim().toLowerCase()===(row.Author||'').trim().toLowerCase()
+  ];
+  for(const fn of checks){
+    const matches=books.filter(fn);
+    if(matches.length===1)return matches[0];
+    if(matches.length>1)return 'ambiguous';
+  }
+  return null;
+}
+function goodreadsToBook(row) {
+  const rating=Number(row['My Rating']),dateRead=goodreadsDate(row['Date Read']),dateAdded=goodreadsDate(row['Date Added']),shelf=goodreadsStatus(row);
+  return normaliseBook({
+    id:uid('book'),title:row.Title,author:row.Author,
+    additionalAuthors:splitList(row['Additional Authors']),
+    isbn13:goodreadsISBN(row.ISBN13),isbn10:goodreadsISBN(row.ISBN),
+    publisher:row.Publisher||'',pages:Number(row['Number of Pages'])||0,
+    physicalFormat:row.Binding||'',publishDate:row['Year Published']||'',
+    originalPublicationYear:row['Original Publication Year']||'',
+    rating10:rating>0&&rating<=5?rating*2:null,
+    review:row['My Review']||'',shelf,status:shelf==='read'?'finished':shelf,
+    shelves:goodreadsCustomShelves(row),
+    readings:dateRead?[{id:uid('reading'),date:dateRead,precision:'day'}]:[],
+    progressHistory:[],currentPage:0,
+    goodreadsId:String(row['Book Id']||''),
+    goodreadsReadCount:Number(row['Read Count'])||0,
+    goodreadsAverageRating:row['Average Rating']||'',
+    goodreadsPrivateNotes:row['Private Notes']||'',
+    goodreadsOwnedCopies:row['Owned Copies']||'',
+    createdAt:dateAdded?new Date(dateAdded+'T00:00:00').getTime():Date.now()
+  });
+}
+function mergeGoodreads(existing,incoming) {
+  for(const key of ['isbn13','isbn10','publisher','pages','physicalFormat','publishDate','originalPublicationYear','goodreadsId','goodreadsReadCount','goodreadsAverageRating','goodreadsPrivateNotes','goodreadsOwnedCopies']){
+    if(!existing[key]&&incoming[key])existing[key]=incoming[key];
+  }
+  if(existing.rating10==null)existing.rating10=incoming.rating10;
+  if(!existing.review)existing.review=incoming.review;
+  existing.shelves=[...new Set([...existing.shelves,...incoming.shelves])];
+  for(const r of incoming.readings)if(!existing.readings.some(x=>x.date===r.date&&x.precision===r.precision))existing.readings.push(r);
+  existing.updatedAt=Date.now();
+}
+async function previewGoodreadsImport() {
+  const file=$('goodreads-file').files[0];
+  $('goodreads-apply').disabled=true;goodreadsPreview=null;
+  if(!file){$('goodreads-preview').textContent='Choose your Goodreads CSV.';return;}
+  if(file.size>8*1024*1024){$('goodreads-preview').textContent='CSV larger than 8 MB.';return;}
+  try {
+    const rows=parseGoodreadsCSV(await file.text()),books=JSON.parse(JSON.stringify(database.books)),seen=new Set();
+    let added=0,matched=0,ambiguous=0,skipped=0;
+    for(const row of rows){
+      if(!row.Title||!row.Author){skipped++;continue;}
+      const key=row['Book Id']?'id:'+row['Book Id']:'name:'+row.Title.toLowerCase()+'|'+row.Author.toLowerCase();
+      if(seen.has(key)){skipped++;continue;}
+      seen.add(key);
+      const match=goodreadsMatch(row,books);
+      if(match==='ambiguous'){ambiguous++;continue;}
+      const b=goodreadsToBook(row);
+      if(match){mergeGoodreads(match,b);matched++;}
+      else{books.push(b);added++;}
+    }
+    const proposed={...database,books,updatedAt:Date.now()};
+    const payloadLength=JSON.stringify({action:'write',file:BOOKS_FILE,data:proposed,baseHash:booksFileHash,requestId:'0'.repeat(32)}).length;
+    if(JSON.stringify(proposed).length>1450000||payloadLength>1500000)throw new Error('Import exceeds current backend write size. Split the CSV into batches.');
+    goodreadsPreviewSource=JSON.stringify(database);
+    goodreadsPreview=proposed;
+    $('goodreads-preview').textContent=`Preview: ${added} new, ${matched} matched, ${ambiguous} ambiguous and ${skipped} skipped. Existing book status, personal ratings, reviews and progress are preserved where records match. Review these numbers before importing.`;
+    $('goodreads-apply').disabled=false;
+  }catch(err){$('goodreads-preview').textContent='CSV error: '+err.message;}
+}
+function applyGoodreadsImport() {
+  if(!goodreadsPreview||saveInFlight||saveTimer){
+    setStatus('Another save is running or the preview is not ready.','err');return;
+  }
+  if(JSON.stringify(database)!==goodreadsPreviewSource){
+    $('goodreads-preview').textContent='Books changed since the preview. Preview the CSV again.';
+    $('goodreads-apply').disabled=true;return;
+  }
+  database=goodreadsPreview;
+  goodreadsPreview=null;
+  $('goodreads-apply').disabled=true;
+  $('goodreads-preview').textContent='Import applied. Saving to Drive…';
+  refreshAll();scheduleSave();
+}
 loadAll();
 </script>
 </body>
