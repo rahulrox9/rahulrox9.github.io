@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bookshelf Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" type="text/javascript"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e;--red:#b64335;--blue:#365f9d;--purple:#72549a}
@@ -32,6 +32,13 @@ main{max-width:1120px;margin:0 auto;padding:1.35rem}
 .search-result-item:hover{background:var(--card);border-color:var(--warm)}
 .search-result-item img{width:36px;height:54px;object-fit:cover;border-radius:2px}
 @media(max-width:760px){main{padding:.85rem}.hero{align-items:flex-start;flex-direction:column}.stats{grid-template-columns:repeat(2,1fr)}.book-row{grid-template-columns:48px minmax(0,1fr)}.cover,.cover-ph{width:48px;height:72px}.row-actions{grid-column:2}.form-grid{grid-template-columns:1fr}.wide{grid-column:auto}.reading-row{grid-template-columns:105px 1fr auto}.actions .btn{flex:1;min-width:135px}}
+.unlock-gate{max-width:480px;margin:4rem auto;padding:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:9px}
+.unlock-gate h2{font-family:'Playfair Display',serif;margin-bottom:.75rem}
+.unlock-gate p{font-size:.79rem;color:var(--muted);line-height:1.6;margin-bottom:1rem}
+.unlock-gate label{display:block;font-size:.72rem;margin-bottom:.35rem}
+.unlock-gate input{display:block;width:100%;padding:.65rem;border:1px solid var(--border);border-radius:5px;margin-bottom:.8rem;background:var(--parchment)}
+.unlock-gate[hidden],#admin-main[hidden],#retry-save[hidden]{display:none}
+.save-indicator{text-align:right}
 </style>
 </head>
 <body>
@@ -39,8 +46,18 @@ main{max-width:1120px;margin:0 auto;padding:1.35rem}
   <a class="nav-logo" href="#">Admin <span>Bookshelf</span></a>
   <div class="nav-right"><a class="nav-link" href="https://rahulrox9.github.io/Public/books.html">Public bookshelf</a></div>
 </nav>
-<main>
-  <div class="hero"><div><h1>Bookshelf <span>Database</span></h1><p>Manage your library, page progress, series search &amp; barcode scanner.</p></div><div id="save-state" class="status">Loading…</div></div>
+<section id="unlock-gate" class="unlock-gate">
+  <form id="unlock-form" onsubmit="unlockAdmin(event)">
+    <h2>Bookshelf administration</h2>
+    <p>Enter the administrator token configured in Google Apps Script. The token is held only in this tab's memory, not saved to GitHub or browser storage.</p>
+    <label for="admin-token-input">Administrator token</label>
+    <input id="admin-token-input" type="password" autocomplete="off" spellcheck="false" required>
+    <button id="unlock-button" class="btn" type="submit">Unlock editor</button>
+    <div id="unlock-error" class="status err" role="alert"></div>
+  </form>
+</section>
+<main id="admin-main" hidden>
+  <div class="hero"><div><h1>Bookshelf <span>Database</span></h1><p>Manage your library, page progress, series search &amp; barcode scanner.</p></div><div class="save-indicator"><div id="save-state" class="status">Locked</div><button id="retry-save" class="btn sm red" hidden onclick="retryPendingSaves()">Retry save</button></div></div>
 
   <section class="panel">
     <div style="display:flex;gap:0.5rem;margin-bottom:0.8rem;flex-wrap:wrap">
@@ -101,7 +118,7 @@ main{max-width:1120px;margin:0 auto;padding:1.35rem}
 </div>
 
 <script>
-const DB_URL='https://script.google.com/macros/s/AKfycbzpa1fUDZDXfQT5L6SxQRNf1zEFk-tpHV_2Tq9CY2iG4iSqa4W__Rnqs6fshnGJ0pnvRQ/exec';
+const DB_URL='https://script.google.com/macros/s/AKfycbyrGy4Stw2IKEcK9a7WfzrOVrEs6s5mF-m2vKE6l-_Jt3Am5X248llZ4z9rpX5piJwuZQ/exec';
 const BOOKS_FILE='books.json';
 const RULES_FILE='book_genre_rules.json';
 const PAGE_SIZE=100;
@@ -118,11 +135,139 @@ let saveRevision=0;
 let savedRevision=0;
 let html5QrCode=null;
 
-function gsCall(functionName,...args){return new Promise((resolve,reject)=>{if(!window.google||!google.script||!google.script.run){reject(new Error('Open this administrative page through the private Google Apps Script deployment, not GitHub Pages.'));return}google.script.run.withSuccessHandler(resolve).withFailureHandler(err=>reject(new Error(err&&err.message||String(err))))[functionName](...args)})}
-async function driveRead(file){return await gsCall('adminRead',file)}
-async function driveWrite(file,data){return await gsCall('adminWrite',file,data)}
-async function serverAction(action,params={}){const data=await gsCall('adminAction',action,params);if(!data.ok)throw new Error(data.error||'Server action failed');return data}
+// GitHub Pages cannot use google.script.run. Public GET uses JSONP;
+// private POST uses a no-cors text/plain request, followed by a JSONP receipt.
+// A write is never marked "Saved" until the backend confirms completion.
+let adminToken='';
+let booksHash=null;
+let rulesHash=null;
+let rulesRevision=0;
+let rulesSavedRevision=0;
+let rulesSaveInFlight=false;
+let rulesSaveAgain=false;
+let rulesTimer=null;
+let bookSaveError='';
+let rulesSaveError='';
 
+function jsonp(params){
+  return new Promise((resolve,reject)=>{
+    const cb='shelfcb_'+crypto.randomUUID().replace(/-/g,'');
+    const qs=new URLSearchParams({...params,callback:cb,_:String(Date.now())});
+    const script=document.createElement('script');
+    let finished=false;
+    const cleanup=()=>{clearTimeout(timer);delete window[cb];script.remove()};
+    const fail=err=>{if(finished)return;finished=true;cleanup();reject(err)};
+    const timer=setTimeout(()=>fail(new Error('API request timed out')),16000);
+    window[cb]=data=>{if(finished)return;finished=true;cleanup();
+      if(data&&data.ok===false)reject(new Error(data.error||'API request rejected'));
+      else resolve(data);
+    };
+    script.onerror=()=>fail(new Error('API request failed. Check your Apps Script deployment.'));
+    script.src=DB_URL+'?'+qs.toString();
+    document.head.appendChild(script);
+  });
+}
+
+async function sha256Json(value){
+  const bytes=new TextEncoder().encode(JSON.stringify(value));
+  const digest=await crypto.subtle.digest('SHA-256',bytes);
+  return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function delay(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
+
+async function adminRequest(action,params={}){
+  if(!adminToken)throw new Error('Administrator is locked');
+  const id=crypto.randomUUID().replace(/-/g,'');
+  const body=JSON.stringify({action,requestId:id,token:adminToken,...params});
+  // Do not await a readable cross-origin POST response; Apps Script does not
+  // provide CORS headers. Receipt polling independently verifies completion.
+  let networkFailure='';
+  fetch(DB_URL,{method:'POST',mode:'no-cors',credentials:'omit',
+    headers:{'Content-Type':'text/plain;charset=UTF-8'},body})
+    .catch(e=>{networkFailure=String(e&&e.message||e)});
+  const deadline=Date.now()+45000;
+  let lastPollingError='';
+  while(Date.now()<deadline){
+    await delay(950);
+    try{
+      const receipt=await jsonp({action:'receipt',id});
+      if(receipt.state==='ok')return receipt;
+      if(receipt.state==='error')throw new Error(receipt.error||'Administrative request failed');
+    }catch(e){
+      // Permanent errors are distinguished from transient script transport errors.
+      if(e.message==='API request timed out'||e.message.startsWith('API request failed')){
+        lastPollingError=e.message;
+        continue;
+      }
+      throw e;
+    }
+  }
+  throw new Error('Could not verify the server response; do not close this tab. '+
+    (networkFailure||lastPollingError||'Check deployment and retry.'));
+}
+
+async function driveRead(file){
+  const data=await jsonp({file});
+  const hash=await sha256Json(data);
+  if(file===BOOKS_FILE)booksHash=hash;
+  if(file===RULES_FILE)rulesHash=hash;
+  return data;
+}
+async function driveWrite(file,data,baseHash){
+  const receipt=await adminRequest('write',{file,data,baseHash});
+  if(!/^[a-f0-9]{64}$/.test(receipt.hash||'')){
+    throw new Error('Server did not return a valid write confirmation hash');
+  }
+  return receipt;
+}
+async function serverAction(action,params={}){
+  if(!['lookupIsbn','searchBook'].includes(action))throw new Error('Unsupported action');
+  return await jsonp({action,...params});
+}
+async function unlockAdmin(event){
+  event.preventDefault();
+  const el=document.getElementById('admin-token-input');
+  const btn=document.getElementById('unlock-button');
+  const error=document.getElementById('unlock-error');
+  adminToken=el.value.trim();
+  el.value='';
+  error.textContent='';
+  btn.disabled=true;
+  btn.textContent='Checking…';
+  try{
+    await adminRequest('auth');
+    document.getElementById('unlock-gate').hidden=true;
+    document.getElementById('admin-main').hidden=false;
+    await loadAll();
+  }catch(e){
+    adminToken='';
+    error.textContent='Could not unlock editor: '+e.message;
+  }finally{
+    btn.disabled=false;
+    btn.textContent='Unlock editor';
+  }
+}
+function updateSaveIndicator(){
+  const err=bookSaveError||rulesSaveError;
+  const retry=document.getElementById('retry-save');
+  retry.hidden=!err;
+  if(err){setSaveState('Save failed — '+err,'err');return}
+  if(saveInFlight||rulesSaveInFlight){setSaveState('Saving…');return}
+  if(saveRevision!==savedRevision||rulesRevision!==rulesSavedRevision){
+    setSaveState('Unsaved changes');return;
+  }
+  setSaveState('Saved','ok');
+}
+function retryPendingSaves(){
+  if(saveRevision!==savedRevision){bookSaveError='';saveNow()}
+  if(rulesRevision!==rulesSavedRevision){rulesSaveError='';saveRulesNow()}
+  updateSaveIndicator();
+}
+window.addEventListener('beforeunload',event=>{
+  if(saveRevision!==savedRevision||rulesRevision!==rulesSavedRevision){
+    event.preventDefault();event.returnValue='';
+  }
+});
 function setStatus(text,type=''){const el=document.getElementById('status');el.textContent=text;el.className='status '+type}
 function setSaveState(text,type=''){const el=document.getElementById('save-state');el.textContent=text;el.className='status '+type}
 function esc(v=''){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
@@ -137,7 +282,7 @@ function allGenres(){return [...new Set([...BASE_GENRES,...(rules.customGenres||
 function normaliseDatabase(value){const db=Array.isArray(value)?{version:2,updatedAt:0,books:value}:value&&Array.isArray(value.books)?value:{version:2,updatedAt:0,books:[]};db.version=2;db.books=db.books.map(normaliseBook);return db}
 function normaliseBook(b){let readings=Array.isArray(b.readings)?b.readings:[];if(!readings.length&&b.readDate)readings=[{id:uid('reading'),date:b.readDate,precision:/^\d{4}-\d{2}-\d{2}$/.test(b.readDate)?'day':'month'}];const genres=Array.isArray(b.genres)?b.genres:(b.genre?[b.genre]:[]);let computedStatus='finished';if(b.shelf==='towatch')computedStatus='towatch';else if(Number(b.currentPage)>0&&Number(b.currentPage)<Number(b.pages))computedStatus='reading';return {...b,id:b.id||uid('book'),additionalAuthors:Array.isArray(b.additionalAuthors)?b.additionalAuthors:[],rating10:b.rating10===0?0:(b.rating10??null),review:b.review||'',description:b.description||'',shelf:b.shelf||'read',status:b.status||computedStatus,series:b.series||'',seriesNumber:b.seriesNumber||'',currentPage:Number(b.currentPage)||0,pages:Number(b.pages)||0,readings,genres,tags:Array.isArray(b.tags)?b.tags:[],createdAt:b.createdAt||b.addedAt||Date.now(),updatedAt:b.updatedAt||Date.now()}}
 
-async function loadAll(){try{const db=await driveRead(BOOKS_FILE);const r=await driveRead(RULES_FILE);database=normaliseDatabase(db);rules=r&&typeof r==='object'&&!Array.isArray(r)?{version:1,customGenres:Array.isArray(r.customGenres)?r.customGenres:[]}:{version:1,customGenres:[]};refreshAll();setStatus(`Loaded ${database.books.length} personal books from Drive.`,'ok');setSaveState('Saved','ok')}catch(e){console.error(e);setStatus('Could not load books: '+e.message,'err');setSaveState('Load failed','err');document.querySelectorAll('button').forEach(b=>{if(!b.closest('nav'))b.disabled=true})}}
+async function loadAll(){try{const db=await driveRead(BOOKS_FILE);if(!Array.isArray(db)&&!(db&&Array.isArray(db.books)))throw new Error('Invalid books.json data');const r=await driveRead(RULES_FILE);database=normaliseDatabase(db);rules=r&&typeof r==='object'&&!Array.isArray(r)?{...r,version:r.version||1,customGenres:Array.isArray(r.customGenres)?r.customGenres:[]}:{version:1,customGenres:[]};refreshAll();setStatus(`Loaded ${database.books.length} personal books from Drive.`,'ok');updateSaveIndicator()}catch(e){console.error(e);setStatus('Could not load books: '+e.message,'err');setSaveState('Load failed','err');document.querySelectorAll('button').forEach(b=>{if(!b.closest('nav'))b.disabled=true})}}
 function refreshAll(){renderStats();buildGenreControls();renderBooks();renderRules()}
 function renderStats(){const rated=database.books.filter(b=>Number.isFinite(Number(b.rating10))&&b.rating10!==null&&b.rating10!=='');const avg=rated.length?rated.reduce((s,b)=>s+Number(b.rating10),0)/rated.length:0;document.getElementById('stat-total').textContent=database.books.length;document.getElementById('stat-rated').textContent=rated.length;document.getElementById('stat-towatch').textContent=database.books.filter(b=>b.shelf==='towatch').length;document.getElementById('stat-reread').textContent=database.books.filter(b=>(b.readings||[]).length>1).length;document.getElementById('stat-average').textContent=avg?avg.toFixed(1):'—'}
 function switchSection(name,btn){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));btn.classList.add('on');document.querySelectorAll('.section').forEach(x=>x.classList.remove('on'));document.getElementById('section-'+name).classList.add('on');if(name==='rules')renderRules()}
@@ -146,9 +291,80 @@ function filteredBooks(){const q=(document.getElementById('search').value||'').t
 function renderBooks(){renderStats();const arr=filteredBooks();const pages=Math.max(1,Math.ceil(arr.length/PAGE_SIZE));bookPage=Math.min(bookPage,pages);const visible=arr.slice((bookPage-1)*PAGE_SIZE,bookPage*PAGE_SIZE);const list=document.getElementById('book-list');if(!visible.length){list.innerHTML='<div class="empty">No books match your filters.</div>'}else{list.innerHTML=visible.map(b=>{const r=latestReading(b);const rating=b.rating10!==null&&b.rating10!==''&&b.rating10!==undefined?`${Number(b.rating10).toFixed(Number(b.rating10)%1?1:0)}/10`:'Unrated';const seriesInfo=b.series?` · Series: ${b.series}${b.seriesNumber?' #'+b.seriesNumber:''}`:'';const totalPages=Number(b.pages)||0;const currPage=Number(b.currentPage)||0;const pct=totalPages>0?Math.min(100,Math.round((currPage/totalPages)*100)):0;return`<div class="book-row">${b.cover?`<img class="cover" src="${esc(b.cover)}" alt="${esc(b.title)}" loading="lazy">`:'<div class="cover-ph">📖</div>'}<div><div class="book-title">${esc(b.title)}</div><div class="book-meta">${esc(b.author||'Unknown author')}${seriesInfo} · Rating: ${rating}${r?' · Read: '+esc(formatReading(r)):''}</div><div class="chips">${b.shelf==='towatch'?'<span class="chip towatch">To Read</span>':''}${(b.genres||[]).map(g=>`<span class="chip">${esc(g)}</span>`).join('')}${(b.tags||[]).slice(0,3).map(t=>`<span class="chip tag">${esc(t)}</span>`).join('')}</div>${totalPages>0?`<div style="margin-top:0.35rem;font-size:0.68rem;color:var(--muted)">Page ${currPage} of ${totalPages} (${pct}%)<div style="background:var(--border);border-radius:99px;height:4px;overflow:hidden;margin-top:0.15rem"><div style="background:var(--warm);height:100%;width:${pct}%"></div></div></div>`:''}</div><div class="row-actions"><button class="icon-btn" onclick="openEditor('${esc(b.id)}')">Edit</button><button class="icon-btn" onclick="deleteBook('${esc(b.id)}')">Delete</button></div></div>`}).join('')}
   document.getElementById('pagination').innerHTML=arr.length>PAGE_SIZE?`<button class="icon-btn" onclick="bookPage=Math.max(1,bookPage-1);renderBooks()" ${bookPage===1?'disabled':''}>Previous</button><span>Page ${bookPage} of ${pages} · ${arr.length} books</span><button class="icon-btn" onclick="bookPage=Math.min(${pages},bookPage+1);renderBooks()" ${bookPage===pages?'disabled':''}>Next</button>`:`<span>${arr.length} books</span>`}
 
-function scheduleSave(){database.updatedAt=Date.now();saveRevision++;setSaveState('Unsaved changes');clearTimeout(saveTimer);saveTimer=setTimeout(saveNow,650)}
-async function saveNow(){if(saveInFlight){saveAgain=true;return}if(savedRevision===saveRevision)return;saveInFlight=true;const revision=saveRevision;const snapshot=JSON.parse(JSON.stringify(database));setSaveState('Saving…');try{await driveWrite(BOOKS_FILE,snapshot);savedRevision=revision;setSaveState(savedRevision===saveRevision?'Saved':'Unsaved changes',savedRevision===saveRevision?'ok':'')}catch(e){console.error(e);setSaveState('Save failed','err');setStatus('Save failed: '+e.message,'err')}finally{saveInFlight=false;if(saveAgain||savedRevision!==saveRevision&&revision!==saveRevision){saveAgain=false;clearTimeout(saveTimer);saveTimer=setTimeout(saveNow,650)}}}
-async function saveRules(){try{await driveWrite(RULES_FILE,rules);setStatus('Genres updated.','ok')}catch(e){setStatus('Could not save genres: '+e.message,'err')}}
+function scheduleSave(){
+  database.updatedAt=Date.now();
+  saveRevision++;
+  bookSaveError='';
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(saveNow,650);
+  updateSaveIndicator();
+}
+async function saveNow(){
+  if(saveInFlight){saveAgain=true;return}
+  if(savedRevision===saveRevision)return;
+  saveInFlight=true;
+  const revision=saveRevision;
+  const snapshot=JSON.parse(JSON.stringify(database));
+  updateSaveIndicator();
+  try{
+    const receipt=await driveWrite(BOOKS_FILE,snapshot,booksHash);
+    booksHash=receipt.hash;
+    savedRevision=revision;
+    bookSaveError='';
+  }catch(e){
+    console.error('Book save failed:',e);
+    bookSaveError=e.message;
+    setStatus('Book save failed: '+e.message,'err');
+  }finally{
+    saveInFlight=false;
+    const changedWhileSaving=saveRevision!==revision;
+    if((saveAgain||changedWhileSaving)&&!bookSaveError){
+      saveAgain=false;
+      clearTimeout(saveTimer);
+      saveTimer=setTimeout(saveNow,300);
+    }else{
+      saveAgain=false;
+    }
+    updateSaveIndicator();
+  }
+}
+function saveRules(){
+  rulesRevision++;
+  rulesSaveError='';
+  clearTimeout(rulesTimer);
+  rulesTimer=setTimeout(saveRulesNow,650);
+  updateSaveIndicator();
+}
+async function saveRulesNow(){
+  if(rulesSaveInFlight){rulesSaveAgain=true;return}
+  if(rulesSavedRevision===rulesRevision)return;
+  rulesSaveInFlight=true;
+  const revision=rulesRevision;
+  const snapshot=JSON.parse(JSON.stringify(rules));
+  updateSaveIndicator();
+  try{
+    const receipt=await driveWrite(RULES_FILE,snapshot,rulesHash);
+    rulesHash=receipt.hash;
+    rulesSavedRevision=revision;
+    rulesSaveError='';
+    setStatus('Genres updated.','ok');
+  }catch(e){
+    console.error('Genre save failed:',e);
+    rulesSaveError=e.message;
+    setStatus('Could not save genres: '+e.message,'err');
+  }finally{
+    rulesSaveInFlight=false;
+    const changedWhileSaving=rulesRevision!==revision;
+    if((rulesSaveAgain||changedWhileSaving)&&!rulesSaveError){
+      rulesSaveAgain=false;
+      clearTimeout(rulesTimer);
+      rulesTimer=setTimeout(saveRulesNow,300);
+    }else{
+      rulesSaveAgain=false;
+    }
+    updateSaveIndicator();
+  }
+}
 
 function renderRules(){buildGenreControls()}
 function addCustomGenre(){const el=document.getElementById('new-genre');const value=el.value.trim();if(!value)return;if(!rules.customGenres.includes(value))rules.customGenres.push(value);el.value='';renderRules();saveRules()}
@@ -172,7 +388,7 @@ function removeReading(i){const b=database.books.find(x=>x.id===editingBookId);i
 function splitList(v){return [...new Set(String(v||'').split(',').map(x=>x.trim()).filter(Boolean))]}
 function deleteBook(id){const b=database.books.find(x=>x.id===id);if(!b||!confirm(`Delete “${b.title}” from books.json?`))return;database.books=database.books.filter(x=>x.id!==id);refreshAll();scheduleSave()}
 
-loadAll();
+// Authentication is required before opening the editor.
 </script>
 </body>
 </html>
