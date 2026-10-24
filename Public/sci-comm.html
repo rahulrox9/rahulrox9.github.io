@@ -9,7 +9,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e}
 html{scroll-behavior:smooth}
-body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);overflow-x:hidden}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35}
 
 nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:52px}
@@ -24,30 +24,136 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 
 @media(max-width:680px){nav{padding:0 1.2rem}.nav-links a:not(.active):not(.nav-admin){display:none}.nav-admin{display:flex!important}}
 
-.page-header{max-width:1200px;margin:0 auto;padding:4rem 4rem 2rem}
+.page-header{max-width:1200px;margin:0 auto;padding:4rem 4rem 2.5rem}
 .eyebrow{font-size:0.68rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.6rem}
 .eyebrow::before{content:'';display:inline-block;width:24px;height:1px;background:var(--warm)}
-.page-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,4.5rem);font-weight:700;line-height:1.05;letter-spacing:-0.02em;margin-bottom:1rem}
+.page-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,3.8vw,4.2rem);font-weight:700;line-height:1.05;letter-spacing:-0.02em;margin-bottom:1rem}
 .page-title em{font-style:italic;color:var(--warm)}
-.page-desc{font-size:0.9rem;color:var(--muted);line-height:1.8;max-width:620px;font-weight:300}
+.page-desc{font-size:0.92rem;color:var(--muted);line-height:1.8;max-width:620px;font-weight:300}
+
 .page-wrap{max-width:1200px;margin:0 auto;padding:0 4rem 6rem}
-.main-category-block{margin-bottom:5rem}
-.main-category-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--warm);margin-bottom:2rem;border-bottom:2px solid var(--border);padding-bottom:0.5rem;display:inline-block}
+.main-category-block{margin-bottom:4.5rem}
+.main-category-title{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:700;color:var(--warm);margin-bottom:1.8rem;border-bottom:2px solid var(--border);padding-bottom:0.45rem;display:inline-block}
 
 .subsection{margin-bottom:2.5rem}
-.subsection-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;padding:0 0 0.5rem;margin-bottom:1.2rem;border-bottom:1px solid var(--border)}
-.subsection-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;letter-spacing:0.04em;color:var(--ink);text-transform:uppercase}
+.subsection-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;padding:0 0 0.6rem;margin-bottom:1.2rem;border-bottom:1px solid var(--border)}
+.subsection-title{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;letter-spacing:0.08em;color:var(--ink);text-transform:uppercase}
+.subsection-count{font-size:0.7rem;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase}
 
-.posts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
-.post-card{background:var(--card);padding:2.2rem 1.8rem;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;transition:background 0.2s;position:relative;min-height:240px}
-.post-card:hover{background:var(--parchment)}
+/* Single-Row Card Stack */
+.posts-grid{display:flex;flex-direction:column;gap:1.1rem}
+
+.post-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  text-decoration:none;
+  color:var(--ink);
+  display:grid;
+  grid-template-columns:1fr 220px;
+  align-items:stretch;
+  transition:all 0.22s ease;
+  position:relative;
+}
+.post-card:hover{
+  background:#fff;
+  border-color:var(--warm);
+  transform:translateY(-2px);
+  box-shadow:0 12px 28px rgba(26,18,8,0.05);
+}
 .post-card:hover .post-arrow{transform:translate(3px,-3px)}
-.post-tag{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--warm);margin-bottom:0.6rem;font-weight:500}
-.post-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;line-height:1.3;margin-bottom:0.6rem}
-.post-excerpt{font-size:0.8rem;color:var(--muted);line-height:1.65;flex:1;font-weight:300;text-align:justify}
-.post-footer{display:flex;align-items:center;justify-content:space-between;margin-top:1.5rem}
-.post-date{font-size:0.7rem;color:var(--muted)}
-.post-arrow{font-size:0.8rem;color:var(--warm);transition:transform 0.2s}
+.post-card:hover .post-title{color:var(--warm)}
+.post-card:hover .post-visual svg{transform:scale(1.05)}
+
+/* Editorial Body */
+.post-body{
+  padding:1.8rem 2.2rem;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.post-tag{
+  font-size:0.62rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--warm);
+  margin-bottom:0.55rem;
+  font-weight:500;
+}
+.post-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.35rem;
+  font-weight:700;
+  line-height:1.28;
+  margin-bottom:0.65rem;
+  transition:color 0.2s;
+}
+.post-excerpt{
+  font-size:0.84rem;
+  color:var(--muted);
+  line-height:1.68;
+  font-weight:300;
+  max-width:740px;
+}
+.post-footer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:1.4rem;
+  padding-top:0.9rem;
+  border-top:1px solid var(--border);
+}
+.post-date{font-size:0.72rem;color:var(--muted);letter-spacing:0.02em}
+.post-cta{font-size:0.7rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink);display:inline-flex;align-items:center;gap:0.35rem}
+.post-arrow{font-size:0.82rem;color:var(--warm);transition:transform 0.2s}
+
+/* Right Technical Plate */
+.post-visual{
+  border-left:1px solid var(--border);
+  background:linear-gradient(145deg,var(--parchment) 0%,#f3ece0 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:1.2rem;
+  position:relative;
+  overflow:hidden;
+}
+.post-visual svg{
+  width:100%;
+  max-width:130px;
+  height:90px;
+  transition:transform 0.3s ease;
+}
+.visual-caption{
+  font-size:0.58rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-top:0.55rem;
+}
+
+/* Coming Soon Single-Row Banner */
+.post-upcoming{
+  background:rgba(255,249,242,0.55);
+  border:1px dashed var(--border);
+  padding:1.1rem 1.8rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  color:var(--muted);
+}
+.post-upcoming-label{
+  font-size:0.68rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  font-weight:500;
+  color:var(--warm);
+}
+.post-upcoming-text{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-size:0.92rem;
+}
 
 footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .footer-left{font-family:'Playfair Display',serif;font-size:0.9rem;font-style:italic;color:var(--muted)}
@@ -56,9 +162,11 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 .footer-right a:hover{color:var(--warm)}
 
 @media(max-width:900px){
-    .page-header,.page-wrap{padding-left:1.5rem;padding-right:1.5rem}
-    .posts-grid{grid-template-columns:1fr}
-    footer{padding:1.5rem;flex-direction:column;gap:1rem;text-align:center}
+  .page-header,.page-wrap{padding-left:1.5rem;padding-right:1.5rem}
+  .post-card{grid-template-columns:1fr}
+  .post-body{padding:1.5rem 1.4rem}
+  .post-visual{border-left:none;border-top:1px solid var(--border);padding:1.2rem}
+  footer{padding:1.5rem;flex-direction:column;gap:1rem;text-align:center}
 }
 </style>
 </head>
@@ -81,52 +189,109 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 <div class="page-header">
   <div class="eyebrow">Writing</div>
   <h1 class="page-title">Sci-Comm <em>Articles</em></h1>
-  <p class="page-desc">Attempts to explain, simplify, and make science feel less distant than it often pretends to be.</p>
+  <p class="page-desc">Attempts to explain, simplify and make science feel less distant than it often pretends to be.</p>
 </div>
 
 <div class="page-wrap">
-  
+
   <div class="main-category-block">
     <h2 class="main-category-title">Natural Science</h2>
-    
+
     <section class="subsection">
       <div class="subsection-head">
         <h3 class="subsection-title">Geoscience</h3>
+        <span class="subsection-count">03 Entries</span>
       </div>
       <div class="posts-grid">
+
         <a class="post-card" href="../?p=Writing/Sci-Comm/AlpsHimalayas.html">
-          <div>
-            <div class="post-tag">English · Natural Science · Geoscience</div>
-            <div class="post-title">The Alps & The Himalayas: A Brief Comparative Analysis</div>
-            <div class="post-excerpt">A geological comparison of two iconic mountain ranges, exploring the mechanics of plate convergence, seismic risks, and the trade-off between accessibility and wilderness.</div>
+          <div class="post-body">
+            <div>
+              <div class="post-tag">English · Natural Science · Geoscience</div>
+              <div class="post-title">The Alps &amp; The Himalayas: A Brief Comparative Analysis</div>
+              <div class="post-excerpt">A geological comparison of two iconic mountain ranges, exploring the mechanics of plate convergence, seismic risks and the trade-off between accessibility and wilderness.</div>
+            </div>
+            <div class="post-footer">
+              <span class="post-date">14.06.2020</span>
+              <span class="post-cta">Read Article <span class="post-arrow">↗</span></span>
+            </div>
           </div>
-          <div class="post-footer">
-            <span class="post-date">14.06.2020</span>
-            <span class="post-arrow">↗</span>
+          <div class="post-visual">
+            <svg viewBox="0 0 140 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 74 L38 28 L62 56 L92 14 L132 74 Z" stroke="#c8873a" stroke-width="1.5" fill="rgba(200,135,58,0.08)"/>
+              <path d="M22 74 L52 42 L78 64 L108 32 L132 74" stroke="#2d6b5e" stroke-width="1.2" stroke-dasharray="3 3"/>
+              <line x1="4" y1="74" x2="136" y2="74" stroke="#8a7560" stroke-width="1"/>
+            </svg>
+            <span class="visual-caption">Orogeny</span>
           </div>
         </a>
+
         <a class="post-card" href="../?p=Writing/Sci-Comm/Zircon.html">
-          <div>
-            <div class="post-tag">English · Natural Science · Geoscience</div>
-            <div class="post-title">Zircon: Nature’s Best Clock</div>
-            <div class="post-excerpt">An exploration of Uranium-Lead (U-Pb) dating, crystal structure, and why zircon remains the gold standard for determining geological timescales.</div>
+          <div class="post-body">
+            <div>
+              <div class="post-tag">English · Natural Science · Geoscience</div>
+              <div class="post-title">Zircon: Nature’s Best Clock</div>
+              <div class="post-excerpt">An exploration of Uranium-Lead (U-Pb) dating, crystal structure and why zircon remains the gold standard for determining geological timescales.</div>
+            </div>
+            <div class="post-footer">
+              <span class="post-date">24.06.2020</span>
+              <span class="post-cta">Read Article <span class="post-arrow">↗</span></span>
+            </div>
           </div>
-          <div class="post-footer">
-            <span class="post-date">24.06.2020</span>
-            <span class="post-arrow">↗</span>
+          <div class="post-visual">
+            <svg viewBox="0 0 140 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="70" y1="6" x2="70" y2="84" stroke="#2d6b5e" stroke-width="1" stroke-dasharray="2 2"/>
+              <polyline points="48,24 64,19 92,24" stroke="#8a7560" stroke-width="0.9" stroke-dasharray="2 2"/>
+              <polyline points="48,66 64,71 92,66" stroke="#8a7560" stroke-width="0.9" stroke-dasharray="2 2"/>
+              <line x1="64" y1="19" x2="64" y2="71" stroke="#8a7560" stroke-width="0.9" stroke-dasharray="2 2"/>
+              <polygon points="70,6 92,24 92,66 70,84 48,66 48,24" stroke="#c8873a" stroke-width="1.5" fill="rgba(200,135,58,0.08)" stroke-linejoin="round"/>
+              <polyline points="48,24 76,29 92,24" stroke="#c8873a" stroke-width="1.2" stroke-linejoin="round"/>
+              <polyline points="48,66 76,61 92,66" stroke="#c8873a" stroke-width="1.2" stroke-linejoin="round"/>
+              <line x1="76" y1="29" x2="76" y2="61" stroke="#c8873a" stroke-width="1.4"/>
+              <line x1="70" y1="6" x2="76" y2="29" stroke="#c8873a" stroke-width="1.3"/>
+              <line x1="70" y1="84" x2="76" y2="61" stroke="#c8873a" stroke-width="1.3"/>
+            </svg>
+            <span class="visual-caption">Tetragonal Zircon</span>
           </div>
         </a>
+
         <a class="post-card" href="../?p=Writing/Sci-Comm/MagneticHole.html">
-          <div>
-            <div class="post-tag">English · Natural Science · Geoscience</div>
-            <div class="post-title">The Growing ‘Hole’ in the Earth’s Magnetic Field</div>
-            <div class="post-excerpt">Examining the expansion of the South Atlantic Anomaly, satellite monitoring data from ESA’s Swarm constellation, and implications for geomagnetic reversals.</div>
+          <div class="post-body">
+            <div>
+              <div class="post-tag">English · Natural Science · Geoscience</div>
+              <div class="post-title">The Growing ‘Hole’ in the Earth’s Magnetic Field</div>
+              <div class="post-excerpt">Examining the expansion of the South Atlantic Anomaly, satellite monitoring data from ESA’s Swarm constellation and implications for geomagnetic reversals.</div>
+            </div>
+            <div class="post-footer">
+              <span class="post-date">24.06.2020</span>
+              <span class="post-cta">Read Article <span class="post-arrow">↗</span></span>
+            </div>
           </div>
-          <div class="post-footer">
-            <span class="post-date">24.06.2020</span>
-            <span class="post-arrow">↗</span>
-          </div>
+          <div class="post-visual">
+  <svg viewBox="0 0 140 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Tilted Magnetic Field Group (Rotated 11.5°) -->
+    <g transform="rotate(11.5 70 45)">
+      <!-- Magnetic Dipole Axis passing through the magnetic poles -->
+      <line x1="70" y1="6" x2="70" y2="84" stroke="#8a7560" stroke-width="0.9" stroke-dasharray="2 2"/>
+
+      <!-- Outer pole-to-pole magnetic field lines (high latitude) -->
+      <path d="M68 31 C8 2, 8 88, 68 59" stroke="#8a7560" stroke-width="1" stroke-dasharray="3 2"/>
+      <path d="M72 31 C132 2, 132 88, 72 59" stroke="#8a7560" stroke-width="1" stroke-dasharray="3 2"/>
+
+      <!-- Inner pole-to-pole magnetic field lines (low latitude) -->
+      <path d="M69 32 C28 16, 28 74, 69 58" stroke="#c8873a" stroke-width="1.4" fill="rgba(200,135,58,0.04)"/>
+      <path d="M71 32 C112 16, 112 74, 71 58" stroke="#c8873a" stroke-width="1.4" fill="rgba(200,135,58,0.04)"/>
+    </g>
+
+    <!-- Upright Earth Sphere (Equator is flat-horizontal, Meridian is straight-vertical) -->
+    <circle cx="70" cy="45" r="14" stroke="#2d6b5e" stroke-width="1.5" fill="rgba(45,107,94,0.12)"/>
+    <ellipse cx="70" cy="45" rx="14" ry="4.5" stroke="#2d6b5e" stroke-width="0.9" stroke-dasharray="2 1.5"/>
+    <ellipse cx="70" cy="45" rx="4.5" ry="14" stroke="#2d6b5e" stroke-width="0.9"/>
+  </svg>
+  <span class="visual-caption">Magnetosphere</span>
+</div>
         </a>
+
       </div>
     </section>
   </div>
@@ -137,22 +302,39 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
     <section class="subsection">
       <div class="subsection-head">
         <h3 class="subsection-title">Culinary Science</h3>
+        <span class="subsection-count">01 Entry</span>
       </div>
       <div class="posts-grid">
+
         <a class="post-card" href="../?p=Writing/Sci-Comm/Using_the_knife.html">
-          <div>
-            <div class="post-tag">English · Miscellaneous · Culinary Science</div>
-            <div class="post-title">A guide to amateur cooking. Part 1: French classical knife skills</div>
-            <div class="post-excerpt">An introduction to fundamental French classical knife skills, exploring techniques from basic chopping to precise julienne and brunoise cuts.</div>
+          <div class="post-body">
+            <div>
+              <div class="post-tag">English · Miscellaneous · Culinary Science</div>
+              <div class="post-title">A guide to amateur cooking. Part 1: French classical knife skills</div>
+              <div class="post-excerpt">An introduction to fundamental French classical knife skills, exploring techniques from basic chopping to precise julienne and brunoise cuts.</div>
+            </div>
+            <div class="post-footer">
+              <span class="post-date">09.04.2026 (revised) · 15.12.2020 (original)</span>
+              <span class="post-cta">Read Article <span class="post-arrow">↗</span></span>
+            </div>
           </div>
-          <div class="post-footer">
-            <span class="post-date">09.04.2026 (revised) · 15.12.2020 (original)</span>
-            <span class="post-arrow">↗</span>
+          <div class="post-visual">
+            <svg viewBox="0 0 140 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="24" y="24" width="42" height="42" stroke="#c8873a" stroke-width="1.4" fill="rgba(200,135,58,0.08)"/>
+              <line x1="38" y1="24" x2="38" y2="66" stroke="#8a7560" stroke-width="1" stroke-dasharray="2 2"/>
+              <line x1="52" y1="24" x2="52" y2="66" stroke="#8a7560" stroke-width="1" stroke-dasharray="2 2"/>
+              <rect x="84" y="38" width="14" height="14" stroke="#2d6b5e" stroke-width="1.4" fill="rgba(45,107,94,0.1)"/>
+              <rect x="104" y="38" width="14" height="14" stroke="#2d6b5e" stroke-width="1.4" fill="rgba(45,107,94,0.1)"/>
+            </svg>
+            <span class="visual-caption">Brunoise Cut</span>
           </div>
         </a>
-        <div style="background:var(--card); display:flex; align-items:center; justify-content:center; border-left:1px solid var(--border)">
-          <span style="font-size:0.65rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase;">Part 2 coming soon</span>
+
+        <div class="post-upcoming">
+          <span class="post-upcoming-text">A guide to amateur cooking · Part 2</span>
+          <span class="post-upcoming-label">Forthcoming</span>
         </div>
+
       </div>
     </section>
   </div>
