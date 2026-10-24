@@ -7,9 +7,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e}
+:root{
+  --ink:#1a1208;
+  --parchment:#faf6ef;
+  --warm:#c8873a;
+  --warm-soft:rgba(200,135,58,0.1);
+  --muted:#8a7560;
+  --card:#fff9f2;
+  --border:#e8dfd0;
+  --green:#2d6b5e;
+  --green-soft:rgba(45,107,94,0.1);
+}
 html{scroll-behavior:smooth}
-body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);overflow-x:hidden}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35}
 
 nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:52px}
@@ -24,56 +34,69 @@ nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop
 
 @media(max-width:680px){nav{padding:0 1.2rem}.nav-links a:not(.active):not(.nav-admin){display:none}.nav-admin{display:flex!important}}
 
-.page-header{max-width:1200px;margin:0 auto;padding:4rem 4rem 2rem}
-.eyebrow{font-size:0.68rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.6rem}
+/* Editorial Header */
+.page-header{max-width:1200px;margin:0 auto;padding:4.5rem 4rem 3rem;display:grid;grid-template-columns:1.2fr 0.8fr;gap:3rem;align-items:end;border-bottom:1px solid var(--border)}
+.eyebrow{font-size:0.68rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm);margin-bottom:0.9rem;display:flex;align-items:center;gap:0.6rem}
 .eyebrow::before{content:'';display:inline-block;width:24px;height:1px;background:var(--warm)}
-.page-title{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,4vw,4rem);font-weight:700;line-height:1.05;letter-spacing:-0.02em;margin-bottom:1rem}
-.page-title em{font-style:italic;color:var(--warm)}
-.page-desc{font-size:0.9rem;color:var(--muted);line-height:1.8;max-width:540px;font-weight:300}
+.page-title{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,4.5vw,4.4rem);font-weight:700;line-height:1.02;letter-spacing:-0.02em}
+.page-title em{font-style:italic;color:var(--warm);font-weight:400}
+.page-desc{font-size:0.92rem;color:var(--muted);line-height:1.8;font-weight:300;border-left:2px solid var(--warm);padding-left:1.4rem;margin-bottom:0.3rem}
 
-.tag-bar{max-width:1200px;margin:0 auto;padding:0 4rem 2.5rem;display:flex;gap:0.5rem;flex-wrap:wrap}
-.tag-btn{padding:0.25rem 0.8rem;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;white-space:nowrap}
-.tag-btn.on{background:var(--warm);color:#fff;border-color:var(--warm)}
-.tag-btn:hover:not(.on){border-color:var(--warm);color:var(--warm)}
+/* Category Directory Strip */
+.directory-bar{max-width:1200px;margin:0 auto;padding:1.8rem 4rem 2.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.dir-card{background:var(--card);border:1px solid var(--border);padding:1.1rem 1.3rem;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;justify-content:space-between;transition:all 0.22s ease;position:relative;overflow:hidden}
+.dir-card::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;background:var(--warm);transform:scaleX(0);transform-origin:left;transition:transform 0.25s ease}
+.dir-card:hover{background:#fff;transform:translateY(-2px);box-shadow:0 10px 24px rgba(26,18,8,0.05)}
+.dir-card:hover::after{transform:scaleX(1)}
+.dir-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.45rem}
+.dir-num{font-family:'Playfair Display',serif;font-style:italic;font-size:0.8rem;color:var(--warm)}
+.dir-count{font-size:0.64rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)}
+.dir-name{font-family:'Playfair Display',serif;font-size:1.08rem;font-weight:700;display:flex;align-items:center;justify-content:space-between}
+.dir-arrow{font-family:'DM Sans',sans-serif;font-size:0.85rem;color:var(--warm);transition:transform 0.2s}
+.dir-card:hover .dir-arrow{transform:translateX(4px)}
 
-.posts-wrap{max-width:1200px;margin:0 auto;padding:0 4rem 6rem}
-.posts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+/* Main Editorial Sections */
+.posts-wrap{max-width:1200px;margin:0 auto;padding:1rem 4rem 6rem;display:flex;flex-direction:column;gap:4.5rem}
 
-.section-header{
-  grid-column:1 / -1;
-  background:var(--parchment);
-  padding:2.5rem 1.8rem 1rem;
-  border-bottom:1px solid var(--border);
-}
-.section-header h2{
-  font-family:'Playfair Display',serif;
-  font-size:1.4rem;
-  font-weight:700;
-  color:var(--muted);
-  letter-spacing:0.05em;
-  text-transform:uppercase;
-}
+.category-section{display:grid;grid-template-columns:300px 1fr;gap:3rem;padding-top:3rem;border-top:1px solid var(--border)}
+.category-section:first-child{border-top:none;padding-top:1rem}
 
-.post-card{background:var(--card);padding:2rem 1.8rem;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;transition:background 0.2s;position:relative}
-.post-card:hover{background:var(--parchment)}
+/* Left Sidebar per Section */
+.section-info{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start}
+.section-info-top{position:sticky;top:76px}
+.section-index{font-family:'Playfair Display',serif;font-size:0.85rem;font-style:italic;color:var(--warm);display:block;margin-bottom:0.4rem}
+.section-title{font-family:'Playfair Display',serif;font-size:1.85rem;font-weight:700;line-height:1.15;letter-spacing:-0.01em;margin-bottom:0.8rem;color:var(--ink)}
+.section-desc{font-size:0.84rem;color:var(--muted);line-height:1.7;font-weight:300;margin-bottom:1.8rem}
+
+.section-cta{display:inline-flex;align-items:center;gap:0.65rem;padding:0.65rem 1.2rem;background:var(--ink);color:var(--parchment);text-decoration:none;font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;border-radius:2px;transition:all 0.2s ease}
+.section-cta span{font-size:0.85rem;color:var(--warm);transition:transform 0.2s ease}
+.section-cta:hover{background:var(--warm);color:#fff}
+.section-cta:hover span{color:#fff;transform:translateX(4px)}
+
+/* Right Cards Area per Section */
+.section-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:1.4rem}
+.section-cards.single{grid-template-columns:1fr}
+
+.post-card{background:var(--card);border:1px solid var(--border);padding:2rem 1.9rem;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;justify-content:space-between;transition:all 0.25s ease;position:relative}
+.post-card.is-featured{background:linear-gradient(165deg,#fffcf8 0%,var(--card) 100%);border-top:3px solid var(--green)}
+.post-card.is-recent{border-top:3px solid var(--warm)}
+.post-card:hover{background:#fff;transform:translateY(-3px);box-shadow:0 14px 32px rgba(26,18,8,0.06);border-color:var(--warm)}
 .post-card:hover .post-arrow{transform:translate(3px,-3px)}
-.post-tag{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--warm);margin-bottom:0.6rem;font-weight:500}
-.post-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;line-height:1.3;margin-bottom:0.6rem}
-.post-excerpt{font-size:0.8rem;color:var(--muted);line-height:1.65;flex:1;font-weight:300}
-.post-footer{display:flex;align-items:center;justify-content:space-between;margin-top:1.2rem}
-.post-date{font-size:0.7rem;color:var(--muted)}
-.post-arrow{font-size:0.8rem;color:var(--warm);transition:transform 0.2s}
-.post-featured{
-  font-size:0.6rem;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-  color:#fff;
-  background:var(--green);
-  display:inline-block;
-  padding:2px 6px;
-  margin-bottom:0.5rem;
-  border-radius:3px;
-}
+.post-card:hover .post-title{color:var(--warm)}
+
+.post-top{display:flex;align-items:center;justify-content:space-between;gap:0.6rem;margin-bottom:1rem;flex-wrap:wrap}
+.post-badge{font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;font-weight:500;padding:0.22rem 0.55rem;border-radius:2px}
+.post-badge.featured{background:var(--green-soft);color:var(--green);border:1px solid rgba(45,107,94,0.25)}
+.post-badge.recent{background:var(--warm-soft);color:var(--warm);border:1px solid rgba(200,135,58,0.25)}
+.post-tag{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:500}
+
+.post-title{font-family:'Playfair Display',serif;font-size:1.28rem;font-weight:700;line-height:1.32;margin-bottom:0.8rem;transition:color 0.2s}
+.post-excerpt{font-size:0.82rem;color:var(--muted);line-height:1.72;font-weight:300;flex:1}
+
+.post-footer{display:flex;align-items:center;justify-content:space-between;margin-top:1.6rem;padding-top:1rem;border-top:1px solid var(--border)}
+.post-date{font-size:0.7rem;color:var(--muted);letter-spacing:0.03em}
+.post-read{font-size:0.7rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink);display:flex;align-items:center;gap:0.35rem}
+.post-arrow{font-size:0.82rem;color:var(--warm);transition:transform 0.2s}
 
 footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .footer-left{font-family:'Playfair Display',serif;font-size:0.9rem;font-style:italic;color:var(--muted)}
@@ -81,10 +104,18 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 .footer-right a{font-size:0.75rem;color:var(--muted);text-decoration:none;transition:color 0.15s}
 .footer-right a:hover{color:var(--warm)}
 
-@media(max-width:900px){
-  .page-header,.tag-bar,.posts-wrap{padding-left:1.5rem;padding-right:1.5rem}
-  .posts-grid{grid-template-columns:1fr}
-  footer{padding:1.5rem;flex-direction:column;gap:1rem;text-align:center}
+@media(max-width:980px){
+  .page-header{grid-template-columns:1fr;gap:1.2rem;padding:3rem 1.8rem 2rem}
+  .directory-bar{grid-template-columns:repeat(2,1fr);padding:1.5rem 1.8rem 2rem}
+  .posts-wrap{padding:0 1.8rem 4rem;gap:3rem}
+  .category-section{grid-template-columns:1fr;gap:1.5rem;padding-top:2.2rem}
+  .section-info-top{position:static}
+  .section-desc{margin-bottom:1.1rem}
+  footer{padding:1.8rem;flex-direction:column;gap:1rem;text-align:center}
+}
+@media(max-width:640px){
+  .directory-bar{grid-template-columns:1fr}
+  .section-cards{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -104,16 +135,16 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 </nav>
 
 <div class="page-header">
-  <div class="eyebrow">Writing</div>
-  <h1 class="page-title">Things I've<br><em>written</em></h1>
-  <p class="page-desc">Articles, poems, stories and whatever else demands to be written.</p>
+  <div>
+    <div class="eyebrow">Writing Archive</div>
+    <h1 class="page-title">Things I've<br><em>written</em></h1>
+  </div>
+  <p class="page-desc">Articles, poems, essays and technical notes across Earth sciences, classical Indic texts and literature. Highlighted works appear below alongside links to each complete collection.</p>
 </div>
 
-<div class="tag-bar" id="tag-bar"></div>
+<div class="directory-bar" id="directory-bar"></div>
 
-<div class="posts-wrap">
-  <div class="posts-grid" id="posts-grid"></div>
-</div>
+<div class="posts-wrap" id="posts-wrap"></div>
 
 <footer>
   <div class="footer-left">Rahul Subbaraman</div>
@@ -125,119 +156,236 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
 </footer>
 
 <script>
-window.POSTS = [
+window.SECTIONS = [
   {
-    file: '../?p=Writing/Poems/mama-mata.html',
-    tag: ['Sanskrit','Poetry'],
-    title: 'मम माता (My Mother)',
-    excerpt: "A Sanskrit poem about a mother's boundless love, written in the classical style, with an English rendering alongside.",
-    date: 'Oct 2014',
-    featured: false
+    id: 'Indic',
+    num: 'I',
+    title: 'Indic Studies',
+    desc: 'Explorations of Vedic astronomy, classical Sanskrit literature, calendar mechanics and philosophical commentaries.',
+    landingUrl: 'indic.html',
+    buttonText: 'All Indic Articles'
   },
   {
-    file: '../?p=Writing/Poems/love.html',
-    tag: ['English','Poetry'],
-    title: 'Love',
-    excerpt: "A poem defining love through its permanence and its ultimate culmination in humanitarian and spiritual devotion.",
-    date: 'Feb 2014',
-    featured: false
+    id: 'Sci-Comm',
+    title: 'Sci-Comm',
+    num: 'II',
+    desc: 'Earth sciences, continental tectonics, geophysics and analytical guides to classical culinary technique.',
+    landingUrl: 'sci-comm.html',
+    buttonText: 'All Sci-Comm'
   },
   {
-    file: '../?p=Writing/Poems/love.html',
-    tag: ['English','Poetry'],
-    title: 'Satyam Vada Dharmam Cara',
-    excerpt: "A poem I wrote based on the ancient Sanskrit maxim from Taittiriya Upanishad, which won me the 2nd prize in an inter-school poetry competition.",
-    date: '2014',
-    featured: false
+    id: 'Poetry',
+    num: 'III',
+    title: 'Poetry',
+    desc: 'Original verses composed in classical Sanskrit and English on devotion, ethics and permanence.',
+    landingUrl: 'poetry.html',
+    buttonText: 'All Poetry'
   },
   {
-    file: '../?p=Writing/Articles/Using_the_knife.html',
-    tag: ['English', 'Article', 'Miscellaneous', 'Culinary'],
-    title: 'A guide to amateur cooking. Part 1: French classical knife skills',
-    excerpt: "An introduction to fundamental French classical knife skills, exploring techniques from basic chopping to precise julienne and brunoise cuts.",
-    date: '15 Dec 2020',
-    featured: false
-  },
-  {
-    file: '../?p=Writing/Indic/Anatomy_Time.html',
-    tag: ['English', 'Sanskrit', 'Indic', 'Vedic Science'],
-    title: 'Kālavidyā: The Science of Time in Sanātana Dharma | Part 1: The Anatomy of Time',
-    excerpt: "From the 4-second flutter of a human breath (Prāṇa) to the quadrillion-year lifespan of the Creator, the Sūryasiddhānta constructs a seamless anatomy of time. Discover how ancient Vedic astronomy bridges the infinitesimal and the infinite, mapping our exact coordinates in a cosmic cycle.",
-    date: '29 Mar 2026',
-    featured: true
+    id: 'QuickReads',
+    num: 'IV',
+    title: 'Quick Reads',
+    desc: 'Short essays, observations and compact technical notes on everyday skills and systems.',
+    landingUrl: 'quick-reads.html',
+    buttonText: 'All Quick Reads'
   }
 ];
 
-let activeTag = 'all';
+window.POSTS = [
+  {
+    file: '../?p=Writing/Indic/Anatomy_Time.html',
+    section: 'Indic',
+    tag: ['Sanskrit', 'Vedic Science'],
+    title: 'Kālavidyā: The Science of Time in Sanātana Dharma | Part 1: The Anatomy of Time',
+    excerpt: 'From the 4-second flutter of a human breath (Prāṇa) to the quadrillion-year lifespan of the Creator, the Sūryasiddhānta constructs a seamless anatomy of time.',
+    date: '29 Mar 2026',
+    featured: true,
+    recent: false
+  },
+  {
+    file: '../?p=Writing/Indic/Panchangam.html',
+    section: 'Indic',
+    tag: ['Indic', 'Vedic Science'],
+    title: 'Panchangam: The Five Limbs of Hindu Timekeeping',
+    excerpt: 'An astronomical and structural overview of the traditional Hindu calendar system, examining Tithi, Vāra, Nakṣatra, Yoga and Karaṇa.',
+    date: '2026',
+    featured: false,
+    recent: true
+  },
+  {
+    file: '../?p=Writing/Indic/Hanuman_Chalisa_01.html',
+    section: 'Indic',
+    tag: ['Sanskrit', 'Indic'],
+    title: 'Hanuman Chalisa | Part 1',
+    excerpt: 'A verse-by-verse linguistic and philosophical breakdown of the opening verses of Tulsidas’s devotional hymn.',
+    date: '2026',
+    featured: false,
+    recent: false
+  },
+  {
+    file: '../?p=Writing/Indic/WIP.html',
+    section: 'Indic',
+    tag: ['Indic', 'Notes'],
+    title: 'Indic Studies: Work in Progress',
+    excerpt: 'Preliminary research notes and translation drafts in progress.',
+    date: '2026',
+    featured: false,
+    recent: false
+  },
+  {
+    file: '../?p=Writing/Sci-Comm/AlpsHimalayas.html',
+    section: 'Sci-Comm',
+    tag: ['Sci-Comm', 'Geology'],
+    title: 'Alps and Himalayas: A Tale of Two Collisions',
+    excerpt: 'Comparing the tectonic architecture, continental subduction dynamics and structural evolution of the Alpine and Himalayan orogenies.',
+    date: '2026',
+    featured: true,
+    recent: false
+  },
+  {
+    file: '../?p=Writing/Sci-Comm/Zircon.html',
+    section: 'Sci-Comm',
+    tag: ['Sci-Comm', 'Geochemistry'],
+    title: 'Zircon: Microscopic Time Capsules of Early Earth',
+    excerpt: 'How durable zirconium silicate crystals survive billions of years of geological recycling to preserve isotopic records of the Hadean eon.',
+    date: '2026',
+    featured: false,
+    recent: true
+  },
+  {
+    file: '../?p=Writing/Sci-Comm/MagneticHole.html',
+    section: 'Sci-Comm',
+    tag: ['Sci-Comm', 'Geophysics'],
+    title: 'The South Atlantic Magnetic Anomaly',
+    excerpt: 'Investigating the localised weakening in Earth’s geomagnetic field, geodynamo flux patches and consequences for low-Earth orbit satellites.',
+    date: '2026',
+    featured: false,
+    recent: false
+  },
+  {
+    file: '../?p=Writing/Sci-Comm/Using_the_knife.html',
+    section: 'Sci-Comm',
+    tag: ['Article', 'Culinary'],
+    title: 'A guide to amateur cooking. Part 1: French classical knife skills',
+    excerpt: 'An introduction to fundamental French classical knife skills, exploring techniques from basic chopping to precise julienne and brunoise cuts.',
+    date: '15 Dec 2020',
+    featured: false,
+    recent: false
+  },
+  {
+    file: '../?p=Writing/Poems/mama-mata.html',
+    section: 'Poetry',
+    tag: ['Sanskrit', 'Poetry'],
+    title: 'मम माता (My Mother)',
+    excerpt: "A Sanskrit poem about a mother's boundless love, written in the classical style, with an English rendering alongside.",
+    date: 'Oct 2014',
+    featured: true,
+    recent: false
+  },
+  {
+    file: '../?p=Writing/Poems/SVDC.html',
+    section: 'Poetry',
+    tag: ['English', 'Poetry'],
+    title: 'Satyam Vada Dharmam Cara',
+    excerpt: 'A poem I wrote based on the ancient Sanskrit maxim from Taittiriya Upanishad, which won me the 2nd prize in an inter-school poetry competition.',
+    date: '2014',
+    featured: false,
+    recent: true
+  },
+  {
+    file: '../?p=Writing/Poems/love.html',
+    section: 'Poetry',
+    tag: ['English', 'Poetry'],
+    title: 'Love',
+    excerpt: 'A poem defining love through its permanence and its ultimate culmination in humanitarian and spiritual devotion.',
+    date: 'Feb 2014',
+    featured: false,
+    recent: false
+  },
+  {
+    file: '../?p=Writing/QuickReads/Typing.html',
+    section: 'QuickReads',
+    tag: ['English', 'Quick Reads'],
+    title: 'On Touch Typing and Mechanical Rhythm',
+    excerpt: 'Observations on ergonomics, muscle memory and cognitive flow in modern digital transcription.',
+    date: '2026',
+    featured: true,
+    recent: true
+  }
+];
 
 function createPostHTML(p) {
-  return `<a class="post-card" href="${p.file}">
+  const isFeatured = p.featured;
+  const cardTypeClass = isFeatured ? 'is-featured' : 'is-recent';
+  const badgeHTML = isFeatured
+    ? '<span class="post-badge featured">Featured</span>'
+    : '<span class="post-badge recent">Recent</span>';
+
+  return `<a class="post-card ${cardTypeClass}" href="${p.file}">
       <div>
-        <div class="post-tag">${p.tag.join(' · ')}</div>
-        ${p.featured ? '<div class="post-featured">Featured</div>' : ''}
+        <div class="post-top">
+          ${badgeHTML}
+          <span class="post-tag">${p.tag.join(' · ')}</span>
+        </div>
         <div class="post-title">${p.title}</div>
         <div class="post-excerpt">${p.excerpt}</div>
       </div>
       <div class="post-footer">
         <span class="post-date">${p.date}</span>
-        <span class="post-arrow">↗</span>
+        <span class="post-read">Read <span class="post-arrow">↗</span></span>
       </div>
     </a>`;
 }
 
 function render() {
-  const grid = document.getElementById('posts-grid');
-  const filtered = activeTag === 'all' ? window.POSTS : window.POSTS.filter(p => p.tag.includes(activeTag));
+  const dirBar = document.getElementById('directory-bar');
+  const wrap = document.getElementById('posts-wrap');
 
-  if (!filtered.length) {
-    grid.innerHTML = '<div class="empty-state">No posts yet — coming soon.</div>';
-    return;
-  }
+  let dirHTML = '';
+  let sectionsHTML = '';
 
-  const featured = filtered.filter(p => p.featured);
-  const sci_comm = filtered.filter(p => p.tag.includes('Sci-Comm') && !p.featured);
-  const indic = filtered.filter(p => p.tag.includes('Indic') && !p.featured);
-  const misc = filtered.filter(p => p.tag.includes('Miscellaneous') && !p.featured);
-  const poetry = filtered.filter(p => p.tag.includes('Poetry') && !p.featured);
+  window.SECTIONS.forEach(sec => {
+    const allInSec = window.POSTS.filter(p => p.section === sec.id);
+    const countLabel = allInSec.length === 1 ? '1 Entry' : `${allInSec.length} Entries`;
 
-  let finalHTML = '';
+    dirHTML += `
+      <a class="dir-card" href="${sec.landingUrl}">
+        <div class="dir-top">
+          <span class="dir-num">${sec.num}</span>
+          <span class="dir-count">${countLabel}</span>
+        </div>
+        <div class="dir-name">
+          <span>${sec.title}</span>
+          <span class="dir-arrow">→</span>
+        </div>
+      </a>
+    `;
 
-  if (featured.length > 0) {
-    finalHTML += `<div class="section-header"><h2>Featured</h2></div>`;
-    finalHTML += featured.map(p => createPostHTML(p)).join('');
-  }
+    const highlights = allInSec.filter(p => p.featured || p.recent).slice(0, 2);
+    const displayPosts = highlights.length > 0 ? highlights : allInSec.slice(0, 2);
+    const gridClass = displayPosts.length === 1 ? 'section-cards single' : 'section-cards';
 
-  if (sci_comm.length > 0) {
-    finalHTML += `<div class="section-header"><h2>Sci-Comm Articles</h2></div>`;
-    finalHTML += sci_comm.map(p => createPostHTML(p)).join('');
-  }
+    sectionsHTML += `
+      <section class="category-section">
+        <div class="section-info">
+          <div class="section-info-top">
+            <span class="section-index">Collection ${sec.num}</span>
+            <h2 class="section-title">${sec.title}</h2>
+            <p class="section-desc">${sec.desc}</p>
+            <a class="section-cta" href="${sec.landingUrl}">
+              ${sec.buttonText} <span>→</span>
+            </a>
+          </div>
+        </div>
+        <div class="${gridClass}">
+          ${displayPosts.map(p => createPostHTML(p)).join('')}
+        </div>
+      </section>
+    `;
+  });
 
-  if (indic.length > 0) {
-    finalHTML += `<div class="section-header"><h2>Indic Articles</h2></div>`;
-    finalHTML += indic.map(p => createPostHTML(p)).join('');
-  }
-
-  if (misc.length > 0) {
-    finalHTML += `<div class="section-header"><h2>Miscellaneous Articles</h2></div>`;
-    finalHTML += misc.map(p => createPostHTML(p)).join('');
-  }
-
-  if (poetry.length > 0) {
-    finalHTML += `<div class="section-header"><h2>Poetry</h2></div>`;
-    finalHTML += poetry.map(p => createPostHTML(p)).join('');
-  }
-
-  grid.innerHTML = finalHTML;
-
-  const tags = ['all', ...new Set(window.POSTS.flatMap(p => p.tag))];
-  document.getElementById('tag-bar').innerHTML = tags.map(t =>
-    `<button class="tag-btn${t===activeTag?' on':''}" onclick="filterTag('${t}',this)">${t==='all'?'All':t}</button>`
-  ).join('');
-}
-
-function filterTag(tag, btn) {
-  activeTag = tag;
-  render();
+  dirBar.innerHTML = dirHTML;
+  wrap.innerHTML = sectionsHTML;
 }
 
 render();
