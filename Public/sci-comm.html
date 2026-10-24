@@ -318,16 +318,33 @@ footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align
               <span class="post-cta">Read Article <span class="post-arrow">↗</span></span>
             </div>
           </div>
-          <div class="post-visual">
-            <svg viewBox="0 0 140 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="24" y="24" width="42" height="42" stroke="#c8873a" stroke-width="1.4" fill="rgba(200,135,58,0.08)"/>
-              <line x1="38" y1="24" x2="38" y2="66" stroke="#8a7560" stroke-width="1" stroke-dasharray="2 2"/>
-              <line x1="52" y1="24" x2="52" y2="66" stroke="#8a7560" stroke-width="1" stroke-dasharray="2 2"/>
-              <rect x="84" y="38" width="14" height="14" stroke="#2d6b5e" stroke-width="1.4" fill="rgba(45,107,94,0.1)"/>
-              <rect x="104" y="38" width="14" height="14" stroke="#2d6b5e" stroke-width="1.4" fill="rgba(45,107,94,0.1)"/>
-            </svg>
-            <span class="visual-caption">Brunoise Cut</span>
-          </div>
+<div class="post-visual">
+  <svg viewBox="0 0 140 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Large chopping board (2:1 ratio rectangle) -->
+    <rect x="12" y="15" width="116" height="58" rx="3" stroke="#8a7560" stroke-width="1" fill="rgba(250,246,239,0.9)"/>
+    <!-- Board handle hole -->
+    <circle cx="120" cy="44" r="3.5" stroke="#8a7560" stroke-width="0.8"/>
+
+    <!-- Knife on the left -->
+    <!-- Handle rectangle: h:b = 2:1 (height 12, base 6, smaller than triangle base) -->
+    <rect x="33" y="18" width="6" height="12" rx="1" stroke="#2d6b5e" stroke-width="1.2" fill="none"/>
+    <!-- Right triangle blade: h:b = 3:1 (height 36, base 12) -->
+    <polygon points="30,30 42,30 30,66" stroke="#2d6b5e" stroke-width="1.2" fill="none"/>
+
+    <!-- Chopped veggies in the middle (Julienne slices) -->
+    <line x1="62" y1="35" x2="62" y2="55" stroke="#c8873a" stroke-width="1.2" stroke-dasharray="2 1"/>
+    <line x1="68" y1="35" x2="68" y2="55" stroke="#c8873a" stroke-width="1.2" stroke-dasharray="2 1"/>
+    <line x1="74" y1="35" x2="74" y2="55" stroke="#c8873a" stroke-width="1.2" stroke-dasharray="2 1"/>
+
+    <!-- Chopped veggies on the right (Tiny cubes) -->
+    <rect x="92" y="36" width="5" height="5" stroke="#c8873a" stroke-width="1" fill="rgba(200,135,58,0.2)"/>
+    <rect x="99" y="36" width="5" height="5" stroke="#c8873a" stroke-width="1" fill="rgba(200,135,58,0.2)"/>
+    <rect x="92" y="43" width="5" height="5" stroke="#c8873a" stroke-width="1" fill="rgba(200,135,58,0.2)"/>
+    <rect x="99" y="43" width="5" height="5" stroke="#c8873a" stroke-width="1" fill="rgba(200,135,58,0.2)"/>
+    <rect x="106" y="39" width="5" height="5" stroke="#c8873a" stroke-width="1" fill="rgba(200,135,58,0.2)"/>
+  </svg>
+  <span class="visual-caption">Knife Cuts</span>
+</div>
         </a>
 
         <div class="post-upcoming">
