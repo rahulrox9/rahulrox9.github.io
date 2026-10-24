@@ -1,29 +1,325 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rahul's Poetry</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1208;--parchment:#faf6ef;--warm:#c8873a;--muted:#8a7560;--card:#fff9f2;--border:#e8dfd0;--green:#2d6b5e}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(250,246,239,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:52px}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;text-decoration:none;color:var(--ink)}
+.nav-logo span{color:var(--warm);font-style:italic}
+.nav-links{display:flex;gap:1.4rem;align-items:center}
+.nav-links a{font-size:0.76rem;color:var(--muted);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
+.nav-links a:hover{color:var(--warm)}
+.nav-links a.active{color:var(--ink);font-weight:500}
+.nav-admin{font-size:0.72rem;color:var(--muted);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;padding:0.25rem 0.65rem;border:1px solid var(--border);border-radius:3px;transition:all 0.15s}
+.nav-admin:hover{color:var(--warm);border-color:var(--warm)}
+
+@media(max-width:680px){nav{padding:0 1.2rem}.nav-links a:not(.active):not(.nav-admin){display:none}.nav-admin{display:flex!important}}
+
+.page-header{max-width:1200px;margin:0 auto;padding:4rem 4rem 2.5rem}
+.eyebrow{font-size:0.68rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.6rem}
+.eyebrow::before{content:'';display:inline-block;width:24px;height:1px;background:var(--warm)}
+.page-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,3.8vw,4.2rem);font-weight:700;line-height:1.05;letter-spacing:-0.02em;margin-bottom:1rem}
+.page-title em{font-style:italic;color:var(--warm)}
+
+.page-wrap{max-width:1200px;margin:0 auto;padding:0 4rem 6rem}
+.language-section{margin-bottom:4.5rem}
+.language-title{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:700;color:var(--warm);margin-bottom:1.8rem;border-bottom:2px solid var(--border);padding-bottom:0.45rem;display:inline-block}
+
+/* Single-Row Card Stack */
+.posts-grid{display:flex;flex-direction:column;gap:1.1rem}
+
+.post-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  text-decoration:none;
+  color:var(--ink);
+  display:grid;
+  grid-template-columns:1fr 220px;
+  align-items:stretch;
+  transition:all 0.22s ease;
+  position:relative;
+}
+.post-card:hover{
+  background:#fff;
+  border-color:var(--warm);
+  transform:translateY(-2px);
+  box-shadow:0 12px 28px rgba(26,18,8,0.05);
+}
+.post-card:hover .post-arrow{transform:translate(3px,-3px)}
+.post-card:hover .post-title{color:var(--warm)}
+.post-card:hover .post-visual svg{transform:scale(1.05)}
+
+/* Editorial Body */
+.post-body{
+  padding:1.8rem 2.2rem;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.post-tag{
+  font-size:0.62rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--warm);
+  margin-bottom:0.55rem;
+  font-weight:500;
+}
+.post-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.35rem;
+  font-weight:700;
+  line-height:1.28;
+  margin-bottom:0.65rem;
+  transition:color 0.2s;
+}
+.post-excerpt{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-size:0.88rem;
+  color:var(--muted);
+  line-height:1.68;
+  font-weight:300;
+  max-width:740px;
+  border-left:2px solid var(--border);
+  padding-left:1rem;
+  white-space:pre-line;
+}
+.post-footer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:1.4rem;
+  padding-top:0.9rem;
+  border-top:1px solid var(--border);
+}
+.post-date{font-size:0.72rem;color:var(--muted);letter-spacing:0.02em}
+.post-cta{font-size:0.7rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink);display:inline-flex;align-items:center;gap:0.35rem}
+.post-arrow{font-size:0.82rem;color:var(--warm);transition:transform 0.2s}
+
+/* Right Technical Plate */
+.post-visual{
+  border-left:1px solid var(--border);
+  background:linear-gradient(145deg,var(--parchment) 0%,#f3ece0 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:1.2rem;
+  position:relative;
+  overflow:hidden;
+}
+.post-visual svg{
+  width:100%;
+  max-width:130px;
+  height:90px;
+  transition:transform 0.3s ease;
+}
+.visual-caption{
+  font-size:0.58rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-top:0.55rem;
+}
+
+.post-upcoming{
+  background:rgba(255,249,242,0.55);
+  border:1px dashed var(--border);
+  padding:1.1rem 1.8rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  color:var(--muted);
+}
+.post-upcoming-label{
+  font-size:0.68rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  font-weight:500;
+  color:var(--warm);
+}
+.post-upcoming-text{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-size:0.92rem;
+}
+
+footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.footer-left{font-family:'Playfair Display',serif;font-size:0.9rem;font-style:italic;color:var(--muted)}
+.footer-right{display:flex;gap:1.8rem}
+.footer-right a{font-size:0.75rem;color:var(--muted);text-decoration:none;transition:color 0.15s}
+.footer-right a:hover{color:var(--warm)}
+
+@media(max-width:900px){
+  .page-header,.page-wrap{padding-left:1.5rem;padding-right:1.5rem}
+  .post-card{grid-template-columns:1fr}
+  .post-body{padding:1.5rem 1.4rem}
+  .post-visual{border-left:none;border-top:1px solid var(--border);padding:1.2rem}
+  footer{padding:1.5rem;flex-direction:column;gap:1rem;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../index.html">Rahul <span>Subbaraman</span></a>
+  <div class="nav-links">
+    <a href="books.html">Bookshelf</a>
+    <a href="magnets.html">Magnets</a>
+    <a href="postcards.html">Postcards</a>
+    <a href="sanskrit.html">Sanskrit</a>
+    <a href="travel.html">Travels</a>
+    <a href="watchlist.html">Watchlist</a>
+    <a href="writing.html" class="active">Writing</a>
+    <a class="nav-admin" href="../Admin/admin.html">Admin</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="eyebrow">Writing</div>
+  <h1 class="page-title">Rahul's <em>Poetry</em></h1>
+</div>
+
+<div class="page-wrap">
+  
+  <section class="language-section">
+    <h2 class="language-title">Sanskrit</h2>
+    <div class="posts-grid">
+
+      <a class="post-card" href="../?p=Writing/Poems/mama-mata.html">
+        <div class="post-body">
+          <div>
+            <div class="post-tag">Classical · Devotional</div>
+            <div class="post-title">मम माता (My Mother)</div>
+            <div class="post-excerpt">यथा माता तथा पुत्राः 
+            A tribute to a mother's boundless love, explored through the sacred resonance of the classical tongue.</div>
+          </div>
+          <div class="post-footer">
+            <span class="post-date">Oct 2014</span>
+            <span class="post-cta">Read Poem <span class="post-arrow">↗</span></span>
+          </div>
+        </div>
 <div class="post-visual">
   <svg viewBox="0 0 140 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <!-- Dharmic Chakra -->
-    <circle cx="70" cy="24" r="11" stroke="#2d6b5e" stroke-width="1.2" fill="rgba(45,107,94,0.04)"/>
-    <line x1="70" y1="13" x2="70" y2="35" stroke="#2d6b5e" stroke-width="1"/>
-    <line x1="59" y1="24" x2="81" y2="24" stroke="#2d6b5e" stroke-width="1"/>
-    <line x1="62" y1="16" x2="78" y2="32" stroke="#2d6b5e" stroke-width="1"/>
-    <line x1="62" y1="32" x2="78" y2="16" stroke="#2d6b5e" stroke-width="1"/>
-    <circle cx="70" cy="24" r="2" fill="#2d6b5e"/>
+    <!-- Big Mom Head (Green tones) -->
+    <circle cx="60" cy="16" r="10" stroke="#2d6b5e" stroke-width="1.2" fill="rgba(45,107,94,0.12)"/>
+    <!-- Big Mom Body (Half capsule) -->
+    <path d="M44 46 A16 16 0 0 1 76 46 L76 78 L44 78 Z" stroke="#2d6b5e" stroke-width="1.2" fill="rgba(45,107,94,0.06)" stroke-linejoin="round"/>
 
-    <!-- Lotus: Exact original 5 petals + 2 new outer flanking petals -->
-    <!-- Far Outer Left Petal (New) -->
-    <path d="M70 80 C48 76 38 64 42 46 C48 50 58 62 70 76 Z" stroke="#c8873a" stroke-width="1.1" fill="rgba(200,135,58,0.06)" stroke-linejoin="round"/>
-    <!-- Far Outer Right Petal (New) -->
-    <path d="M70 80 C92 76 102 64 98 46 C92 50 82 62 70 76 Z" stroke="#c8873a" stroke-width="1.1" fill="rgba(200,135,58,0.06)" stroke-linejoin="round"/>
+    <!-- Small Child Head (Blue tones) -->
+    <circle cx="84" cy="32" r="7" stroke="#3165b4" stroke-width="1.2" fill="rgba(49,101,180,0.15)"/>
+    <!-- Small Child Body (Half capsule) -->
+    <path d="M72 54 A12 12 0 0 1 96 54 L96 78 L72 78 Z" stroke="#3165b4" stroke-width="1.2" fill="rgba(49,101,180,0.08)" stroke-linejoin="round"/>
 
-    <!-- Outer Left Petal -->
-    <path d="M70 78 C54 74 46 62 50 50 C56 53 64 63 70 74 Z" stroke="#c8873a" stroke-width="1.1" fill="rgba(200,135,58,0.08)" stroke-linejoin="round"/>
-    <!-- Outer Right Petal -->
-    <path d="M70 78 C86 74 94 62 90 50 C84 53 76 63 70 74 Z" stroke="#c8873a" stroke-width="1.1" fill="rgba(200,135,58,0.08)" stroke-linejoin="round"/>
-    <!-- Inner Left Petal -->
-    <path d="M70 75 C60 70 54 58 58 46 C62 50 66 60 70 70 Z" stroke="#c8873a" stroke-width="1.1" fill="rgba(200,135,58,0.14)" stroke-linejoin="round"/>
-    <!-- Inner Right Petal -->
-    <path d="M70 75 C80 70 86 58 82 46 C78 50 74 60 70 70 Z" stroke="#c8873a" stroke-width="1.1" fill="rgba(200,135,58,0.14)" stroke-linejoin="round"/>
-    <!-- Central Petal/Bulb -->
-    <path d="M70 76 C67 73 66 64 67.5 54 C68.3 49 70 47 70 47 C70 47 71.7 49 72.5 54 C74 64 73 73 70 76 Z" stroke="#c8873a" stroke-width="1.1" fill="rgba(200,135,58,0.2)" stroke-linejoin="round"/>
+    <!-- Heart at the intersection point (Red tones) -->
+    <path d="M74 58 C74 56, 70 52, 66 55 C63 58, 66 63, 74 69 C82 63, 85 58, 82 55 C78 52, 74 56, 74 58 Z" stroke="#c73838" stroke-width="1" fill="rgba(199,56,56,0.25)"/>
+  </svg>
+  <span class="visual-caption">Vātsalya</span>
+</div>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="language-section">
+    <h2 class="language-title">English</h2>
+    <div class="posts-grid">
+
+      <a class="post-card" href="../?p=Writing/Poems/love.html">
+        <div class="post-body">
+          <div>
+            <div class="post-tag">Contemporary · Philosophical</div>
+            <div class="post-title">Love</div>
+            <div class="post-excerpt">Defining the architecture of permanence 
+            A meditation on love through the lens of spiritual and humanitarian devotion.</div>
+          </div>
+          <div class="post-footer">
+            <span class="post-date">Feb 2014</span>
+            <span class="post-cta">Read Poem <span class="post-arrow">↗</span></span>
+          </div>
+        </div>
+        <div class="post-visual">
+  <svg viewBox="0 0 140 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+<div class="post-visual">
+  <svg viewBox="0 0 140 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M70 32 C55 15, 30 20, 30 42 C30 60, 52 70, 70 84 C88 70, 110 60, 110 42 C110 20, 85 15, 70 32 Z" stroke="#c8873a" stroke-width="1.4" fill="rgba(200,135,58,0.08)" stroke-linejoin="round"/>
+  </svg>
+  <span class="visual-caption">Love</span>
+</div>
+</div>
+      </a>
+
+      <a class="post-card" href="../?p=Writing/Poems/satyam.html">
+        <div class="post-body">
+          <div>
+            <div class="post-tag">Indic Themes · Vedic</div>
+            <div class="post-title">Satyam Vada Dharmam Cara</div>
+            <div class="post-excerpt">Walk the path where truth resides 
+            A poem based on the ancient Taittiriya Upanishad maxim: 'Speak the Truth, Practice Righteousness'.</div>
+          </div>
+          <div class="post-footer">
+            <span class="post-date">2014</span>
+            <span class="post-cta">Read Poem <span class="post-arrow">↗</span></span>
+          </div>
+        </div>
+        <div class="post-visual">
+  <svg viewBox="0 0 70 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Dharmic Chakra (Left, perfectly matched size and level) -->
+    <g transform="translate(65, 60)">
+      <circle cx="0" cy="0" r="17" stroke="#2d6b5e" stroke-width="1.2" fill="rgba(45,107,94,0.04)"/>
+      <line x1="0" y1="-18" x2="0" y2="17" stroke="#2d6b5e" stroke-width="1"/>
+      <line x1="-18" y1="0" x2="18" y2="0" stroke="#2d6b5e" stroke-width="1"/>
+      <line x1="-12.7" y1="-12.7" x2="12.7" y2="12.7" stroke="#2d6b5e" stroke-width="1"/>
+      <line x1="-12.7" y1="12.7" x2="12.7" y2="-12.7" stroke="#2d6b5e" stroke-width="1"/>
+      <circle cx="0" cy="0" r="3" fill="#2d6b5e"/>
+    </g>
+
+    <!-- Classic 5-petal Lotus shifted right -->
+    <g transform="translate(-70, 0)">
+      <!-- Outer Left Petal -->
+      <path d="M70 78 C54 74 46 62 50 50 C56 53 64 63 70 74 Z" stroke="#c8873a" stroke-width="1.1" fill="rgba(200,135,58,0.08)" stroke-linejoin="round"/>
+      <!-- Outer Right Petal -->
+      <path d="M70 78 C86 74 94 62 90 50 C84 53 76 63 70 74 Z" stroke="#c8873a" stroke-width="1.1" fill="rgba(200,135,58,0.08)" stroke-linejoin="round"/>
+      <!-- Inner Left Petal -->
+      <path d="M70 75 C60 70 54 58 58 46 C62 50 66 60 70 70 Z" stroke="#c8873a" stroke-width="1.1" fill="rgba(200,135,58,0.14)" stroke-linejoin="round"/>
+      <!-- Inner Right Petal -->
+      <path d="M70 75 C80 70 86 58 82 46 C78 50 74 60 70 70 Z" stroke="#c8873a" stroke-width="1.1" fill="rgba(200,135,58,0.14)" stroke-linejoin="round"/>
+      <!-- Central Petal/Bud -->
+      <path d="M70 76 C67 73 66 64 67.5 54 C68.3 49 70 47 70 47 C70 47 71.7 49 72.5 54 C74 64 73 73 70 76 Z" stroke="#c8873a" stroke-width="1.1" fill="rgba(200,135,58,0.2)" stroke-linejoin="round"/>
+    </g>
   </svg>
   <span class="visual-caption">Satyam Vada Dharmam Cara</span>
 </div>
+      </a>
+
+      <div class="post-upcoming">
+        <span class="post-upcoming-text">Happened once, not sure when a poem will come from me next...</span>
+        <span class="post-upcoming-label">Forthcoming</span>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="footer-left">Rahul Subbaraman</div>
+  <div class="footer-right">
+    <a href="writing.html">Writing</a>
+    <a href="sci-comm.html">Sci-Comm Articles</a>
+    <a href="indic.html">Indic Articles</a>
+    <a href="quick-reads.html">Quick Reads</a>
+  </div>
+</footer>
+
+</body>
+</html>
