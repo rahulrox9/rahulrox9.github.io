@@ -162,7 +162,7 @@ function countryToEmoji(name, explicitCode) {
 
 function makePin(category, country, countryCode, name) {
   let symbol;
-  else if (category === 'airport') symbol = '✈️';
+  if (category === 'airport') symbol = '✈️';
   else symbol = countryToEmoji(country||'', countryCode||'') || '📍';
   const html = `<div class="flag-pin">
     <div class="flag-circle">${symbol}</div>
@@ -261,7 +261,7 @@ function expandPanel() {
 async function load() {
   try {
     const { data: pins } = await driveRead('travel_pins.json');
-    allPins     = Array.isArray(pins) ? pins : [];
+    allPins = Array.isArray(pins) ? pins.filter(p => p.category !== 'temple') : [];
     const countries = new Set(allPins.map(p=>p.country).filter(Boolean));
     document.getElementById('place-count').textContent   = allPins.length;
     document.getElementById('country-count').textContent = countries.size + ' countries';
