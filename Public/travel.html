@@ -39,7 +39,6 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(250,246,239,0.92);backdro
 .popup-country{font-size:0.72rem;color:var(--muted);margin-top:0.1rem}
 .popup-cat{display:inline-block;font-size:0.6rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;padding:0.1rem 0.4rem;border-radius:8px;margin-top:0.3rem}
 .popup-cat.place{background:#fdecd8;color:var(--warm)}
-.popup-cat.temple{background:#f0e8f8;color:#7b4a9e}
 .popup-cat.airport{background:#e8f0f8;color:#2d6b8e}
 .popup-notes{font-size:0.74rem;color:#5a4e3f;font-style:italic;margin-top:0.3rem;line-height:1.4}
 
@@ -102,7 +101,6 @@ nav{position:sticky;top:0;z-index:1000;background:rgba(250,246,239,0.92);backdro
     </div>
     <div class="cp-cats">
       <button class="cat-pill on" id="cat-place" onclick="toggleCat('place',this)">📍 Places</button>
-      <button class="cat-pill on" id="cat-temple" onclick="toggleCat('temple',this)">🕉️ Temples</button>
       <button class="cat-pill on" id="cat-airport" onclick="toggleCat('airport',this)">✈️ Airports</button>
     </div>
     <div class="cp-list" id="cp-list"></div>
@@ -164,7 +162,6 @@ function countryToEmoji(name, explicitCode) {
 
 function makePin(category, country, countryCode, name) {
   let symbol;
-  if (category === 'temple')       symbol = '🕉️';
   else if (category === 'airport') symbol = '✈️';
   else symbol = countryToEmoji(country||'', countryCode||'') || '📍';
   const html = `<div class="flag-pin">
@@ -191,7 +188,7 @@ function makePopup(p) {
 
 const countryMarkers = {};
 const countryVisible = {};
-const catVisible = {place:true, temple:true, airport:true};
+const catVisible = {place:true, airport:true};
 let allPins = [];
 
 function markerShouldShow(p) {
