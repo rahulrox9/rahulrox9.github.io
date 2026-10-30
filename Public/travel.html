@@ -164,6 +164,7 @@ function makePin(category, country, countryCode, name) {
   let symbol;
   if (category === 'airport') symbol = '✈️';
   else symbol = countryToEmoji(country||'', countryCode||'') || '📍';
+  
   const html = `<div class="flag-pin">
     <div class="flag-circle">${symbol}</div>
     <div class="flag-stem"></div>
